@@ -63,19 +63,22 @@ func (c *Client) ListDNSRecord(ctx context.Context, site string) ([]DNSRecord, e
 }
 
 func (c *Client) GetDNSRecord(ctx context.Context, site, id string) (*DNSRecord, error) {
-	var respBody DNSRecord
-
-	err := c.do(ctx, "GET", fmt.Sprintf("%s/site/%s/static-dns/%s", c.apiV2Path, site, id), nil, &respBody)
+	respBody, err := c.ListDNSRecord(ctx, site)
 	if err != nil {
 		return nil, err
 	}
 
-	// if len(respBody.Data) != 1 {
-	// 	return nil, &NotFoundError{}
-	// }
+	if len(respBody) == 0 {
+		return nil, &NotFoundError{}
+	}
 
-	// d := respBody.Data[0]
-	return &respBody, nil
+	for _, dns := range respBody {
+		if dns.ID == id {
+			return &dns, nil
+		}
+	}
+
+	return nil, &NotFoundError{}
 }
 
 func (c *Client) DeleteDNSRecord(ctx context.Context, site, id string) error {
