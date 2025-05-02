@@ -5,7 +5,7 @@ package unifi
 
 import (
 	"context"
-	)
+)
 
 func (c *Client) ListMediaFile(ctx context.Context, site string) ([]MediaFile, error) {
 	return c.listMediaFile(ctx, site)

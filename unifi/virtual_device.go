@@ -5,7 +5,7 @@ package unifi
 
 import (
 	"context"
-	)
+)
 
 func (c *Client) ListVirtualDevice(ctx context.Context, site string) ([]VirtualDevice, error) {
 	return c.listVirtualDevice(ctx, site)

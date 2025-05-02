@@ -5,7 +5,7 @@ package unifi
 
 import (
 	"context"
-	)
+)
 
 func (c *Client) ListSpatialRecord(ctx context.Context, site string) ([]SpatialRecord, error) {
 	return c.listSpatialRecord(ctx, site)

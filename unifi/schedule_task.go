@@ -5,7 +5,7 @@ package unifi
 
 import (
 	"context"
-	)
+)
 
 func (c *Client) ListScheduleTask(ctx context.Context, site string) ([]ScheduleTask, error) {
 	return c.listScheduleTask(ctx, site)

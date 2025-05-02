@@ -5,8 +5,8 @@ package unifi
 
 import (
 	"context"
-	"fmt"
 	"encoding/json"
+	"fmt"
 )
 
 type DNSRecord struct {
@@ -21,7 +21,7 @@ type DNSRecord struct {
 	Enabled    bool   `json:"enabled"`
 	Key        string `json:"key,omitempty"` // .{1,128}
 	Port       int    `json:"port,omitempty"`
-	Priority   int `json:"priority,omitempty"`    // .{1,128}
+	Priority   int    `json:"priority,omitempty"`    // .{1,128}
 	RecordType string `json:"record_type,omitempty"` // A|AAAA|CNAME|MX|NS|PTR|SOA|SRV|TXT
 	Ttl        int    `json:"ttl,omitempty"`
 	Value      string `json:"value,omitempty"` // .{1,256}
