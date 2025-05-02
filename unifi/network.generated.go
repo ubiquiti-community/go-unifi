@@ -92,12 +92,12 @@ type Network struct {
 	IPSecEspDhGroup                               int                             `json:"ipsec_esp_dh_group,omitempty"`   // 1|2|5|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32
 	IPSecEspEncryption                            string                          `json:"ipsec_esp_encryption,omitempty"` // aes128|aes192|aes256|3des
 	IPSecEspHash                                  string                          `json:"ipsec_esp_hash,omitempty"`       // sha1|md5|sha256|sha384|sha512
-	IPSecEspLifetime                              emptyStringInt                  `json:"ipsec_esp_lifetime,omitempty"`   // ^(?:3[0-9]|[4-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)$
+	IPSecEspLifetime                              int                             `json:"ipsec_esp_lifetime,omitempty"`   // ^(?:3[0-9]|[4-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)$
 	IPSecHash                                     string                          `json:"ipsec_hash,omitempty"`           // sha1|md5|sha256|sha384|sha512
 	IPSecIkeDhGroup                               int                             `json:"ipsec_ike_dh_group,omitempty"`   // 1|2|5|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32
 	IPSecIkeEncryption                            string                          `json:"ipsec_ike_encryption,omitempty"` // aes128|aes192|aes256|3des
 	IPSecIkeHash                                  string                          `json:"ipsec_ike_hash,omitempty"`       // sha1|md5|sha256|sha384|sha512
-	IPSecIkeLifetime                              string                          `json:"ipsec_ike_lifetime,omitempty"`   // ^(?:3[0-9]|[4-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)$
+	IPSecIkeLifetime                              int                             `json:"ipsec_ike_lifetime,omitempty"`   // ^(?:3[0-9]|[4-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)$
 	IPSecInterface                                string                          `json:"ipsec_interface,omitempty"`      // wan|wan2
 	IPSecKeyExchange                              string                          `json:"ipsec_key_exchange,omitempty"`   // ikev1|ikev2
 	IPSecLocalIDentifier                          string                          `json:"ipsec_local_identifier,omitempty"`
