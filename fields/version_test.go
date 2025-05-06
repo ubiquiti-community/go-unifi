@@ -17,10 +17,10 @@ func TestLatestUnifiVersion(t *testing.T) {
 	require := require.New(t)
 
 	fwVersion, err := version.NewVersion("7.3.83+atag-7.3.83-19645")
-	require.NoError(err)
+	assert.NoError(err)
 
 	fwDownload, err := url.Parse("https://fw-download.ubnt.com/data/unifi-controller/c31c-debian-7.3.83-c9249c913b91416693b869b9548850c3.deb")
-	require.NoError(err)
+	assert.NoError(err)
 
 	respData := firmwareUpdateApiResponse{
 		Embedded: firmwareUpdateApiResponseEmbedded{
@@ -74,16 +74,16 @@ func TestLatestUnifiVersion(t *testing.T) {
 		assert.Contains(query["filter"], firmwareUpdateApiFilter("product", unifiControllerProduct))
 
 		resp, err := json.Marshal(respData)
-		require.NoError(err)
+		assert.NoError(err)
 
 		_, err = rw.Write(resp)
-		require.NoError(err)
+		assert.NoError(err)
 	}))
 	defer server.Close()
 
 	firmwareUpdateApi = server.URL
 	gotVersion, gotDownload, err := latestUnifiVersion()
-	require.NoError(err)
+	assert.NoError(err)
 
 	assert.Equal(fwVersion.Core(), gotVersion)
 	assert.Equal(fwDownload, gotDownload)

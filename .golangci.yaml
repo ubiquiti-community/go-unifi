@@ -1,44 +1,60 @@
----
+# Visit https://golangci-lint.run/ for usage documentation
+# and information on other useful linters
+version: "2"
+issues:
+  max-same-issues: 0
 linters:
-  enable-all: true
   disable:
-    - 'depguard'
-    - 'tagliatelle'
-
-    # Temporary
-    - 'cyclop'
-    - 'dupl'
-    - 'exhaustruct'
-    - 'forbidigo'
-    - 'funlen'
-    - 'gochecknoglobals'
-    - 'gocognit'
-    - 'goconst'
-    - 'gocritic'
-    - 'gocyclo'
-    - 'godox'
-    - 'goerr113'
-    - 'gomnd'
-    - 'gosec'
-    - 'lll'
-    - 'maintidx'
-    - 'nestif'
-    - 'nlreturn'
-    - 'paralleltest'
-    - 'revive'
-    - 'stylecheck'
-    - 'varnamelen'
-    - 'wrapcheck'
-    - 'wsl'
-
-    # Deprecated
-    - 'deadcode'
-    - 'exhaustivestruct'
-    - 'golint'
-    - 'ifshort'
-    - 'interfacer'
-    - 'maligned'
-    - 'nosnakecase'
-    - 'scopelint'
-    - 'structcheck'
-    - 'varcheck'
+  - all
+  enable:
+  - copyloopvar
+  - depguard
+  - dupl
+  - durationcheck
+  - errcheck
+  - exhaustruct
+  - forbidigo
+  - forcetypeassert
+  - funlen
+  - gochecknoglobals
+  - gocognit
+  - goconst
+  - gocritic
+  - gocyclo
+  - godot
+  - godox
+  - goerr113
+  - gofmt
+  - gomnd
+  - gosec
+  - gosimple
+  - govet
+  - ineffassign
+  - lll
+  - maintidx
+  - makezero
+  - misspell
+  - nestif
+  - nilerr
+  - nlreturn
+  - paralleltest
+  - predeclared
+  - revive
+  - staticcheck
+  - stylecheck
+  - tagliatelle
+  - tenv
+  - unconvert
+  - unparam
+  - unused
+  - varnamelen
+  - wrapcheck
+formatters:
+  settings:
+    gofmt:
+      simplify: true
+      rewrite-rules:
+      - pattern: 'any'
+        replacement: 'any'
+      - pattern: 'a[b:len(a)]'
+        replacement: 'a[b:]'
