@@ -70,6 +70,10 @@ func (c *Client) Version() string {
 	return c.version
 }
 
+func (c *Client) SetAPIKey(apiKey string) {
+	c.apiKey = apiKey
+}
+
 func (c *Client) SetBaseURL(base string) error {
 	var err error
 	c.baseURL, err = url.Parse(base)
