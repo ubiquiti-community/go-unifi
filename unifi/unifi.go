@@ -51,6 +51,7 @@ type Client struct {
 	c       *http.Client
 	baseURL *url.URL
 
+	apiKey     string
 	apiPath    string
 	apiV2Path  string
 	loginPath  string
@@ -153,15 +154,17 @@ func (c *Client) Login(ctx context.Context, user, pass string) error {
 		} `json:"meta"`
 	}
 
-	err = c.do(ctx, "POST", c.loginPath, &struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}{
-		Username: user,
-		Password: pass,
-	}, nil)
-	if err != nil {
-		return err
+	if c.apiKey == "" {
+		err = c.do(ctx, "POST", c.loginPath, &struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}{
+			Username: user,
+			Password: pass,
+		}, nil)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = c.do(ctx, "GET", c.statusPath, nil, &status)
@@ -190,7 +193,12 @@ func (c *Client) Login(ctx context.Context, user, pass string) error {
 	return nil
 }
 
-func (c *Client) do(ctx context.Context, method, relativeURL string, reqBody any, respBody any) error {
+func (c *Client) do(
+	ctx context.Context,
+	method, relativeURL string,
+	reqBody any,
+	respBody any,
+) error {
 	// single threading requests, this is mostly to assist in CSRF token propagation
 	c.Lock()
 	defer c.Unlock()
@@ -227,6 +235,10 @@ func (c *Client) do(ctx context.Context, method, relativeURL string, reqBody any
 
 	if c.csrf != "" {
 		req.Header.Set("X-Csrf-Token", c.csrf)
+	}
+
+	if c.apiKey != "" {
+		req.Header.Set("X-API-KEY", c.apiKey)
 	}
 
 	resp, err := c.c.Do(req)

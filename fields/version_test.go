@@ -14,7 +14,7 @@ import (
 
 func TestLatestUnifiVersion(t *testing.T) {
 	assert := assert.New(t)
-	require := require.New(t)
+	_ = require.New(t)
 
 	fwVersion, err := version.NewVersion("7.3.83+atag-7.3.83-19645")
 	assert.NoError(err)

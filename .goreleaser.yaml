@@ -1,8 +1,8 @@
 ---
 before:
   hooks:
-    - 'go mod tidy'
-    - 'go generate unifi/device.go'
+    - "go mod tidy"
+    - "go generate unifi/device.go"
 
 builds:
   - skip: true

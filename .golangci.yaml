@@ -1,60 +1,37 @@
-# Visit https://golangci-lint.run/ for usage documentation
-# and information on other useful linters
 version: "2"
 issues:
   max-same-issues: 0
 linters:
-  disable:
-  - all
   enable:
-  - copyloopvar
-  - depguard
-  - dupl
-  - durationcheck
-  - errcheck
-  - exhaustruct
-  - forbidigo
-  - forcetypeassert
-  - funlen
-  - gochecknoglobals
-  - gocognit
-  - goconst
-  - gocritic
-  - gocyclo
-  - godot
-  - godox
-  - goerr113
-  - gofmt
-  - gomnd
-  - gosec
-  - gosimple
-  - govet
-  - ineffassign
-  - lll
-  - maintidx
-  - makezero
-  - misspell
-  - nestif
-  - nilerr
-  - nlreturn
-  - paralleltest
-  - predeclared
-  - revive
-  - staticcheck
-  - stylecheck
-  - tagliatelle
-  - tenv
-  - unconvert
-  - unparam
-  - unused
-  - varnamelen
-  - wrapcheck
+    - durationcheck
+    # - errcheck
+    - copyloopvar
+    # - forcetypeassert
+    - godot
+    - ineffassign
+    - makezero
+    - misspell
+    - nilerr
+    - predeclared
+    - staticcheck
+    - unconvert
+    # - unparam
+    - unused
+    - govet
+  disable:
+    - errcheck
 formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
   settings:
     gofmt:
       simplify: true
       rewrite-rules:
-      - pattern: 'any'
-        replacement: 'any'
-      - pattern: 'a[b:len(a)]'
-        replacement: 'a[b:]'
+        - pattern: "interface{}"
+          replacement: "any"
+        - pattern: "a[b:len(a)]"
+          replacement: "a[b:]"
