@@ -7,10 +7,17 @@ import (
 	"context"
 )
 
-func (c *Client) GetSettingSuperIdentity(ctx context.Context, site string) (*SettingSuperIdentity, error) {
+func (c *Client) GetSettingSuperIdentity(
+	ctx context.Context,
+	site string,
+) (*SettingSuperIdentity, error) {
 	return c.getSettingSuperIdentity(ctx, site)
 }
 
-func (c *Client) UpdateSettingSuperIdentity(ctx context.Context, site string, d *SettingSuperIdentity) (*SettingSuperIdentity, error) {
+func (c *Client) UpdateSettingSuperIdentity(
+	ctx context.Context,
+	site string,
+	d *SettingSuperIdentity,
+) (*SettingSuperIdentity, error) {
 	return c.updateSettingSuperIdentity(ctx, site, d)
 }

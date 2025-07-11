@@ -11,6 +11,10 @@ func (c *Client) GetSettingSnmp(ctx context.Context, site string) (*SettingSnmp,
 	return c.getSettingSnmp(ctx, site)
 }
 
-func (c *Client) UpdateSettingSnmp(ctx context.Context, site string, d *SettingSnmp) (*SettingSnmp, error) {
+func (c *Client) UpdateSettingSnmp(
+	ctx context.Context,
+	site string,
+	d *SettingSnmp,
+) (*SettingSnmp, error) {
 	return c.updateSettingSnmp(ctx, site, d)
 }

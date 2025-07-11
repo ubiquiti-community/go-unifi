@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -94,11 +94,10 @@ func (c *Client) listSpatialRecord(ctx context.Context, site string) ([]SpatialR
 		Data []SpatialRecord `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/spatialrecord", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/spatialrecord", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -107,8 +106,7 @@ func (c *Client) getSpatialRecord(ctx context.Context, site, id string) (*Spatia
 		Meta meta            `json:"meta"`
 		Data []SpatialRecord `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/spatialrecord/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/spatialrecord/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +120,7 @@ func (c *Client) getSpatialRecord(ctx context.Context, site, id string) (*Spatia
 }
 
 func (c *Client) deleteSpatialRecord(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/spatialrecord/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/spatialrecord/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -135,7 +133,7 @@ func (c *Client) createSpatialRecord(ctx context.Context, site string, d *Spatia
 		Data []SpatialRecord `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/spatialrecord", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/spatialrecord", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -144,9 +142,9 @@ func (c *Client) createSpatialRecord(ctx context.Context, site string, d *Spatia
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateSpatialRecord(ctx context.Context, site string, d *SpatialRecord) (*SpatialRecord, error) {
@@ -155,7 +153,7 @@ func (c *Client) updateSpatialRecord(ctx context.Context, site string, d *Spatia
 		Data []SpatialRecord `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/spatialrecord/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/spatialrecord/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +162,7 @@ func (c *Client) updateSpatialRecord(ctx context.Context, site string, d *Spatia
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

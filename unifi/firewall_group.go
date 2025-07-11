@@ -14,10 +14,18 @@ func (c *Client) DeleteFirewallGroup(ctx context.Context, site, id string) error
 	return c.deleteFirewallGroup(ctx, site, id)
 }
 
-func (c *Client) CreateFirewallGroup(ctx context.Context, site string, d *FirewallGroup) (*FirewallGroup, error) {
+func (c *Client) CreateFirewallGroup(
+	ctx context.Context,
+	site string,
+	d *FirewallGroup,
+) (*FirewallGroup, error) {
 	return c.createFirewallGroup(ctx, site, d)
 }
 
-func (c *Client) UpdateFirewallGroup(ctx context.Context, site string, d *FirewallGroup) (*FirewallGroup, error) {
+func (c *Client) UpdateFirewallGroup(
+	ctx context.Context,
+	site string,
+	d *FirewallGroup,
+) (*FirewallGroup, error) {
 	return c.updateFirewallGroup(ctx, site, d)
 }

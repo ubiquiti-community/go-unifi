@@ -11,6 +11,10 @@ func (c *Client) GetSettingGlobalNat(ctx context.Context, site string) (*Setting
 	return c.getSettingGlobalNat(ctx, site)
 }
 
-func (c *Client) UpdateSettingGlobalNat(ctx context.Context, site string, d *SettingGlobalNat) (*SettingGlobalNat, error) {
+func (c *Client) UpdateSettingGlobalNat(
+	ctx context.Context,
+	site string,
+	d *SettingGlobalNat,
+) (*SettingGlobalNat, error) {
 	return c.updateSettingGlobalNat(ctx, site, d)
 }

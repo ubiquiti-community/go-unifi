@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -17,11 +17,11 @@ var (
 )
 
 type SettingProviderCapabilities struct {
-	ID     string `json:"_id,omitempty"`
-	SiteID string `json:"site_id,omitempty"`
+	Id     string `json:"_id,omitempty"`
+	SiteId string `json:"site_id,omitempty"`
 
 	Hidden   bool   `json:"attr_hidden,omitempty"`
-	HiddenID string `json:"attr_hidden_id,omitempty"`
+	HiddenId string `json:"attr_hidden_id,omitempty"`
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
@@ -53,13 +53,22 @@ func (dst *SettingProviderCapabilities) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingProviderCapabilities(ctx context.Context, site string) (*SettingProviderCapabilities, error) {
+func (c *Client) getSettingProviderCapabilities(
+	ctx context.Context,
+	site string,
+) (*SettingProviderCapabilities, error) {
 	var respBody struct {
 		Meta meta                          `json:"meta"`
 		Data []SettingProviderCapabilities `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/provider_capabilities", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("s/%s/get/setting/provider_capabilities", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -72,14 +81,24 @@ func (c *Client) getSettingProviderCapabilities(ctx context.Context, site string
 	return &d, nil
 }
 
-func (c *Client) updateSettingProviderCapabilities(ctx context.Context, site string, d *SettingProviderCapabilities) (*SettingProviderCapabilities, error) {
+func (c *Client) updateSettingProviderCapabilities(
+	ctx context.Context,
+	site string,
+	d *SettingProviderCapabilities,
+) (*SettingProviderCapabilities, error) {
 	var respBody struct {
 		Meta meta                          `json:"meta"`
 		Data []SettingProviderCapabilities `json:"data"`
 	}
 
 	d.Key = "provider_capabilities"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/provider_capabilities", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("s/%s/set/setting/provider_capabilities", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

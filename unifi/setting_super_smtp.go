@@ -11,6 +11,10 @@ func (c *Client) GetSettingSuperSmtp(ctx context.Context, site string) (*Setting
 	return c.getSettingSuperSmtp(ctx, site)
 }
 
-func (c *Client) UpdateSettingSuperSmtp(ctx context.Context, site string, d *SettingSuperSmtp) (*SettingSuperSmtp, error) {
+func (c *Client) UpdateSettingSuperSmtp(
+	ctx context.Context,
+	site string,
+	d *SettingSuperSmtp,
+) (*SettingSuperSmtp, error) {
 	return c.updateSettingSuperSmtp(ctx, site, d)
 }

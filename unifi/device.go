@@ -24,7 +24,7 @@ const (
 )
 
 type LastConnection struct {
-	Mac      string `json:"mac,omitempty"`
+	MAC      string `json:"mac,omitempty"`
 	LastSeen int    `json:"last_seen,omitempty"`
 }
 type PortTable struct {
@@ -33,13 +33,13 @@ type PortTable struct {
 	PortPoe        bool           `json:"port_poe,omitempty"`
 	PoeCaps        int            `json:"poe_caps,omitempty"`
 	SpeedCaps      int            `json:"speed_caps,omitempty"`
-	LastConnection LastConnection `json:"last_connection,omitempty"`
+	LastConnection LastConnection `json:"last_connection"`
 	OpMode         string         `json:"op_mode,omitempty"`
 	Forward        string         `json:"forward,omitempty"`
 	PoeMode        string         `json:"poe_mode,omitempty"`
 	FullDuplex     bool           `json:"full_duplex,omitempty"`
 	IsUplink       bool           `json:"is_uplink,omitempty"`
-	MacTableCount  int            `json:"mac_table_count,omitempty"`
+	MACTableCount  int            `json:"mac_table_count,omitempty"`
 	PoeClass       string         `json:"poe_class,omitempty"`
 	PoeCurrent     string         `json:"poe_current,omitempty"`
 	PoeEnable      bool           `json:"poe_enable,omitempty"`
@@ -96,7 +96,7 @@ func (c *Client) AdoptDevice(ctx context.Context, site, mac string) error {
 		Meta meta `json:"meta"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/cmd/devmgr", site), reqBody, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/cmd/devmgr", site), reqBody, &respBody)
 	if err != nil {
 		return err
 	}
@@ -118,7 +118,7 @@ func (c *Client) ForgetDevice(ctx context.Context, site, mac string) error {
 		Data []Device `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/cmd/sitemgr", site), reqBody, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/cmd/sitemgr", site), reqBody, &respBody)
 	if err != nil {
 		return err
 	}

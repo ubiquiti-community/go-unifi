@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -64,7 +64,7 @@ type Hotspot2Conf struct {
 	NetworkAuthUrl          string                              `json:"network_auth_url,omitempty"`
 	NetworkType             int                                 `json:"network_type,omitempty"` // 0|1|2|3|4|5|14|15
 	Osu                     []Hotspot2ConfOsu                   `json:"osu,omitempty"`
-	OsuSSID                 string                              `json:"osu_ssid"`
+	OsuSSID                 string                              `json:"osu_ssid,omitempty"`
 	QOSMapDcsp              []Hotspot2ConfQOSMapDcsp            `json:"qos_map_dcsp,omitempty"`
 	QOSMapExceptions        []Hotspot2ConfQOSMapExceptions      `json:"qos_map_exceptions,omitempty"`
 	QOSMapStatus            bool                                `json:"qos_map_status"`
@@ -433,11 +433,10 @@ func (c *Client) listHotspot2Conf(ctx context.Context, site string) ([]Hotspot2C
 		Data []Hotspot2Conf `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/hotspot2conf", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/hotspot2conf", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -446,8 +445,7 @@ func (c *Client) getHotspot2Conf(ctx context.Context, site, id string) (*Hotspot
 		Meta meta           `json:"meta"`
 		Data []Hotspot2Conf `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/hotspot2conf/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/hotspot2conf/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -461,7 +459,7 @@ func (c *Client) getHotspot2Conf(ctx context.Context, site, id string) (*Hotspot
 }
 
 func (c *Client) deleteHotspot2Conf(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/hotspot2conf/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/hotspot2conf/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -474,7 +472,7 @@ func (c *Client) createHotspot2Conf(ctx context.Context, site string, d *Hotspot
 		Data []Hotspot2Conf `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/hotspot2conf", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/hotspot2conf", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -483,9 +481,9 @@ func (c *Client) createHotspot2Conf(ctx context.Context, site string, d *Hotspot
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateHotspot2Conf(ctx context.Context, site string, d *Hotspot2Conf) (*Hotspot2Conf, error) {
@@ -494,7 +492,7 @@ func (c *Client) updateHotspot2Conf(ctx context.Context, site string, d *Hotspot
 		Data []Hotspot2Conf `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/hotspot2conf/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/hotspot2conf/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -503,7 +501,7 @@ func (c *Client) updateHotspot2Conf(ctx context.Context, site string, d *Hotspot
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

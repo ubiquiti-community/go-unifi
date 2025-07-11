@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -28,7 +28,7 @@ type SettingSuperCloudaccess struct {
 	Key string `json:"key"`
 
 	DeviceAuth      string `json:"device_auth,omitempty"`
-	DeviceID        string `json:"device_id"`
+	DeviceID        string `json:"device_id,omitempty"`
 	Enabled         bool   `json:"enabled"`
 	UbicUuid        string `json:"ubic_uuid,omitempty"`
 	XCertificateArn string `json:"x_certificate_arn,omitempty"`
@@ -57,8 +57,7 @@ func (c *Client) getSettingSuperCloudaccess(ctx context.Context, site string) (*
 		Meta meta                      `json:"meta"`
 		Data []SettingSuperCloudaccess `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/super_cloudaccess", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_cloudaccess", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +77,7 @@ func (c *Client) updateSettingSuperCloudaccess(ctx context.Context, site string,
 	}
 
 	d.Key = "super_cloudaccess"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/super_cloudaccess", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_cloudaccess", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +86,7 @@ func (c *Client) updateSettingSuperCloudaccess(ctx context.Context, site string,
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

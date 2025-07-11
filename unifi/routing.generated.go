@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -30,7 +30,7 @@ type Routing struct {
 	GatewayType          string `json:"gateway_type,omitempty"`          // default|switch
 	Name                 string `json:"name,omitempty"`                  // .{1,128}
 	StaticRouteDistance  int    `json:"static-route_distance,omitempty"` // ^[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]$|^$
-	StaticRouteInterface string `json:"static-route_interface"`          // WAN1|WAN2|[\d\w]+|^$
+	StaticRouteInterface string `json:"static-route_interface"`          // WAN[1-8]?|[\d\w]+|^$
 	StaticRouteNetwork   string `json:"static-route_network,omitempty"`  // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$|^([a-fA-F0-9:]+\/(([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|12[0-8])))$
 	StaticRouteNexthop   string `json:"static-route_nexthop"`            // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^([a-fA-F0-9:]+)$|^$
 	StaticRouteType      string `json:"static-route_type,omitempty"`     // nexthop-route|interface-route|blackhole
@@ -62,11 +62,10 @@ func (c *Client) listRouting(ctx context.Context, site string) ([]Routing, error
 		Data []Routing `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/routing", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/routing", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -75,8 +74,7 @@ func (c *Client) getRouting(ctx context.Context, site, id string) (*Routing, err
 		Meta meta      `json:"meta"`
 		Data []Routing `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/routing/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/routing/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +88,7 @@ func (c *Client) getRouting(ctx context.Context, site, id string) (*Routing, err
 }
 
 func (c *Client) deleteRouting(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/routing/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/routing/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -103,7 +101,7 @@ func (c *Client) createRouting(ctx context.Context, site string, d *Routing) (*R
 		Data []Routing `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/routing", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/routing", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -112,9 +110,9 @@ func (c *Client) createRouting(ctx context.Context, site string, d *Routing) (*R
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateRouting(ctx context.Context, site string, d *Routing) (*Routing, error) {
@@ -123,7 +121,7 @@ func (c *Client) updateRouting(ctx context.Context, site string, d *Routing) (*R
 		Data []Routing `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/routing/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/routing/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +130,7 @@ func (c *Client) updateRouting(ctx context.Context, site string, d *Routing) (*R
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

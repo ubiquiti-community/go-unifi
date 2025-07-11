@@ -79,10 +79,11 @@ type booleanishString bool
 
 func (e *booleanishString) UnmarshalJSON(b []byte) error {
 	s := string(b)
-	if s == `"enabled"` {
+	switch s {
+	case `"enabled"`:
 		*e = booleanishString(true)
 		return nil
-	} else if s == `"disabled"` {
+	case `"disabled"`:
 		*e = booleanishString(false)
 		return nil
 	}

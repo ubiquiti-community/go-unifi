@@ -17,18 +17,18 @@ type APGroup struct {
 	ID string `json:"_id,omitempty"`
 
 	Hidden   bool   `json:"attr_hidden,omitempty"`
-	HiddenID string `json:"attr_hidden_id,omitempty"`
+	HiddenId string `json:"attr_hidden_id,omitempty"`
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
 	Name       string   `json:"name"`
-	DeviceMACs []string `json:"device_macs"`
+	DeviceMacs []string `json:"device_macs"`
 }
 
 func (c *Client) ListAPGroup(ctx context.Context, site string) ([]APGroup, error) {
 	var respBody []APGroup
 
-	err := c.do(ctx, "GET", fmt.Sprintf("%s/site/%s/apgroups", c.apiV2Path, site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("v2/api/site/%s/apgroups", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (c *Client) ListAPGroup(ctx context.Context, site string) ([]APGroup, error
 // 		Data []WLANGroup `json:"data"`
 // 	}
 
-// 	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/wlangroup/%s", site, id), nil, &respBody)
+// 	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/wlangroup/%s", site, id), nil, &respBody)
 // 	if err != nil {
 // 		return nil, err
 // 	}
@@ -56,7 +56,7 @@ func (c *Client) ListAPGroup(ctx context.Context, site string) ([]APGroup, error
 // }
 
 // func (c *Client) deleteWLANGroup(ctx context.Context, site, id string) error {
-// 	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/wlangroup/%s", site, id), struct{}{}, nil)
+// 	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/wlangroup/%s", site, id), struct{}{}, nil)
 // 	if err != nil {
 // 		return err
 // 	}
@@ -66,7 +66,7 @@ func (c *Client) ListAPGroup(ctx context.Context, site string) ([]APGroup, error
 func (c *Client) CreateAPGroup(ctx context.Context, site string, d *APGroup) (*APGroup, error) {
 	var respBody APGroup
 
-	err := c.do(ctx, "POST", fmt.Sprintf("%s/site/%s/apgroups", c.apiV2Path, site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/apgroups", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (c *Client) CreateAPGroup(ctx context.Context, site string, d *APGroup) (*A
 // 		Data []WLANGroup `json:"data"`
 // 	}
 
-// 	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/wlangroup/%s", site, d.ID), d, &respBody)
+// 	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/wlangroup/%s", site, d.Id), d, &respBody)
 // 	if err != nil {
 // 		return nil, err
 // 	}

@@ -11,6 +11,10 @@ func (c *Client) GetSettingLcm(ctx context.Context, site string) (*SettingLcm, e
 	return c.getSettingLcm(ctx, site)
 }
 
-func (c *Client) UpdateSettingLcm(ctx context.Context, site string, d *SettingLcm) (*SettingLcm, error) {
+func (c *Client) UpdateSettingLcm(
+	ctx context.Context,
+	site string,
+	d *SettingLcm,
+) (*SettingLcm, error) {
 	return c.updateSettingLcm(ctx, site, d)
 }

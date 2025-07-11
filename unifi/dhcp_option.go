@@ -19,10 +19,18 @@ func (c *Client) DeleteDHCPOption(ctx context.Context, site, id string) error {
 	return c.deleteDHCPOption(ctx, site, id)
 }
 
-func (c *Client) CreateDHCPOption(ctx context.Context, site string, d *DHCPOption) (*DHCPOption, error) {
+func (c *Client) CreateDHCPOption(
+	ctx context.Context,
+	site string,
+	d *DHCPOption,
+) (*DHCPOption, error) {
 	return c.createDHCPOption(ctx, site, d)
 }
 
-func (c *Client) UpdateDHCPOption(ctx context.Context, site string, d *DHCPOption) (*DHCPOption, error) {
+func (c *Client) UpdateDHCPOption(
+	ctx context.Context,
+	site string,
+	d *DHCPOption,
+) (*DHCPOption, error) {
 	return c.updateDHCPOption(ctx, site, d)
 }

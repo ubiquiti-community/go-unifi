@@ -11,6 +11,10 @@ func (c *Client) GetSettingIps(ctx context.Context, site string) (*SettingIps, e
 	return c.getSettingIps(ctx, site)
 }
 
-func (c *Client) UpdateSettingIps(ctx context.Context, site string, d *SettingIps) (*SettingIps, error) {
+func (c *Client) UpdateSettingIps(
+	ctx context.Context,
+	site string,
+	d *SettingIps,
+) (*SettingIps, error) {
 	return c.updateSettingIps(ctx, site, d)
 }

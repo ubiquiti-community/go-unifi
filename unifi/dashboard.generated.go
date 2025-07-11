@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -50,8 +50,8 @@ func (dst *Dashboard) UnmarshalJSON(b []byte) error {
 
 type DashboardModules struct {
 	Config       string `json:"config,omitempty"`
-	ID           string `json:"id"`
-	ModuleID     string `json:"module_id"`
+	ID           string `json:"id,omitempty"`
+	ModuleID     string `json:"module_id,omitempty"`
 	Restrictions string `json:"restrictions,omitempty"`
 }
 
@@ -77,11 +77,10 @@ func (c *Client) listDashboard(ctx context.Context, site string) ([]Dashboard, e
 		Data []Dashboard `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dashboard", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dashboard", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -90,8 +89,7 @@ func (c *Client) getDashboard(ctx context.Context, site, id string) (*Dashboard,
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dashboard/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +103,7 @@ func (c *Client) getDashboard(ctx context.Context, site, id string) (*Dashboard,
 }
 
 func (c *Client) deleteDashboard(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/dashboard/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -118,7 +116,7 @@ func (c *Client) createDashboard(ctx context.Context, site string, d *Dashboard)
 		Data []Dashboard `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/dashboard", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/dashboard", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -127,9 +125,9 @@ func (c *Client) createDashboard(ctx context.Context, site string, d *Dashboard)
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateDashboard(ctx context.Context, site string, d *Dashboard) (*Dashboard, error) {
@@ -138,7 +136,7 @@ func (c *Client) updateDashboard(ctx context.Context, site string, d *Dashboard)
 		Data []Dashboard `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/dashboard/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +145,7 @@ func (c *Client) updateDashboard(ctx context.Context, site string, d *Dashboard)
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

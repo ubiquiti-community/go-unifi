@@ -11,7 +11,7 @@ func (dst *Network) MarshalJSON() ([]byte, error) {
 	aux := &struct {
 		*Alias
 
-		WANEgressQOS *emptyStringInt `json:"wan_egress_qos,omitempty"`
+		WanEgressQos *emptyStringInt `json:"wan_egress_qos,omitempty"`
 	}{
 		Alias: (*Alias)(dst),
 	}
@@ -19,7 +19,7 @@ func (dst *Network) MarshalJSON() ([]byte, error) {
 	if dst.Purpose == "wan" {
 		// only send QOS when this is a WAN network
 		v := emptyStringInt(dst.WANEgressQOS)
-		aux.WANEgressQOS = &v
+		aux.WanEgressQos = &v
 	}
 
 	b, err := json.Marshal(aux)
@@ -27,7 +27,7 @@ func (dst *Network) MarshalJSON() ([]byte, error) {
 }
 
 func (c *Client) DeleteNetwork(ctx context.Context, site, id, name string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/networkconf/%s", site, id), struct {
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id), struct {
 		Name string `json:"name"`
 	}{
 		Name: name,

@@ -1,3 +1,6 @@
+// Code generated from ace.jar fields *.json files
+// DO NOT EDIT.
+
 package unifi
 
 import (
@@ -16,10 +19,18 @@ func (c *Client) DeleteRADIUSProfile(ctx context.Context, site, id string) error
 	return c.deleteRADIUSProfile(ctx, site, id)
 }
 
-func (c *Client) CreateRADIUSProfile(ctx context.Context, site string, d *RADIUSProfile) (*RADIUSProfile, error) {
+func (c *Client) CreateRADIUSProfile(
+	ctx context.Context,
+	site string,
+	d *RADIUSProfile,
+) (*RADIUSProfile, error) {
 	return c.createRADIUSProfile(ctx, site, d)
 }
 
-func (c *Client) UpdateRADIUSProfile(ctx context.Context, site string, d *RADIUSProfile) (*RADIUSProfile, error) {
+func (c *Client) UpdateRADIUSProfile(
+	ctx context.Context,
+	site string,
+	d *RADIUSProfile,
+) (*RADIUSProfile, error) {
 	return c.updateRADIUSProfile(ctx, site, d)
 }

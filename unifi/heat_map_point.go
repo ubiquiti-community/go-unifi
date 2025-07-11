@@ -19,10 +19,18 @@ func (c *Client) DeleteHeatMapPoint(ctx context.Context, site, id string) error 
 	return c.deleteHeatMapPoint(ctx, site, id)
 }
 
-func (c *Client) CreateHeatMapPoint(ctx context.Context, site string, d *HeatMapPoint) (*HeatMapPoint, error) {
+func (c *Client) CreateHeatMapPoint(
+	ctx context.Context,
+	site string,
+	d *HeatMapPoint,
+) (*HeatMapPoint, error) {
 	return c.createHeatMapPoint(ctx, site, d)
 }
 
-func (c *Client) UpdateHeatMapPoint(ctx context.Context, site string, d *HeatMapPoint) (*HeatMapPoint, error) {
+func (c *Client) UpdateHeatMapPoint(
+	ctx context.Context,
+	site string,
+	d *HeatMapPoint,
+) (*HeatMapPoint, error) {
 	return c.updateHeatMapPoint(ctx, site, d)
 }

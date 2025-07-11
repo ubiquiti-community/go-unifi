@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -27,7 +27,7 @@ type VirtualDevice struct {
 
 	HeightInMeters float64 `json:"heightInMeters,omitempty"`
 	Locked         bool    `json:"locked"`
-	MapID          string  `json:"map_id"`
+	MapID          string  `json:"map_id,omitempty"`
 	Type           string  `json:"type,omitempty"` // uap|usg|usw
 	X              string  `json:"x,omitempty"`
 	Y              string  `json:"y,omitempty"`
@@ -55,11 +55,10 @@ func (c *Client) listVirtualDevice(ctx context.Context, site string) ([]VirtualD
 		Data []VirtualDevice `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/virtualdevice", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/virtualdevice", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -68,8 +67,7 @@ func (c *Client) getVirtualDevice(ctx context.Context, site, id string) (*Virtua
 		Meta meta            `json:"meta"`
 		Data []VirtualDevice `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/virtualdevice/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/virtualdevice/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +81,7 @@ func (c *Client) getVirtualDevice(ctx context.Context, site, id string) (*Virtua
 }
 
 func (c *Client) deleteVirtualDevice(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/virtualdevice/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/virtualdevice/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -96,7 +94,7 @@ func (c *Client) createVirtualDevice(ctx context.Context, site string, d *Virtua
 		Data []VirtualDevice `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/virtualdevice", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/virtualdevice", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -105,9 +103,9 @@ func (c *Client) createVirtualDevice(ctx context.Context, site string, d *Virtua
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateVirtualDevice(ctx context.Context, site string, d *VirtualDevice) (*VirtualDevice, error) {
@@ -116,7 +114,7 @@ func (c *Client) updateVirtualDevice(ctx context.Context, site string, d *Virtua
 		Data []VirtualDevice `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/virtualdevice/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/virtualdevice/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +123,7 @@ func (c *Client) updateVirtualDevice(ctx context.Context, site string, d *Virtua
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

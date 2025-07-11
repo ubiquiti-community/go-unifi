@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -72,11 +72,10 @@ func (c *Client) listDpiApp(ctx context.Context, site string) ([]DpiApp, error) 
 		Data []DpiApp `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dpiapp", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dpiapp", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -85,8 +84,7 @@ func (c *Client) getDpiApp(ctx context.Context, site, id string) (*DpiApp, error
 		Meta meta     `json:"meta"`
 		Data []DpiApp `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dpiapp/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dpiapp/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +98,7 @@ func (c *Client) getDpiApp(ctx context.Context, site, id string) (*DpiApp, error
 }
 
 func (c *Client) deleteDpiApp(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/dpiapp/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/dpiapp/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -113,7 +111,7 @@ func (c *Client) createDpiApp(ctx context.Context, site string, d *DpiApp) (*Dpi
 		Data []DpiApp `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/dpiapp", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/dpiapp", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -122,9 +120,9 @@ func (c *Client) createDpiApp(ctx context.Context, site string, d *DpiApp) (*Dpi
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateDpiApp(ctx context.Context, site string, d *DpiApp) (*DpiApp, error) {
@@ -133,7 +131,7 @@ func (c *Client) updateDpiApp(ctx context.Context, site string, d *DpiApp) (*Dpi
 		Data []DpiApp `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/dpiapp/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/dpiapp/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +140,7 @@ func (c *Client) updateDpiApp(ctx context.Context, site string, d *DpiApp) (*Dpi
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

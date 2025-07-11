@@ -19,10 +19,18 @@ func (c *Client) DeleteDashboard(ctx context.Context, site, id string) error {
 	return c.deleteDashboard(ctx, site, id)
 }
 
-func (c *Client) CreateDashboard(ctx context.Context, site string, d *Dashboard) (*Dashboard, error) {
+func (c *Client) CreateDashboard(
+	ctx context.Context,
+	site string,
+	d *Dashboard,
+) (*Dashboard, error) {
 	return c.createDashboard(ctx, site, d)
 }
 
-func (c *Client) UpdateDashboard(ctx context.Context, site string, d *Dashboard) (*Dashboard, error) {
+func (c *Client) UpdateDashboard(
+	ctx context.Context,
+	site string,
+	d *Dashboard,
+) (*Dashboard, error) {
 	return c.updateDashboard(ctx, site, d)
 }

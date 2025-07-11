@@ -19,10 +19,18 @@ func (c *Client) DeleteBroadcastGroup(ctx context.Context, site, id string) erro
 	return c.deleteBroadcastGroup(ctx, site, id)
 }
 
-func (c *Client) CreateBroadcastGroup(ctx context.Context, site string, d *BroadcastGroup) (*BroadcastGroup, error) {
+func (c *Client) CreateBroadcastGroup(
+	ctx context.Context,
+	site string,
+	d *BroadcastGroup,
+) (*BroadcastGroup, error) {
 	return c.createBroadcastGroup(ctx, site, d)
 }
 
-func (c *Client) UpdateBroadcastGroup(ctx context.Context, site string, d *BroadcastGroup) (*BroadcastGroup, error) {
+func (c *Client) UpdateBroadcastGroup(
+	ctx context.Context,
+	site string,
+	d *BroadcastGroup,
+) (*BroadcastGroup, error) {
 	return c.updateBroadcastGroup(ctx, site, d)
 }

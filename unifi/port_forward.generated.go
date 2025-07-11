@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -33,10 +33,10 @@ type PortForward struct {
 	FwdPort            string                      `json:"fwd_port,omitempty"` // (([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])|([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])-([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]))+(,([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])|,([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])-([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])){0,14}
 	Log                bool                        `json:"log"`
 	Name               string                      `json:"name,omitempty"`           // .{1,128}
-	PfwdInterface      string                      `json:"pfwd_interface,omitempty"` // wan|wan2|both|all
+	PfwdInterface      string                      `json:"pfwd_interface,omitempty"` // wan[2-8]?|both|all
 	Proto              string                      `json:"proto,omitempty"`          // tcp_udp|tcp|udp
 	Src                string                      `json:"src,omitempty"`            // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])-(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([0-9]|[1-2][0-9]|3[0-2])$|^!(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^!(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])-(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^!(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([0-9]|[1-2][0-9]|3[0-2])$|^any$
-	SrcFirewallGroupID string                      `json:"src_firewall_group_id"`
+	SrcFirewallGroupID string                      `json:"src_firewall_group_id,omitempty"`
 	SrcLimitingEnabled bool                        `json:"src_limiting_enabled"`
 	SrcLimitingType    string                      `json:"src_limiting_type,omitempty"` // ip|firewall_group
 }
@@ -59,7 +59,7 @@ func (dst *PortForward) UnmarshalJSON(b []byte) error {
 
 type PortForwardDestinationIPs struct {
 	DestinationIP string `json:"destination_ip,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^any$
-	Interface     string `json:"interface,omitempty"`      // wan|wan2
+	Interface     string `json:"interface,omitempty"`      // wan[2-8]?
 }
 
 func (dst *PortForwardDestinationIPs) UnmarshalJSON(b []byte) error {
@@ -84,11 +84,10 @@ func (c *Client) listPortForward(ctx context.Context, site string) ([]PortForwar
 		Data []PortForward `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/portforward", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/portforward", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -97,8 +96,7 @@ func (c *Client) getPortForward(ctx context.Context, site, id string) (*PortForw
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/portforward/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/portforward/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +110,7 @@ func (c *Client) getPortForward(ctx context.Context, site, id string) (*PortForw
 }
 
 func (c *Client) deletePortForward(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/portforward/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/portforward/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -125,7 +123,7 @@ func (c *Client) createPortForward(ctx context.Context, site string, d *PortForw
 		Data []PortForward `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/portforward", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/portforward", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -134,9 +132,9 @@ func (c *Client) createPortForward(ctx context.Context, site string, d *PortForw
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updatePortForward(ctx context.Context, site string, d *PortForward) (*PortForward, error) {
@@ -145,7 +143,7 @@ func (c *Client) updatePortForward(ctx context.Context, site string, d *PortForw
 		Data []PortForward `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/portforward/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/portforward/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +152,7 @@ func (c *Client) updatePortForward(ctx context.Context, site string, d *PortForw
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

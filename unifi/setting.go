@@ -7,8 +7,8 @@ import (
 )
 
 type Setting struct {
-	ID     string `json:"_id,omitempty"`
-	SiteID string `json:"site_id,omitempty"`
+	Id     string `json:"_id,omitempty"`
+	SiteId string `json:"site_id,omitempty"`
 	Key    string `json:"key"`
 }
 

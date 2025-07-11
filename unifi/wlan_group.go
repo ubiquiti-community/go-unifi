@@ -1,3 +1,6 @@
+// Code generated from ace.jar fields *.json files
+// DO NOT EDIT.
+
 package unifi
 
 import (
@@ -16,10 +19,18 @@ func (c *Client) DeleteWLANGroup(ctx context.Context, site, id string) error {
 	return c.deleteWLANGroup(ctx, site, id)
 }
 
-func (c *Client) CreateWLANGroup(ctx context.Context, site string, d *WLANGroup) (*WLANGroup, error) {
+func (c *Client) CreateWLANGroup(
+	ctx context.Context,
+	site string,
+	d *WLANGroup,
+) (*WLANGroup, error) {
 	return c.createWLANGroup(ctx, site, d)
 }
 
-func (c *Client) UpdateWLANGroup(ctx context.Context, site string, d *WLANGroup) (*WLANGroup, error) {
+func (c *Client) UpdateWLANGroup(
+	ctx context.Context,
+	site string,
+	d *WLANGroup,
+) (*WLANGroup, error) {
 	return c.updateWLANGroup(ctx, site, d)
 }

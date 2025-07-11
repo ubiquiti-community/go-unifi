@@ -11,6 +11,10 @@ func (c *Client) GetSettingDashboard(ctx context.Context, site string) (*Setting
 	return c.getSettingDashboard(ctx, site)
 }
 
-func (c *Client) UpdateSettingDashboard(ctx context.Context, site string, d *SettingDashboard) (*SettingDashboard, error) {
+func (c *Client) UpdateSettingDashboard(
+	ctx context.Context,
+	site string,
+	d *SettingDashboard,
+) (*SettingDashboard, error) {
 	return c.updateSettingDashboard(ctx, site, d)
 }

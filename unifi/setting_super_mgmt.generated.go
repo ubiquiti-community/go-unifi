@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -36,10 +36,7 @@ type SettingSuperMgmt struct {
 	AutobackupGcsCertificatePath             string   `json:"autobackup_gcs_certificate_path,omitempty"`
 	AutobackupLocalPath                      string   `json:"autobackup_local_path,omitempty"`
 	AutobackupMaxFiles                       int      `json:"autobackup_max_files,omitempty"`
-	AutobackupPostActions                    []string `json:"autobackup_post_actions,omitempty"` // copy_local|copy_s3|copy_gcs|copy_cloud
-	AutobackupS3AccessKey                    string   `json:"autobackup_s3_access_key,omitempty"`
-	AutobackupS3AccessSecret                 string   `json:"autobackup_s3_access_secret,omitempty"`
-	AutobackupS3Bucket                       string   `json:"autobackup_s3_bucket,omitempty"`
+	AutobackupPostActions                    []string `json:"autobackup_post_actions,omitempty"` // copy_local|copy_gcs|copy_cloud
 	AutobackupTimezone                       string   `json:"autobackup_timezone,omitempty"`
 	BackupToCloudEnabled                     bool     `json:"backup_to_cloud_enabled"`
 	ContactInfoCity                          string   `json:"contact_info_city,omitempty"`
@@ -116,8 +113,7 @@ func (c *Client) getSettingSuperMgmt(ctx context.Context, site string) (*Setting
 		Meta meta               `json:"meta"`
 		Data []SettingSuperMgmt `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/super_mgmt", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_mgmt", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +133,7 @@ func (c *Client) updateSettingSuperMgmt(ctx context.Context, site string, d *Set
 	}
 
 	d.Key = "super_mgmt"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/super_mgmt", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_mgmt", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +142,7 @@ func (c *Client) updateSettingSuperMgmt(ctx context.Context, site string, d *Set
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

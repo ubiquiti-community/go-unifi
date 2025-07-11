@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -51,8 +51,7 @@ func (c *Client) getSettingMagicSiteToSiteVpn(ctx context.Context, site string) 
 		Meta meta                        `json:"meta"`
 		Data []SettingMagicSiteToSiteVpn `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/magic_site_to_site_vpn", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/magic_site_to_site_vpn", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +71,7 @@ func (c *Client) updateSettingMagicSiteToSiteVpn(ctx context.Context, site strin
 	}
 
 	d.Key = "magic_site_to_site_vpn"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/magic_site_to_site_vpn", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/magic_site_to_site_vpn", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +80,7 @@ func (c *Client) updateSettingMagicSiteToSiteVpn(ctx context.Context, site strin
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

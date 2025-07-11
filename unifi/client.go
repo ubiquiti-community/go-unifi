@@ -12,13 +12,13 @@ var (
 )
 
 type Fingerprint struct {
-	ComputedDevID  int  `json:"computed_dev_id,omitempty"`
+	ComputedDevId  int  `json:"computed_dev_id,omitempty"`
 	ComputedEngine int  `json:"computed_engine,omitempty"`
 	Confidence     int  `json:"confidence,omitempty"`
 	DevCat         int  `json:"dev_cat,omitempty"`
 	DevFamily      int  `json:"dev_family,omitempty"`
-	DevID          int  `json:"dev_id,omitempty"`
-	DevIDOverride  int  `json:"dev_id_override,omitempty"`
+	DevId          int  `json:"dev_id,omitempty"`
+	DevIdOverride  int  `json:"dev_id_override,omitempty"`
 	DevVendor      int  `json:"dev_vendor,omitempty"`
 	HasOverride    bool `json:"has_override,omitempty"`
 	OsName         int  `json:"os_name,omitempty"`
@@ -54,7 +54,7 @@ type ClientInfo struct {
 	FixedIP                             string          `json:"fixed_ip,omitempty"`
 	GwMac                               string          `json:"gw_mac,omitempty"`
 	Hostname                            string          `json:"hostname,omitempty"`
-	ID                                  string          `json:"id,omitempty"`
+	Id                                  string          `json:"id,omitempty"`
 	Idletime                            int             `json:"idletime,omitempty"`
 	IP                                  string          `json:"ip,omitempty"`
 	Ipv4LeaseExpirationTimestampSeconds int             `json:"ipv4_lease_expiration_timestamp_seconds,omitempty"`
@@ -63,7 +63,7 @@ type ClientInfo struct {
 	IsGuest                             bool            `json:"is_guest,omitempty"`
 	IsMlo                               bool            `json:"is_mlo,omitempty"`
 	IsWired                             bool            `json:"is_wired,omitempty"`
-	LastConnectionNetworkID             string          `json:"last_connection_network_id,omitempty"`
+	LastConnectionNetworkId             string          `json:"last_connection_network_id,omitempty"`
 	LastConnectionNetworkName           string          `json:"last_connection_network_name,omitempty"`
 	LastIP                              string          `json:"last_ip,omitempty"`
 	LastIpv6                            []string        `json:"last_ipv6,omitempty"`
@@ -78,7 +78,7 @@ type ClientInfo struct {
 	Mimo                                string          `json:"mimo,omitempty"`
 	ModelName                           string          `json:"model_name,omitempty"`
 	Name                                string          `json:"name,omitempty"`
-	NetworkID                           string          `json:"network_id,omitempty"`
+	NetworkId                           string          `json:"network_id,omitempty"`
 	NetworkName                         string          `json:"network_name,omitempty"`
 	Noise                               int             `json:"noise,omitempty"`
 	Noted                               bool            `json:"noted,omitempty"`
@@ -94,7 +94,7 @@ type ClientInfo struct {
 	RxPackets                           int             `json:"rx_packets,omitempty"`
 	RxRate                              int             `json:"rx_rate,omitempty"`
 	Signal                              int             `json:"signal,omitempty"`
-	SiteID                              string          `json:"site_id,omitempty"`
+	SiteId                              string          `json:"site_id,omitempty"`
 	Status                              string          `json:"status,omitempty"`
 	SwPort                              int             `json:"sw_port,omitempty"`
 	Tags                                []string        `json:"tags,omitempty"`
@@ -109,16 +109,16 @@ type ClientInfo struct {
 	UplinkMac                           string          `json:"uplink_mac,omitempty"`
 	Uptime                              int             `json:"uptime,omitempty"`
 	UseFixedip                          bool            `json:"use_fixedip,omitempty"`
-	UsergroupID                         string          `json:"usergroup_id,omitempty"`
-	UserID                              string          `json:"user_id,omitempty"`
+	UsergroupId                         string          `json:"usergroup_id,omitempty"`
+	UserId                              string          `json:"user_id,omitempty"`
 	VirtualNetworkOverrideEnabled       bool            `json:"virtual_network_override_enabled,omitempty"`
-	VirtualNetworkOverrideID            string          `json:"virtual_network_override_id,omitempty"`
+	VirtualNetworkOverrideId            string          `json:"virtual_network_override_id,omitempty"`
 	WifiExperienceAverage               int             `json:"wifi_experience_average,omitempty"`
 	WifiExperienceScore                 int             `json:"wifi_experience_score,omitempty"`
 	WifiTxAttempts                      int             `json:"wifi_tx_attempts,omitempty"`
 	WifiTxRetriesPercentage             float64         `json:"wifi_tx_retries_percentage,omitempty"`
 	WiredRateMbps                       int             `json:"wired_rate_mbps,omitempty"`
-	WlanconfID                          string          `json:"wlanconf_id,omitempty"`
+	WlanconfId                          string          `json:"wlanconf_id,omitempty"`
 }
 
 type ClientList []ClientInfo
@@ -126,7 +126,13 @@ type ClientList []ClientInfo
 func (c *Client) ListClientsActive(ctx context.Context, site string) (ClientList, error) {
 	var respBody []ClientInfo
 
-	err := c.do(ctx, "GET", fmt.Sprintf("%s/site/%s/clients/active?includeUnifiDevices=true", c.apiV2Path, site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("v2/api/site/%s/clients/active?includeUnifiDevices=true", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +143,13 @@ func (c *Client) ListClientsActive(ctx context.Context, site string) (ClientList
 func (c *Client) GetClientLocal(ctx context.Context, site string, mac string) (*ClientInfo, error) {
 	var respBody ClientInfo
 
-	err := c.do(ctx, "GET", fmt.Sprintf("%s/site/%s/clients/local/%s?includeUnifiDevices=true&includeUnifiDevices=true", c.apiV2Path, site, mac), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("v2/api/site/%s/clients/local/%s?includeUnifiDevices=true", site, mac),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

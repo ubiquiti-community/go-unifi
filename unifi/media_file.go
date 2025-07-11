@@ -19,10 +19,18 @@ func (c *Client) DeleteMediaFile(ctx context.Context, site, id string) error {
 	return c.deleteMediaFile(ctx, site, id)
 }
 
-func (c *Client) CreateMediaFile(ctx context.Context, site string, d *MediaFile) (*MediaFile, error) {
+func (c *Client) CreateMediaFile(
+	ctx context.Context,
+	site string,
+	d *MediaFile,
+) (*MediaFile, error) {
 	return c.createMediaFile(ctx, site, d)
 }
 
-func (c *Client) UpdateMediaFile(ctx context.Context, site string, d *MediaFile) (*MediaFile, error) {
+func (c *Client) UpdateMediaFile(
+	ctx context.Context,
+	site string,
+	d *MediaFile,
+) (*MediaFile, error) {
 	return c.updateMediaFile(ctx, site, d)
 }

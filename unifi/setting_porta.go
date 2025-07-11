@@ -11,6 +11,10 @@ func (c *Client) GetSettingPorta(ctx context.Context, site string) (*SettingPort
 	return c.getSettingPorta(ctx, site)
 }
 
-func (c *Client) UpdateSettingPorta(ctx context.Context, site string, d *SettingPorta) (*SettingPorta, error) {
+func (c *Client) UpdateSettingPorta(
+	ctx context.Context,
+	site string,
+	d *SettingPorta,
+) (*SettingPorta, error) {
 	return c.updateSettingPorta(ctx, site, d)
 }

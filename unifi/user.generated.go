@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -38,12 +38,12 @@ type User struct {
 	LocalDNSRecordEnabled         bool   `json:"local_dns_record_enabled"`
 	MAC                           string `json:"mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	Name                          string `json:"name,omitempty"`
-	NetworkID                     string `json:"network_id"`
+	NetworkID                     string `json:"network_id,omitempty"`
 	Note                          string `json:"note,omitempty"`
 	UseFixedIP                    bool   `json:"use_fixedip"`
-	UserGroupID                   string `json:"usergroup_id"`
+	UserGroupID                   string `json:"usergroup_id,omitempty"`
 	VirtualNetworkOverrideEnabled bool   `json:"virtual_network_override_enabled"`
-	VirtualNetworkOverrideID      string `json:"virtual_network_override_id"`
+	VirtualNetworkOverrideID      string `json:"virtual_network_override_id,omitempty"`
 }
 
 func (dst *User) UnmarshalJSON(b []byte) error {
@@ -71,11 +71,10 @@ func (c *Client) listUser(ctx context.Context, site string) ([]User, error) {
 		Data []User `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/user", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/user", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -84,8 +83,7 @@ func (c *Client) getUser(ctx context.Context, site, id string) (*User, error) {
 		Meta meta   `json:"meta"`
 		Data []User `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/user/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/user/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +97,7 @@ func (c *Client) getUser(ctx context.Context, site, id string) (*User, error) {
 }
 
 func (c *Client) deleteUser(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/user/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/user/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -112,7 +110,7 @@ func (c *Client) createUser(ctx context.Context, site string, d *User) (*User, e
 		Data []User `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/user", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/user", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -121,9 +119,9 @@ func (c *Client) createUser(ctx context.Context, site string, d *User) (*User, e
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateUser(ctx context.Context, site string, d *User) (*User, error) {
@@ -132,7 +130,7 @@ func (c *Client) updateUser(ctx context.Context, site string, d *User) (*User, e
 		Data []User `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/user/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/user/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +139,7 @@ func (c *Client) updateUser(ctx context.Context, site string, d *User) (*User, e
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

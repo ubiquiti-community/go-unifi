@@ -72,7 +72,7 @@ func (c *Client) sysinfo(ctx context.Context, id string) (*sysInfo, error) {
 		Data []sysInfo `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/stat/sysinfo", id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/stat/sysinfo", id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}

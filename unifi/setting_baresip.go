@@ -11,6 +11,10 @@ func (c *Client) GetSettingBaresip(ctx context.Context, site string) (*SettingBa
 	return c.getSettingBaresip(ctx, site)
 }
 
-func (c *Client) UpdateSettingBaresip(ctx context.Context, site string, d *SettingBaresip) (*SettingBaresip, error) {
+func (c *Client) UpdateSettingBaresip(
+	ctx context.Context,
+	site string,
+	d *SettingBaresip,
+) (*SettingBaresip, error) {
 	return c.updateSettingBaresip(ctx, site, d)
 }

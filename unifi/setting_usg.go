@@ -1,3 +1,6 @@
+// Code generated from ace.jar fields *.json files
+// DO NOT EDIT.
+
 package unifi
 
 import (
@@ -8,6 +11,10 @@ func (c *Client) GetSettingUsg(ctx context.Context, site string) (*SettingUsg, e
 	return c.getSettingUsg(ctx, site)
 }
 
-func (c *Client) UpdateSettingUsg(ctx context.Context, site string, d *SettingUsg) (*SettingUsg, error) {
+func (c *Client) UpdateSettingUsg(
+	ctx context.Context,
+	site string,
+	d *SettingUsg,
+) (*SettingUsg, error) {
 	return c.updateSettingUsg(ctx, site, d)
 }

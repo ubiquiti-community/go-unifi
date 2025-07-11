@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -60,8 +60,7 @@ func (c *Client) getSettingLcm(ctx context.Context, site string) (*SettingLcm, e
 		Meta meta         `json:"meta"`
 		Data []SettingLcm `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/lcm", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/lcm", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +80,7 @@ func (c *Client) updateSettingLcm(ctx context.Context, site string, d *SettingLc
 	}
 
 	d.Key = "lcm"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/lcm", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/lcm", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +89,7 @@ func (c *Client) updateSettingLcm(ctx context.Context, site string, d *SettingLc
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

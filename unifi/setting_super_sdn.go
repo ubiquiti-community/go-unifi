@@ -11,6 +11,10 @@ func (c *Client) GetSettingSuperSdn(ctx context.Context, site string) (*SettingS
 	return c.getSettingSuperSdn(ctx, site)
 }
 
-func (c *Client) UpdateSettingSuperSdn(ctx context.Context, site string, d *SettingSuperSdn) (*SettingSuperSdn, error) {
+func (c *Client) UpdateSettingSuperSdn(
+	ctx context.Context,
+	site string,
+	d *SettingSuperSdn,
+) (*SettingSuperSdn, error) {
 	return c.updateSettingSuperSdn(ctx, site, d)
 }

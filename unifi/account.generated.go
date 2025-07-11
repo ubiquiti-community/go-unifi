@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -25,14 +25,16 @@ type Account struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	IP               string `json:"ip,omitempty"`   // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
-	Name             string `json:"name,omitempty"` // ^[^"' ]+$
-	NetworkID        string `json:"networkconf_id,omitempty"`
-	TunnelConfigType string `json:"tunnel_config_type,omitempty"` // vpn|802.1x|custom
-	TunnelMediumType int    `json:"tunnel_medium_type,omitempty"` // [1-9]|1[0-5]|^$
-	TunnelType       int    `json:"tunnel_type,omitempty"`        // [1-9]|1[0-3]|^$
-	VLAN             int    `json:"vlan,omitempty"`               // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|400[0-9]|^$
-	XPassword        string `json:"x_password,omitempty"`
+	FilterIDs        []string `json:"filter_ids,omitempty"`
+	IP               string   `json:"ip,omitempty"`   // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	Name             string   `json:"name,omitempty"` // ^[^"' ]+$
+	NetworkID        string   `json:"networkconf_id,omitempty"`
+	TunnelConfigType string   `json:"tunnel_config_type,omitempty"` // vpn|802.1x|custom
+	TunnelMediumType int      `json:"tunnel_medium_type,omitempty"` // [1-9]|1[0-5]|^$
+	TunnelType       int      `json:"tunnel_type,omitempty"`        // [1-9]|1[0-3]|^$
+	UlpUserID        string   `json:"ulp_user_id,omitempty"`
+	VLAN             int      `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|400[0-9]|^$
+	XPassword        string   `json:"x_password,omitempty"`
 }
 
 func (dst *Account) UnmarshalJSON(b []byte) error {
@@ -64,11 +66,10 @@ func (c *Client) listAccount(ctx context.Context, site string) ([]Account, error
 		Data []Account `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/account", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/account", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -77,8 +78,7 @@ func (c *Client) getAccount(ctx context.Context, site, id string) (*Account, err
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/account/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/account/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (c *Client) getAccount(ctx context.Context, site, id string) (*Account, err
 }
 
 func (c *Client) deleteAccount(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/account/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/account/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func (c *Client) createAccount(ctx context.Context, site string, d *Account) (*A
 		Data []Account `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/account", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/account", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -114,9 +114,9 @@ func (c *Client) createAccount(ctx context.Context, site string, d *Account) (*A
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateAccount(ctx context.Context, site string, d *Account) (*Account, error) {
@@ -125,7 +125,7 @@ func (c *Client) updateAccount(ctx context.Context, site string, d *Account) (*A
 		Data []Account `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/account/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/account/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func (c *Client) updateAccount(ctx context.Context, site string, d *Account) (*A
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

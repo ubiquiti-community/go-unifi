@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -73,8 +73,7 @@ func (c *Client) getSettingGlobalAp(ctx context.Context, site string) (*SettingG
 		Meta meta              `json:"meta"`
 		Data []SettingGlobalAp `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/global_ap", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/global_ap", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +93,7 @@ func (c *Client) updateSettingGlobalAp(ctx context.Context, site string, d *Sett
 	}
 
 	d.Key = "global_ap"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/global_ap", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/global_ap", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +102,7 @@ func (c *Client) updateSettingGlobalAp(ctx context.Context, site string, d *Sett
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

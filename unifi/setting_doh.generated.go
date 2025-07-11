@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -27,12 +27,35 @@ type SettingDoh struct {
 
 	Key string `json:"key"`
 
-	ServerNames []string `json:"server_names,omitempty"`
-	State       string   `json:"state,omitempty"` // off|auto|manual
+	CustomServers []SettingDohCustomServers `json:"custom_servers,omitempty"`
+	ServerNames   []string                  `json:"server_names,omitempty"`
+	State         string                    `json:"state,omitempty"` // off|auto|manual|custom
 }
 
 func (dst *SettingDoh) UnmarshalJSON(b []byte) error {
 	type Alias SettingDoh
+	aux := &struct {
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
+	}
+
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+
+	return nil
+}
+
+type SettingDohCustomServers struct {
+	Enabled    bool   `json:"enabled"`
+	SdnsStamp  string `json:"sdns_stamp,omitempty"`
+	ServerName string `json:"server_name,omitempty"`
+}
+
+func (dst *SettingDohCustomServers) UnmarshalJSON(b []byte) error {
+	type Alias SettingDohCustomServers
 	aux := &struct {
 		*Alias
 	}{
@@ -52,8 +75,7 @@ func (c *Client) getSettingDoh(ctx context.Context, site string) (*SettingDoh, e
 		Meta meta         `json:"meta"`
 		Data []SettingDoh `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/doh", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/doh", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +95,7 @@ func (c *Client) updateSettingDoh(ctx context.Context, site string, d *SettingDo
 	}
 
 	d.Key = "doh"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/doh", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/doh", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +104,7 @@ func (c *Client) updateSettingDoh(ctx context.Context, site string, d *SettingDo
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

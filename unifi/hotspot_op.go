@@ -19,10 +19,18 @@ func (c *Client) DeleteHotspotOp(ctx context.Context, site, id string) error {
 	return c.deleteHotspotOp(ctx, site, id)
 }
 
-func (c *Client) CreateHotspotOp(ctx context.Context, site string, d *HotspotOp) (*HotspotOp, error) {
+func (c *Client) CreateHotspotOp(
+	ctx context.Context,
+	site string,
+	d *HotspotOp,
+) (*HotspotOp, error) {
 	return c.createHotspotOp(ctx, site, d)
 }
 
-func (c *Client) UpdateHotspotOp(ctx context.Context, site string, d *HotspotOp) (*HotspotOp, error) {
+func (c *Client) UpdateHotspotOp(
+	ctx context.Context,
+	site string,
+	d *HotspotOp,
+) (*HotspotOp, error) {
 	return c.updateHotspotOp(ctx, site, d)
 }

@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -55,8 +55,7 @@ func (c *Client) getSettingSnmp(ctx context.Context, site string) (*SettingSnmp,
 		Meta meta          `json:"meta"`
 		Data []SettingSnmp `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/snmp", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/snmp", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +75,7 @@ func (c *Client) updateSettingSnmp(ctx context.Context, site string, d *SettingS
 	}
 
 	d.Key = "snmp"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/snmp", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/snmp", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +84,7 @@ func (c *Client) updateSettingSnmp(ctx context.Context, site string, d *SettingS
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

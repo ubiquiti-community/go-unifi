@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -194,11 +194,10 @@ func (c *Client) listChannelPlan(ctx context.Context, site string) ([]ChannelPla
 		Data []ChannelPlan `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/channelplan", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/channelplan", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -207,8 +206,7 @@ func (c *Client) getChannelPlan(ctx context.Context, site, id string) (*ChannelP
 		Meta meta          `json:"meta"`
 		Data []ChannelPlan `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/channelplan/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/channelplan/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -222,7 +220,7 @@ func (c *Client) getChannelPlan(ctx context.Context, site, id string) (*ChannelP
 }
 
 func (c *Client) deleteChannelPlan(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/channelplan/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/channelplan/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -235,7 +233,7 @@ func (c *Client) createChannelPlan(ctx context.Context, site string, d *ChannelP
 		Data []ChannelPlan `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/channelplan", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/channelplan", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -244,9 +242,9 @@ func (c *Client) createChannelPlan(ctx context.Context, site string, d *ChannelP
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateChannelPlan(ctx context.Context, site string, d *ChannelPlan) (*ChannelPlan, error) {
@@ -255,7 +253,7 @@ func (c *Client) updateChannelPlan(ctx context.Context, site string, d *ChannelP
 		Data []ChannelPlan `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/channelplan/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/channelplan/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -264,7 +262,7 @@ func (c *Client) updateChannelPlan(ctx context.Context, site string, d *ChannelP
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

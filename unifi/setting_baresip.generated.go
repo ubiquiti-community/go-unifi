@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -54,8 +54,7 @@ func (c *Client) getSettingBaresip(ctx context.Context, site string) (*SettingBa
 		Meta meta             `json:"meta"`
 		Data []SettingBaresip `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/baresip", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/baresip", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +74,7 @@ func (c *Client) updateSettingBaresip(ctx context.Context, site string, d *Setti
 	}
 
 	d.Key = "baresip"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/baresip", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/baresip", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +83,7 @@ func (c *Client) updateSettingBaresip(ctx context.Context, site string, d *Setti
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

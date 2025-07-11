@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -57,11 +57,10 @@ func (c *Client) listUserGroup(ctx context.Context, site string) ([]UserGroup, e
 		Data []UserGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/usergroup", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/usergroup", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -70,8 +69,7 @@ func (c *Client) getUserGroup(ctx context.Context, site, id string) (*UserGroup,
 		Meta meta        `json:"meta"`
 		Data []UserGroup `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/usergroup/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/usergroup/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +83,7 @@ func (c *Client) getUserGroup(ctx context.Context, site, id string) (*UserGroup,
 }
 
 func (c *Client) deleteUserGroup(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/usergroup/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/usergroup/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -98,7 +96,7 @@ func (c *Client) createUserGroup(ctx context.Context, site string, d *UserGroup)
 		Data []UserGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/usergroup", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/usergroup", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -107,9 +105,9 @@ func (c *Client) createUserGroup(ctx context.Context, site string, d *UserGroup)
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateUserGroup(ctx context.Context, site string, d *UserGroup) (*UserGroup, error) {
@@ -118,7 +116,7 @@ func (c *Client) updateUserGroup(ctx context.Context, site string, d *UserGroup)
 		Data []UserGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/usergroup/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/usergroup/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +125,7 @@ func (c *Client) updateUserGroup(ctx context.Context, site string, d *UserGroup)
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

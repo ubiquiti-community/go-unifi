@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -36,14 +36,14 @@ type SettingGuestAccess struct {
 	Expire                                 string   `json:"expire,omitempty"`        // [\d]+|custom
 	ExpireNumber                           int      `json:"expire_number,omitempty"` // ^[1-9][0-9]{0,5}|1000000$
 	ExpireUnit                             int      `json:"expire_unit,omitempty"`   // 1|60|1440
-	FacebookAppID                          string   `json:"facebook_app_id"`
+	FacebookAppID                          string   `json:"facebook_app_id,omitempty"`
 	FacebookEnabled                        bool     `json:"facebook_enabled"`
 	FacebookScopeEmail                     bool     `json:"facebook_scope_email"`
 	FacebookWifiBlockHttps                 bool     `json:"facebook_wifi_block_https"`
-	FacebookWifiGwID                       string   `json:"facebook_wifi_gw_id"`
+	FacebookWifiGwID                       string   `json:"facebook_wifi_gw_id,omitempty"`
 	FacebookWifiGwName                     string   `json:"facebook_wifi_gw_name,omitempty"`
 	Gateway                                string   `json:"gateway,omitempty"` // paypal|stripe|authorize|quickpay|merchantwarrior|ippay
-	GoogleClientID                         string   `json:"google_client_id"`
+	GoogleClientID                         string   `json:"google_client_id,omitempty"`
 	GoogleDomain                           string   `json:"google_domain,omitempty"`
 	GoogleEnabled                          bool     `json:"google_enabled"`
 	GoogleScopeEmail                       bool     `json:"google_scope_email"`
@@ -91,7 +91,7 @@ type SettingGuestAccess struct {
 	RADIUSDisconnectEnabled                bool     `json:"radius_disconnect_enabled"`
 	RADIUSDisconnectPort                   int      `json:"radius_disconnect_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
 	RADIUSEnabled                          bool     `json:"radius_enabled"`
-	RADIUSProfileID                        string   `json:"radiusprofile_id"`
+	RADIUSProfileID                        string   `json:"radiusprofile_id,omitempty"`
 	RedirectEnabled                        bool     `json:"redirect_enabled"`
 	RedirectHttps                          bool     `json:"redirect_https"`
 	RedirectToHttps                        bool     `json:"redirect_to_https"`
@@ -102,9 +102,9 @@ type SettingGuestAccess struct {
 	TemplateEngine                         string   `json:"template_engine,omitempty"` // jsp|angular
 	VoucherCustomized                      bool     `json:"voucher_customized"`
 	VoucherEnabled                         bool     `json:"voucher_enabled"`
-	WechatAppID                            string   `json:"wechat_app_id"`
+	WechatAppID                            string   `json:"wechat_app_id,omitempty"`
 	WechatEnabled                          bool     `json:"wechat_enabled"`
-	WechatShopID                           string   `json:"wechat_shop_id"`
+	WechatShopID                           string   `json:"wechat_shop_id,omitempty"`
 	XAuthorizeLoginid                      string   `json:"x_authorize_loginid,omitempty"`
 	XAuthorizeTransactionkey               string   `json:"x_authorize_transactionkey,omitempty"`
 	XFacebookAppSecret                     string   `json:"x_facebook_app_secret,omitempty"`
@@ -160,8 +160,7 @@ func (c *Client) getSettingGuestAccess(ctx context.Context, site string) (*Setti
 		Meta meta                 `json:"meta"`
 		Data []SettingGuestAccess `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/guest_access", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/guest_access", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +180,7 @@ func (c *Client) updateSettingGuestAccess(ctx context.Context, site string, d *S
 	}
 
 	d.Key = "guest_access"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/guest_access", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/guest_access", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (c *Client) updateSettingGuestAccess(ctx context.Context, site string, d *S
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

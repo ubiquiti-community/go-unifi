@@ -28,7 +28,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -64,33 +64,40 @@ func (dst *{{ $k }}) UnmarshalJSON(b []byte) error {
 }
 {{ end }}
 
-{{- $apiVersion2 := or (eq .StructName "APGroup") (eq .StructName "DNSRecord") }}
-
 {{ if not .IsSetting }}
 func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
+{{- if .IsV2 }}
+	var respBody []{{ .StructName }}
+{{- else }}
 	var respBody struct {
-		Meta meta `json:"meta"`
+		Meta meta      `json:"meta"`
 		Data []{{ .StructName }} `json:"data"`
 	}
+{{- end }}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("{{ if eq .StructName "DNSRecord" }}%s/site/%s/{{ .ResourcePath }}", c.apiV2Path{{ else }}s/%s/{{ if eq .StructName "Device" }}stat/{{ else if $apiVersion2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}"{{ end }}, site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
 
+{{- if .IsV2 }}
+	return respBody, nil
+{{- else }}
 	return respBody.Data, nil
+{{- end }}
 }
 {{- end }}
 
+{{ if not .IsV2 }}
 func (c *Client) get{{ .StructName }}(ctx context.Context, site{{ if not .IsSetting }}, id{{ end }} string) (*{{ .StructName }}, error) {
 	var respBody struct {
 		Meta meta `json:"meta"`
 		Data []{{ .StructName }} `json:"data"`
 	}
-{{ if .IsSetting }}
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/{{ .ResourcePath }}", site), nil, &respBody)
+{{- if .IsSetting }}
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/{{ .ResourcePath }}", site), nil, &respBody)
 {{- else }}
-	err := c.do(ctx, "GET", fmt.Sprintf("{{ if eq .StructName "DNSRecord" }}%s/site/%s/{{ .ResourcePath }}/%s", c.apiV2Path{{ else }}s/%s/{{ if eq .StructName "Device" }}stat/{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s"{{ end }}, site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, id), nil, &respBody)
 {{- end }}
 	if err != nil {
 		return nil, err
@@ -103,10 +110,11 @@ func (c *Client) get{{ .StructName }}(ctx context.Context, site{{ if not .IsSett
 	d := respBody.Data[0]
 	return &d, nil
 }
+{{- end }}
 
 {{ if not .IsSetting }}
 func (c *Client) delete{{ .StructName }}(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("{{ if eq .StructName "DNSRecord" }}%s/site/%s/{{ .ResourcePath }}/%s", c.apiV2Path{{ else }}s/%s/rest/{{ .ResourcePath }}/%s"{{ end }}, site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -114,46 +122,60 @@ func (c *Client) delete{{ .StructName }}(ctx context.Context, site, id string) e
 }
 
 func (c *Client) create{{ .StructName }}(ctx context.Context, site string, d *{{ .StructName }}) (*{{ .StructName }}, error) {
+{{- if .IsV2 }}
+	var respBody {{ .StructName }}
+{{- else }}
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []{{ .StructName }} `json:"data"`
 	}
+{{- end }}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("{{ if eq .StructName "DNSRecord" }}%s/site/%s/{{ .ResourcePath }}", c.apiV2Path{{ else }}s/%s/rest/{{ .ResourcePath }}"{{ end }}, site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
+{{ if .IsV2 }}
+	return &respBody, nil
+{{- else }}
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
+{{- end }}
 }
 {{- end }}
 
 func (c *Client) update{{ .StructName }}(ctx context.Context, site string, d *{{ .StructName }}) (*{{ .StructName }}, error) {
+{{- if .IsV2 }}
+	var respBody {{ .StructName }}
+{{- else }}
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []{{ .StructName }} `json:"data"`
 	}
+{{- end }}
 {{ if .IsSetting }}
 	d.Key = "{{ .ResourcePath }}"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/{{ .ResourcePath }}", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/{{ .ResourcePath }}", site), d, &respBody)
 {{- else }}
-	err := c.do(ctx, "PUT", fmt.Sprintf("{{ if eq .StructName "DNSRecord" }}%s/site/%s/{{ .ResourcePath }}/%s", c.apiV2Path{{ else }}s/%s/rest/{{ .ResourcePath }}/%s"{{ end }}, site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, d.ID), d, &respBody)
 {{- end }}
 	if err != nil {
 		return nil, err
 	}
-
+{{ if .IsV2 }}
+	return &respBody, nil
+{{- else }}
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
+{{- end }}
 }

@@ -19,10 +19,18 @@ func (c *Client) DeleteHotspot2Conf(ctx context.Context, site, id string) error 
 	return c.deleteHotspot2Conf(ctx, site, id)
 }
 
-func (c *Client) CreateHotspot2Conf(ctx context.Context, site string, d *Hotspot2Conf) (*Hotspot2Conf, error) {
+func (c *Client) CreateHotspot2Conf(
+	ctx context.Context,
+	site string,
+	d *Hotspot2Conf,
+) (*Hotspot2Conf, error) {
 	return c.createHotspot2Conf(ctx, site, d)
 }
 
-func (c *Client) UpdateHotspot2Conf(ctx context.Context, site string, d *Hotspot2Conf) (*Hotspot2Conf, error) {
+func (c *Client) UpdateHotspot2Conf(
+	ctx context.Context,
+	site string,
+	d *Hotspot2Conf,
+) (*Hotspot2Conf, error) {
 	return c.updateHotspot2Conf(ctx, site, d)
 }

@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -26,7 +26,6 @@ type FirewallRule struct {
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
 	Action                string   `json:"action,omitempty"` // drop|reject|accept
-	Contiguous            bool     `json:"contiguous"`
 	DstAddress            string   `json:"dst_address,omitempty"`
 	DstAddressIPV6        string   `json:"dst_address_ipv6,omitempty"`
 	DstFirewallGroupIDs   []string `json:"dst_firewallgroup_ids,omitempty"` // [\d\w]+
@@ -38,8 +37,6 @@ type FirewallRule struct {
 	ICMPv6Typename        string   `json:"icmpv6_typename"` // ^$|address-unreachable|bad-header|beyond-scope|communication-prohibited|destination-unreachable|echo-reply|echo-request|failed-policy|neighbor-advertisement|neighbor-solicitation|no-route|packet-too-big|parameter-problem|port-unreachable|redirect|reject-route|router-advertisement|router-solicitation|time-exceeded|ttl-zero-during-reassembly|ttl-zero-during-transit|unknown-header-type|unknown-option
 	IPSec                 string   `json:"ipsec"`           // match-ipsec|match-none|^$
 	Logging               bool     `json:"logging"`
-	MonthDays             string   `json:"monthdays"` // ^$|^(([1-9]|[12][0-9]|3[01])(,([1-9]|[12][0-9]|3[01])){0,30})$
-	MonthDaysNegate       bool     `json:"monthdays_negate"`
 	Name                  string   `json:"name,omitempty"` // .{1,128}
 	Protocol              string   `json:"protocol"`       // ^$|all|([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])|tcp_udp|ah|ax.25|dccp|ddp|egp|eigrp|encap|esp|etherip|fc|ggp|gre|hip|hmp|icmp|idpr-cmtp|idrp|igmp|igp|ip|ipcomp|ipencap|ipip|ipv6|ipv6-frag|ipv6-icmp|ipv6-nonxt|ipv6-opts|ipv6-route|isis|iso-tp4|l2tp|manet|mobility-header|mpls-in-ip|ospf|pim|pup|rdp|rohc|rspf|rsvp|sctp|shim6|skip|st|tcp|udp|udplite|vmtp|vrrp|wesp|xns-idp|xtp
 	ProtocolMatchExcepted bool     `json:"protocol_match_excepted"`
@@ -54,17 +51,10 @@ type FirewallRule struct {
 	SrcNetworkID          string   `json:"src_networkconf_id"`              // [\d\w]+|^$
 	SrcNetworkType        string   `json:"src_networkconf_type,omitempty"`  // ADDRv4|NETv4
 	SrcPort               string   `json:"src_port,omitempty"`
-	StartDate             string   `json:"startdate"` // ^$|^(20[0-9]{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])$
-	StartTime             string   `json:"starttime"` // ^$|^(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])$
 	StateEstablished      bool     `json:"state_established"`
 	StateInvalid          bool     `json:"state_invalid"`
 	StateNew              bool     `json:"state_new"`
 	StateRelated          bool     `json:"state_related"`
-	StopDate              string   `json:"stopdate"` // ^$|^(20[0-9]{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])$
-	StopTime              string   `json:"stoptime"` // ^$|^(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])$
-	UTC                   bool     `json:"utc"`
-	Weekdays              string   `json:"weekdays"` // ^$|^((Mon|Tue|Wed|Thu|Fri|Sat|Sun)(,(Mon|Tue|Wed|Thu|Fri|Sat|Sun)){0,6})$
-	WeekdaysNegate        bool     `json:"weekdays_negate"`
 }
 
 func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
@@ -92,11 +82,10 @@ func (c *Client) listFirewallRule(ctx context.Context, site string) ([]FirewallR
 		Data []FirewallRule `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/firewallrule", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/firewallrule", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -105,8 +94,7 @@ func (c *Client) getFirewallRule(ctx context.Context, site, id string) (*Firewal
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/firewallrule/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +108,7 @@ func (c *Client) getFirewallRule(ctx context.Context, site, id string) (*Firewal
 }
 
 func (c *Client) deleteFirewallRule(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/firewallrule/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -133,7 +121,7 @@ func (c *Client) createFirewallRule(ctx context.Context, site string, d *Firewal
 		Data []FirewallRule `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/firewallrule", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/firewallrule", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -142,9 +130,9 @@ func (c *Client) createFirewallRule(ctx context.Context, site string, d *Firewal
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateFirewallRule(ctx context.Context, site string, d *FirewallRule) (*FirewallRule, error) {
@@ -153,7 +141,7 @@ func (c *Client) updateFirewallRule(ctx context.Context, site string, d *Firewal
 		Data []FirewallRule `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/firewallrule/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +150,7 @@ func (c *Client) updateFirewallRule(ctx context.Context, site string, d *Firewal
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

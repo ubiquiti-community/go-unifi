@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -52,11 +52,10 @@ func (c *Client) listDpiGroup(ctx context.Context, site string) ([]DpiGroup, err
 		Data []DpiGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dpigroup", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dpigroup", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -65,8 +64,7 @@ func (c *Client) getDpiGroup(ctx context.Context, site, id string) (*DpiGroup, e
 		Meta meta       `json:"meta"`
 		Data []DpiGroup `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dpigroup/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dpigroup/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +78,7 @@ func (c *Client) getDpiGroup(ctx context.Context, site, id string) (*DpiGroup, e
 }
 
 func (c *Client) deleteDpiGroup(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/dpigroup/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/dpigroup/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -93,7 +91,7 @@ func (c *Client) createDpiGroup(ctx context.Context, site string, d *DpiGroup) (
 		Data []DpiGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/dpigroup", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/dpigroup", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -102,9 +100,9 @@ func (c *Client) createDpiGroup(ctx context.Context, site string, d *DpiGroup) (
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateDpiGroup(ctx context.Context, site string, d *DpiGroup) (*DpiGroup, error) {
@@ -113,7 +111,7 @@ func (c *Client) updateDpiGroup(ctx context.Context, site string, d *DpiGroup) (
 		Data []DpiGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/dpigroup/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/dpigroup/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +120,7 @@ func (c *Client) updateDpiGroup(ctx context.Context, site string, d *DpiGroup) (
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

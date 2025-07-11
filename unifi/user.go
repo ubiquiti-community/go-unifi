@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 )
 
 // GetUserByMAC returns slightly different information than GetUser, as they
@@ -15,7 +16,7 @@ func (c *Client) GetUserByMAC(ctx context.Context, site, mac string) (*User, err
 		Data []User `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/stat/user/%s", site, mac), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/stat/user/%s", site, mac), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +50,7 @@ func (c *Client) CreateUser(ctx context.Context, site string, d *User) (*User, e
 		} `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/group/user", site), reqBody, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/group/user", site), reqBody, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +72,14 @@ func (c *Client) CreateUser(ctx context.Context, site string, d *User) (*User, e
 	return &user, nil
 }
 
-func (c *Client) stamgr(ctx context.Context, site, cmd string, data map[string]any) ([]User, error) {
+func (c *Client) stamgr(
+	ctx context.Context,
+	site, cmd string,
+	data map[string]any,
+) ([]User, error) {
 	reqBody := map[string]any{}
 
-	for k, v := range data {
-		reqBody[k] = v
-	}
+	maps.Copy(reqBody, data)
 
 	reqBody["cmd"] = cmd
 
@@ -85,7 +88,7 @@ func (c *Client) stamgr(ctx context.Context, site, cmd string, data map[string]a
 		Data []User `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/cmd/stamgr", site), reqBody, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/cmd/stamgr", site), reqBody, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +148,11 @@ func (c *Client) KickUserByMAC(ctx context.Context, site, mac string) error {
 	return nil
 }
 
-func (c *Client) OverrideUserFingerprint(ctx context.Context, site, mac string, devIdOveride int) error {
+func (c *Client) OverrideUserFingerprint(
+	ctx context.Context,
+	site, mac string,
+	devIdOveride int,
+) error {
 	reqBody := map[string]any{
 		"mac":             mac,
 		"dev_id_override": devIdOveride,
@@ -165,7 +172,13 @@ func (c *Client) OverrideUserFingerprint(ctx context.Context, site, mac string, 
 		SearchQuery   string `json:"search_query"`
 	}
 
-	err := c.do(ctx, reqMethod, fmt.Sprintf("%s/site/%s/station/%s/fingerprint_override", c.apiV2Path, site, mac), reqBody, &respBody)
+	err := c.do(
+		ctx,
+		reqMethod,
+		fmt.Sprintf("v2/api/site/%s/station/%s/fingerprint_override", site, mac),
+		reqBody,
+		&respBody,
+	)
 	if err != nil {
 		return err
 	}

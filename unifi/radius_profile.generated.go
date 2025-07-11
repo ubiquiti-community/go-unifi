@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -25,16 +25,23 @@ type RADIUSProfile struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	AccountingEnabled     bool                       `json:"accounting_enabled"`
-	AcctServers           []RADIUSProfileAcctServers `json:"acct_servers,omitempty"`
-	AuthServers           []RADIUSProfileAuthServers `json:"auth_servers,omitempty"`
-	InterimUpdateEnabled  bool                       `json:"interim_update_enabled"`
-	InterimUpdateInterval int                        `json:"interim_update_interval,omitempty"` // ^([6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
-	Name                  string                     `json:"name,omitempty"`                    // .{1,128}
-	UseUsgAcctServer      bool                       `json:"use_usg_acct_server"`
-	UseUsgAuthServer      bool                       `json:"use_usg_auth_server"`
-	VLANEnabled           bool                       `json:"vlan_enabled"`
-	VLANWLANMode          string                     `json:"vlan_wlan_mode,omitempty"` // disabled|optional|required
+	AccountingEnabled         bool                       `json:"accounting_enabled"`
+	AcctServers               []RADIUSProfileAcctServers `json:"acct_servers,omitempty"`
+	AuthServers               []RADIUSProfileAuthServers `json:"auth_servers,omitempty"`
+	InterimUpdateEnabled      bool                       `json:"interim_update_enabled"`
+	InterimUpdateInterval     int                        `json:"interim_update_interval,omitempty"` // ^([6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
+	Name                      string                     `json:"name,omitempty"`                    // .{1,128}
+	TlsEnabled                bool                       `json:"tls_enabled"`
+	UseUsgAcctServer          bool                       `json:"use_usg_acct_server"`
+	UseUsgAuthServer          bool                       `json:"use_usg_auth_server"`
+	VLANEnabled               bool                       `json:"vlan_enabled"`
+	VLANWLANMode              string                     `json:"vlan_wlan_mode,omitempty"` // disabled|optional|required
+	XCaCrts                   []RADIUSProfileXCaCrts     `json:"x_ca_crts,omitempty"`
+	XClientCrt                string                     `json:"x_client_crt,omitempty"`
+	XClientCrtFilename        string                     `json:"x_client_crt_filename,omitempty"`
+	XClientPrivateKey         string                     `json:"x_client_private_key,omitempty"`
+	XClientPrivateKeyFilename string                     `json:"x_client_private_key_filename,omitempty"`
+	XClientPrivateKeyPassword string                     `json:"x_client_private_key_password,omitempty"`
 }
 
 func (dst *RADIUSProfile) UnmarshalJSON(b []byte) error {
@@ -106,17 +113,37 @@ func (dst *RADIUSProfileAuthServers) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+type RADIUSProfileXCaCrts struct {
+	Filename string `json:"filename,omitempty"`
+	XCaCrt   string `json:"x_ca_crt,omitempty"`
+}
+
+func (dst *RADIUSProfileXCaCrts) UnmarshalJSON(b []byte) error {
+	type Alias RADIUSProfileXCaCrts
+	aux := &struct {
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
+	}
+
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+
+	return nil
+}
+
 func (c *Client) listRADIUSProfile(ctx context.Context, site string) ([]RADIUSProfile, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/radiusprofile", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/radiusprofile", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -125,8 +152,7 @@ func (c *Client) getRADIUSProfile(ctx context.Context, site, id string) (*RADIUS
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/radiusprofile/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +166,7 @@ func (c *Client) getRADIUSProfile(ctx context.Context, site, id string) (*RADIUS
 }
 
 func (c *Client) deleteRADIUSProfile(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/radiusprofile/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -153,7 +179,7 @@ func (c *Client) createRADIUSProfile(ctx context.Context, site string, d *RADIUS
 		Data []RADIUSProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/radiusprofile", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/radiusprofile", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -162,9 +188,9 @@ func (c *Client) createRADIUSProfile(ctx context.Context, site string, d *RADIUS
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateRADIUSProfile(ctx context.Context, site string, d *RADIUSProfile) (*RADIUSProfile, error) {
@@ -173,7 +199,7 @@ func (c *Client) updateRADIUSProfile(ctx context.Context, site string, d *RADIUS
 		Data []RADIUSProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/radiusprofile/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -182,7 +208,7 @@ func (c *Client) updateRADIUSProfile(ctx context.Context, site string, d *RADIUS
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

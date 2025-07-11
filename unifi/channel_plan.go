@@ -19,10 +19,18 @@ func (c *Client) DeleteChannelPlan(ctx context.Context, site, id string) error {
 	return c.deleteChannelPlan(ctx, site, id)
 }
 
-func (c *Client) CreateChannelPlan(ctx context.Context, site string, d *ChannelPlan) (*ChannelPlan, error) {
+func (c *Client) CreateChannelPlan(
+	ctx context.Context,
+	site string,
+	d *ChannelPlan,
+) (*ChannelPlan, error) {
 	return c.createChannelPlan(ctx, site, d)
 }
 
-func (c *Client) UpdateChannelPlan(ctx context.Context, site string, d *ChannelPlan) (*ChannelPlan, error) {
+func (c *Client) UpdateChannelPlan(
+	ctx context.Context,
+	site string,
+	d *ChannelPlan,
+) (*ChannelPlan, error) {
 	return c.updateChannelPlan(ctx, site, d)
 }

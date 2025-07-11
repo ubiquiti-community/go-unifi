@@ -19,7 +19,9 @@ func TestLatestUnifiVersion(t *testing.T) {
 	fwVersion, err := version.NewVersion("7.3.83+atag-7.3.83-19645")
 	assert.NoError(err)
 
-	fwDownload, err := url.Parse("https://fw-download.ubnt.com/data/unifi-controller/c31c-debian-7.3.83-c9249c913b91416693b869b9548850c3.deb")
+	fwDownload, err := url.Parse(
+		"https://fw-download.ubnt.com/data/unifi-controller/c31c-debian-7.3.83-c9249c913b91416693b869b9548850c3.deb",
+	)
 	assert.NoError(err)
 
 	respData := firmwareUpdateApiResponse{

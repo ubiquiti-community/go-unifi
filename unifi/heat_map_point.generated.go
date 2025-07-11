@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -26,7 +26,7 @@ type HeatMapPoint struct {
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
 	DownloadSpeed float64 `json:"download_speed,omitempty"`
-	HeatmapID     string  `json:"heatmap_id"`
+	HeatmapID     string  `json:"heatmap_id,omitempty"`
 	UploadSpeed   float64 `json:"upload_speed,omitempty"`
 	X             float64 `json:"x,omitempty"`
 	Y             float64 `json:"y,omitempty"`
@@ -54,11 +54,10 @@ func (c *Client) listHeatMapPoint(ctx context.Context, site string) ([]HeatMapPo
 		Data []HeatMapPoint `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/heatmappoint", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/heatmappoint", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -67,8 +66,7 @@ func (c *Client) getHeatMapPoint(ctx context.Context, site, id string) (*HeatMap
 		Meta meta           `json:"meta"`
 		Data []HeatMapPoint `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/heatmappoint/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/heatmappoint/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +80,7 @@ func (c *Client) getHeatMapPoint(ctx context.Context, site, id string) (*HeatMap
 }
 
 func (c *Client) deleteHeatMapPoint(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/heatmappoint/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/heatmappoint/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -95,7 +93,7 @@ func (c *Client) createHeatMapPoint(ctx context.Context, site string, d *HeatMap
 		Data []HeatMapPoint `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/heatmappoint", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/heatmappoint", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -104,9 +102,9 @@ func (c *Client) createHeatMapPoint(ctx context.Context, site string, d *HeatMap
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateHeatMapPoint(ctx context.Context, site string, d *HeatMapPoint) (*HeatMapPoint, error) {
@@ -115,7 +113,7 @@ func (c *Client) updateHeatMapPoint(ctx context.Context, site string, d *HeatMap
 		Data []HeatMapPoint `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/heatmappoint/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/heatmappoint/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +122,7 @@ func (c *Client) updateHeatMapPoint(ctx context.Context, site string, d *HeatMap
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

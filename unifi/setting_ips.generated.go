@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -29,16 +29,15 @@ type SettingIps struct {
 
 	AdBlockingConfigurations    []SettingIpsAdBlockingConfigurations `json:"ad_blocking_configurations,omitempty"`
 	AdBlockingEnabled           bool                                 `json:"ad_blocking_enabled"`
-	AdvancedFilteringPreference string                               `json:"advanced_filtering_preference,omitempty"` // |auto|manual|disabled
+	AdvancedFilteringPreference string                               `json:"advanced_filtering_preference,omitempty"` // |manual|disabled
 	DNSFiltering                bool                                 `json:"dns_filtering"`
 	DNSFilters                  []SettingIpsDNSFilters               `json:"dns_filters,omitempty"`
-	EnabledCategories           []string                             `json:"enabled_categories,omitempty"` // emerging-activex|emerging-attackresponse|botcc|emerging-chat|ciarmy|compromised|emerging-dns|emerging-dos|dshield|emerging-exploit|emerging-ftp|emerging-games|emerging-icmp|emerging-icmpinfo|emerging-imap|emerging-inappropriate|emerging-info|emerging-malware|emerging-misc|emerging-mobile|emerging-netbios|emerging-p2p|emerging-policy|emerging-pop3|emerging-rpc|emerging-scada|emerging-scan|emerging-shellcode|emerging-smtp|emerging-snmp|emerging-sql|emerging-telnet|emerging-tftp|tor|emerging-trojan|emerging-useragent|emerging-voip|emerging-webapps|emerging-webclient|emerging-webserver|emerging-worm|exploit-kit|adware-pup|botcc-portgrouped|phishing|threatview-cs-c2|3coresec|chat|coinminer|current-events|drop|hunting|icmp-info|inappropriate|info|ja3|policy|scada
+	EnabledCategories           []string                             `json:"enabled_categories,omitempty"` // emerging-activex|emerging-attackresponse|botcc|emerging-chat|ciarmy|compromised|emerging-dns|emerging-dos|dshield|emerging-exploit|emerging-ftp|emerging-games|emerging-icmp|emerging-icmpinfo|emerging-imap|emerging-inappropriate|emerging-info|emerging-malware|emerging-misc|emerging-mobile|emerging-netbios|emerging-p2p|emerging-policy|emerging-pop3|emerging-rpc|emerging-scada|emerging-scan|emerging-shellcode|emerging-smtp|emerging-snmp|emerging-sql|emerging-telnet|emerging-tftp|tor|emerging-useragent|emerging-voip|emerging-webapps|emerging-webclient|emerging-webserver|emerging-worm|exploit-kit|adware-pup|botcc-portgrouped|phishing|threatview-cs-c2|3coresec|chat|coinminer|current-events|drop|hunting|icmp-info|inappropriate|info|ja3|policy|scada|dark-web-blocker-list|malicious-hosts
 	EnabledNetworks             []string                             `json:"enabled_networks,omitempty"`
 	Honeypot                    []SettingIpsHoneypot                 `json:"honeypot,omitempty"`
 	HoneypotEnabled             bool                                 `json:"honeypot_enabled"`
 	IPsMode                     string                               `json:"ips_mode,omitempty"` // ids|ips|ipsInline|disabled
-	RestrictIPAddresses         bool                                 `json:"restrict_ip_addresses"`
-	RestrictTor                 bool                                 `json:"restrict_tor"`
+	MemoryOptimized             bool                                 `json:"memory_optimized"`
 	RestrictTorrents            bool                                 `json:"restrict_torrents"`
 	Suppression                 SettingIpsSuppression                `json:"suppression,omitempty"`
 }
@@ -60,7 +59,7 @@ func (dst *SettingIps) UnmarshalJSON(b []byte) error {
 }
 
 type SettingIpsAdBlockingConfigurations struct {
-	NetworkID string `json:"network_id"`
+	NetworkID string `json:"network_id,omitempty"`
 }
 
 func (dst *SettingIpsAdBlockingConfigurations) UnmarshalJSON(b []byte) error {
@@ -116,7 +115,7 @@ type SettingIpsDNSFilters struct {
 	Description  string   `json:"description,omitempty"`
 	Filter       string   `json:"filter,omitempty"` // none|work|family
 	Name         string   `json:"name,omitempty"`
-	NetworkID    string   `json:"network_id"`
+	NetworkID    string   `json:"network_id,omitempty"`
 	Version      string   `json:"version,omitempty"` // v4|v6
 }
 
@@ -138,7 +137,7 @@ func (dst *SettingIpsDNSFilters) UnmarshalJSON(b []byte) error {
 
 type SettingIpsHoneypot struct {
 	IPAddress string `json:"ip_address,omitempty"`
-	NetworkID string `json:"network_id"`
+	NetworkID string `json:"network_id,omitempty"`
 	Version   string `json:"version,omitempty"` // v4|v6
 }
 
@@ -228,8 +227,7 @@ func (c *Client) getSettingIps(ctx context.Context, site string) (*SettingIps, e
 		Meta meta         `json:"meta"`
 		Data []SettingIps `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/ips", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/ips", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +247,7 @@ func (c *Client) updateSettingIps(ctx context.Context, site string, d *SettingIp
 	}
 
 	d.Key = "ips"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/ips", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/ips", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +256,7 @@ func (c *Client) updateSettingIps(ctx context.Context, site string, d *SettingIp
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

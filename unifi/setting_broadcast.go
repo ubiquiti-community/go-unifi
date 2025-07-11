@@ -11,6 +11,10 @@ func (c *Client) GetSettingBroadcast(ctx context.Context, site string) (*Setting
 	return c.getSettingBroadcast(ctx, site)
 }
 
-func (c *Client) UpdateSettingBroadcast(ctx context.Context, site string, d *SettingBroadcast) (*SettingBroadcast, error) {
+func (c *Client) UpdateSettingBroadcast(
+	ctx context.Context,
+	site string,
+	d *SettingBroadcast,
+) (*SettingBroadcast, error) {
 	return c.updateSettingBroadcast(ctx, site, d)
 }

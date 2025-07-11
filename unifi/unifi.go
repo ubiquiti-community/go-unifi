@@ -15,18 +15,11 @@ import (
 	"sync"
 )
 
+//go:generate go run ../cmd/fields/ -version-base-dir=../cmd/fields/ -output-dir=../unifi/ -latest
+
 const (
-	apiPath   = "/api"
-	apiV2Path = "/v2/api"
-
-	apiPathNew   = "/proxy/network/api"
-	apiV2PathNew = "/proxy/network/v2/api"
-
 	loginPath    = "/api/login"
 	loginPathNew = "/api/auth/login"
-
-	statusPath    = "/status"
-	statusPathNew = "/proxy/network/status"
 )
 
 type NotFoundError struct{}
@@ -51,11 +44,9 @@ type Client struct {
 	c       *http.Client
 	baseURL *url.URL
 
-	apiKey     string
-	apiPath    string
-	apiV2Path  string
-	loginPath  string
-	statusPath string
+	apiKey    string
+	loginPath string
+	apiPath   string // path to API, e.g. "proxy/network" for new style API, "/api" for old style API
 
 	csrf string
 
@@ -82,7 +73,7 @@ func (c *Client) SetBaseURL(base string) error {
 	}
 
 	// error for people who are still passing hard coded old paths
-	if path := strings.TrimSuffix(c.baseURL.Path, "/"); path == apiPath {
+	if path := strings.TrimSuffix(c.baseURL.Path, "/"); path == "/api" {
 		return fmt.Errorf("expected a base URL without the `/api`, got: %q", c.baseURL)
 	}
 
@@ -123,18 +114,14 @@ func (c *Client) setAPIUrlStyle(ctx context.Context) error {
 
 	if resp.StatusCode == http.StatusOK {
 		// the new API returns a 200 for a / request
-		c.apiPath = apiPathNew
-		c.apiV2Path = apiV2PathNew
+		c.apiPath = "/proxy/network"
 		c.loginPath = loginPathNew
-		c.statusPath = statusPathNew
 		return nil
 	}
 
 	// The old version returns a "302" (to /manage) for a / request
-	c.apiPath = apiPath
-	c.apiV2Path = apiV2Path
+	c.apiPath = "/"
 	c.loginPath = loginPath
-	c.statusPath = statusPath
 	return nil
 }
 
@@ -171,7 +158,7 @@ func (c *Client) Login(ctx context.Context, user, pass string) error {
 		}
 	}
 
-	err = c.do(ctx, "GET", c.statusPath, nil, &status)
+	err = c.do(ctx, "GET", "status", nil, &status)
 	if err != nil {
 		return err
 	}
@@ -204,8 +191,10 @@ func (c *Client) do(
 	respBody any,
 ) error {
 	// single threading requests, this is mostly to assist in CSRF token propagation
-	c.Lock()
-	defer c.Unlock()
+	if c.apiKey == "" {
+		c.Lock()
+		defer c.Unlock()
+	}
 
 	var (
 		reqReader io.Reader
@@ -235,14 +224,13 @@ func (c *Client) do(
 	}
 
 	req.Header.Set("User-Agent", "terraform-provider-unifi/0.1")
+	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
-	if c.csrf != "" {
-		req.Header.Set("X-Csrf-Token", c.csrf)
-	}
-
 	if c.apiKey != "" {
-		req.Header.Set("X-API-KEY", c.apiKey)
+		req.Header.Set("X-API-Key", c.apiKey)
+	} else if c.csrf != "" {
+		req.Header.Set("X-Csrf-Token", c.csrf)
 	}
 
 	resp, err := c.c.Do(req)
@@ -255,8 +243,10 @@ func (c *Client) do(
 		return &NotFoundError{}
 	}
 
-	if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
-		c.csrf = resp.Header.Get("X-Csrf-Token")
+	if c.apiKey == "" {
+		if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
+			c.csrf = resp.Header.Get("X-Csrf-Token")
+		}
 	}
 
 	if resp.StatusCode != http.StatusOK {
@@ -292,6 +282,11 @@ func (c *Client) do(
 	}
 
 	return nil
+}
+
+type respData[T any] struct {
+	Meta meta `json:"meta"`
+	Data T    `json:"data"`
 }
 
 type meta struct {

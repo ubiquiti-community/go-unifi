@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -27,16 +27,18 @@ type SettingGlobalSwitch struct {
 
 	Key string `json:"key"`
 
-	AclDeviceIsolation     []string                            `json:"acl_device_isolation,omitempty"`
-	AclL3Isolation         []SettingGlobalSwitchAclL3Isolation `json:"acl_l3_isolation,omitempty"`
-	DHCPSnoop              bool                                `json:"dhcp_snoop"`
-	Dot1XFallbackNetworkID string                              `json:"dot1x_fallback_networkconf_id"` // [\d\w]+|
-	Dot1XPortctrlEnabled   bool                                `json:"dot1x_portctrl_enabled"`
-	FlowctrlEnabled        bool                                `json:"flowctrl_enabled"`
-	JumboframeEnabled      bool                                `json:"jumboframe_enabled"`
-	RADIUSProfileID        string                              `json:"radiusprofile_id"`
-	StpVersion             string                              `json:"stp_version,omitempty"`       // stp|rstp|disabled
-	SwitchExclusions       []string                            `json:"switch_exclusions,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
+	AclDeviceIsolation             []string                            `json:"acl_device_isolation,omitempty"`
+	AclL3Isolation                 []SettingGlobalSwitchAclL3Isolation `json:"acl_l3_isolation,omitempty"`
+	DHCPSnoop                      bool                                `json:"dhcp_snoop"`
+	Dot1XFallbackNetworkID         string                              `json:"dot1x_fallback_networkconf_id,omitempty"` // [\d\w]+|
+	Dot1XPortctrlEnabled           bool                                `json:"dot1x_portctrl_enabled"`
+	FloodKnownProtocols            bool                                `json:"flood_known_protocols"`
+	FlowctrlEnabled                bool                                `json:"flowctrl_enabled"`
+	ForwardUnknownMcastRouterPorts bool                                `json:"forward_unknown_mcast_router_ports"`
+	JumboframeEnabled              bool                                `json:"jumboframe_enabled"`
+	RADIUSProfileID                string                              `json:"radiusprofile_id,omitempty"`
+	StpVersion                     string                              `json:"stp_version,omitempty"`       // stp|rstp|disabled
+	SwitchExclusions               []string                            `json:"switch_exclusions,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 }
 
 func (dst *SettingGlobalSwitch) UnmarshalJSON(b []byte) error {
@@ -81,8 +83,7 @@ func (c *Client) getSettingGlobalSwitch(ctx context.Context, site string) (*Sett
 		Meta meta                  `json:"meta"`
 		Data []SettingGlobalSwitch `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/global_switch", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/global_switch", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +103,7 @@ func (c *Client) updateSettingGlobalSwitch(ctx context.Context, site string, d *
 	}
 
 	d.Key = "global_switch"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/global_switch", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/global_switch", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +112,7 @@ func (c *Client) updateSettingGlobalSwitch(ctx context.Context, site string, d *
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

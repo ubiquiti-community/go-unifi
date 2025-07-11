@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -53,8 +53,7 @@ func (c *Client) getSettingElementAdopt(ctx context.Context, site string) (*Sett
 		Meta meta                  `json:"meta"`
 		Data []SettingElementAdopt `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting/element_adopt", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/element_adopt", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +73,7 @@ func (c *Client) updateSettingElementAdopt(ctx context.Context, site string, d *
 	}
 
 	d.Key = "element_adopt"
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/set/setting/element_adopt", site), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/element_adopt", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +82,7 @@ func (c *Client) updateSettingElementAdopt(ctx context.Context, site string, d *
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

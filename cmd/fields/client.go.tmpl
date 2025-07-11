@@ -33,7 +33,26 @@ func (c *Client) List{{ .StructName }}(ctx context.Context, site string) ([]{{ .
 {{- end }}
 
 func (c *Client) Get{{ .StructName }}(ctx context.Context, site{{ if not .IsSetting }}, id{{ end }} string) (*{{ .StructName }}, error) {
-  return c.get{{ .StructName }}(ctx, site{{ if not .IsSetting }}, id{{ end }})
+{{- if .IsV2 }}
+	respBody, err := c.list{{ .StructName }}(ctx, site)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(respBody) == 0 {
+		return nil, &NotFoundError{}
+	}
+
+	for _, val := range respBody {
+		if val.ID == id {
+			return &val, nil
+		}
+	}
+
+	return nil, &NotFoundError{}
+{{- else }}
+	return c.get{{ .StructName }}(ctx, site{{ if not .IsSetting }}, id{{ end }})
+{{- end }}
 }
 
 {{ if not .IsSetting }}

@@ -1,3 +1,6 @@
+// Code generated from ace.jar fields *.json files
+// DO NOT EDIT.
+
 package unifi
 
 import (
@@ -8,6 +11,10 @@ func (c *Client) GetSettingRadius(ctx context.Context, site string) (*SettingRad
 	return c.getSettingRadius(ctx, site)
 }
 
-func (c *Client) UpdateSettingRadius(ctx context.Context, site string, d *SettingRadius) (*SettingRadius, error) {
+func (c *Client) UpdateSettingRadius(
+	ctx context.Context,
+	site string,
+	d *SettingRadius,
+) (*SettingRadius, error) {
 	return c.updateSettingRadius(ctx, site, d)
 }

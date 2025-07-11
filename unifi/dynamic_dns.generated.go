@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-// just to fix compile issues with the import
+// just to fix compile issues with the import.
 var (
 	_ context.Context
 	_ fmt.Formatter
@@ -27,11 +27,11 @@ type DynamicDNS struct {
 
 	CustomService string   `json:"custom_service,omitempty"` // ^[^"' ]+$
 	HostName      string   `json:"host_name,omitempty"`      // ^[^"' ]+$
-	Interface     string   `json:"interface,omitempty"`      // wan|wan2
+	Interface     string   `json:"interface,omitempty"`      // wan[2-8]?
 	Login         string   `json:"login,omitempty"`          // ^[^"' ]+$
 	Options       []string `json:"options,omitempty"`        // ^[^"' ]+$
 	Server        string   `json:"server"`                   // ^[^"' ]+$|^$
-	Service       string   `json:"service,omitempty"`        // afraid|changeip|cloudflare|cloudxns|ddnss|dhis|dnsexit|dnsomatic|dnspark|dnspod|dslreports|dtdns|duckdns|duiadns|dyn|dyndns|dynv6|easydns|freemyip|googledomains|loopia|namecheap|noip|nsupdate|ovh|sitelutions|spdyn|strato|tunnelbroker|zoneedit|custom
+	Service       string   `json:"service,omitempty"`        // afraid|changeip|cloudflare|cloudxns|ddnss|dhis|dnsexit|dnsomatic|dnspark|dnspod|dslreports|dtdns|duckdns|duiadns|dyn|dyndns|dynv6|easydns|freemyip|googledomains|loopia|namecheap|noip|nsupdate|ovh|sitelutions|spdyn|strato|tunnelbroker|zoneedit|cloudflare|custom
 	XPassword     string   `json:"x_password,omitempty"`     // ^[^"' ]+$
 }
 
@@ -57,11 +57,10 @@ func (c *Client) listDynamicDNS(ctx context.Context, site string) ([]DynamicDNS,
 		Data []DynamicDNS `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dynamicdns", site), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dynamicdns", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody.Data, nil
 }
 
@@ -70,8 +69,7 @@ func (c *Client) getDynamicDNS(ctx context.Context, site, id string) (*DynamicDN
 		Meta meta         `json:"meta"`
 		Data []DynamicDNS `json:"data"`
 	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/rest/dynamicdns/%s", site, id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dynamicdns/%s", site, id), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +83,7 @@ func (c *Client) getDynamicDNS(ctx context.Context, site, id string) (*DynamicDN
 }
 
 func (c *Client) deleteDynamicDNS(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("s/%s/rest/dynamicdns/%s", site, id), struct{}{}, nil)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/dynamicdns/%s", site, id), struct{}{}, nil)
 	if err != nil {
 		return err
 	}
@@ -98,7 +96,7 @@ func (c *Client) createDynamicDNS(ctx context.Context, site string, d *DynamicDN
 		Data []DynamicDNS `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("s/%s/rest/dynamicdns", site), d, &respBody)
+	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/dynamicdns", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -107,9 +105,9 @@ func (c *Client) createDynamicDNS(ctx context.Context, site string, d *DynamicDN
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }
 
 func (c *Client) updateDynamicDNS(ctx context.Context, site string, d *DynamicDNS) (*DynamicDNS, error) {
@@ -118,7 +116,7 @@ func (c *Client) updateDynamicDNS(ctx context.Context, site string, d *DynamicDN
 		Data []DynamicDNS `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("s/%s/rest/dynamicdns/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/dynamicdns/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +125,7 @@ func (c *Client) updateDynamicDNS(ctx context.Context, site string, d *DynamicDN
 		return nil, &NotFoundError{}
 	}
 
-	new := respBody.Data[0]
+	res := respBody.Data[0]
 
-	return &new, nil
+	return &res, nil
 }

@@ -11,6 +11,10 @@ func (c *Client) GetSettingGlobalAp(ctx context.Context, site string) (*SettingG
 	return c.getSettingGlobalAp(ctx, site)
 }
 
-func (c *Client) UpdateSettingGlobalAp(ctx context.Context, site string, d *SettingGlobalAp) (*SettingGlobalAp, error) {
+func (c *Client) UpdateSettingGlobalAp(
+	ctx context.Context,
+	site string,
+	d *SettingGlobalAp,
+) (*SettingGlobalAp, error) {
 	return c.updateSettingGlobalAp(ctx, site, d)
 }
