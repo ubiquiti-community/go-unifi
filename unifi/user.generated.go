@@ -28,22 +28,23 @@ type User struct {
 	DevIdOverride int    `json:"dev_id_override,omitempty"` // non-generated field
 	IP            string `json:"ip,omitempty"`              // non-generated field
 
-	Blocked                       bool   `json:"blocked,omitempty"`
-	FixedApEnabled                bool   `json:"fixed_ap_enabled"`
-	FixedApMAC                    string `json:"fixed_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
-	FixedIP                       string `json:"fixed_ip,omitempty"`
-	Hostname                      string `json:"hostname,omitempty"`
-	LastSeen                      int    `json:"last_seen,omitempty"`
-	LocalDNSRecord                string `json:"local_dns_record,omitempty"`
-	LocalDNSRecordEnabled         bool   `json:"local_dns_record_enabled"`
-	MAC                           string `json:"mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
-	Name                          string `json:"name,omitempty"`
-	NetworkID                     string `json:"network_id,omitempty"`
-	Note                          string `json:"note,omitempty"`
-	UseFixedIP                    bool   `json:"use_fixedip"`
-	UserGroupID                   string `json:"usergroup_id,omitempty"`
-	VirtualNetworkOverrideEnabled bool   `json:"virtual_network_override_enabled"`
-	VirtualNetworkOverrideID      string `json:"virtual_network_override_id,omitempty"`
+	Blocked                       bool     `json:"blocked,omitempty"`
+	FixedApEnabled                bool     `json:"fixed_ap_enabled"`
+	FixedApMAC                    string   `json:"fixed_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
+	FixedIP                       string   `json:"fixed_ip,omitempty"`
+	Hostname                      string   `json:"hostname,omitempty"`
+	LastSeen                      int      `json:"last_seen,omitempty"`
+	LocalDNSRecord                string   `json:"local_dns_record,omitempty"`
+	LocalDNSRecordEnabled         bool     `json:"local_dns_record_enabled"`
+	MAC                           string   `json:"mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
+	Name                          string   `json:"name,omitempty"`
+	NetworkID                     string   `json:"network_id,omitempty"`
+	NetworkMembersGroupIDs        []string `json:"network_members_group_ids,omitempty"`
+	Note                          string   `json:"note,omitempty"`
+	UseFixedIP                    bool     `json:"use_fixedip"`
+	UserGroupID                   string   `json:"usergroup_id,omitempty"`
+	VirtualNetworkOverrideEnabled bool     `json:"virtual_network_override_enabled"`
+	VirtualNetworkOverrideID      string   `json:"virtual_network_override_id,omitempty"`
 }
 
 func (dst *User) UnmarshalJSON(b []byte) error {

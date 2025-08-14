@@ -237,7 +237,7 @@ func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 type DeviceEthernetOverrides struct {
 	Disabled     bool   `json:"disabled,omitempty"`
 	Ifname       string `json:"ifname,omitempty"`       // eth[0-9]{1,2}
-	NetworkGroup string `json:"networkgroup,omitempty"` // LAN[2-8]?|WAN[2-8]?
+	NetworkGroup string `json:"networkgroup,omitempty"` // LAN[2-8]?|WAN[2-9]?
 }
 
 func (dst *DeviceEthernetOverrides) UnmarshalJSON(b []byte) error {
@@ -646,17 +646,22 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 }
 
 type DeviceSim struct {
-	CardPresent bool             `json:"card_present,omitempty"`
-	CurrentApn  DeviceCurrentApn `json:"current_apn,omitempty"`
-	Iccid       int              `json:"iccid,omitempty"`
-	Slot        int              `json:"slot,omitempty"` // 1|2
+	CardPresent        bool             `json:"card_present,omitempty"`
+	CurrentApn         DeviceCurrentApn `json:"current_apn,omitempty"`
+	DataHardLimitBytes int              `json:"data_hard_limit_bytes,omitempty"`
+	DataLimitEnabled   bool             `json:"data_limit_enabled,omitempty"`
+	DataSoftLimitBytes int              `json:"data_soft_limit_bytes,omitempty"`
+	Iccid              int              `json:"iccid,omitempty"`
+	Slot               int              `json:"slot,omitempty"` // 1|2
 }
 
 func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	type Alias DeviceSim
 	aux := &struct {
-		Iccid emptyStringInt `json:"iccid"`
-		Slot  emptyStringInt `json:"slot"`
+		DataHardLimitBytes emptyStringInt `json:"data_hard_limit_bytes"`
+		DataSoftLimitBytes emptyStringInt `json:"data_soft_limit_bytes"`
+		Iccid              emptyStringInt `json:"iccid"`
+		Slot               emptyStringInt `json:"slot"`
 
 		*Alias
 	}{
@@ -667,6 +672,8 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	dst.DataHardLimitBytes = int(aux.DataHardLimitBytes)
+	dst.DataSoftLimitBytes = int(aux.DataSoftLimitBytes)
 	dst.Iccid = int(aux.Iccid)
 	dst.Slot = int(aux.Slot)
 

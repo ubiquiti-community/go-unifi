@@ -44,11 +44,11 @@ type ClientInfo struct {
 	Ccq                                 int             `json:"ccq,omitempty"`
 	Channel                             int             `json:"channel,omitempty"`
 	ChannelWidth                        string          `json:"channel_width,omitempty"`
-	DetailedStates                      DetailedStates  `json:"detailed_states,omitempty"`
+	DetailedStates                      DetailedStates  `json:"detailed_states"`
 	DhcpendTime                         int             `json:"dhcpend_time,omitempty"`
 	DisplayName                         string          `json:"display_name,omitempty"`
 	Essid                               string          `json:"essid,omitempty"`
-	Fingerprint                         Fingerprint     `json:"fingerprint,omitempty"`
+	Fingerprint                         Fingerprint     `json:"fingerprint"`
 	FirstSeen                           int             `json:"first_seen,omitempty"`
 	FixedApEnabled                      bool            `json:"fixed_ap_enabled,omitempty"`
 	FixedIP                             string          `json:"fixed_ip,omitempty"`
@@ -70,6 +70,7 @@ type ClientInfo struct {
 	LastRadio                           string          `json:"last_radio,omitempty"`
 	LastSeen                            int             `json:"last_seen,omitempty"`
 	LastUplinkMac                       string          `json:"last_uplink_mac,omitempty"`
+	LastUplinkRemotePort                int             `json:"last_uplink_remote_port,omitempty"`
 	LastUplinkName                      string          `json:"last_uplink_name,omitempty"`
 	LatestAssocTime                     int             `json:"latest_assoc_time,omitempty"`
 	LocalDNSRecord                      string          `json:"local_dns_record,omitempty"`
