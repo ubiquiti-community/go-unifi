@@ -180,6 +180,15 @@ func NewResource(structName string, resourcePath string) *Resource {
 			false,
 			"",
 		)
+		baseType.Fields["Mbb"] = NewFieldInfo(
+			"Mbb",
+			"mbb",
+			"*DeviceMbb",
+			"",
+			true,
+			false,
+			"",
+		)
 		baseType.Fields["Model"] = NewFieldInfo("Model", "model", "string", "", true, false, "")
 		baseType.Fields["State"] = NewFieldInfo(
 			"State",
@@ -512,6 +521,15 @@ func main() {
 				case "LastSeen":
 					f.FieldType = "int"
 					f.CustomUnmarshalType = "emptyStringInt"
+				}
+				return nil
+			}
+		case "DevicePortOverrides":
+			resource.FieldProcessor = func(name string, f *FieldInfo) error {
+				switch name {
+				case "QosProfile":
+					f.FieldName = "QOSProfile"
+					f.FieldType = "*DeviceQOSProfile"
 				}
 				return nil
 			}
