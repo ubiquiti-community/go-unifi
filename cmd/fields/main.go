@@ -171,6 +171,15 @@ func NewResource(structName string, resourcePath string) *Resource {
 			false,
 			"",
 		)
+		baseType.Fields["QOSProfile"] = NewFieldInfo(
+			"QOSProfile",
+			"qos_profile",
+			"*DeviceQOSProfile",
+			"",
+			true,
+			false,
+			"",
+		)
 		baseType.Fields["Model"] = NewFieldInfo("Model", "model", "string", "", true, false, "")
 		baseType.Fields["State"] = NewFieldInfo(
 			"State",

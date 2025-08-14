@@ -95,6 +95,7 @@ type Device struct {
 	PowerSourceCtrlEnabled      bool                      `json:"power_source_ctrl_enabled,omitempty"`
 	PtmpApMAC                   string                    `json:"ptmp_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
 	PtpApMAC                    string                    `json:"ptp_ap_mac,omitempty"`  // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
+	QOSProfile                  *DeviceQOSProfile         `json:"qos_profile,omitempty"`
 	RADIUSProfileID             string                    `json:"radiusprofile_id,omitempty"`
 	RadioTable                  []DeviceRadioTable        `json:"radio_table,omitempty"`
 	ResetbtnEnabled             string                    `json:"resetbtn_enabled,omitempty"` // on|off
