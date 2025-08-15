@@ -354,53 +354,6 @@ type DevicePortOverrides struct {
 	VoiceNetworkID               string            `json:"voice_networkconf_id,omitempty"`
 }
 
-func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
-	type Alias DevicePortOverrides
-	aux := &struct {
-		Dot1XIDleTimeout           emptyStringInt   `json:"dot1x_idle_timeout"`
-		EgressRateLimitKbps        emptyStringInt   `json:"egress_rate_limit_kbps"`
-		MirrorPortIDX              emptyStringInt   `json:"mirror_port_idx"`
-		PortIDX                    emptyStringInt   `json:"port_idx"`
-		PriorityQueue1Level        emptyStringInt   `json:"priority_queue1_level"`
-		PriorityQueue2Level        emptyStringInt   `json:"priority_queue2_level"`
-		PriorityQueue3Level        emptyStringInt   `json:"priority_queue3_level"`
-		PriorityQueue4Level        emptyStringInt   `json:"priority_queue4_level"`
-		Speed                      emptyStringInt   `json:"speed"`
-		StormctrlBroadcastastLevel emptyStringInt   `json:"stormctrl_bcast_level"`
-		StormctrlBroadcastastRate  emptyStringInt   `json:"stormctrl_bcast_rate"`
-		StormctrlMcastLevel        emptyStringInt   `json:"stormctrl_mcast_level"`
-		StormctrlMcastRate         emptyStringInt   `json:"stormctrl_mcast_rate"`
-		StormctrlUcastLevel        emptyStringInt   `json:"stormctrl_ucast_level"`
-		StormctrlUcastRate         emptyStringInt   `json:"stormctrl_ucast_rate"`
-
-		*Alias
-	}{
-		Alias: (*Alias)(dst),
-	}
-
-	err := json.Unmarshal(b, &aux)
-	if err != nil {
-		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	dst.Dot1XIDleTimeout = int(aux.Dot1XIDleTimeout)
-	dst.EgressRateLimitKbps = int(aux.EgressRateLimitKbps)
-	dst.MirrorPortIDX = int(aux.MirrorPortIDX)
-	dst.PortIDX = int(aux.PortIDX)
-	dst.PriorityQueue1Level = int(aux.PriorityQueue1Level)
-	dst.PriorityQueue2Level = int(aux.PriorityQueue2Level)
-	dst.PriorityQueue3Level = int(aux.PriorityQueue3Level)
-	dst.PriorityQueue4Level = int(aux.PriorityQueue4Level)
-	dst.Speed = int(aux.Speed)
-	dst.StormctrlBroadcastastLevel = int(aux.StormctrlBroadcastastLevel)
-	dst.StormctrlBroadcastastRate = int(aux.StormctrlBroadcastastRate)
-	dst.StormctrlMcastLevel = int(aux.StormctrlMcastLevel)
-	dst.StormctrlMcastRate = int(aux.StormctrlMcastRate)
-	dst.StormctrlUcastLevel = int(aux.StormctrlUcastLevel)
-	dst.StormctrlUcastRate = int(aux.StormctrlUcastRate)
-
-	return nil
-}
-
 type DeviceQOSMarking struct {
 	CosCode          int `json:"cos_code,omitempty"`           // [0-7]
 	DscpCode         int `json:"dscp_code,omitempty"`          // 0|8|16|24|32|40|48|56|10|12|14|18|20|22|26|28|30|34|36|38|44|46
