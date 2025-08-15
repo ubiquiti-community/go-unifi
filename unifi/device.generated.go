@@ -357,7 +357,6 @@ type DevicePortOverrides struct {
 func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DevicePortOverrides
 	aux := &struct {
-		AggregateMembers           []emptyStringInt `json:"aggregate_members"`
 		Dot1XIDleTimeout           emptyStringInt   `json:"dot1x_idle_timeout"`
 		EgressRateLimitKbps        emptyStringInt   `json:"egress_rate_limit_kbps"`
 		MirrorPortIDX              emptyStringInt   `json:"mirror_port_idx"`
@@ -382,10 +381,6 @@ func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	dst.AggregateMembers = make([]int, len(aux.AggregateMembers))
-	for i, v := range aux.AggregateMembers {
-		dst.AggregateMembers[i] = int(v)
 	}
 	dst.Dot1XIDleTimeout = int(aux.Dot1XIDleTimeout)
 	dst.EgressRateLimitKbps = int(aux.EgressRateLimitKbps)
