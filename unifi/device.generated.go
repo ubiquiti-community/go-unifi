@@ -114,49 +114,6 @@ type Device struct {
 	Y                           float64                   `json:"y,omitempty"`
 }
 
-func (dst *Device) UnmarshalJSON(b []byte) error {
-	type Alias Device
-	aux := &struct {
-		GatewayVrrpPriority        emptyStringInt   `json:"gateway_vrrp_priority"`
-		LcmBrightness              emptyStringInt   `json:"lcm_brightness"`
-		LcmIDleTimeout             emptyStringInt   `json:"lcm_idle_timeout"`
-		LcmOrientationOverride     emptyStringInt   `json:"lcm_orientation_override"`
-		LedOverrideColorBrightness emptyStringInt   `json:"led_override_color_brightness"`
-		LteExtAnt                  booleanishString `json:"lte_ext_ant"`
-		LteHardLimit               emptyStringInt   `json:"lte_hard_limit"`
-		LtePoe                     booleanishString `json:"lte_poe"`
-		LteSimPin                  emptyStringInt   `json:"lte_sim_pin"`
-		LteSoftLimit               emptyStringInt   `json:"lte_soft_limit"`
-		PowerSourceCtrlBudget      emptyStringInt   `json:"power_source_ctrl_budget"`
-		StpPriority                numberOrString   `json:"stp_priority"`
-		Volume                     emptyStringInt   `json:"volume"`
-
-		*Alias
-	}{
-		Alias: (*Alias)(dst),
-	}
-
-	err := json.Unmarshal(b, &aux)
-	if err != nil {
-		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	dst.GatewayVrrpPriority = int(aux.GatewayVrrpPriority)
-	dst.LcmBrightness = int(aux.LcmBrightness)
-	dst.LcmIDleTimeout = int(aux.LcmIDleTimeout)
-	dst.LcmOrientationOverride = int(aux.LcmOrientationOverride)
-	dst.LedOverrideColorBrightness = int(aux.LedOverrideColorBrightness)
-	dst.LteExtAnt = bool(aux.LteExtAnt)
-	dst.LteHardLimit = int(aux.LteHardLimit)
-	dst.LtePoe = bool(aux.LtePoe)
-	dst.LteSimPin = int(aux.LteSimPin)
-	dst.LteSoftLimit = int(aux.LteSoftLimit)
-	dst.PowerSourceCtrlBudget = int(aux.PowerSourceCtrlBudget)
-	dst.StpPriority = string(aux.StpPriority)
-	dst.Volume = int(aux.Volume)
-
-	return nil
-}
-
 type DeviceConfigNetwork struct {
 	BondingEnabled bool   `json:"bonding_enabled,omitempty"`
 	DNS1           string `json:"dns1,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$|^$
