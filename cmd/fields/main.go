@@ -161,6 +161,15 @@ func NewResource(structName string, resourcePath string) *Resource {
 	case resource.StructName == "DNSRecord":
 		resource.ResourcePath = "static-dns"
 	case resource.StructName == "Device":
+		baseType.Fields["PortTable"] = NewFieldInfo(
+			"PortTable",
+			"port_table",
+			"[]DevicePortTable",
+			"",
+			true,
+			false,
+			"",
+		)
 		baseType.Fields[" MAC"] = NewFieldInfo("MAC", "mac", "string", "", true, false, "")
 		baseType.Fields["Adopted"] = NewFieldInfo(
 			"Adopted",

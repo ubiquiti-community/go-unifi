@@ -162,7 +162,7 @@ func (c *Client) update{{ .StructName }}(ctx context.Context, site string, d *{{
 	d.Key = "{{ .ResourcePath }}"
 	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/{{ .ResourcePath }}", site), d, &respBody)
 {{- else }}
-	err := c.do(ctx, "PUT", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, d.ID), d, &respBody)
 {{- end }}
 	if err != nil {
 		return nil, err

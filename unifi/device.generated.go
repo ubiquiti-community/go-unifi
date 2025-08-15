@@ -90,6 +90,7 @@ type Device struct {
 	PeerToPeerMode              string                    `json:"peer_to_peer_mode,omitempty"` // ap|sta
 	PoeMode                     string                    `json:"poe_mode,omitempty"`          // auto|pasv24|passthrough|off
 	PortOverrides               []DevicePortOverrides     `json:"port_overrides"`
+	PortTable                   []DevicePortTable         `json:"port_table,omitempty"`
 	PowerSourceCtrl             string                    `json:"power_source_ctrl,omitempty"`        // auto|8023af|8023at|8023bt-type3|8023bt-type4|pasv24|poe-injector|ac|adapter|dc|rps
 	PowerSourceCtrlBudget       int                       `json:"power_source_ctrl_budget,omitempty"` // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]
 	PowerSourceCtrlEnabled      bool                      `json:"power_source_ctrl_enabled,omitempty"`
@@ -650,7 +651,7 @@ func (c *Client) updateDevice(ctx context.Context, site string, d *Device) (*Dev
 		Data []Device `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/stat/device/%s", site, d.ID), d, &respBody)
+	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/device/%s", site, d.ID), d, &respBody)
 	if err != nil {
 		return nil, err
 	}

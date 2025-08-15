@@ -2,29 +2,8 @@ package unifi
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
-
-func (dst *Network) MarshalJSON() ([]byte, error) {
-	type Alias Network
-	aux := &struct {
-		*Alias
-
-		WanEgressQos *emptyStringInt `json:"wan_egress_qos,omitempty"`
-	}{
-		Alias: (*Alias)(dst),
-	}
-
-	if dst.Purpose == "wan" {
-		// only send QOS when this is a WAN network
-		v := emptyStringInt(dst.WANEgressQOS)
-		aux.WanEgressQos = &v
-	}
-
-	b, err := json.Marshal(aux)
-	return b, err
-}
 
 func (c *Client) DeleteNetwork(ctx context.Context, site, id, name string) error {
 	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id), struct {
