@@ -277,7 +277,7 @@ func main() {
 		false,
 		"Only download and build the fields JSON directory, do not generate",
 	)
-	useLatestVersion := flag.Bool("latest", true, "Use the latest available version")
+	useLatestVersion := flag.Bool("latest", false, "Use the latest available version")
 
 	flag.Parse()
 
@@ -423,14 +423,6 @@ func main() {
 				case "StpPriority":
 					f.FieldType = "string"
 					f.CustomUnmarshalType = "numberOrString"
-				case "Ht":
-					f.FieldType = "int"
-				case "Channel", "BackupChannel", "TxPower":
-					if f.FieldType == "string" {
-						f.CustomUnmarshalType = "numberOrString"
-					}
-				case "LteExtAnt", "LtePoe":
-					f.CustomUnmarshalType = "booleanishString"
 				}
 
 				f.OmitEmpty = true

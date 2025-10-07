@@ -205,6 +205,7 @@ type Network struct {
 	WANDHCPv6Cos                                  int                             `json:"wan_dhcpv6_cos,omitempty"` // [0-7]|^$
 	WANDHCPv6Options                              []NetworkWANDHCPv6Options       `json:"wan_dhcpv6_options,omitempty"`
 	WANDHCPv6PDSize                               int                             `json:"wan_dhcpv6_pd_size,omitempty"` // ^(4[89]|5[0-9]|6[0-4])$|^$
+	WANDHCPv6PDSizeAuto                           bool                            `json:"wan_dhcpv6_pd_size_auto"`
 	WANDNS1                                       string                          `json:"wan_dns1"`                     // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	WANDNS2                                       string                          `json:"wan_dns2"`                     // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	WANDNS3                                       string                          `json:"wan_dns3"`                     // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
@@ -234,7 +235,7 @@ type Network struct {
 	WANSmartqDownRate                             int                             `json:"wan_smartq_down_rate,omitempty"` // [0-9]{1,6}|1000000
 	WANSmartqEnabled                              bool                            `json:"wan_smartq_enabled"`
 	WANSmartqUpRate                               int                             `json:"wan_smartq_up_rate,omitempty"` // [0-9]{1,6}|1000000
-	WANType                                       string                          `json:"wan_type,omitempty"`           // disabled|dhcp|static|pppoe|dslite|map-e,hubspoke|map-e,jpix|map-e,ntt
+	WANType                                       string                          `json:"wan_type,omitempty"`           // disabled|dhcp|static|pppoe|dslite|map-e,hubspoke|map-e,jpix|map-e,ntt|dslite-over-pppoe
 	WANTypeV6                                     string                          `json:"wan_type_v6,omitempty"`        // disabled|slaac|dhcpv6|static
 	WANUsername                                   string                          `json:"wan_username"`                 // [^"' ]+|^$
 	WANVLAN                                       int                             `json:"wan_vlan,omitempty"`           // [0-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-4]|^$

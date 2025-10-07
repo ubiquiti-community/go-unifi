@@ -15,7 +15,7 @@ import (
 	"sync"
 )
 
-//go:generate go run ../cmd/fields/ -version-base-dir=../cmd/fields/ -output-dir=../unifi/ -latest
+//go:generate go run ../cmd/fields/ -version-base-dir=../cmd/fields/ -output-dir=../unifi/ 9.5.20
 
 const (
 	loginPath    = "/api/login"

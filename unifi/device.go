@@ -89,128 +89,67 @@ type DevicePortTable struct {
 }
 
 func (dst *DevicePortTable) UnmarshalJSON(b []byte) error {
-	type Alias struct {
-		PortIdx             emptyStringInt       `json:"port_idx,omitempty"`
-		Media               string               `json:"media,omitempty"`
-		PortPoe             bool                 `json:"port_poe,omitempty"`
-		PoeCaps             emptyStringInt       `json:"poe_caps,omitempty"`
-		SpeedCaps           emptyStringInt       `json:"speed_caps,omitempty"`
-		LastConnection      DeviceLastConnection `json:"last_connection,omitempty"`
-		OpMode              string               `json:"op_mode,omitempty"`
-		Forward             string               `json:"forward,omitempty"`
-		PoeMode             string               `json:"poe_mode,omitempty"`
-		Anomalies           emptyStringInt       `json:"anomalies,omitempty"`
-		Autoneg             bool                 `json:"autoneg,omitempty"`
-		Dot1XMode           string               `json:"dot1x_mode,omitempty"`
-		Dot1XStatus         string               `json:"dot1x_status,omitempty"`
-		Enable              bool                 `json:"enable,omitempty"`
-		FlowctrlRx          bool                 `json:"flowctrl_rx,omitempty"`
-		FlowctrlTx          bool                 `json:"flowctrl_tx,omitempty"`
-		FullDuplex          bool                 `json:"full_duplex,omitempty"`
-		IsUplink            bool                 `json:"is_uplink,omitempty"`
-		Jumbo               bool                 `json:"jumbo,omitempty"`
-		MacTableCount       emptyStringInt       `json:"mac_table_count,omitempty"`
-		PoeClass            string               `json:"poe_class,omitempty"`
-		PoeCurrent          string               `json:"poe_current,omitempty"`
-		PoeEnable           bool                 `json:"poe_enable,omitempty"`
-		PoeGood             bool                 `json:"poe_good,omitempty"`
-		PoePower            string               `json:"poe_power,omitempty"`
-		PoeVoltage          string               `json:"poe_voltage,omitempty"`
-		RxBroadcast         emptyStringInt       `json:"rx_broadcast,omitempty"`
-		RxBytes             emptyStringInt       `json:"rx_bytes,omitempty"`
-		RxDropped           emptyStringInt       `json:"rx_dropped,omitempty"`
-		RxErrors            emptyStringInt       `json:"rx_errors,omitempty"`
-		RxMulticast         emptyStringInt       `json:"rx_multicast,omitempty"`
-		RxPackets           emptyStringInt       `json:"rx_packets,omitempty"`
-		Satisfaction        emptyStringInt       `json:"satisfaction,omitempty"`
-		SatisfactionReason  emptyStringInt       `json:"satisfaction_reason,omitempty"`
-		Speed               emptyStringInt       `json:"speed,omitempty"`
-		StpPathcost         emptyStringInt       `json:"stp_pathcost,omitempty"`
-		StpState            string               `json:"stp_state,omitempty"`
-		TxBroadcast         emptyStringInt       `json:"tx_broadcast,omitempty"`
-		TxBytes             emptyStringInt       `json:"tx_bytes,omitempty"`
-		TxDropped           emptyStringInt       `json:"tx_dropped,omitempty"`
-		TxErrors            emptyStringInt       `json:"tx_errors,omitempty"`
-		TxMulticast         emptyStringInt       `json:"tx_multicast,omitempty"`
-		TxPackets           emptyStringInt       `json:"tx_packets,omitempty"`
-		Up                  bool                 `json:"up,omitempty"`
-		TxBytesR            float64              `json:"tx_bytes-r,omitempty"`
-		RxBytesR            float64              `json:"rx_bytes-r,omitempty"`
-		BytesR              float64              `json:"bytes-r,omitempty"`
-		FlowControlEnabled  bool                 `json:"flow_control_enabled,omitempty"`
-		NativeNetworkconfID string               `json:"native_networkconf_id,omitempty"`
-		Name                string               `json:"name,omitempty"`
-		SettingPreference   string               `json:"setting_preference,omitempty"`
-		StormctrlBcastRate  emptyStringInt       `json:"stormctrl_bcast_rate,omitempty"`
-		StormctrlMcastRate  emptyStringInt       `json:"stormctrl_mcast_rate,omitempty"`
-		StormctrlUcastRate  emptyStringInt       `json:"stormctrl_ucast_rate,omitempty"`
-		TaggedVlanMgmt      string               `json:"tagged_vlan_mgmt,omitempty"`
-		Masked              bool                 `json:"masked,omitempty"`
-		AggregatedBy        bool                 `json:"aggregated_by,omitempty"`
+	type Alias DevicePortTable
+	aux := &struct {
+		PortIdx            emptyStringInt `json:"port_idx,omitempty"`
+		PoeCaps            emptyStringInt `json:"poe_caps,omitempty"`
+		SpeedCaps          emptyStringInt `json:"speed_caps,omitempty"`
+		Anomalies          emptyStringInt `json:"anomalies,omitempty"`
+		MacTableCount      emptyStringInt `json:"mac_table_count,omitempty"`
+		RxBroadcast        emptyStringInt `json:"rx_broadcast,omitempty"`
+		RxBytes            emptyStringInt `json:"rx_bytes,omitempty"`
+		RxDropped          emptyStringInt `json:"rx_dropped,omitempty"`
+		RxErrors           emptyStringInt `json:"rx_errors,omitempty"`
+		RxMulticast        emptyStringInt `json:"rx_multicast,omitempty"`
+		RxPackets          emptyStringInt `json:"rx_packets,omitempty"`
+		Satisfaction       emptyStringInt `json:"satisfaction,omitempty"`
+		SatisfactionReason emptyStringInt `json:"satisfaction_reason,omitempty"`
+		Speed              emptyStringInt `json:"speed,omitempty"`
+		StpPathcost        emptyStringInt `json:"stp_pathcost,omitempty"`
+		TxBroadcast        emptyStringInt `json:"tx_broadcast,omitempty"`
+		TxBytes            emptyStringInt `json:"tx_bytes,omitempty"`
+		TxDropped          emptyStringInt `json:"tx_dropped,omitempty"`
+		TxErrors           emptyStringInt `json:"tx_errors,omitempty"`
+		TxMulticast        emptyStringInt `json:"tx_multicast,omitempty"`
+		TxPackets          emptyStringInt `json:"tx_packets,omitempty"`
+		StormctrlBcastRate emptyStringInt `json:"stormctrl_bcast_rate,omitempty"`
+		StormctrlMcastRate emptyStringInt `json:"stormctrl_mcast_rate,omitempty"`
+		StormctrlUcastRate emptyStringInt `json:"stormctrl_ucast_rate,omitempty"`
+
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
 	}
 
-	var alias Alias
-	if err := json.Unmarshal(b, &alias); err != nil {
-		return err
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 
-	dst.PortIdx = int(alias.PortIdx)
-	dst.Media = alias.Media
-	dst.PortPoe = alias.PortPoe
-	dst.PoeCaps = int(alias.PoeCaps)
-	dst.SpeedCaps = int(alias.SpeedCaps)
-	dst.LastConnection = alias.LastConnection
-	dst.OpMode = alias.OpMode
-	dst.Forward = alias.Forward
-	dst.PoeMode = alias.PoeMode
-	dst.Anomalies = int(alias.Anomalies)
-	dst.Autoneg = alias.Autoneg
-	dst.Dot1XMode = alias.Dot1XMode
-	dst.Dot1XStatus = alias.Dot1XStatus
-	dst.Enable = alias.Enable
-	dst.FlowctrlRx = alias.FlowctrlRx
-	dst.FlowctrlTx = alias.FlowctrlTx
-	dst.FullDuplex = alias.FullDuplex
-	dst.IsUplink = alias.IsUplink
-	dst.Jumbo = alias.Jumbo
-	dst.MacTableCount = int(alias.MacTableCount)
-	dst.PoeClass = alias.PoeClass
-	dst.PoeCurrent = alias.PoeCurrent
-	dst.PoeEnable = alias.PoeEnable
-	dst.PoeGood = alias.PoeGood
-	dst.PoePower = alias.PoePower
-	dst.PoeVoltage = alias.PoeVoltage
-	dst.RxBroadcast = int(alias.RxBroadcast)
-	dst.RxBytes = int(alias.RxBytes)
-	dst.RxDropped = int(alias.RxDropped)
-	dst.RxErrors = int(alias.RxErrors)
-	dst.RxMulticast = int(alias.RxMulticast)
-	dst.RxPackets = int(alias.RxPackets)
-	dst.Satisfaction = int(alias.Satisfaction)
-	dst.SatisfactionReason = int(alias.SatisfactionReason)
-	dst.Speed = int(alias.Speed)
-	dst.StpPathcost = int(alias.StpPathcost)
-	dst.StpState = alias.StpState
-	dst.TxBroadcast = int(alias.TxBroadcast)
-	dst.TxBytes = int64(alias.TxBytes)
-	dst.TxDropped = int(alias.TxDropped)
-	dst.TxErrors = int(alias.TxErrors)
-	dst.TxMulticast = int(alias.TxMulticast)
-	dst.TxPackets = int(alias.TxPackets)
-	dst.Up = alias.Up
-	dst.TxBytesR = alias.TxBytesR
-	dst.RxBytesR = alias.RxBytesR
-	dst.BytesR = alias.BytesR
-	dst.FlowControlEnabled = alias.FlowControlEnabled
-	dst.NativeNetworkconfID = alias.NativeNetworkconfID
-	dst.Name = alias.Name
-	dst.SettingPreference = alias.SettingPreference
-	dst.StormctrlBcastRate = int(alias.StormctrlBcastRate)
-	dst.StormctrlMcastRate = int(alias.StormctrlMcastRate)
-	dst.StormctrlUcastRate = int(alias.StormctrlUcastRate)
-	dst.TaggedVlanMgmt = alias.TaggedVlanMgmt
-	dst.Masked = alias.Masked
-	dst.AggregatedBy = alias.AggregatedBy
+	dst.PortIdx = int(aux.PortIdx)
+	dst.PoeCaps = int(aux.PoeCaps)
+	dst.SpeedCaps = int(aux.SpeedCaps)
+	dst.Anomalies = int(aux.Anomalies)
+	dst.MacTableCount = int(aux.MacTableCount)
+	dst.RxBroadcast = int(aux.RxBroadcast)
+	dst.RxBytes = int(aux.RxBytes)
+	dst.RxDropped = int(aux.RxDropped)
+	dst.RxErrors = int(aux.RxErrors)
+	dst.RxMulticast = int(aux.RxMulticast)
+	dst.RxPackets = int(aux.RxPackets)
+	dst.Satisfaction = int(aux.Satisfaction)
+	dst.SatisfactionReason = int(aux.SatisfactionReason)
+	dst.Speed = int(aux.Speed)
+	dst.StpPathcost = int(aux.StpPathcost)
+	dst.TxBroadcast = int(aux.TxBroadcast)
+	dst.TxBytes = int64(aux.TxBytes)
+	dst.TxDropped = int(aux.TxDropped)
+	dst.TxErrors = int(aux.TxErrors)
+	dst.TxMulticast = int(aux.TxMulticast)
+	dst.TxPackets = int(aux.TxPackets)
+	dst.StormctrlBcastRate = int(aux.StormctrlBcastRate)
+	dst.StormctrlMcastRate = int(aux.StormctrlMcastRate)
+	dst.StormctrlUcastRate = int(aux.StormctrlUcastRate)
 
 	return nil
 }
