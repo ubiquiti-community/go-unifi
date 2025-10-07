@@ -207,7 +207,7 @@ func copyCustom(fieldsDir string) error {
 	}
 
 	rootDir := findModuleRoot(wd)
-	srcDir := path.Join(rootDir, "fields")
+	srcDir := path.Join(rootDir, "cmd", "fields")
 
 	files, err := os.ReadDir(path.Join(srcDir, "custom"))
 	if err != nil {
