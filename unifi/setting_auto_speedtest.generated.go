@@ -47,12 +47,21 @@ func (dst *SettingAutoSpeedtest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingAutoSpeedtest(ctx context.Context, site string) (*SettingAutoSpeedtest, error) {
+func (c *Client) getSettingAutoSpeedtest(
+	ctx context.Context,
+	site string,
+) (*SettingAutoSpeedtest, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingAutoSpeedtest `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/auto_speedtest", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/auto_speedtest", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -65,14 +74,24 @@ func (c *Client) getSettingAutoSpeedtest(ctx context.Context, site string) (*Set
 	return &d, nil
 }
 
-func (c *Client) updateSettingAutoSpeedtest(ctx context.Context, site string, d *SettingAutoSpeedtest) (*SettingAutoSpeedtest, error) {
+func (c *Client) updateSettingAutoSpeedtest(
+	ctx context.Context,
+	site string,
+	d *SettingAutoSpeedtest,
+) (*SettingAutoSpeedtest, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingAutoSpeedtest `json:"data"`
 	}
 
 	d.Key = "auto_speedtest"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/auto_speedtest", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/auto_speedtest", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

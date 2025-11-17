@@ -163,7 +163,13 @@ func (c *Client) getSettingUsg(ctx context.Context, site string) (*SettingUsg, e
 		Meta meta         `json:"meta"`
 		Data []SettingUsg `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/usg", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/usg", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -176,14 +182,24 @@ func (c *Client) getSettingUsg(ctx context.Context, site string) (*SettingUsg, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingUsg(ctx context.Context, site string, d *SettingUsg) (*SettingUsg, error) {
+func (c *Client) updateSettingUsg(
+	ctx context.Context,
+	site string,
+	d *SettingUsg,
+) (*SettingUsg, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingUsg `json:"data"`
 	}
 
 	d.Key = "usg"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/usg", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/usg", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

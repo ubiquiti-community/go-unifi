@@ -50,12 +50,21 @@ func (dst *SettingRoamingAssistant) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingRoamingAssistant(ctx context.Context, site string) (*SettingRoamingAssistant, error) {
+func (c *Client) getSettingRoamingAssistant(
+	ctx context.Context,
+	site string,
+) (*SettingRoamingAssistant, error) {
 	var respBody struct {
 		Meta meta                      `json:"meta"`
 		Data []SettingRoamingAssistant `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/roaming_assistant", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/roaming_assistant", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -68,14 +77,24 @@ func (c *Client) getSettingRoamingAssistant(ctx context.Context, site string) (*
 	return &d, nil
 }
 
-func (c *Client) updateSettingRoamingAssistant(ctx context.Context, site string, d *SettingRoamingAssistant) (*SettingRoamingAssistant, error) {
+func (c *Client) updateSettingRoamingAssistant(
+	ctx context.Context,
+	site string,
+	d *SettingRoamingAssistant,
+) (*SettingRoamingAssistant, error) {
 	var respBody struct {
 		Meta meta                      `json:"meta"`
 		Data []SettingRoamingAssistant `json:"data"`
 	}
 
 	d.Key = "roaming_assistant"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/roaming_assistant", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/roaming_assistant", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

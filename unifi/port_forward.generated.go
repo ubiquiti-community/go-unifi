@@ -84,7 +84,13 @@ func (c *Client) listPortForward(ctx context.Context, site string) ([]PortForwar
 		Data []PortForward `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/portforward", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/portforward", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +102,13 @@ func (c *Client) getPortForward(ctx context.Context, site, id string) (*PortForw
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/portforward/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/portforward/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -110,20 +122,36 @@ func (c *Client) getPortForward(ctx context.Context, site, id string) (*PortForw
 }
 
 func (c *Client) deletePortForward(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/portforward/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/portforward/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createPortForward(ctx context.Context, site string, d *PortForward) (*PortForward, error) {
+func (c *Client) createPortForward(
+	ctx context.Context,
+	site string,
+	d *PortForward,
+) (*PortForward, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/portforward", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/portforward", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -137,13 +165,23 @@ func (c *Client) createPortForward(ctx context.Context, site string, d *PortForw
 	return &res, nil
 }
 
-func (c *Client) updatePortForward(ctx context.Context, site string, d *PortForward) (*PortForward, error) {
+func (c *Client) updatePortForward(
+	ctx context.Context,
+	site string,
+	d *PortForward,
+) (*PortForward, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/portforward/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/portforward/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -94,7 +94,13 @@ func (c *Client) getSettingMdns(ctx context.Context, site string) (*SettingMdns,
 		Meta meta          `json:"meta"`
 		Data []SettingMdns `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/mdns", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/mdns", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -107,14 +113,24 @@ func (c *Client) getSettingMdns(ctx context.Context, site string) (*SettingMdns,
 	return &d, nil
 }
 
-func (c *Client) updateSettingMdns(ctx context.Context, site string, d *SettingMdns) (*SettingMdns, error) {
+func (c *Client) updateSettingMdns(
+	ctx context.Context,
+	site string,
+	d *SettingMdns,
+) (*SettingMdns, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []SettingMdns `json:"data"`
 	}
 
 	d.Key = "mdns"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/mdns", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/mdns", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

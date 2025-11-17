@@ -66,7 +66,13 @@ func (c *Client) listAccount(ctx context.Context, site string) ([]Account, error
 		Data []Account `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/account", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/account", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +84,13 @@ func (c *Client) getAccount(ctx context.Context, site, id string) (*Account, err
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/account/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/account/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +104,13 @@ func (c *Client) getAccount(ctx context.Context, site, id string) (*Account, err
 }
 
 func (c *Client) deleteAccount(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/account/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/account/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
@@ -105,7 +123,13 @@ func (c *Client) createAccount(ctx context.Context, site string, d *Account) (*A
 		Data []Account `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/account", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/account", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +149,13 @@ func (c *Client) updateAccount(ctx context.Context, site string, d *Account) (*A
 		Data []Account `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/account/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/account/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

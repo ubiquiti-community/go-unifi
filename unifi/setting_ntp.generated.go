@@ -55,7 +55,13 @@ func (c *Client) getSettingNtp(ctx context.Context, site string) (*SettingNtp, e
 		Meta meta         `json:"meta"`
 		Data []SettingNtp `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/ntp", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/ntp", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -68,14 +74,24 @@ func (c *Client) getSettingNtp(ctx context.Context, site string) (*SettingNtp, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingNtp(ctx context.Context, site string, d *SettingNtp) (*SettingNtp, error) {
+func (c *Client) updateSettingNtp(
+	ctx context.Context,
+	site string,
+	d *SettingNtp,
+) (*SettingNtp, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingNtp `json:"data"`
 	}
 
 	d.Key = "ntp"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/ntp", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/ntp", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

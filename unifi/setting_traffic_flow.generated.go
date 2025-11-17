@@ -49,12 +49,21 @@ func (dst *SettingTrafficFlow) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingTrafficFlow(ctx context.Context, site string) (*SettingTrafficFlow, error) {
+func (c *Client) getSettingTrafficFlow(
+	ctx context.Context,
+	site string,
+) (*SettingTrafficFlow, error) {
 	var respBody struct {
 		Meta meta                 `json:"meta"`
 		Data []SettingTrafficFlow `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/traffic_flow", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/traffic_flow", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -67,14 +76,24 @@ func (c *Client) getSettingTrafficFlow(ctx context.Context, site string) (*Setti
 	return &d, nil
 }
 
-func (c *Client) updateSettingTrafficFlow(ctx context.Context, site string, d *SettingTrafficFlow) (*SettingTrafficFlow, error) {
+func (c *Client) updateSettingTrafficFlow(
+	ctx context.Context,
+	site string,
+	d *SettingTrafficFlow,
+) (*SettingTrafficFlow, error) {
 	var respBody struct {
 		Meta meta                 `json:"meta"`
 		Data []SettingTrafficFlow `json:"data"`
 	}
 
 	d.Key = "traffic_flow"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/traffic_flow", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/traffic_flow", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -46,12 +46,21 @@ func (dst *SettingNetworkOptimization) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingNetworkOptimization(ctx context.Context, site string) (*SettingNetworkOptimization, error) {
+func (c *Client) getSettingNetworkOptimization(
+	ctx context.Context,
+	site string,
+) (*SettingNetworkOptimization, error) {
 	var respBody struct {
 		Meta meta                         `json:"meta"`
 		Data []SettingNetworkOptimization `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/network_optimization", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/network_optimization", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +73,24 @@ func (c *Client) getSettingNetworkOptimization(ctx context.Context, site string)
 	return &d, nil
 }
 
-func (c *Client) updateSettingNetworkOptimization(ctx context.Context, site string, d *SettingNetworkOptimization) (*SettingNetworkOptimization, error) {
+func (c *Client) updateSettingNetworkOptimization(
+	ctx context.Context,
+	site string,
+	d *SettingNetworkOptimization,
+) (*SettingNetworkOptimization, error) {
 	var respBody struct {
 		Meta meta                         `json:"meta"`
 		Data []SettingNetworkOptimization `json:"data"`
 	}
 
 	d.Key = "network_optimization"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/network_optimization", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/network_optimization", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

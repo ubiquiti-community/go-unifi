@@ -51,12 +51,21 @@ func (dst *SettingConnectivity) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingConnectivity(ctx context.Context, site string) (*SettingConnectivity, error) {
+func (c *Client) getSettingConnectivity(
+	ctx context.Context,
+	site string,
+) (*SettingConnectivity, error) {
 	var respBody struct {
 		Meta meta                  `json:"meta"`
 		Data []SettingConnectivity `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/connectivity", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/connectivity", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -69,14 +78,24 @@ func (c *Client) getSettingConnectivity(ctx context.Context, site string) (*Sett
 	return &d, nil
 }
 
-func (c *Client) updateSettingConnectivity(ctx context.Context, site string, d *SettingConnectivity) (*SettingConnectivity, error) {
+func (c *Client) updateSettingConnectivity(
+	ctx context.Context,
+	site string,
+	d *SettingConnectivity,
+) (*SettingConnectivity, error) {
 	var respBody struct {
 		Meta meta                  `json:"meta"`
 		Data []SettingConnectivity `json:"data"`
 	}
 
 	d.Key = "connectivity"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/connectivity", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/connectivity", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

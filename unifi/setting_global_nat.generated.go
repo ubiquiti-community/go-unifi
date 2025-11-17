@@ -52,7 +52,13 @@ func (c *Client) getSettingGlobalNat(ctx context.Context, site string) (*Setting
 		Meta meta               `json:"meta"`
 		Data []SettingGlobalNat `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/global_nat", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/global_nat", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -65,14 +71,24 @@ func (c *Client) getSettingGlobalNat(ctx context.Context, site string) (*Setting
 	return &d, nil
 }
 
-func (c *Client) updateSettingGlobalNat(ctx context.Context, site string, d *SettingGlobalNat) (*SettingGlobalNat, error) {
+func (c *Client) updateSettingGlobalNat(
+	ctx context.Context,
+	site string,
+	d *SettingGlobalNat,
+) (*SettingGlobalNat, error) {
 	var respBody struct {
 		Meta meta               `json:"meta"`
 		Data []SettingGlobalNat `json:"data"`
 	}
 
 	d.Key = "global_nat"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/global_nat", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/global_nat", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

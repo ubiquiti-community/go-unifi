@@ -60,7 +60,13 @@ func (c *Client) getSettingLcm(ctx context.Context, site string) (*SettingLcm, e
 		Meta meta         `json:"meta"`
 		Data []SettingLcm `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/lcm", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/lcm", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -73,14 +79,24 @@ func (c *Client) getSettingLcm(ctx context.Context, site string) (*SettingLcm, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingLcm(ctx context.Context, site string, d *SettingLcm) (*SettingLcm, error) {
+func (c *Client) updateSettingLcm(
+	ctx context.Context,
+	site string,
+	d *SettingLcm,
+) (*SettingLcm, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingLcm `json:"data"`
 	}
 
 	d.Key = "lcm"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/lcm", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/lcm", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

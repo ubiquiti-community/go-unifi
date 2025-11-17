@@ -6,14 +6,14 @@ on:
 
 jobs:
   fields:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'actions/setup-go@v5'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
 
       # TODO: Automatically merge the PR if tests pass.
-      - run: 'go generate unifi/fields.go'
-      - uses: 'peter-evans/create-pull-request@v6'
+      - run: go generate unifi/fields.go
+      - uses: peter-evans/create-pull-request@v6
         with:
           delete-branch: true
           title: 'Update to latest controller version'

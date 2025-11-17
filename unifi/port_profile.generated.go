@@ -226,7 +226,13 @@ func (c *Client) listPortProfile(ctx context.Context, site string) ([]PortProfil
 		Data []PortProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/portconf", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/portconf", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +244,13 @@ func (c *Client) getPortProfile(ctx context.Context, site, id string) (*PortProf
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/portconf/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/portconf/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -252,20 +264,36 @@ func (c *Client) getPortProfile(ctx context.Context, site, id string) (*PortProf
 }
 
 func (c *Client) deletePortProfile(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/portconf/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/portconf/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createPortProfile(ctx context.Context, site string, d *PortProfile) (*PortProfile, error) {
+func (c *Client) createPortProfile(
+	ctx context.Context,
+	site string,
+	d *PortProfile,
+) (*PortProfile, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/portconf", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/portconf", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -279,13 +307,23 @@ func (c *Client) createPortProfile(ctx context.Context, site string, d *PortProf
 	return &res, nil
 }
 
-func (c *Client) updatePortProfile(ctx context.Context, site string, d *PortProfile) (*PortProfile, error) {
+func (c *Client) updatePortProfile(
+	ctx context.Context,
+	site string,
+	d *PortProfile,
+) (*PortProfile, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/portconf/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/portconf/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

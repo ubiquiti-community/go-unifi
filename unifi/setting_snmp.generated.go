@@ -55,7 +55,13 @@ func (c *Client) getSettingSnmp(ctx context.Context, site string) (*SettingSnmp,
 		Meta meta          `json:"meta"`
 		Data []SettingSnmp `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/snmp", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/snmp", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -68,14 +74,24 @@ func (c *Client) getSettingSnmp(ctx context.Context, site string) (*SettingSnmp,
 	return &d, nil
 }
 
-func (c *Client) updateSettingSnmp(ctx context.Context, site string, d *SettingSnmp) (*SettingSnmp, error) {
+func (c *Client) updateSettingSnmp(
+	ctx context.Context,
+	site string,
+	d *SettingSnmp,
+) (*SettingSnmp, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []SettingSnmp `json:"data"`
 	}
 
 	d.Key = "snmp"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/snmp", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/snmp", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

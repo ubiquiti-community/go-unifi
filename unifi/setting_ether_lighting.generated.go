@@ -89,12 +89,21 @@ func (dst *SettingEtherLightingSpeedOverrides) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingEtherLighting(ctx context.Context, site string) (*SettingEtherLighting, error) {
+func (c *Client) getSettingEtherLighting(
+	ctx context.Context,
+	site string,
+) (*SettingEtherLighting, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingEtherLighting `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/ether_lighting", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/ether_lighting", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -107,14 +116,24 @@ func (c *Client) getSettingEtherLighting(ctx context.Context, site string) (*Set
 	return &d, nil
 }
 
-func (c *Client) updateSettingEtherLighting(ctx context.Context, site string, d *SettingEtherLighting) (*SettingEtherLighting, error) {
+func (c *Client) updateSettingEtherLighting(
+	ctx context.Context,
+	site string,
+	d *SettingEtherLighting,
+) (*SettingEtherLighting, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingEtherLighting `json:"data"`
 	}
 
 	d.Key = "ether_lighting"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/ether_lighting", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/ether_lighting", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

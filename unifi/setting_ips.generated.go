@@ -177,7 +177,13 @@ func (c *Client) getSettingIps(ctx context.Context, site string) (*SettingIps, e
 		Meta meta         `json:"meta"`
 		Data []SettingIps `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/ips", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/ips", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -190,14 +196,24 @@ func (c *Client) getSettingIps(ctx context.Context, site string) (*SettingIps, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingIps(ctx context.Context, site string, d *SettingIps) (*SettingIps, error) {
+func (c *Client) updateSettingIps(
+	ctx context.Context,
+	site string,
+	d *SettingIps,
+) (*SettingIps, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingIps `json:"data"`
 	}
 
 	d.Key = "ips"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/ips", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/ips", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

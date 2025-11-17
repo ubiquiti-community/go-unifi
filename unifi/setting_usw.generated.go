@@ -51,7 +51,13 @@ func (c *Client) getSettingUsw(ctx context.Context, site string) (*SettingUsw, e
 		Meta meta         `json:"meta"`
 		Data []SettingUsw `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/usw", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/usw", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +70,24 @@ func (c *Client) getSettingUsw(ctx context.Context, site string) (*SettingUsw, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingUsw(ctx context.Context, site string, d *SettingUsw) (*SettingUsw, error) {
+func (c *Client) updateSettingUsw(
+	ctx context.Context,
+	site string,
+	d *SettingUsw,
+) (*SettingUsw, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingUsw `json:"data"`
 	}
 
 	d.Key = "usw"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/usw", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/usw", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

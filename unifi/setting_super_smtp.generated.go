@@ -62,7 +62,13 @@ func (c *Client) getSettingSuperSmtp(ctx context.Context, site string) (*Setting
 		Meta meta               `json:"meta"`
 		Data []SettingSuperSmtp `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_smtp", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_smtp", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -75,14 +81,24 @@ func (c *Client) getSettingSuperSmtp(ctx context.Context, site string) (*Setting
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperSmtp(ctx context.Context, site string, d *SettingSuperSmtp) (*SettingSuperSmtp, error) {
+func (c *Client) updateSettingSuperSmtp(
+	ctx context.Context,
+	site string,
+	d *SettingSuperSmtp,
+) (*SettingSuperSmtp, error) {
 	var respBody struct {
 		Meta meta               `json:"meta"`
 		Data []SettingSuperSmtp `json:"data"`
 	}
 
 	d.Key = "super_smtp"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_smtp", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_smtp", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

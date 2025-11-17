@@ -56,7 +56,13 @@ func (c *Client) getSettingBroadcast(ctx context.Context, site string) (*Setting
 		Meta meta               `json:"meta"`
 		Data []SettingBroadcast `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/broadcast", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/broadcast", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -69,14 +75,24 @@ func (c *Client) getSettingBroadcast(ctx context.Context, site string) (*Setting
 	return &d, nil
 }
 
-func (c *Client) updateSettingBroadcast(ctx context.Context, site string, d *SettingBroadcast) (*SettingBroadcast, error) {
+func (c *Client) updateSettingBroadcast(
+	ctx context.Context,
+	site string,
+	d *SettingBroadcast,
+) (*SettingBroadcast, error) {
 	var respBody struct {
 		Meta meta               `json:"meta"`
 		Data []SettingBroadcast `json:"data"`
 	}
 
 	d.Key = "broadcast"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/broadcast", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/broadcast", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

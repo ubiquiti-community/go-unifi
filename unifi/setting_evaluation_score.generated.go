@@ -46,12 +46,21 @@ func (dst *SettingEvaluationScore) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingEvaluationScore(ctx context.Context, site string) (*SettingEvaluationScore, error) {
+func (c *Client) getSettingEvaluationScore(
+	ctx context.Context,
+	site string,
+) (*SettingEvaluationScore, error) {
 	var respBody struct {
 		Meta meta                     `json:"meta"`
 		Data []SettingEvaluationScore `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/evaluation_score", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/evaluation_score", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +73,24 @@ func (c *Client) getSettingEvaluationScore(ctx context.Context, site string) (*S
 	return &d, nil
 }
 
-func (c *Client) updateSettingEvaluationScore(ctx context.Context, site string, d *SettingEvaluationScore) (*SettingEvaluationScore, error) {
+func (c *Client) updateSettingEvaluationScore(
+	ctx context.Context,
+	site string,
+	d *SettingEvaluationScore,
+) (*SettingEvaluationScore, error) {
 	var respBody struct {
 		Meta meta                     `json:"meta"`
 		Data []SettingEvaluationScore `json:"data"`
 	}
 
 	d.Key = "evaluation_score"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/evaluation_score", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/evaluation_score", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -88,7 +88,7 @@ type Network struct {
 	IGMPProxyUpstream                             bool                            `json:"igmp_proxy_upstream"`
 	IGMPQuerierSwitches                           []NetworkIGMPQuerierSwitches    `json:"igmp_querier_switches,omitempty"`
 	IGMPSnooping                                  bool                            `json:"igmp_snooping"`
-	IGMPSupression                                bool                            `json:"igmp_supression"`
+	IGMPSupression                                bool                            `json:"igmp_suppression"`
 	IPSecDhGroup                                  int                             `json:"ipsec_dh_group,omitempty"` // 2|5|14|15|16|19|20|21|25|26
 	IPSecDynamicRouting                           bool                            `json:"ipsec_dynamic_routing"`
 	IPSecEncryption                               string                          `json:"ipsec_encryption,omitempty"`     // aes128|aes192|aes256|3des
@@ -476,7 +476,13 @@ func (c *Client) listNetwork(ctx context.Context, site string) ([]Network, error
 		Data []Network `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/networkconf", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/networkconf", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -488,7 +494,13 @@ func (c *Client) getNetwork(ctx context.Context, site, id string) (*Network, err
 		Meta meta      `json:"meta"`
 		Data []Network `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -502,7 +514,13 @@ func (c *Client) getNetwork(ctx context.Context, site, id string) (*Network, err
 }
 
 func (c *Client) deleteNetwork(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
@@ -515,7 +533,13 @@ func (c *Client) createNetwork(ctx context.Context, site string, d *Network) (*N
 		Data []Network `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/networkconf", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/networkconf", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -535,7 +559,13 @@ func (c *Client) updateNetwork(ctx context.Context, site string, d *Network) (*N
 		Data []Network `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -46,12 +46,21 @@ func (dst *SettingSslInspection) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSslInspection(ctx context.Context, site string) (*SettingSslInspection, error) {
+func (c *Client) getSettingSslInspection(
+	ctx context.Context,
+	site string,
+) (*SettingSslInspection, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingSslInspection `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/ssl_inspection", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/ssl_inspection", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +73,24 @@ func (c *Client) getSettingSslInspection(ctx context.Context, site string) (*Set
 	return &d, nil
 }
 
-func (c *Client) updateSettingSslInspection(ctx context.Context, site string, d *SettingSslInspection) (*SettingSslInspection, error) {
+func (c *Client) updateSettingSslInspection(
+	ctx context.Context,
+	site string,
+	d *SettingSslInspection,
+) (*SettingSslInspection, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingSslInspection `json:"data"`
 	}
 
 	d.Key = "ssl_inspection"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/ssl_inspection", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/ssl_inspection", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

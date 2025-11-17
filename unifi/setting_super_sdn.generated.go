@@ -56,7 +56,13 @@ func (c *Client) getSettingSuperSdn(ctx context.Context, site string) (*SettingS
 		Meta meta              `json:"meta"`
 		Data []SettingSuperSdn `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_sdn", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_sdn", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -69,14 +75,24 @@ func (c *Client) getSettingSuperSdn(ctx context.Context, site string) (*SettingS
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperSdn(ctx context.Context, site string, d *SettingSuperSdn) (*SettingSuperSdn, error) {
+func (c *Client) updateSettingSuperSdn(
+	ctx context.Context,
+	site string,
+	d *SettingSuperSdn,
+) (*SettingSuperSdn, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []SettingSuperSdn `json:"data"`
 	}
 
 	d.Key = "super_sdn"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_sdn", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_sdn", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

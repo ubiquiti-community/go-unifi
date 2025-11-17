@@ -47,12 +47,21 @@ func (dst *SettingSuperIdentity) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSuperIdentity(ctx context.Context, site string) (*SettingSuperIdentity, error) {
+func (c *Client) getSettingSuperIdentity(
+	ctx context.Context,
+	site string,
+) (*SettingSuperIdentity, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingSuperIdentity `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_identity", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_identity", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -65,14 +74,24 @@ func (c *Client) getSettingSuperIdentity(ctx context.Context, site string) (*Set
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperIdentity(ctx context.Context, site string, d *SettingSuperIdentity) (*SettingSuperIdentity, error) {
+func (c *Client) updateSettingSuperIdentity(
+	ctx context.Context,
+	site string,
+	d *SettingSuperIdentity,
+) (*SettingSuperIdentity, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingSuperIdentity `json:"data"`
 	}
 
 	d.Key = "super_identity"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_identity", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_identity", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

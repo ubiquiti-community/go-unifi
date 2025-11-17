@@ -54,7 +54,13 @@ func (c *Client) getSettingCountry(ctx context.Context, site string) (*SettingCo
 		Meta meta             `json:"meta"`
 		Data []SettingCountry `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/country", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/country", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -67,14 +73,24 @@ func (c *Client) getSettingCountry(ctx context.Context, site string) (*SettingCo
 	return &d, nil
 }
 
-func (c *Client) updateSettingCountry(ctx context.Context, site string, d *SettingCountry) (*SettingCountry, error) {
+func (c *Client) updateSettingCountry(
+	ctx context.Context,
+	site string,
+	d *SettingCountry,
+) (*SettingCountry, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []SettingCountry `json:"data"`
 	}
 
 	d.Key = "country"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/country", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/country", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

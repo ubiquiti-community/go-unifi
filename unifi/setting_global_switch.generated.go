@@ -78,12 +78,21 @@ func (dst *SettingGlobalSwitchAclL3Isolation) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingGlobalSwitch(ctx context.Context, site string) (*SettingGlobalSwitch, error) {
+func (c *Client) getSettingGlobalSwitch(
+	ctx context.Context,
+	site string,
+) (*SettingGlobalSwitch, error) {
 	var respBody struct {
 		Meta meta                  `json:"meta"`
 		Data []SettingGlobalSwitch `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/global_switch", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/global_switch", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -96,14 +105,24 @@ func (c *Client) getSettingGlobalSwitch(ctx context.Context, site string) (*Sett
 	return &d, nil
 }
 
-func (c *Client) updateSettingGlobalSwitch(ctx context.Context, site string, d *SettingGlobalSwitch) (*SettingGlobalSwitch, error) {
+func (c *Client) updateSettingGlobalSwitch(
+	ctx context.Context,
+	site string,
+	d *SettingGlobalSwitch,
+) (*SettingGlobalSwitch, error) {
 	var respBody struct {
 		Meta meta                  `json:"meta"`
 		Data []SettingGlobalSwitch `json:"data"`
 	}
 
 	d.Key = "global_switch"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/global_switch", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/global_switch", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

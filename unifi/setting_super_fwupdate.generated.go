@@ -48,12 +48,21 @@ func (dst *SettingSuperFwupdate) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSuperFwupdate(ctx context.Context, site string) (*SettingSuperFwupdate, error) {
+func (c *Client) getSettingSuperFwupdate(
+	ctx context.Context,
+	site string,
+) (*SettingSuperFwupdate, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingSuperFwupdate `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_fwupdate", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_fwupdate", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -66,14 +75,24 @@ func (c *Client) getSettingSuperFwupdate(ctx context.Context, site string) (*Set
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperFwupdate(ctx context.Context, site string, d *SettingSuperFwupdate) (*SettingSuperFwupdate, error) {
+func (c *Client) updateSettingSuperFwupdate(
+	ctx context.Context,
+	site string,
+	d *SettingSuperFwupdate,
+) (*SettingSuperFwupdate, error) {
 	var respBody struct {
 		Meta meta                   `json:"meta"`
 		Data []SettingSuperFwupdate `json:"data"`
 	}
 
 	d.Key = "super_fwupdate"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_fwupdate", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_fwupdate", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -140,7 +140,13 @@ func (c *Client) listRADIUSProfile(ctx context.Context, site string) ([]RADIUSPr
 		Data []RADIUSProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/radiusprofile", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/radiusprofile", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +158,13 @@ func (c *Client) getRADIUSProfile(ctx context.Context, site, id string) (*RADIUS
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -166,20 +178,36 @@ func (c *Client) getRADIUSProfile(ctx context.Context, site, id string) (*RADIUS
 }
 
 func (c *Client) deleteRADIUSProfile(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createRADIUSProfile(ctx context.Context, site string, d *RADIUSProfile) (*RADIUSProfile, error) {
+func (c *Client) createRADIUSProfile(
+	ctx context.Context,
+	site string,
+	d *RADIUSProfile,
+) (*RADIUSProfile, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/radiusprofile", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/radiusprofile", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -193,13 +221,23 @@ func (c *Client) createRADIUSProfile(ctx context.Context, site string, d *RADIUS
 	return &res, nil
 }
 
-func (c *Client) updateRADIUSProfile(ctx context.Context, site string, d *RADIUSProfile) (*RADIUSProfile, error) {
+func (c *Client) updateRADIUSProfile(
+	ctx context.Context,
+	site string,
+	d *RADIUSProfile,
+) (*RADIUSProfile, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/radiusprofile/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

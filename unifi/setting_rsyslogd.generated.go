@@ -66,7 +66,13 @@ func (c *Client) getSettingRsyslogd(ctx context.Context, site string) (*SettingR
 		Meta meta              `json:"meta"`
 		Data []SettingRsyslogd `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/rsyslogd", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/rsyslogd", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -79,14 +85,24 @@ func (c *Client) getSettingRsyslogd(ctx context.Context, site string) (*SettingR
 	return &d, nil
 }
 
-func (c *Client) updateSettingRsyslogd(ctx context.Context, site string, d *SettingRsyslogd) (*SettingRsyslogd, error) {
+func (c *Client) updateSettingRsyslogd(
+	ctx context.Context,
+	site string,
+	d *SettingRsyslogd,
+) (*SettingRsyslogd, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []SettingRsyslogd `json:"data"`
 	}
 
 	d.Key = "rsyslogd"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/rsyslogd", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/rsyslogd", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

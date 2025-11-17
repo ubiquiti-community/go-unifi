@@ -54,7 +54,13 @@ func (c *Client) getSettingBaresip(ctx context.Context, site string) (*SettingBa
 		Meta meta             `json:"meta"`
 		Data []SettingBaresip `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/baresip", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/baresip", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -67,14 +73,24 @@ func (c *Client) getSettingBaresip(ctx context.Context, site string) (*SettingBa
 	return &d, nil
 }
 
-func (c *Client) updateSettingBaresip(ctx context.Context, site string, d *SettingBaresip) (*SettingBaresip, error) {
+func (c *Client) updateSettingBaresip(
+	ctx context.Context,
+	site string,
+	d *SettingBaresip,
+) (*SettingBaresip, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []SettingBaresip `json:"data"`
 	}
 
 	d.Key = "baresip"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/baresip", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/baresip", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

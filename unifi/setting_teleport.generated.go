@@ -52,7 +52,13 @@ func (c *Client) getSettingTeleport(ctx context.Context, site string) (*SettingT
 		Meta meta              `json:"meta"`
 		Data []SettingTeleport `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/teleport", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/teleport", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -65,14 +71,24 @@ func (c *Client) getSettingTeleport(ctx context.Context, site string) (*SettingT
 	return &d, nil
 }
 
-func (c *Client) updateSettingTeleport(ctx context.Context, site string, d *SettingTeleport) (*SettingTeleport, error) {
+func (c *Client) updateSettingTeleport(
+	ctx context.Context,
+	site string,
+	d *SettingTeleport,
+) (*SettingTeleport, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []SettingTeleport `json:"data"`
 	}
 
 	d.Key = "teleport"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/teleport", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/teleport", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

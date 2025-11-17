@@ -155,12 +155,21 @@ func (dst *SettingGuestAccess) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingGuestAccess(ctx context.Context, site string) (*SettingGuestAccess, error) {
+func (c *Client) getSettingGuestAccess(
+	ctx context.Context,
+	site string,
+) (*SettingGuestAccess, error) {
 	var respBody struct {
 		Meta meta                 `json:"meta"`
 		Data []SettingGuestAccess `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/guest_access", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/guest_access", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -173,14 +182,24 @@ func (c *Client) getSettingGuestAccess(ctx context.Context, site string) (*Setti
 	return &d, nil
 }
 
-func (c *Client) updateSettingGuestAccess(ctx context.Context, site string, d *SettingGuestAccess) (*SettingGuestAccess, error) {
+func (c *Client) updateSettingGuestAccess(
+	ctx context.Context,
+	site string,
+	d *SettingGuestAccess,
+) (*SettingGuestAccess, error) {
 	var respBody struct {
 		Meta meta                 `json:"meta"`
 		Data []SettingGuestAccess `json:"data"`
 	}
 
 	d.Key = "guest_access"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/guest_access", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/guest_access", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

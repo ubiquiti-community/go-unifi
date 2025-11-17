@@ -73,7 +73,13 @@ func (c *Client) getSettingGlobalAp(ctx context.Context, site string) (*SettingG
 		Meta meta              `json:"meta"`
 		Data []SettingGlobalAp `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/global_ap", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/global_ap", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -86,14 +92,24 @@ func (c *Client) getSettingGlobalAp(ctx context.Context, site string) (*SettingG
 	return &d, nil
 }
 
-func (c *Client) updateSettingGlobalAp(ctx context.Context, site string, d *SettingGlobalAp) (*SettingGlobalAp, error) {
+func (c *Client) updateSettingGlobalAp(
+	ctx context.Context,
+	site string,
+	d *SettingGlobalAp,
+) (*SettingGlobalAp, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []SettingGlobalAp `json:"data"`
 	}
 
 	d.Key = "global_ap"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/global_ap", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/global_ap", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

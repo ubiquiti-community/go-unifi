@@ -46,12 +46,21 @@ func (dst *SettingSuperEvents) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSuperEvents(ctx context.Context, site string) (*SettingSuperEvents, error) {
+func (c *Client) getSettingSuperEvents(
+	ctx context.Context,
+	site string,
+) (*SettingSuperEvents, error) {
 	var respBody struct {
 		Meta meta                 `json:"meta"`
 		Data []SettingSuperEvents `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_events", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_events", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +73,24 @@ func (c *Client) getSettingSuperEvents(ctx context.Context, site string) (*Setti
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperEvents(ctx context.Context, site string, d *SettingSuperEvents) (*SettingSuperEvents, error) {
+func (c *Client) updateSettingSuperEvents(
+	ctx context.Context,
+	site string,
+	d *SettingSuperEvents,
+) (*SettingSuperEvents, error) {
 	var respBody struct {
 		Meta meta                 `json:"meta"`
 		Data []SettingSuperEvents `json:"data"`
 	}
 
 	d.Key = "super_events"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_events", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_events", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

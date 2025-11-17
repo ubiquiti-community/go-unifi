@@ -82,7 +82,13 @@ func (c *Client) listFirewallRule(ctx context.Context, site string) ([]FirewallR
 		Data []FirewallRule `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/firewallrule", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/firewallrule", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +100,13 @@ func (c *Client) getFirewallRule(ctx context.Context, site, id string) (*Firewal
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -108,20 +120,36 @@ func (c *Client) getFirewallRule(ctx context.Context, site, id string) (*Firewal
 }
 
 func (c *Client) deleteFirewallRule(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createFirewallRule(ctx context.Context, site string, d *FirewallRule) (*FirewallRule, error) {
+func (c *Client) createFirewallRule(
+	ctx context.Context,
+	site string,
+	d *FirewallRule,
+) (*FirewallRule, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/firewallrule", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/firewallrule", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -135,13 +163,23 @@ func (c *Client) createFirewallRule(ctx context.Context, site string, d *Firewal
 	return &res, nil
 }
 
-func (c *Client) updateFirewallRule(ctx context.Context, site string, d *FirewallRule) (*FirewallRule, error) {
+func (c *Client) updateFirewallRule(
+	ctx context.Context,
+	site string,
+	d *FirewallRule,
+) (*FirewallRule, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/firewallrule/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

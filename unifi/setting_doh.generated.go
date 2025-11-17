@@ -75,7 +75,13 @@ func (c *Client) getSettingDoh(ctx context.Context, site string) (*SettingDoh, e
 		Meta meta         `json:"meta"`
 		Data []SettingDoh `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/doh", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/doh", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -88,14 +94,24 @@ func (c *Client) getSettingDoh(ctx context.Context, site string) (*SettingDoh, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingDoh(ctx context.Context, site string, d *SettingDoh) (*SettingDoh, error) {
+func (c *Client) updateSettingDoh(
+	ctx context.Context,
+	site string,
+	d *SettingDoh,
+) (*SettingDoh, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingDoh `json:"data"`
 	}
 
 	d.Key = "doh"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/doh", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/doh", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

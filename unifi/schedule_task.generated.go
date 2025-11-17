@@ -74,7 +74,13 @@ func (c *Client) listScheduleTask(ctx context.Context, site string) ([]ScheduleT
 		Data []ScheduleTask `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/scheduletask", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/scheduletask", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +92,13 @@ func (c *Client) getScheduleTask(ctx context.Context, site, id string) (*Schedul
 		Meta meta           `json:"meta"`
 		Data []ScheduleTask `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/scheduletask/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/scheduletask/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -100,20 +112,36 @@ func (c *Client) getScheduleTask(ctx context.Context, site, id string) (*Schedul
 }
 
 func (c *Client) deleteScheduleTask(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/scheduletask/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/scheduletask/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createScheduleTask(ctx context.Context, site string, d *ScheduleTask) (*ScheduleTask, error) {
+func (c *Client) createScheduleTask(
+	ctx context.Context,
+	site string,
+	d *ScheduleTask,
+) (*ScheduleTask, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []ScheduleTask `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/scheduletask", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/scheduletask", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -127,13 +155,23 @@ func (c *Client) createScheduleTask(ctx context.Context, site string, d *Schedul
 	return &res, nil
 }
 
-func (c *Client) updateScheduleTask(ctx context.Context, site string, d *ScheduleTask) (*ScheduleTask, error) {
+func (c *Client) updateScheduleTask(
+	ctx context.Context,
+	site string,
+	d *ScheduleTask,
+) (*ScheduleTask, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []ScheduleTask `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/scheduletask/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/scheduletask/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

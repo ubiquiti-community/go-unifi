@@ -77,7 +77,13 @@ func (c *Client) listDashboard(ctx context.Context, site string) ([]Dashboard, e
 		Data []Dashboard `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dashboard", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/dashboard", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +95,13 @@ func (c *Client) getDashboard(ctx context.Context, site, id string) (*Dashboard,
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -103,20 +115,36 @@ func (c *Client) getDashboard(ctx context.Context, site, id string) (*Dashboard,
 }
 
 func (c *Client) deleteDashboard(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createDashboard(ctx context.Context, site string, d *Dashboard) (*Dashboard, error) {
+func (c *Client) createDashboard(
+	ctx context.Context,
+	site string,
+	d *Dashboard,
+) (*Dashboard, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/dashboard", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/dashboard", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -130,13 +158,23 @@ func (c *Client) createDashboard(ctx context.Context, site string, d *Dashboard)
 	return &res, nil
 }
 
-func (c *Client) updateDashboard(ctx context.Context, site string, d *Dashboard) (*Dashboard, error) {
+func (c *Client) updateDashboard(
+	ctx context.Context,
+	site string,
+	d *Dashboard,
+) (*Dashboard, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/dashboard/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

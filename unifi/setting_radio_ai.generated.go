@@ -146,7 +146,13 @@ func (c *Client) getSettingRadioAi(ctx context.Context, site string) (*SettingRa
 		Meta meta             `json:"meta"`
 		Data []SettingRadioAi `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/radio_ai", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/radio_ai", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -159,14 +165,24 @@ func (c *Client) getSettingRadioAi(ctx context.Context, site string) (*SettingRa
 	return &d, nil
 }
 
-func (c *Client) updateSettingRadioAi(ctx context.Context, site string, d *SettingRadioAi) (*SettingRadioAi, error) {
+func (c *Client) updateSettingRadioAi(
+	ctx context.Context,
+	site string,
+	d *SettingRadioAi,
+) (*SettingRadioAi, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []SettingRadioAi `json:"data"`
 	}
 
 	d.Key = "radio_ai"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/radio_ai", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/radio_ai", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -9,41 +9,56 @@ on:
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'actions/setup-go@v5'
-      - run: 'go build ./...'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+      - run: go build ./...
 
   generate:
-    needs: 'build'
-    runs-on: 'ubuntu-latest'
+    needs: build
+    runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'actions/setup-go@v5'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
 
-      - run: 'go generate unifi/device.go'
-      - run: 'git diff --compact-summary --exit-code'
+      - run: go generate unifi/device.go
+      - run: git diff --compact-summary --exit-code
 
   lint:
-    runs-on: 'ubuntu-latest'
+    name: Lint
+    runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'actions/setup-go@v5'
-      - uses: 'golangci/golangci-lint-action@v3'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          skip-pkg-cache: true
+          go-version-file: 'go.mod'
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v9.0.0
+        with:
+          version: latest
 
   test:
-    needs: 'build'
-    runs-on: 'ubuntu-latest'
+    name: Test
+    runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'actions/setup-go@v5'
-      - run: 'go test ./...'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Run tests
+        run: go test ./...
 
   yamllint:
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'ibiqlik/action-yamllint@v3'
+      - uses: actions/checkout@v4
+      - uses: ibiqlik/action-yamllint@v3

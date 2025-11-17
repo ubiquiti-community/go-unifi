@@ -51,7 +51,13 @@ func (c *Client) getSettingLocale(ctx context.Context, site string) (*SettingLoc
 		Meta meta            `json:"meta"`
 		Data []SettingLocale `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/locale", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/locale", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +70,24 @@ func (c *Client) getSettingLocale(ctx context.Context, site string) (*SettingLoc
 	return &d, nil
 }
 
-func (c *Client) updateSettingLocale(ctx context.Context, site string, d *SettingLocale) (*SettingLocale, error) {
+func (c *Client) updateSettingLocale(
+	ctx context.Context,
+	site string,
+	d *SettingLocale,
+) (*SettingLocale, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []SettingLocale `json:"data"`
 	}
 
 	d.Key = "locale"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/locale", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/locale", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

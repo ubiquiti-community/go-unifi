@@ -51,7 +51,8 @@ func (c *Client) deleteBGPConfig(ctx context.Context, site string) error {
 func (c *Client) CreateBGPConfig(
 	ctx context.Context,
 	site string,
-	d *BGPConfig) (*BGPConfig, error) {
+	d *BGPConfig,
+) (*BGPConfig, error) {
 	var respBody BGPConfig
 
 	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/bgp/config", site), d, &respBody)
@@ -62,7 +63,11 @@ func (c *Client) CreateBGPConfig(
 	return &respBody, nil
 }
 
-func (c *Client) UpdateBGPConfig(ctx context.Context, site string, d *BGPConfig) (*BGPConfig, error) {
+func (c *Client) UpdateBGPConfig(
+	ctx context.Context,
+	site string,
+	d *BGPConfig,
+) (*BGPConfig, error) {
 	var respBody BGPConfig
 
 	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/bgp/config", site), d, &respBody)

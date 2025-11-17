@@ -52,12 +52,21 @@ func (dst *SettingSuperCloudaccess) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSuperCloudaccess(ctx context.Context, site string) (*SettingSuperCloudaccess, error) {
+func (c *Client) getSettingSuperCloudaccess(
+	ctx context.Context,
+	site string,
+) (*SettingSuperCloudaccess, error) {
 	var respBody struct {
 		Meta meta                      `json:"meta"`
 		Data []SettingSuperCloudaccess `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_cloudaccess", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_cloudaccess", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -70,14 +79,24 @@ func (c *Client) getSettingSuperCloudaccess(ctx context.Context, site string) (*
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperCloudaccess(ctx context.Context, site string, d *SettingSuperCloudaccess) (*SettingSuperCloudaccess, error) {
+func (c *Client) updateSettingSuperCloudaccess(
+	ctx context.Context,
+	site string,
+	d *SettingSuperCloudaccess,
+) (*SettingSuperCloudaccess, error) {
 	var respBody struct {
 		Meta meta                      `json:"meta"`
 		Data []SettingSuperCloudaccess `json:"data"`
 	}
 
 	d.Key = "super_cloudaccess"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_cloudaccess", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_cloudaccess", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

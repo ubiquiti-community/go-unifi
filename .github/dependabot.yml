@@ -1,14 +1,13 @@
----
 version: 2
 updates:
-- package-ecosystem: "github-actions"
-  directory: "/"
-  schedule:
-    interval: "daily"
-    time: "02:03"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:03"
 
-- package-ecosystem: "gomod"
-  directory: "/"
-  schedule:
-    interval: "daily"
-    time: "02:03"
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:03"

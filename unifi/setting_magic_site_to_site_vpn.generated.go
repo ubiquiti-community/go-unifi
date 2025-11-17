@@ -46,12 +46,21 @@ func (dst *SettingMagicSiteToSiteVpn) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingMagicSiteToSiteVpn(ctx context.Context, site string) (*SettingMagicSiteToSiteVpn, error) {
+func (c *Client) getSettingMagicSiteToSiteVpn(
+	ctx context.Context,
+	site string,
+) (*SettingMagicSiteToSiteVpn, error) {
 	var respBody struct {
 		Meta meta                        `json:"meta"`
 		Data []SettingMagicSiteToSiteVpn `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/magic_site_to_site_vpn", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/magic_site_to_site_vpn", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +73,24 @@ func (c *Client) getSettingMagicSiteToSiteVpn(ctx context.Context, site string) 
 	return &d, nil
 }
 
-func (c *Client) updateSettingMagicSiteToSiteVpn(ctx context.Context, site string, d *SettingMagicSiteToSiteVpn) (*SettingMagicSiteToSiteVpn, error) {
+func (c *Client) updateSettingMagicSiteToSiteVpn(
+	ctx context.Context,
+	site string,
+	d *SettingMagicSiteToSiteVpn,
+) (*SettingMagicSiteToSiteVpn, error) {
 	var respBody struct {
 		Meta meta                        `json:"meta"`
 		Data []SettingMagicSiteToSiteVpn `json:"data"`
 	}
 
 	d.Key = "magic_site_to_site_vpn"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/magic_site_to_site_vpn", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/magic_site_to_site_vpn", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

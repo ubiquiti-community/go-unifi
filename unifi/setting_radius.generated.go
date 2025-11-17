@@ -65,7 +65,13 @@ func (c *Client) getSettingRadius(ctx context.Context, site string) (*SettingRad
 		Meta meta            `json:"meta"`
 		Data []SettingRadius `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/radius", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/radius", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -78,14 +84,24 @@ func (c *Client) getSettingRadius(ctx context.Context, site string) (*SettingRad
 	return &d, nil
 }
 
-func (c *Client) updateSettingRadius(ctx context.Context, site string, d *SettingRadius) (*SettingRadius, error) {
+func (c *Client) updateSettingRadius(
+	ctx context.Context,
+	site string,
+	d *SettingRadius,
+) (*SettingRadius, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []SettingRadius `json:"data"`
 	}
 
 	d.Key = "radius"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/radius", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/radius", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

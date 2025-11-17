@@ -52,7 +52,13 @@ func (c *Client) listFirewallGroup(ctx context.Context, site string) ([]Firewall
 		Data []FirewallGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/firewallgroup", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/firewallgroup", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +70,13 @@ func (c *Client) getFirewallGroup(ctx context.Context, site, id string) (*Firewa
 		Meta meta            `json:"meta"`
 		Data []FirewallGroup `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/firewallgroup/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/firewallgroup/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -78,20 +90,36 @@ func (c *Client) getFirewallGroup(ctx context.Context, site, id string) (*Firewa
 }
 
 func (c *Client) deleteFirewallGroup(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/firewallgroup/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/firewallgroup/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createFirewallGroup(ctx context.Context, site string, d *FirewallGroup) (*FirewallGroup, error) {
+func (c *Client) createFirewallGroup(
+	ctx context.Context,
+	site string,
+	d *FirewallGroup,
+) (*FirewallGroup, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []FirewallGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/firewallgroup", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/firewallgroup", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -105,13 +133,23 @@ func (c *Client) createFirewallGroup(ctx context.Context, site string, d *Firewa
 	return &res, nil
 }
 
-func (c *Client) updateFirewallGroup(ctx context.Context, site string, d *FirewallGroup) (*FirewallGroup, error) {
+func (c *Client) updateFirewallGroup(
+	ctx context.Context,
+	site string,
+	d *FirewallGroup,
+) (*FirewallGroup, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []FirewallGroup `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/firewallgroup/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/firewallgroup/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

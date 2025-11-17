@@ -63,7 +63,13 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 func (c *Client) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, error) {
 	var respBody []DNSRecord
 
-	err := c.do(ctx, "GET", fmt.Sprintf("v2/api/site/%s/static-dns", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("v2/api/site/%s/static-dns", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -71,17 +77,33 @@ func (c *Client) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, e
 }
 
 func (c *Client) deleteDNSRecord(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("v2/api/site/%s/static-dns/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("v2/api/site/%s/static-dns/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createDNSRecord(ctx context.Context, site string, d *DNSRecord) (*DNSRecord, error) {
+func (c *Client) createDNSRecord(
+	ctx context.Context,
+	site string,
+	d *DNSRecord,
+) (*DNSRecord, error) {
 	var respBody DNSRecord
 
-	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/static-dns", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("v2/api/site/%s/static-dns", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -89,10 +111,20 @@ func (c *Client) createDNSRecord(ctx context.Context, site string, d *DNSRecord)
 	return &respBody, nil
 }
 
-func (c *Client) updateDNSRecord(ctx context.Context, site string, d *DNSRecord) (*DNSRecord, error) {
+func (c *Client) updateDNSRecord(
+	ctx context.Context,
+	site string,
+	d *DNSRecord,
+) (*DNSRecord, error) {
 	var respBody DNSRecord
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("v2/api/site/%s/static-dns/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("v2/api/site/%s/static-dns/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

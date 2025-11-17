@@ -52,7 +52,13 @@ func (c *Client) getSettingDpi(ctx context.Context, site string) (*SettingDpi, e
 		Meta meta         `json:"meta"`
 		Data []SettingDpi `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/dpi", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/dpi", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -65,14 +71,24 @@ func (c *Client) getSettingDpi(ctx context.Context, site string) (*SettingDpi, e
 	return &d, nil
 }
 
-func (c *Client) updateSettingDpi(ctx context.Context, site string, d *SettingDpi) (*SettingDpi, error) {
+func (c *Client) updateSettingDpi(
+	ctx context.Context,
+	site string,
+	d *SettingDpi,
+) (*SettingDpi, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingDpi `json:"data"`
 	}
 
 	d.Key = "dpi"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/dpi", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/dpi", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

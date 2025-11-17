@@ -52,7 +52,13 @@ func (c *Client) listHotspotOp(ctx context.Context, site string) ([]HotspotOp, e
 		Data []HotspotOp `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/hotspotop", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/hotspotop", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +70,13 @@ func (c *Client) getHotspotOp(ctx context.Context, site, id string) (*HotspotOp,
 		Meta meta        `json:"meta"`
 		Data []HotspotOp `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/hotspotop/%s", site, id), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/hotspotop/%s", site, id),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -78,20 +90,36 @@ func (c *Client) getHotspotOp(ctx context.Context, site, id string) (*HotspotOp,
 }
 
 func (c *Client) deleteHotspotOp(ctx context.Context, site, id string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/hotspotop/%s", site, id), struct{}{}, nil)
+	err := c.do(
+		ctx,
+		"DELETE",
+		fmt.Sprintf("api/s/%s/rest/hotspotop/%s", site, id),
+		struct{}{},
+		nil,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) createHotspotOp(ctx context.Context, site string, d *HotspotOp) (*HotspotOp, error) {
+func (c *Client) createHotspotOp(
+	ctx context.Context,
+	site string,
+	d *HotspotOp,
+) (*HotspotOp, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []HotspotOp `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/rest/hotspotop", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"POST",
+		fmt.Sprintf("api/s/%s/rest/hotspotop", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -105,13 +133,23 @@ func (c *Client) createHotspotOp(ctx context.Context, site string, d *HotspotOp)
 	return &res, nil
 }
 
-func (c *Client) updateHotspotOp(ctx context.Context, site string, d *HotspotOp) (*HotspotOp, error) {
+func (c *Client) updateHotspotOp(
+	ctx context.Context,
+	site string,
+	d *HotspotOp,
+) (*HotspotOp, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []HotspotOp `json:"data"`
 	}
 
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/hotspotop/%s", site, d.ID), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/hotspotop/%s", site, d.ID),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}

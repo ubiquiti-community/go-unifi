@@ -113,7 +113,13 @@ func (c *Client) getSettingSuperMgmt(ctx context.Context, site string) (*Setting
 		Meta meta               `json:"meta"`
 		Data []SettingSuperMgmt `json:"data"`
 	}
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/get/setting/super_mgmt", site), nil, &respBody)
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/super_mgmt", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -126,14 +132,24 @@ func (c *Client) getSettingSuperMgmt(ctx context.Context, site string) (*Setting
 	return &d, nil
 }
 
-func (c *Client) updateSettingSuperMgmt(ctx context.Context, site string, d *SettingSuperMgmt) (*SettingSuperMgmt, error) {
+func (c *Client) updateSettingSuperMgmt(
+	ctx context.Context,
+	site string,
+	d *SettingSuperMgmt,
+) (*SettingSuperMgmt, error) {
 	var respBody struct {
 		Meta meta               `json:"meta"`
 		Data []SettingSuperMgmt `json:"data"`
 	}
 
 	d.Key = "super_mgmt"
-	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/set/setting/super_mgmt", site), d, &respBody)
+	err := c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/super_mgmt", site),
+		d,
+		&respBody,
+	)
 	if err != nil {
 		return nil, err
 	}
