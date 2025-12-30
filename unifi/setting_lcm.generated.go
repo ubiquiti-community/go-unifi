@@ -55,7 +55,10 @@ func (dst *SettingLcm) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingLcm(ctx context.Context, site string) (*SettingLcm, error) {
+func (c *Client) getSettingLcm(
+	ctx context.Context,
+	site string,
+) (*SettingLcm, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingLcm `json:"data"`

@@ -104,7 +104,11 @@ func (c *Client) listHotspotPackage(ctx context.Context, site string) ([]Hotspot
 	return respBody.Data, nil
 }
 
-func (c *Client) getHotspotPackage(ctx context.Context, site, id string) (*HotspotPackage, error) {
+func (c *Client) getHotspotPackage(
+	ctx context.Context,
+	site string,
+	id string,
+) (*HotspotPackage, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []HotspotPackage `json:"data"`
@@ -128,7 +132,11 @@ func (c *Client) getHotspotPackage(ctx context.Context, site, id string) (*Hotsp
 	return &d, nil
 }
 
-func (c *Client) deleteHotspotPackage(ctx context.Context, site, id string) error {
+func (c *Client) deleteHotspotPackage(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

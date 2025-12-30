@@ -63,7 +63,11 @@ func (c *Client) listWLANGroup(ctx context.Context, site string) ([]WLANGroup, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getWLANGroup(ctx context.Context, site, id string) (*WLANGroup, error) {
+func (c *Client) getWLANGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) (*WLANGroup, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []WLANGroup `json:"data"`
@@ -87,7 +91,11 @@ func (c *Client) getWLANGroup(ctx context.Context, site, id string) (*WLANGroup,
 	return &d, nil
 }
 
-func (c *Client) deleteWLANGroup(ctx context.Context, site, id string) error {
+func (c *Client) deleteWLANGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

@@ -65,7 +65,11 @@ func (c *Client) listFirewallGroup(ctx context.Context, site string) ([]Firewall
 	return respBody.Data, nil
 }
 
-func (c *Client) getFirewallGroup(ctx context.Context, site, id string) (*FirewallGroup, error) {
+func (c *Client) getFirewallGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) (*FirewallGroup, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []FirewallGroup `json:"data"`
@@ -89,7 +93,11 @@ func (c *Client) getFirewallGroup(ctx context.Context, site, id string) (*Firewa
 	return &d, nil
 }
 
-func (c *Client) deleteFirewallGroup(ctx context.Context, site, id string) error {
+func (c *Client) deleteFirewallGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

@@ -79,7 +79,11 @@ func (c *Client) listAccount(ctx context.Context, site string) ([]Account, error
 	return respBody.Data, nil
 }
 
-func (c *Client) getAccount(ctx context.Context, site, id string) (*Account, error) {
+func (c *Client) getAccount(
+	ctx context.Context,
+	site string,
+	id string,
+) (*Account, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`
@@ -103,7 +107,11 @@ func (c *Client) getAccount(ctx context.Context, site, id string) (*Account, err
 	return &d, nil
 }
 
-func (c *Client) deleteAccount(ctx context.Context, site, id string) error {
+func (c *Client) deleteAccount(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -117,7 +125,11 @@ func (c *Client) deleteAccount(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createAccount(ctx context.Context, site string, d *Account) (*Account, error) {
+func (c *Client) createAccount(
+	ctx context.Context,
+	site string,
+	d *Account,
+) (*Account, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`
@@ -143,7 +155,11 @@ func (c *Client) createAccount(ctx context.Context, site string, d *Account) (*A
 	return &res, nil
 }
 
-func (c *Client) updateAccount(ctx context.Context, site string, d *Account) (*Account, error) {
+func (c *Client) updateAccount(
+	ctx context.Context,
+	site string,
+	d *Account,
+) (*Account, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`

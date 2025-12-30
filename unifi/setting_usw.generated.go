@@ -46,7 +46,10 @@ func (dst *SettingUsw) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingUsw(ctx context.Context, site string) (*SettingUsw, error) {
+func (c *Client) getSettingUsw(
+	ctx context.Context,
+	site string,
+) (*SettingUsw, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingUsw `json:"data"`

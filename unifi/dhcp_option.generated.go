@@ -70,7 +70,11 @@ func (c *Client) listDHCPOption(ctx context.Context, site string) ([]DHCPOption,
 	return respBody.Data, nil
 }
 
-func (c *Client) getDHCPOption(ctx context.Context, site, id string) (*DHCPOption, error) {
+func (c *Client) getDHCPOption(
+	ctx context.Context,
+	site string,
+	id string,
+) (*DHCPOption, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []DHCPOption `json:"data"`
@@ -94,7 +98,11 @@ func (c *Client) getDHCPOption(ctx context.Context, site, id string) (*DHCPOptio
 	return &d, nil
 }
 
-func (c *Client) deleteDHCPOption(ctx context.Context, site, id string) error {
+func (c *Client) deleteDHCPOption(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

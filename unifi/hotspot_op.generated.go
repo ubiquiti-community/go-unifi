@@ -65,7 +65,11 @@ func (c *Client) listHotspotOp(ctx context.Context, site string) ([]HotspotOp, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getHotspotOp(ctx context.Context, site, id string) (*HotspotOp, error) {
+func (c *Client) getHotspotOp(
+	ctx context.Context,
+	site string,
+	id string,
+) (*HotspotOp, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []HotspotOp `json:"data"`
@@ -89,7 +93,11 @@ func (c *Client) getHotspotOp(ctx context.Context, site, id string) (*HotspotOp,
 	return &d, nil
 }
 
-func (c *Client) deleteHotspotOp(ctx context.Context, site, id string) error {
+func (c *Client) deleteHotspotOp(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

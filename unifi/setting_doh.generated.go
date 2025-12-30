@@ -70,7 +70,10 @@ func (dst *SettingDohCustomServers) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingDoh(ctx context.Context, site string) (*SettingDoh, error) {
+func (c *Client) getSettingDoh(
+	ctx context.Context,
+	site string,
+) (*SettingDoh, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingDoh `json:"data"`

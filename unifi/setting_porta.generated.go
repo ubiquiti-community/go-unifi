@@ -46,7 +46,10 @@ func (dst *SettingPorta) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingPorta(ctx context.Context, site string) (*SettingPorta, error) {
+func (c *Client) getSettingPorta(
+	ctx context.Context,
+	site string,
+) (*SettingPorta, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []SettingPorta `json:"data"`

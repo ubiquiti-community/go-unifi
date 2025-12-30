@@ -69,7 +69,10 @@ func (dst *SettingNetflow) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingNetflow(ctx context.Context, site string) (*SettingNetflow, error) {
+func (c *Client) getSettingNetflow(
+	ctx context.Context,
+	site string,
+) (*SettingNetflow, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []SettingNetflow `json:"data"`

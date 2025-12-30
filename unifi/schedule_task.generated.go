@@ -87,7 +87,11 @@ func (c *Client) listScheduleTask(ctx context.Context, site string) ([]ScheduleT
 	return respBody.Data, nil
 }
 
-func (c *Client) getScheduleTask(ctx context.Context, site, id string) (*ScheduleTask, error) {
+func (c *Client) getScheduleTask(
+	ctx context.Context,
+	site string,
+	id string,
+) (*ScheduleTask, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []ScheduleTask `json:"data"`
@@ -111,7 +115,11 @@ func (c *Client) getScheduleTask(ctx context.Context, site, id string) (*Schedul
 	return &d, nil
 }
 
-func (c *Client) deleteScheduleTask(ctx context.Context, site, id string) error {
+func (c *Client) deleteScheduleTask(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

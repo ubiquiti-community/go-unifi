@@ -67,7 +67,11 @@ func (c *Client) listHeatMapPoint(ctx context.Context, site string) ([]HeatMapPo
 	return respBody.Data, nil
 }
 
-func (c *Client) getHeatMapPoint(ctx context.Context, site, id string) (*HeatMapPoint, error) {
+func (c *Client) getHeatMapPoint(
+	ctx context.Context,
+	site string,
+	id string,
+) (*HeatMapPoint, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []HeatMapPoint `json:"data"`
@@ -91,7 +95,11 @@ func (c *Client) getHeatMapPoint(ctx context.Context, site, id string) (*HeatMap
 	return &d, nil
 }
 
-func (c *Client) deleteHeatMapPoint(ctx context.Context, site, id string) error {
+func (c *Client) deleteHeatMapPoint(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

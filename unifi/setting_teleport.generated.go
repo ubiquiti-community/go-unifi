@@ -47,7 +47,10 @@ func (dst *SettingTeleport) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingTeleport(ctx context.Context, site string) (*SettingTeleport, error) {
+func (c *Client) getSettingTeleport(
+	ctx context.Context,
+	site string,
+) (*SettingTeleport, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []SettingTeleport `json:"data"`

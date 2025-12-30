@@ -555,7 +555,11 @@ func (c *Client) listWLAN(ctx context.Context, site string) ([]WLAN, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getWLAN(ctx context.Context, site, id string) (*WLAN, error) {
+func (c *Client) getWLAN(
+	ctx context.Context,
+	site string,
+	id string,
+) (*WLAN, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []WLAN `json:"data"`
@@ -579,7 +583,11 @@ func (c *Client) getWLAN(ctx context.Context, site, id string) (*WLAN, error) {
 	return &d, nil
 }
 
-func (c *Client) deleteWLAN(ctx context.Context, site, id string) error {
+func (c *Client) deleteWLAN(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -593,7 +601,11 @@ func (c *Client) deleteWLAN(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createWLAN(ctx context.Context, site string, d *WLAN) (*WLAN, error) {
+func (c *Client) createWLAN(
+	ctx context.Context,
+	site string,
+	d *WLAN,
+) (*WLAN, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []WLAN `json:"data"`
@@ -619,7 +631,11 @@ func (c *Client) createWLAN(ctx context.Context, site string, d *WLAN) (*WLAN, e
 	return &res, nil
 }
 
-func (c *Client) updateWLAN(ctx context.Context, site string, d *WLAN) (*WLAN, error) {
+func (c *Client) updateWLAN(
+	ctx context.Context,
+	site string,
+	d *WLAN,
+) (*WLAN, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []WLAN `json:"data"`

@@ -723,7 +723,11 @@ func (c *Client) listDevice(ctx context.Context, site string) ([]Device, error) 
 	return respBody.Data, nil
 }
 
-func (c *Client) getDevice(ctx context.Context, site, id string) (*Device, error) {
+func (c *Client) getDevice(
+	ctx context.Context,
+	site string,
+	id string,
+) (*Device, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []Device `json:"data"`
@@ -747,7 +751,11 @@ func (c *Client) getDevice(ctx context.Context, site, id string) (*Device, error
 	return &d, nil
 }
 
-func (c *Client) deleteDevice(ctx context.Context, site, id string) error {
+func (c *Client) deleteDevice(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -761,7 +769,11 @@ func (c *Client) deleteDevice(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createDevice(ctx context.Context, site string, d *Device) (*Device, error) {
+func (c *Client) createDevice(
+	ctx context.Context,
+	site string,
+	d *Device,
+) (*Device, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []Device `json:"data"`
@@ -787,7 +799,11 @@ func (c *Client) createDevice(ctx context.Context, site string, d *Device) (*Dev
 	return &res, nil
 }
 
-func (c *Client) updateDevice(ctx context.Context, site string, d *Device) (*Device, error) {
+func (c *Client) updateDevice(
+	ctx context.Context,
+	site string,
+	d *Device,
+) (*Device, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []Device `json:"data"`

@@ -97,7 +97,11 @@ func (c *Client) listPortForward(ctx context.Context, site string) ([]PortForwar
 	return respBody.Data, nil
 }
 
-func (c *Client) getPortForward(ctx context.Context, site, id string) (*PortForward, error) {
+func (c *Client) getPortForward(
+	ctx context.Context,
+	site string,
+	id string,
+) (*PortForward, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
@@ -121,7 +125,11 @@ func (c *Client) getPortForward(ctx context.Context, site, id string) (*PortForw
 	return &d, nil
 }
 
-func (c *Client) deletePortForward(ctx context.Context, site, id string) error {
+func (c *Client) deletePortForward(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

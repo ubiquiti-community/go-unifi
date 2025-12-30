@@ -158,7 +158,10 @@ func (dst *SettingUsgDNSVerification) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingUsg(ctx context.Context, site string) (*SettingUsg, error) {
+func (c *Client) getSettingUsg(
+	ctx context.Context,
+	site string,
+) (*SettingUsg, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingUsg `json:"data"`

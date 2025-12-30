@@ -89,7 +89,10 @@ func (dst *SettingMdnsPredefinedServices) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingMdns(ctx context.Context, site string) (*SettingMdns, error) {
+func (c *Client) getSettingMdns(
+	ctx context.Context,
+	site string,
+) (*SettingMdns, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []SettingMdns `json:"data"`

@@ -61,7 +61,10 @@ func (dst *SettingRsyslogd) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingRsyslogd(ctx context.Context, site string) (*SettingRsyslogd, error) {
+func (c *Client) getSettingRsyslogd(
+	ctx context.Context,
+	site string,
+) (*SettingRsyslogd, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []SettingRsyslogd `json:"data"`

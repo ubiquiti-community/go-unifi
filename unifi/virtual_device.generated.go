@@ -68,7 +68,11 @@ func (c *Client) listVirtualDevice(ctx context.Context, site string) ([]VirtualD
 	return respBody.Data, nil
 }
 
-func (c *Client) getVirtualDevice(ctx context.Context, site, id string) (*VirtualDevice, error) {
+func (c *Client) getVirtualDevice(
+	ctx context.Context,
+	site string,
+	id string,
+) (*VirtualDevice, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []VirtualDevice `json:"data"`
@@ -92,7 +96,11 @@ func (c *Client) getVirtualDevice(ctx context.Context, site, id string) (*Virtua
 	return &d, nil
 }
 
-func (c *Client) deleteVirtualDevice(ctx context.Context, site, id string) error {
+func (c *Client) deleteVirtualDevice(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

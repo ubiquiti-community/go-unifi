@@ -20,6 +20,8 @@ linters:
     - govet
   disable:
     - errcheck
+  exclusions:
+    generated: lax
 formatters:
   enable:
     - gci
@@ -35,3 +37,5 @@ formatters:
           replacement: "any"
         - pattern: "a[b:len(a)]"
           replacement: "a[b:]"
+  exclusions:
+    generated: lax

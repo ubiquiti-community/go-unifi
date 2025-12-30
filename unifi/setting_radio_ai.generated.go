@@ -141,7 +141,10 @@ func (dst *SettingRadioAiRadiosConfiguration) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingRadioAi(ctx context.Context, site string) (*SettingRadioAi, error) {
+func (c *Client) getSettingRadioAi(
+	ctx context.Context,
+	site string,
+) (*SettingRadioAi, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []SettingRadioAi `json:"data"`

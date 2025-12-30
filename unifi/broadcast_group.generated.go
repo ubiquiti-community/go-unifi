@@ -64,7 +64,11 @@ func (c *Client) listBroadcastGroup(ctx context.Context, site string) ([]Broadca
 	return respBody.Data, nil
 }
 
-func (c *Client) getBroadcastGroup(ctx context.Context, site, id string) (*BroadcastGroup, error) {
+func (c *Client) getBroadcastGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) (*BroadcastGroup, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []BroadcastGroup `json:"data"`
@@ -88,7 +92,11 @@ func (c *Client) getBroadcastGroup(ctx context.Context, site, id string) (*Broad
 	return &d, nil
 }
 
-func (c *Client) deleteBroadcastGroup(ctx context.Context, site, id string) error {
+func (c *Client) deleteBroadcastGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

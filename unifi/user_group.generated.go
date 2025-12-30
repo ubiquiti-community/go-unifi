@@ -70,7 +70,11 @@ func (c *Client) listUserGroup(ctx context.Context, site string) ([]UserGroup, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getUserGroup(ctx context.Context, site, id string) (*UserGroup, error) {
+func (c *Client) getUserGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) (*UserGroup, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []UserGroup `json:"data"`
@@ -94,7 +98,11 @@ func (c *Client) getUserGroup(ctx context.Context, site, id string) (*UserGroup,
 	return &d, nil
 }
 
-func (c *Client) deleteUserGroup(ctx context.Context, site, id string) error {
+func (c *Client) deleteUserGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

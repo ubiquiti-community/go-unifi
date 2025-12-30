@@ -284,11 +284,6 @@ func (c *Client) do(
 	return nil
 }
 
-type respData[T any] struct {
-	Meta meta `json:"meta"`
-	Data T    `json:"data"`
-}
-
 type meta struct {
 	RC      string `json:"rc"`
 	Message string `json:"msg"`

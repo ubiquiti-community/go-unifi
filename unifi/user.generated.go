@@ -85,7 +85,11 @@ func (c *Client) listUser(ctx context.Context, site string) ([]User, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getUser(ctx context.Context, site, id string) (*User, error) {
+func (c *Client) getUser(
+	ctx context.Context,
+	site string,
+	id string,
+) (*User, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []User `json:"data"`
@@ -109,7 +113,11 @@ func (c *Client) getUser(ctx context.Context, site, id string) (*User, error) {
 	return &d, nil
 }
 
-func (c *Client) deleteUser(ctx context.Context, site, id string) error {
+func (c *Client) deleteUser(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -123,7 +131,11 @@ func (c *Client) deleteUser(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createUser(ctx context.Context, site string, d *User) (*User, error) {
+func (c *Client) createUser(
+	ctx context.Context,
+	site string,
+	d *User,
+) (*User, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []User `json:"data"`
@@ -149,7 +161,11 @@ func (c *Client) createUser(ctx context.Context, site string, d *User) (*User, e
 	return &res, nil
 }
 
-func (c *Client) updateUser(ctx context.Context, site string, d *User) (*User, error) {
+func (c *Client) updateUser(
+	ctx context.Context,
+	site string,
+	d *User,
+) (*User, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []User `json:"data"`

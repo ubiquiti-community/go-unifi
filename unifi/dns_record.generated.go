@@ -76,7 +76,11 @@ func (c *Client) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, e
 	return respBody, nil
 }
 
-func (c *Client) deleteDNSRecord(ctx context.Context, site, id string) error {
+func (c *Client) deleteDNSRecord(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

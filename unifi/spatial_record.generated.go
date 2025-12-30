@@ -107,7 +107,11 @@ func (c *Client) listSpatialRecord(ctx context.Context, site string) ([]SpatialR
 	return respBody.Data, nil
 }
 
-func (c *Client) getSpatialRecord(ctx context.Context, site, id string) (*SpatialRecord, error) {
+func (c *Client) getSpatialRecord(
+	ctx context.Context,
+	site string,
+	id string,
+) (*SpatialRecord, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []SpatialRecord `json:"data"`
@@ -131,7 +135,11 @@ func (c *Client) getSpatialRecord(ctx context.Context, site, id string) (*Spatia
 	return &d, nil
 }
 
-func (c *Client) deleteSpatialRecord(ctx context.Context, site, id string) error {
+func (c *Client) deleteSpatialRecord(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

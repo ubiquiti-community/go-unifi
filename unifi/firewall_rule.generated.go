@@ -95,7 +95,11 @@ func (c *Client) listFirewallRule(ctx context.Context, site string) ([]FirewallR
 	return respBody.Data, nil
 }
 
-func (c *Client) getFirewallRule(ctx context.Context, site, id string) (*FirewallRule, error) {
+func (c *Client) getFirewallRule(
+	ctx context.Context,
+	site string,
+	id string,
+) (*FirewallRule, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
@@ -119,7 +123,11 @@ func (c *Client) getFirewallRule(ctx context.Context, site, id string) (*Firewal
 	return &d, nil
 }
 
-func (c *Client) deleteFirewallRule(ctx context.Context, site, id string) error {
+func (c *Client) deleteFirewallRule(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

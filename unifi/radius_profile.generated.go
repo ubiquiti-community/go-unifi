@@ -153,7 +153,11 @@ func (c *Client) listRADIUSProfile(ctx context.Context, site string) ([]RADIUSPr
 	return respBody.Data, nil
 }
 
-func (c *Client) getRADIUSProfile(ctx context.Context, site, id string) (*RADIUSProfile, error) {
+func (c *Client) getRADIUSProfile(
+	ctx context.Context,
+	site string,
+	id string,
+) (*RADIUSProfile, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
@@ -177,7 +181,11 @@ func (c *Client) getRADIUSProfile(ctx context.Context, site, id string) (*RADIUS
 	return &d, nil
 }
 
-func (c *Client) deleteRADIUSProfile(ctx context.Context, site, id string) error {
+func (c *Client) deleteRADIUSProfile(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

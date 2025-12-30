@@ -75,9 +75,9 @@ func (e *emptyStringInt) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.Itoa(int(*e))), nil
 }
 
-type booleanishString bool
+type booleanishString bool //nolint:unused
 
-func (e *booleanishString) UnmarshalJSON(b []byte) error {
+func (e *booleanishString) UnmarshalJSON(b []byte) error { //nolint:unused
 	s := string(b)
 	switch s {
 	case `"enabled"`:

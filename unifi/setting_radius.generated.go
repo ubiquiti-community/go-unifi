@@ -60,7 +60,10 @@ func (dst *SettingRadius) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingRadius(ctx context.Context, site string) (*SettingRadius, error) {
+func (c *Client) getSettingRadius(
+	ctx context.Context,
+	site string,
+) (*SettingRadius, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []SettingRadius `json:"data"`

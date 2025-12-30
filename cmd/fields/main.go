@@ -69,6 +69,7 @@ var fieldReps = []replacement{
 	{"Starttime", "StartTime"},
 	{"Stopdate", "StopDate"},
 	{"Stoptime", "StopTime"},
+	{"Supression", "Suppression"}, //nolint:misspell
 	{"Tcp", "TCP"},
 	{"Udp", "UDP"},
 	{"Usergroup", "UserGroup"},

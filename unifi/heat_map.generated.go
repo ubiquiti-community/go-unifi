@@ -66,7 +66,11 @@ func (c *Client) listHeatMap(ctx context.Context, site string) ([]HeatMap, error
 	return respBody.Data, nil
 }
 
-func (c *Client) getHeatMap(ctx context.Context, site, id string) (*HeatMap, error) {
+func (c *Client) getHeatMap(
+	ctx context.Context,
+	site string,
+	id string,
+) (*HeatMap, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []HeatMap `json:"data"`
@@ -90,7 +94,11 @@ func (c *Client) getHeatMap(ctx context.Context, site, id string) (*HeatMap, err
 	return &d, nil
 }
 
-func (c *Client) deleteHeatMap(ctx context.Context, site, id string) error {
+func (c *Client) deleteHeatMap(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -104,7 +112,11 @@ func (c *Client) deleteHeatMap(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createHeatMap(ctx context.Context, site string, d *HeatMap) (*HeatMap, error) {
+func (c *Client) createHeatMap(
+	ctx context.Context,
+	site string,
+	d *HeatMap,
+) (*HeatMap, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []HeatMap `json:"data"`
@@ -130,7 +142,11 @@ func (c *Client) createHeatMap(ctx context.Context, site string, d *HeatMap) (*H
 	return &res, nil
 }
 
-func (c *Client) updateHeatMap(ctx context.Context, site string, d *HeatMap) (*HeatMap, error) {
+func (c *Client) updateHeatMap(
+	ctx context.Context,
+	site string,
+	d *HeatMap,
+) (*HeatMap, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []HeatMap `json:"data"`

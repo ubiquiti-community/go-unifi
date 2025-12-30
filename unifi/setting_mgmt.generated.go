@@ -93,7 +93,10 @@ func (dst *SettingMgmtXSshKeys) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingMgmt(ctx context.Context, site string) (*SettingMgmt, error) {
+func (c *Client) getSettingMgmt(
+	ctx context.Context,
+	site string,
+) (*SettingMgmt, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []SettingMgmt `json:"data"`

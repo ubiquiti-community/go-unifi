@@ -64,7 +64,11 @@ func (c *Client) listTag(ctx context.Context, site string) ([]Tag, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getTag(ctx context.Context, site, id string) (*Tag, error) {
+func (c *Client) getTag(
+	ctx context.Context,
+	site string,
+	id string,
+) (*Tag, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Tag `json:"data"`
@@ -88,7 +92,11 @@ func (c *Client) getTag(ctx context.Context, site, id string) (*Tag, error) {
 	return &d, nil
 }
 
-func (c *Client) deleteTag(ctx context.Context, site, id string) error {
+func (c *Client) deleteTag(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -102,7 +110,11 @@ func (c *Client) deleteTag(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createTag(ctx context.Context, site string, d *Tag) (*Tag, error) {
+func (c *Client) createTag(
+	ctx context.Context,
+	site string,
+	d *Tag,
+) (*Tag, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Tag `json:"data"`
@@ -128,7 +140,11 @@ func (c *Client) createTag(ctx context.Context, site string, d *Tag) (*Tag, erro
 	return &res, nil
 }
 
-func (c *Client) updateTag(ctx context.Context, site string, d *Tag) (*Tag, error) {
+func (c *Client) updateTag(
+	ctx context.Context,
+	site string,
+	d *Tag,
+) (*Tag, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Tag `json:"data"`

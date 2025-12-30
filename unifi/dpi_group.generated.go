@@ -65,7 +65,11 @@ func (c *Client) listDpiGroup(ctx context.Context, site string) ([]DpiGroup, err
 	return respBody.Data, nil
 }
 
-func (c *Client) getDpiGroup(ctx context.Context, site, id string) (*DpiGroup, error) {
+func (c *Client) getDpiGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) (*DpiGroup, error) {
 	var respBody struct {
 		Meta meta       `json:"meta"`
 		Data []DpiGroup `json:"data"`
@@ -89,7 +93,11 @@ func (c *Client) getDpiGroup(ctx context.Context, site, id string) (*DpiGroup, e
 	return &d, nil
 }
 
-func (c *Client) deleteDpiGroup(ctx context.Context, site, id string) error {
+func (c *Client) deleteDpiGroup(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -103,7 +111,11 @@ func (c *Client) deleteDpiGroup(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createDpiGroup(ctx context.Context, site string, d *DpiGroup) (*DpiGroup, error) {
+func (c *Client) createDpiGroup(
+	ctx context.Context,
+	site string,
+	d *DpiGroup,
+) (*DpiGroup, error) {
 	var respBody struct {
 		Meta meta       `json:"meta"`
 		Data []DpiGroup `json:"data"`
@@ -129,7 +141,11 @@ func (c *Client) createDpiGroup(ctx context.Context, site string, d *DpiGroup) (
 	return &res, nil
 }
 
-func (c *Client) updateDpiGroup(ctx context.Context, site string, d *DpiGroup) (*DpiGroup, error) {
+func (c *Client) updateDpiGroup(
+	ctx context.Context,
+	site string,
+	d *DpiGroup,
+) (*DpiGroup, error) {
 	var respBody struct {
 		Meta meta       `json:"meta"`
 		Data []DpiGroup `json:"data"`

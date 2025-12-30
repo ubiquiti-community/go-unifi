@@ -88,7 +88,7 @@ type Network struct {
 	IGMPProxyUpstream                             bool                            `json:"igmp_proxy_upstream"`
 	IGMPQuerierSwitches                           []NetworkIGMPQuerierSwitches    `json:"igmp_querier_switches,omitempty"`
 	IGMPSnooping                                  bool                            `json:"igmp_snooping"`
-	IGMPSupression                                bool                            `json:"igmp_suppression"`
+	IGMPSuppression                               bool                            `json:"igmp_supression"`
 	IPSecDhGroup                                  int                             `json:"ipsec_dh_group,omitempty"` // 2|5|14|15|16|19|20|21|25|26
 	IPSecDynamicRouting                           bool                            `json:"ipsec_dynamic_routing"`
 	IPSecEncryption                               string                          `json:"ipsec_encryption,omitempty"`     // aes128|aes192|aes256|3des
@@ -489,7 +489,11 @@ func (c *Client) listNetwork(ctx context.Context, site string) ([]Network, error
 	return respBody.Data, nil
 }
 
-func (c *Client) getNetwork(ctx context.Context, site, id string) (*Network, error) {
+func (c *Client) getNetwork(
+	ctx context.Context,
+	site string,
+	id string,
+) (*Network, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Network `json:"data"`
@@ -513,7 +517,11 @@ func (c *Client) getNetwork(ctx context.Context, site, id string) (*Network, err
 	return &d, nil
 }
 
-func (c *Client) deleteNetwork(ctx context.Context, site, id string) error {
+func (c *Client) deleteNetwork(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -527,7 +535,11 @@ func (c *Client) deleteNetwork(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createNetwork(ctx context.Context, site string, d *Network) (*Network, error) {
+func (c *Client) createNetwork(
+	ctx context.Context,
+	site string,
+	d *Network,
+) (*Network, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Network `json:"data"`
@@ -553,7 +565,11 @@ func (c *Client) createNetwork(ctx context.Context, site string, d *Network) (*N
 	return &res, nil
 }
 
-func (c *Client) updateNetwork(ctx context.Context, site string, d *Network) (*Network, error) {
+func (c *Client) updateNetwork(
+	ctx context.Context,
+	site string,
+	d *Network,
+) (*Network, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Network `json:"data"`

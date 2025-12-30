@@ -90,7 +90,11 @@ func (c *Client) listDashboard(ctx context.Context, site string) ([]Dashboard, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getDashboard(ctx context.Context, site, id string) (*Dashboard, error) {
+func (c *Client) getDashboard(
+	ctx context.Context,
+	site string,
+	id string,
+) (*Dashboard, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
@@ -114,7 +118,11 @@ func (c *Client) getDashboard(ctx context.Context, site, id string) (*Dashboard,
 	return &d, nil
 }
 
-func (c *Client) deleteDashboard(ctx context.Context, site, id string) error {
+func (c *Client) deleteDashboard(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

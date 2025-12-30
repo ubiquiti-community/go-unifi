@@ -60,7 +60,7 @@ func (c *Client) listDynamicDNS(ctx context.Context, site string) ([]DynamicDNS,
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("api/s/%s/rest/dynamics", site),
+		fmt.Sprintf("api/s/%s/rest/dynamicdns", site),
 		nil,
 		&respBody,
 	)
@@ -70,7 +70,11 @@ func (c *Client) listDynamicDNS(ctx context.Context, site string) ([]DynamicDNS,
 	return respBody.Data, nil
 }
 
-func (c *Client) getDynamicDNS(ctx context.Context, site, id string) (*DynamicDNS, error) {
+func (c *Client) getDynamicDNS(
+	ctx context.Context,
+	site string,
+	id string,
+) (*DynamicDNS, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []DynamicDNS `json:"data"`
@@ -78,7 +82,7 @@ func (c *Client) getDynamicDNS(ctx context.Context, site, id string) (*DynamicDN
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("api/s/%s/rest/dynamics/%s", site, id),
+		fmt.Sprintf("api/s/%s/rest/dynamicdns/%s", site, id),
 		nil,
 		&respBody,
 	)
@@ -94,11 +98,15 @@ func (c *Client) getDynamicDNS(ctx context.Context, site, id string) (*DynamicDN
 	return &d, nil
 }
 
-func (c *Client) deleteDynamicDNS(ctx context.Context, site, id string) error {
+func (c *Client) deleteDynamicDNS(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
-		fmt.Sprintf("api/s/%s/rest/dynamics/%s", site, id),
+		fmt.Sprintf("api/s/%s/rest/dynamicdns/%s", site, id),
 		struct{}{},
 		nil,
 	)
@@ -121,7 +129,7 @@ func (c *Client) createDynamicDNS(
 	err := c.do(
 		ctx,
 		"POST",
-		fmt.Sprintf("api/s/%s/rest/dynamics", site),
+		fmt.Sprintf("api/s/%s/rest/dynamicdns", site),
 		d,
 		&respBody,
 	)
@@ -151,7 +159,7 @@ func (c *Client) updateDynamicDNS(
 	err := c.do(
 		ctx,
 		"PUT",
-		fmt.Sprintf("api/s/%s/rest/dynamics/%s", site, d.ID),
+		fmt.Sprintf("api/s/%s/rest/dynamicdns/%s", site, d.ID),
 		d,
 		&respBody,
 	)

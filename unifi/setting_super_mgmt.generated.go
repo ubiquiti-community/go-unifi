@@ -108,7 +108,10 @@ func (dst *SettingSuperMgmt) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSuperMgmt(ctx context.Context, site string) (*SettingSuperMgmt, error) {
+func (c *Client) getSettingSuperMgmt(
+	ctx context.Context,
+	site string,
+) (*SettingSuperMgmt, error) {
 	var respBody struct {
 		Meta meta               `json:"meta"`
 		Data []SettingSuperMgmt `json:"data"`

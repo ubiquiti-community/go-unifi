@@ -50,7 +50,10 @@ func (dst *SettingNtp) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingNtp(ctx context.Context, site string) (*SettingNtp, error) {
+func (c *Client) getSettingNtp(
+	ctx context.Context,
+	site string,
+) (*SettingNtp, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []SettingNtp `json:"data"`

@@ -96,7 +96,11 @@ func (c *Client) listChannelPlan(ctx context.Context, site string) ([]ChannelPla
 	return respBody.Data, nil
 }
 
-func (c *Client) getChannelPlan(ctx context.Context, site, id string) (*ChannelPlan, error) {
+func (c *Client) getChannelPlan(
+	ctx context.Context,
+	site string,
+	id string,
+) (*ChannelPlan, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []ChannelPlan `json:"data"`
@@ -120,7 +124,11 @@ func (c *Client) getChannelPlan(ctx context.Context, site, id string) (*ChannelP
 	return &d, nil
 }
 
-func (c *Client) deleteChannelPlan(ctx context.Context, site, id string) error {
+func (c *Client) deleteChannelPlan(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

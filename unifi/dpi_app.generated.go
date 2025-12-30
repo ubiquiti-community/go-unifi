@@ -85,7 +85,11 @@ func (c *Client) listDpiApp(ctx context.Context, site string) ([]DpiApp, error) 
 	return respBody.Data, nil
 }
 
-func (c *Client) getDpiApp(ctx context.Context, site, id string) (*DpiApp, error) {
+func (c *Client) getDpiApp(
+	ctx context.Context,
+	site string,
+	id string,
+) (*DpiApp, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []DpiApp `json:"data"`
@@ -109,7 +113,11 @@ func (c *Client) getDpiApp(ctx context.Context, site, id string) (*DpiApp, error
 	return &d, nil
 }
 
-func (c *Client) deleteDpiApp(ctx context.Context, site, id string) error {
+func (c *Client) deleteDpiApp(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -123,7 +131,11 @@ func (c *Client) deleteDpiApp(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createDpiApp(ctx context.Context, site string, d *DpiApp) (*DpiApp, error) {
+func (c *Client) createDpiApp(
+	ctx context.Context,
+	site string,
+	d *DpiApp,
+) (*DpiApp, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []DpiApp `json:"data"`
@@ -149,7 +161,11 @@ func (c *Client) createDpiApp(ctx context.Context, site string, d *DpiApp) (*Dpi
 	return &res, nil
 }
 
-func (c *Client) updateDpiApp(ctx context.Context, site string, d *DpiApp) (*DpiApp, error) {
+func (c *Client) updateDpiApp(
+	ctx context.Context,
+	site string,
+	d *DpiApp,
+) (*DpiApp, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []DpiApp `json:"data"`

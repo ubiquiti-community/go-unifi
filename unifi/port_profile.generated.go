@@ -239,7 +239,11 @@ func (c *Client) listPortProfile(ctx context.Context, site string) ([]PortProfil
 	return respBody.Data, nil
 }
 
-func (c *Client) getPortProfile(ctx context.Context, site, id string) (*PortProfile, error) {
+func (c *Client) getPortProfile(
+	ctx context.Context,
+	site string,
+	id string,
+) (*PortProfile, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
@@ -263,7 +267,11 @@ func (c *Client) getPortProfile(ctx context.Context, site, id string) (*PortProf
 	return &d, nil
 }
 
-func (c *Client) deletePortProfile(ctx context.Context, site, id string) error {
+func (c *Client) deletePortProfile(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",

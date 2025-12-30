@@ -80,7 +80,11 @@ func (c *Client) listMap(ctx context.Context, site string) ([]Map, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getMap(ctx context.Context, site, id string) (*Map, error) {
+func (c *Client) getMap(
+	ctx context.Context,
+	site string,
+	id string,
+) (*Map, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Map `json:"data"`
@@ -104,7 +108,11 @@ func (c *Client) getMap(ctx context.Context, site, id string) (*Map, error) {
 	return &d, nil
 }
 
-func (c *Client) deleteMap(ctx context.Context, site, id string) error {
+func (c *Client) deleteMap(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
@@ -118,7 +126,11 @@ func (c *Client) deleteMap(ctx context.Context, site, id string) error {
 	return nil
 }
 
-func (c *Client) createMap(ctx context.Context, site string, d *Map) (*Map, error) {
+func (c *Client) createMap(
+	ctx context.Context,
+	site string,
+	d *Map,
+) (*Map, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Map `json:"data"`
@@ -144,7 +156,11 @@ func (c *Client) createMap(ctx context.Context, site string, d *Map) (*Map, erro
 	return &res, nil
 }
 
-func (c *Client) updateMap(ctx context.Context, site string, d *Map) (*Map, error) {
+func (c *Client) updateMap(
+	ctx context.Context,
+	site string,
+	d *Map,
+) (*Map, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Map `json:"data"`

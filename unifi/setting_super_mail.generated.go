@@ -46,7 +46,10 @@ func (dst *SettingSuperMail) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getSettingSuperMail(ctx context.Context, site string) (*SettingSuperMail, error) {
+func (c *Client) getSettingSuperMail(
+	ctx context.Context,
+	site string,
+) (*SettingSuperMail, error) {
 	var respBody struct {
 		Meta meta               `json:"meta"`
 		Data []SettingSuperMail `json:"data"`

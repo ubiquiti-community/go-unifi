@@ -63,7 +63,11 @@ func (c *Client) listMediaFile(ctx context.Context, site string) ([]MediaFile, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getMediaFile(ctx context.Context, site, id string) (*MediaFile, error) {
+func (c *Client) getMediaFile(
+	ctx context.Context,
+	site string,
+	id string,
+) (*MediaFile, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []MediaFile `json:"data"`
@@ -87,7 +91,11 @@ func (c *Client) getMediaFile(ctx context.Context, site, id string) (*MediaFile,
 	return &d, nil
 }
 
-func (c *Client) deleteMediaFile(ctx context.Context, site, id string) error {
+func (c *Client) deleteMediaFile(
+	ctx context.Context,
+	site string,
+	id string,
+) error {
 	err := c.do(
 		ctx,
 		"DELETE",
