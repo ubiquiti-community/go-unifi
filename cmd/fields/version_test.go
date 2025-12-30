@@ -72,8 +72,12 @@ func TestLatestUnifiVersion(t *testing.T) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		query := req.URL.Query()
-		assert.Contains(query["filter"], firmwareUpdateApiFilter("channel", releaseChannel))
-		assert.Contains(query["filter"], firmwareUpdateApiFilter("product", unifiControllerProduct))
+		assert.Contains(query["filter"], firmwareUpdateApiFilter("eq", "channel", releaseChannel))
+		assert.Contains(
+			query["filter"],
+			firmwareUpdateApiFilter("eq", "product", unifiControllerProduct),
+		)
+		assert.Contains(query["filter"], firmwareUpdateApiFilter("lt", "version", maxVersion))
 
 		resp, err := json.Marshal(respData)
 		assert.NoError(err)

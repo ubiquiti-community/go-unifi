@@ -14,6 +14,7 @@ const (
 	debianPlatform         = "debian"
 	releaseChannel         = "release"
 	unifiControllerProduct = "unifi-controller"
+	maxVersion             = "10.0.0"
 )
 
 type firmwareUpdateApiResponse struct {
@@ -77,6 +78,6 @@ type firmwareUpdateApiResponseEmbeddedFirmwareLinks struct {
 	Data firmwareUpdateApiResponseEmbeddedFirmwareDataLink `json:"data"`
 }
 
-func firmwareUpdateApiFilter(key, value string) string {
-	return fmt.Sprintf("%s~~%s~~%s", "eq", key, value)
+func firmwareUpdateApiFilter(operator, key, value string) string {
+	return fmt.Sprintf("%s~~%s~~%s", operator, key, value)
 }

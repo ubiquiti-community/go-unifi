@@ -16,8 +16,9 @@ func latestUnifiVersion() (*version.Version, *url.URL, error) {
 	}
 
 	query := url.Query()
-	query.Add("filter", firmwareUpdateApiFilter("channel", releaseChannel))
-	query.Add("filter", firmwareUpdateApiFilter("product", unifiControllerProduct))
+	query.Add("filter", firmwareUpdateApiFilter("eq", "channel", releaseChannel))
+	query.Add("filter", firmwareUpdateApiFilter("eq", "product", unifiControllerProduct))
+	query.Add("filter", firmwareUpdateApiFilter("lt", "version", maxVersion))
 	url.RawQuery = query.Encode()
 
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url.String(), nil)
