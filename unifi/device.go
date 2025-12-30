@@ -171,7 +171,98 @@ func (c *Client) CreateDevice(ctx context.Context, site string, d *Device) (*Dev
 }
 
 func (c *Client) UpdateDevice(ctx context.Context, site string, d *Device) (*Device, error) {
-	return c.updateDevice(ctx, site, d)
+	var respBody struct {
+		Meta meta     `json:"meta"`
+		Data []Device `json:"data"`
+	}
+
+	// Get the existing device to compare
+	existing, err := c.GetDevice(ctx, site, d.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get existing device: %w", err)
+	}
+
+	// Create a patch with only changed fields
+	patch, err := getDeviceDiff(existing, d)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create device diff: %w", err)
+	}
+
+	err = c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/rest/device/%s", site, d.ID),
+		patch,
+		&respBody,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(respBody.Data) != 1 {
+		return nil, &NotFoundError{}
+	}
+
+	res := respBody.Data[0]
+
+	return &res, nil
+}
+
+// getDeviceDiff compares two Device objects and returns a map containing only changed fields.
+func getDeviceDiff(original, target *Device) (map[string]any, error) {
+	// Marshal both to JSON then unmarshal to maps for comparison
+	origJSON, err := json.Marshal(original)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal original device: %w", err)
+	}
+
+	targetJSON, err := json.Marshal(target)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal target device: %w", err)
+	}
+
+	var origMap map[string]any
+	var targetMap map[string]any
+
+	if err := json.Unmarshal(origJSON, &origMap); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal original device: %w", err)
+	}
+
+	if err := json.Unmarshal(targetJSON, &targetMap); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal target device: %w", err)
+	}
+
+	// Build patch with only changed fields
+	patch := make(map[string]any)
+
+	for key, targetValue := range targetMap {
+		// Skip read-only fields
+		if key == "_id" || key == "site_id" {
+			continue
+		}
+
+		origValue, exists := origMap[key]
+
+		// Include if field doesn't exist in original or value changed
+		if !exists || !deepEqualJSON(origValue, targetValue) {
+			patch[key] = targetValue
+		}
+	}
+
+	return patch, nil
+}
+
+// deepEqualJSON compares two values for deep equality by comparing their JSON representations.
+func deepEqualJSON(a, b any) bool {
+	aJSON, err := json.Marshal(a)
+	if err != nil {
+		return false
+	}
+	bJSON, err := json.Marshal(b)
+	if err != nil {
+		return false
+	}
+	return string(aJSON) == string(bJSON)
 }
 
 func (c *Client) GetDevice(ctx context.Context, site, id string) (*Device, error) {

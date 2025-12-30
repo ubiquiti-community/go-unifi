@@ -37,5 +37,7 @@ formatters:
           replacement: "any"
         - pattern: "a[b:len(a)]"
           replacement: "a[b:]"
+    golines:
+      max-len: 200
   exclusions:
     generated: lax

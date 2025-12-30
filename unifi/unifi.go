@@ -13,6 +13,8 @@ import (
 	"path"
 	"strings"
 	"sync"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 //go:generate go run ../cmd/fields/ -version-base-dir=../cmd/fields/ -output-dir=../unifi/ -latest
@@ -21,6 +23,12 @@ const (
 	loginPath    = "/api/login"
 	loginPathNew = "/api/auth/login"
 )
+
+type LoginRequiredError struct{}
+
+func (err *LoginRequiredError) Error() string {
+	return "login required"
+}
 
 type NotFoundError struct{}
 
@@ -41,7 +49,7 @@ type Client struct {
 	// single thread client calls for CSRF, etc.
 	sync.Mutex
 
-	c       *http.Client
+	c       *retryablehttp.Client
 	baseURL *url.URL
 
 	apiKey    string
@@ -80,7 +88,7 @@ func (c *Client) SetBaseURL(base string) error {
 	return nil
 }
 
-func (c *Client) SetHTTPClient(hc *http.Client) error {
+func (c *Client) SetHTTPClient(hc *retryablehttp.Client) error {
 	c.c = hc
 	return nil
 }
@@ -102,7 +110,7 @@ func (c *Client) setAPIUrlStyle(ctx context.Context) error {
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 		},
-		Transport: c.c.Transport,
+		Transport: c.c.HTTPClient.Transport,
 	}
 
 	resp, err := client.Do(req)
@@ -127,10 +135,10 @@ func (c *Client) setAPIUrlStyle(ctx context.Context) error {
 
 func (c *Client) Login(ctx context.Context, user, pass string) error {
 	if c.c == nil {
-		c.c = &http.Client{}
+		c.c = retryablehttp.NewClient()
 
 		jar, _ := cookiejar.New(nil)
-		c.c.Jar = jar
+		c.c.HTTPClient.Jar = jar
 	}
 
 	err := c.setAPIUrlStyle(ctx)
@@ -218,7 +226,7 @@ func (c *Client) do(
 	}
 
 	url := c.baseURL.ResolveReference(reqURL)
-	req, err := http.NewRequestWithContext(ctx, method, url.String(), reqReader)
+	req, err := retryablehttp.NewRequestWithContext(ctx, method, url.String(), reqReader)
 	if err != nil {
 		return fmt.Errorf("unable to create request: %s %s %w", method, relativeURL, err)
 	}
@@ -250,6 +258,9 @@ func (c *Client) do(
 	}
 
 	if resp.StatusCode != http.StatusOK {
+		if resp.StatusCode == http.StatusUnauthorized {
+			return &LoginRequiredError{}
+		}
 		errBody := struct {
 			Meta meta `json:"meta"`
 			Data []struct {
@@ -267,7 +278,13 @@ func (c *Client) do(
 		if apiErr == nil {
 			apiErr = errBody.Meta.error()
 		}
-		return fmt.Errorf("%w (%s) for %s %s", apiErr, resp.Status, method, url.String())
+		return fmt.Errorf(
+			"%w (%s) for %s %s",
+			apiErr,
+			strings.TrimSpace(resp.Status),
+			method,
+			url.String(),
+		)
 	}
 
 	if respBody == nil || resp.ContentLength == 0 {

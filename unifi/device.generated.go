@@ -34,12 +34,12 @@ type Device struct {
 	BaresipAuthUser             string                    `json:"baresip_auth_user,omitempty"` // ^\+?[a-zA-Z0-9_.\-!~*'()]*
 	BaresipEnabled              bool                      `json:"baresip_enabled,omitempty"`
 	BaresipExtension            string                    `json:"baresip_extension,omitempty"` // ^\+?[a-zA-Z0-9_.\-!~*'()]*
-	ConfigNetwork               DeviceConfigNetwork       `json:"config_network,omitempty"`
+	ConfigNetwork               *DeviceConfigNetwork      `json:"config_network,omitempty"`
 	DPIEnabled                  bool                      `json:"dpi_enabled,omitempty"`
 	Disabled                    bool                      `json:"disabled,omitempty"`
 	Dot1XFallbackNetworkID      string                    `json:"dot1x_fallback_networkconf_id,omitempty"` // [\d\w]+|
 	Dot1XPortctrlEnabled        bool                      `json:"dot1x_portctrl_enabled,omitempty"`
-	EtherLighting               DeviceEtherLighting       `json:"ether_lighting,omitempty"`
+	EtherLighting               *DeviceEtherLighting      `json:"ether_lighting,omitempty"`
 	EthernetOverrides           []DeviceEthernetOverrides `json:"ethernet_overrides,omitempty"`
 	FanModeOverride             string                    `json:"fan_mode_override,omitempty"` // default|quiet
 	FlowctrlEnabled             bool                      `json:"flowctrl_enabled,omitempty"`
@@ -78,12 +78,12 @@ type Device struct {
 	LteSoftLimit                int                       `json:"lte_soft_limit,omitempty"`
 	LteUsername                 string                    `json:"lte_username,omitempty"`
 	MapID                       string                    `json:"map_id,omitempty"`
-	MbbOverrides                DeviceMbbOverrides        `json:"mbb_overrides,omitempty"`
+	MbbOverrides                *DeviceMbbOverrides       `json:"mbb_overrides,omitempty"`
 	MeshStaVapEnabled           bool                      `json:"mesh_sta_vap_enabled,omitempty"`
 	MgmtNetworkID               string                    `json:"mgmt_network_id,omitempty"` // [\d\w]+
 	Model                       string                    `json:"model,omitempty"`
 	Name                        string                    `json:"name,omitempty"` // .{0,128}
-	NutServer                   DeviceNutServer           `json:"nut_server,omitempty"`
+	NutServer                   *DeviceNutServer          `json:"nut_server,omitempty"`
 	OutdoorModeOverride         string                    `json:"outdoor_mode_override,omitempty"` // default|on|off
 	OutletEnabled               bool                      `json:"outlet_enabled,omitempty"`
 	OutletOverrides             []DeviceOutletOverrides   `json:"outlet_overrides,omitempty"`
@@ -100,7 +100,7 @@ type Device struct {
 	RADIUSProfileID             string                    `json:"radiusprofile_id,omitempty"`
 	RadioTable                  []DeviceRadioTable        `json:"radio_table,omitempty"`
 	ResetbtnEnabled             string                    `json:"resetbtn_enabled,omitempty"` // on|off
-	RpsOverride                 DeviceRpsOverride         `json:"rps_override,omitempty"`
+	RpsOverride                 *DeviceRpsOverride        `json:"rps_override,omitempty"`
 	SnmpContact                 string                    `json:"snmp_contact,omitempty"`  // .{0,255}
 	SnmpLocation                string                    `json:"snmp_location,omitempty"` // .{0,255}
 	State                       DeviceState               `json:"state"`

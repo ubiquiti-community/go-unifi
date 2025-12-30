@@ -3,16 +3,18 @@ module github.com/ubiquiti-community/go-unifi
 go 1.24
 
 require (
-	github.com/hashicorp/go-version v1.6.0
+	github.com/hashicorp/go-retryablehttp v0.7.8
+	github.com/hashicorp/go-version v1.8.0
 	github.com/iancoleman/strcase v0.3.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/tj/assert v0.0.3
-	github.com/ulikunitz/xz v0.5.11
+	github.com/ulikunitz/xz v0.5.15
 	github.com/xor-gate/ar v0.0.0-20170530204233-5c72ae81e2b7
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect

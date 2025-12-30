@@ -25,7 +25,7 @@ func (c *Client) ListSites(ctx context.Context) ([]Site, error) {
 		Data []Site `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", "self/sites", nil, &respBody)
+	err := c.do(ctx, "GET", "api/self/sites", nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
