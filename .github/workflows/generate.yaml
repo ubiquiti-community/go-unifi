@@ -31,7 +31,7 @@ jobs:
           title: 'Update to latest controller version'
 
       - name: Enable auto-merge for PR
-        if: steps.cpr.outputs.pull-request-number != ''
+        if: steps.cpr.outputs.pull-request-number
         run: gh pr merge --auto --merge "${{ steps.cpr.outputs.pull-request-number }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
