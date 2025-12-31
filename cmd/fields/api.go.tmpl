@@ -119,8 +119,44 @@ func (dst *{{ $k }}) UnmarshalJSON(b []byte) error {
 
 	return nil
 }
+
+{{- $hasCustomMarshalType := false }}
+{{- range $fk, $fv := $v.Fields }}{{ if not $fv }}{{ else }}{{ if eq $fv.CustomUnmarshalType "types.Number" }}{{ $hasCustomMarshalType = true }}{{ end }}{{ end }}{{ end }}
+{{- if $hasCustomMarshalType }}
+func (src {{ $k }}) MarshalJSON() ([]byte, error) {
+	type Alias {{ $k }}
+	aux := &struct {
+		{{- range $fk, $fv := $v.Fields }}{{ if not $fv }}
+		{{- else }}{{ if eq $fv.CustomUnmarshalType "types.Number" }}
+		{{ $fv.FieldName }} any `json:"{{ $fv.JSONName }}"`{{ end }}{{ end }}{{ end }}
+		*Alias
+	}{
+		Alias: (*Alias)(&src),
+	}
+
+	{{- range $fk, $fv := $v.Fields }}{{ if not $fv }}
+	{{- else }}{{ if eq $fv.CustomUnmarshalType "types.Number" }}
+	{{- if $fv.IsArray }}
+	aux.{{ $fv.FieldName }} = make([]any, len(src.{{ $fv.FieldName }}))
+	for i, v := range src.{{ $fv.FieldName }} {
+		if v == 0 {
+			aux.{{ $fv.FieldName }}[i] = ""
+		} else {
+			aux.{{ $fv.FieldName }}[i] = v
+		}
+	}
+	{{- else }}
+	if src.{{ $fv.FieldName }} == 0 {
+		aux.{{ $fv.FieldName }} = ""
+	} else {
+		aux.{{ $fv.FieldName }} = src.{{ $fv.FieldName }}
+	}
+	{{- end }}{{ end }}{{ end }}{{ end }}
+
+	return json.Marshal(aux)
+}
 {{- end }}
-{{ end }}
+{{- end }}
 
 {{ if and (not .IsSetting) (ne .StructName "BGPConfig") }}
 func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
