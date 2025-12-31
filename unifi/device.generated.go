@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -119,17 +121,17 @@ type Device struct {
 func (dst *Device) UnmarshalJSON(b []byte) error {
 	type Alias Device
 	aux := &struct {
-		GatewayVrrpPriority        emptyStringInt `json:"gateway_vrrp_priority"`
-		LcmBrightness              emptyStringInt `json:"lcm_brightness"`
-		LcmIDleTimeout             emptyStringInt `json:"lcm_idle_timeout"`
-		LcmOrientationOverride     emptyStringInt `json:"lcm_orientation_override"`
-		LedOverrideColorBrightness emptyStringInt `json:"led_override_color_brightness"`
-		LteHardLimit               emptyStringInt `json:"lte_hard_limit"`
-		LteSimPin                  emptyStringInt `json:"lte_sim_pin"`
-		LteSoftLimit               emptyStringInt `json:"lte_soft_limit"`
-		PowerSourceCtrlBudget      emptyStringInt `json:"power_source_ctrl_budget"`
-		StpPriority                numberOrString `json:"stp_priority"`
-		Volume                     emptyStringInt `json:"volume"`
+		GatewayVrrpPriority        types.Number    `json:"gateway_vrrp_priority"`
+		LcmBrightness              types.Number    `json:"lcm_brightness"`
+		LcmIDleTimeout             types.Number    `json:"lcm_idle_timeout"`
+		LcmOrientationOverride     types.Number    `json:"lcm_orientation_override"`
+		LedOverrideColorBrightness types.Number    `json:"led_override_color_brightness"`
+		LteHardLimit               types.Number    `json:"lte_hard_limit"`
+		LteSimPin                  types.Number    `json:"lte_sim_pin"`
+		LteSoftLimit               types.Number    `json:"lte_soft_limit"`
+		PowerSourceCtrlBudget      types.Number    `json:"power_source_ctrl_budget"`
+		StpPriority                types.Number `json:"stp_priority"`
+		Volume                     types.Number    `json:"volume"`
 
 		*Alias
 	}{
@@ -140,17 +142,37 @@ func (dst *Device) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.GatewayVrrpPriority = int(aux.GatewayVrrpPriority)
-	dst.LcmBrightness = int(aux.LcmBrightness)
-	dst.LcmIDleTimeout = int(aux.LcmIDleTimeout)
-	dst.LcmOrientationOverride = int(aux.LcmOrientationOverride)
-	dst.LedOverrideColorBrightness = int(aux.LedOverrideColorBrightness)
-	dst.LteHardLimit = int(aux.LteHardLimit)
-	dst.LteSimPin = int(aux.LteSimPin)
-	dst.LteSoftLimit = int(aux.LteSoftLimit)
-	dst.PowerSourceCtrlBudget = int(aux.PowerSourceCtrlBudget)
+	if val, err := aux.GatewayVrrpPriority.Int64(); err == nil {
+		dst.GatewayVrrpPriority = int(val)
+	}
+	if val, err := aux.LcmBrightness.Int64(); err == nil {
+		dst.LcmBrightness = int(val)
+	}
+	if val, err := aux.LcmIDleTimeout.Int64(); err == nil {
+		dst.LcmIDleTimeout = int(val)
+	}
+	if val, err := aux.LcmOrientationOverride.Int64(); err == nil {
+		dst.LcmOrientationOverride = int(val)
+	}
+	if val, err := aux.LedOverrideColorBrightness.Int64(); err == nil {
+		dst.LedOverrideColorBrightness = int(val)
+	}
+	if val, err := aux.LteHardLimit.Int64(); err == nil {
+		dst.LteHardLimit = int(val)
+	}
+	if val, err := aux.LteSimPin.Int64(); err == nil {
+		dst.LteSimPin = int(val)
+	}
+	if val, err := aux.LteSoftLimit.Int64(); err == nil {
+		dst.LteSoftLimit = int(val)
+	}
+	if val, err := aux.PowerSourceCtrlBudget.Int64(); err == nil {
+		dst.PowerSourceCtrlBudget = int(val)
+	}
 	dst.StpPriority = string(aux.StpPriority)
-	dst.Volume = int(aux.Volume)
+	if val, err := aux.Volume.Int64(); err == nil {
+		dst.Volume = int(val)
+	}
 
 	return nil
 }
@@ -217,7 +239,7 @@ type DeviceEtherLighting struct {
 func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 	type Alias DeviceEtherLighting
 	aux := &struct {
-		Brightness emptyStringInt `json:"brightness"`
+		Brightness types.Number `json:"brightness"`
 
 		*Alias
 	}{
@@ -228,7 +250,9 @@ func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Brightness = int(aux.Brightness)
+	if val, err := aux.Brightness.Int64(); err == nil {
+		dst.Brightness = int(val)
+	}
 
 	return nil
 }
@@ -263,7 +287,7 @@ type DeviceMbbOverrides struct {
 func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DeviceMbbOverrides
 	aux := &struct {
-		PrimarySlot emptyStringInt `json:"primary_slot"`
+		PrimarySlot types.Number `json:"primary_slot"`
 
 		*Alias
 	}{
@@ -274,7 +298,9 @@ func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.PrimarySlot = int(aux.PrimarySlot)
+	if val, err := aux.PrimarySlot.Int64(); err == nil {
+		dst.PrimarySlot = int(val)
+	}
 
 	return nil
 }
@@ -291,7 +317,7 @@ type DeviceNutServer struct {
 func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 	type Alias DeviceNutServer
 	aux := &struct {
-		Port emptyStringInt `json:"port"`
+		Port types.Number `json:"port"`
 
 		*Alias
 	}{
@@ -302,7 +328,9 @@ func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Port = int(aux.Port)
+	if val, err := aux.Port.Int64(); err == nil {
+		dst.Port = int(val)
+	}
 
 	return nil
 }
@@ -317,7 +345,7 @@ type DeviceOutletOverrides struct {
 func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DeviceOutletOverrides
 	aux := &struct {
-		Index emptyStringInt `json:"index"`
+		Index types.Number `json:"index"`
 
 		*Alias
 	}{
@@ -328,7 +356,9 @@ func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Index = int(aux.Index)
+	if val, err := aux.Index.Int64(); err == nil {
+		dst.Index = int(val)
+	}
 
 	return nil
 }
@@ -384,22 +414,22 @@ type DevicePortOverrides struct {
 func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DevicePortOverrides
 	aux := &struct {
-		AggregateMembers           []emptyStringInt `json:"aggregate_members"`
-		Dot1XIDleTimeout           emptyStringInt   `json:"dot1x_idle_timeout"`
-		EgressRateLimitKbps        emptyStringInt   `json:"egress_rate_limit_kbps"`
-		MirrorPortIDX              emptyStringInt   `json:"mirror_port_idx"`
-		PortIDX                    emptyStringInt   `json:"port_idx"`
-		PriorityQueue1Level        emptyStringInt   `json:"priority_queue1_level"`
-		PriorityQueue2Level        emptyStringInt   `json:"priority_queue2_level"`
-		PriorityQueue3Level        emptyStringInt   `json:"priority_queue3_level"`
-		PriorityQueue4Level        emptyStringInt   `json:"priority_queue4_level"`
-		Speed                      emptyStringInt   `json:"speed"`
-		StormctrlBroadcastastLevel emptyStringInt   `json:"stormctrl_bcast_level"`
-		StormctrlBroadcastastRate  emptyStringInt   `json:"stormctrl_bcast_rate"`
-		StormctrlMcastLevel        emptyStringInt   `json:"stormctrl_mcast_level"`
-		StormctrlMcastRate         emptyStringInt   `json:"stormctrl_mcast_rate"`
-		StormctrlUcastLevel        emptyStringInt   `json:"stormctrl_ucast_level"`
-		StormctrlUcastRate         emptyStringInt   `json:"stormctrl_ucast_rate"`
+		AggregateMembers           []types.Number `json:"aggregate_members"`
+		Dot1XIDleTimeout           types.Number   `json:"dot1x_idle_timeout"`
+		EgressRateLimitKbps        types.Number   `json:"egress_rate_limit_kbps"`
+		MirrorPortIDX              types.Number   `json:"mirror_port_idx"`
+		PortIDX                    types.Number   `json:"port_idx"`
+		PriorityQueue1Level        types.Number   `json:"priority_queue1_level"`
+		PriorityQueue2Level        types.Number   `json:"priority_queue2_level"`
+		PriorityQueue3Level        types.Number   `json:"priority_queue3_level"`
+		PriorityQueue4Level        types.Number   `json:"priority_queue4_level"`
+		Speed                      types.Number   `json:"speed"`
+		StormctrlBroadcastastLevel types.Number   `json:"stormctrl_bcast_level"`
+		StormctrlBroadcastastRate  types.Number   `json:"stormctrl_bcast_rate"`
+		StormctrlMcastLevel        types.Number   `json:"stormctrl_mcast_level"`
+		StormctrlMcastRate         types.Number   `json:"stormctrl_mcast_rate"`
+		StormctrlUcastLevel        types.Number   `json:"stormctrl_ucast_level"`
+		StormctrlUcastRate         types.Number   `json:"stormctrl_ucast_rate"`
 
 		*Alias
 	}{
@@ -412,23 +442,55 @@ func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	}
 	dst.AggregateMembers = make([]int, len(aux.AggregateMembers))
 	for i, v := range aux.AggregateMembers {
-		dst.AggregateMembers[i] = int(v)
+		if val, err := v.Int64(); err == nil {
+			dst.AggregateMembers[i] = int(val)
+		}
 	}
-	dst.Dot1XIDleTimeout = int(aux.Dot1XIDleTimeout)
-	dst.EgressRateLimitKbps = int(aux.EgressRateLimitKbps)
-	dst.MirrorPortIDX = int(aux.MirrorPortIDX)
-	dst.PortIDX = int(aux.PortIDX)
-	dst.PriorityQueue1Level = int(aux.PriorityQueue1Level)
-	dst.PriorityQueue2Level = int(aux.PriorityQueue2Level)
-	dst.PriorityQueue3Level = int(aux.PriorityQueue3Level)
-	dst.PriorityQueue4Level = int(aux.PriorityQueue4Level)
-	dst.Speed = int(aux.Speed)
-	dst.StormctrlBroadcastastLevel = int(aux.StormctrlBroadcastastLevel)
-	dst.StormctrlBroadcastastRate = int(aux.StormctrlBroadcastastRate)
-	dst.StormctrlMcastLevel = int(aux.StormctrlMcastLevel)
-	dst.StormctrlMcastRate = int(aux.StormctrlMcastRate)
-	dst.StormctrlUcastLevel = int(aux.StormctrlUcastLevel)
-	dst.StormctrlUcastRate = int(aux.StormctrlUcastRate)
+	if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
+		dst.Dot1XIDleTimeout = int(val)
+	}
+	if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
+		dst.EgressRateLimitKbps = int(val)
+	}
+	if val, err := aux.MirrorPortIDX.Int64(); err == nil {
+		dst.MirrorPortIDX = int(val)
+	}
+	if val, err := aux.PortIDX.Int64(); err == nil {
+		dst.PortIDX = int(val)
+	}
+	if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
+		dst.PriorityQueue1Level = int(val)
+	}
+	if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
+		dst.PriorityQueue2Level = int(val)
+	}
+	if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
+		dst.PriorityQueue3Level = int(val)
+	}
+	if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
+		dst.PriorityQueue4Level = int(val)
+	}
+	if val, err := aux.Speed.Int64(); err == nil {
+		dst.Speed = int(val)
+	}
+	if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
+		dst.StormctrlBroadcastastLevel = int(val)
+	}
+	if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
+		dst.StormctrlBroadcastastRate = int(val)
+	}
+	if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
+		dst.StormctrlMcastLevel = int(val)
+	}
+	if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
+		dst.StormctrlMcastRate = int(val)
+	}
+	if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
+		dst.StormctrlUcastLevel = int(val)
+	}
+	if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
+		dst.StormctrlUcastRate = int(val)
+	}
 
 	return nil
 }
@@ -443,10 +505,10 @@ type DeviceQOSMarking struct {
 func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 	type Alias DeviceQOSMarking
 	aux := &struct {
-		CosCode          emptyStringInt `json:"cos_code"`
-		DscpCode         emptyStringInt `json:"dscp_code"`
-		IPPrecedenceCode emptyStringInt `json:"ip_precedence_code"`
-		Queue            emptyStringInt `json:"queue"`
+		CosCode          types.Number `json:"cos_code"`
+		DscpCode         types.Number `json:"dscp_code"`
+		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
+		Queue            types.Number `json:"queue"`
 
 		*Alias
 	}{
@@ -457,10 +519,18 @@ func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.CosCode = int(aux.CosCode)
-	dst.DscpCode = int(aux.DscpCode)
-	dst.IPPrecedenceCode = int(aux.IPPrecedenceCode)
-	dst.Queue = int(aux.Queue)
+	if val, err := aux.CosCode.Int64(); err == nil {
+		dst.CosCode = int(val)
+	}
+	if val, err := aux.DscpCode.Int64(); err == nil {
+		dst.DscpCode = int(val)
+	}
+	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+		dst.IPPrecedenceCode = int(val)
+	}
+	if val, err := aux.Queue.Int64(); err == nil {
+		dst.Queue = int(val)
+	}
 
 	return nil
 }
@@ -477,11 +547,11 @@ type DeviceQOSMatching struct {
 func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 	type Alias DeviceQOSMatching
 	aux := &struct {
-		CosCode          emptyStringInt `json:"cos_code"`
-		DscpCode         emptyStringInt `json:"dscp_code"`
-		DstPort          emptyStringInt `json:"dst_port"`
-		IPPrecedenceCode emptyStringInt `json:"ip_precedence_code"`
-		SrcPort          emptyStringInt `json:"src_port"`
+		CosCode          types.Number `json:"cos_code"`
+		DscpCode         types.Number `json:"dscp_code"`
+		DstPort          types.Number `json:"dst_port"`
+		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
+		SrcPort          types.Number `json:"src_port"`
 
 		*Alias
 	}{
@@ -492,11 +562,21 @@ func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.CosCode = int(aux.CosCode)
-	dst.DscpCode = int(aux.DscpCode)
-	dst.DstPort = int(aux.DstPort)
-	dst.IPPrecedenceCode = int(aux.IPPrecedenceCode)
-	dst.SrcPort = int(aux.SrcPort)
+	if val, err := aux.CosCode.Int64(); err == nil {
+		dst.CosCode = int(val)
+	}
+	if val, err := aux.DscpCode.Int64(); err == nil {
+		dst.DscpCode = int(val)
+	}
+	if val, err := aux.DstPort.Int64(); err == nil {
+		dst.DstPort = int(val)
+	}
+	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+		dst.IPPrecedenceCode = int(val)
+	}
+	if val, err := aux.SrcPort.Int64(); err == nil {
+		dst.SrcPort = int(val)
+	}
 
 	return nil
 }
@@ -590,13 +670,13 @@ type DeviceRadioTable struct {
 func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRadioTable
 	aux := &struct {
-		AntennaGain         emptyStringInt `json:"antenna_gain"`
-		AntennaID           emptyStringInt `json:"antenna_id"`
-		AssistedRoamingRssi emptyStringInt `json:"assisted_roaming_rssi"`
-		Ht                  emptyStringInt `json:"ht"`
-		Maxsta              emptyStringInt `json:"maxsta"`
-		MinRssi             emptyStringInt `json:"min_rssi"`
-		SensLevel           emptyStringInt `json:"sens_level"`
+		AntennaGain         types.Number `json:"antenna_gain"`
+		AntennaID           types.Number `json:"antenna_id"`
+		AssistedRoamingRssi types.Number `json:"assisted_roaming_rssi"`
+		Ht                  types.Number `json:"ht"`
+		Maxsta              types.Number `json:"maxsta"`
+		MinRssi             types.Number `json:"min_rssi"`
+		SensLevel           types.Number `json:"sens_level"`
 
 		*Alias
 	}{
@@ -607,13 +687,27 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.AntennaGain = int(aux.AntennaGain)
-	dst.AntennaID = int(aux.AntennaID)
-	dst.AssistedRoamingRssi = int(aux.AssistedRoamingRssi)
-	dst.Ht = int(aux.Ht)
-	dst.Maxsta = int(aux.Maxsta)
-	dst.MinRssi = int(aux.MinRssi)
-	dst.SensLevel = int(aux.SensLevel)
+	if val, err := aux.AntennaGain.Int64(); err == nil {
+		dst.AntennaGain = int(val)
+	}
+	if val, err := aux.AntennaID.Int64(); err == nil {
+		dst.AntennaID = int(val)
+	}
+	if val, err := aux.AssistedRoamingRssi.Int64(); err == nil {
+		dst.AssistedRoamingRssi = int(val)
+	}
+	if val, err := aux.Ht.Int64(); err == nil {
+		dst.Ht = int(val)
+	}
+	if val, err := aux.Maxsta.Int64(); err == nil {
+		dst.Maxsta = int(val)
+	}
+	if val, err := aux.MinRssi.Int64(); err == nil {
+		dst.MinRssi = int(val)
+	}
+	if val, err := aux.SensLevel.Int64(); err == nil {
+		dst.SensLevel = int(val)
+	}
 
 	return nil
 }
@@ -648,7 +742,7 @@ type DeviceRpsPortTable struct {
 func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRpsPortTable
 	aux := &struct {
-		PortIDX emptyStringInt `json:"port_idx"`
+		PortIDX types.Number `json:"port_idx"`
 
 		*Alias
 	}{
@@ -659,7 +753,9 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.PortIDX = int(aux.PortIDX)
+	if val, err := aux.PortIDX.Int64(); err == nil {
+		dst.PortIDX = int(val)
+	}
 
 	return nil
 }
@@ -680,11 +776,11 @@ type DeviceSim struct {
 func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	type Alias DeviceSim
 	aux := &struct {
-		DataHardLimitBytes   emptyStringInt `json:"data_hard_limit_bytes"`
-		DataSoftLimitBytes   emptyStringInt `json:"data_soft_limit_bytes"`
-		DataWarningThreshold emptyStringInt `json:"data_warning_threshold"`
-		ResetDate            emptyStringInt `json:"reset_date"`
-		Slot                 emptyStringInt `json:"slot"`
+		DataHardLimitBytes   types.Number `json:"data_hard_limit_bytes"`
+		DataSoftLimitBytes   types.Number `json:"data_soft_limit_bytes"`
+		DataWarningThreshold types.Number `json:"data_warning_threshold"`
+		ResetDate            types.Number `json:"reset_date"`
+		Slot                 types.Number `json:"slot"`
 
 		*Alias
 	}{
@@ -695,11 +791,21 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.DataHardLimitBytes = int(aux.DataHardLimitBytes)
-	dst.DataSoftLimitBytes = int(aux.DataSoftLimitBytes)
-	dst.DataWarningThreshold = int(aux.DataWarningThreshold)
-	dst.ResetDate = int(aux.ResetDate)
-	dst.Slot = int(aux.Slot)
+	if val, err := aux.DataHardLimitBytes.Int64(); err == nil {
+		dst.DataHardLimitBytes = int(val)
+	}
+	if val, err := aux.DataSoftLimitBytes.Int64(); err == nil {
+		dst.DataSoftLimitBytes = int(val)
+	}
+	if val, err := aux.DataWarningThreshold.Int64(); err == nil {
+		dst.DataWarningThreshold = int(val)
+	}
+	if val, err := aux.ResetDate.Int64(); err == nil {
+		dst.ResetDate = int(val)
+	}
+	if val, err := aux.Slot.Int64(); err == nil {
+		dst.Slot = int(val)
+	}
 
 	return nil
 }
@@ -808,7 +914,6 @@ func (c *Client) updateDevice(
 		Meta meta     `json:"meta"`
 		Data []Device `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

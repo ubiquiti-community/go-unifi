@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -70,19 +72,19 @@ type PortProfile struct {
 func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	type Alias PortProfile
 	aux := &struct {
-		Dot1XIDleTimeout           emptyStringInt `json:"dot1x_idle_timeout"`
-		EgressRateLimitKbps        emptyStringInt `json:"egress_rate_limit_kbps"`
-		PriorityQueue1Level        emptyStringInt `json:"priority_queue1_level"`
-		PriorityQueue2Level        emptyStringInt `json:"priority_queue2_level"`
-		PriorityQueue3Level        emptyStringInt `json:"priority_queue3_level"`
-		PriorityQueue4Level        emptyStringInt `json:"priority_queue4_level"`
-		Speed                      emptyStringInt `json:"speed"`
-		StormctrlBroadcastastLevel emptyStringInt `json:"stormctrl_bcast_level"`
-		StormctrlBroadcastastRate  emptyStringInt `json:"stormctrl_bcast_rate"`
-		StormctrlMcastLevel        emptyStringInt `json:"stormctrl_mcast_level"`
-		StormctrlMcastRate         emptyStringInt `json:"stormctrl_mcast_rate"`
-		StormctrlUcastLevel        emptyStringInt `json:"stormctrl_ucast_level"`
-		StormctrlUcastRate         emptyStringInt `json:"stormctrl_ucast_rate"`
+		Dot1XIDleTimeout           types.Number `json:"dot1x_idle_timeout"`
+		EgressRateLimitKbps        types.Number `json:"egress_rate_limit_kbps"`
+		PriorityQueue1Level        types.Number `json:"priority_queue1_level"`
+		PriorityQueue2Level        types.Number `json:"priority_queue2_level"`
+		PriorityQueue3Level        types.Number `json:"priority_queue3_level"`
+		PriorityQueue4Level        types.Number `json:"priority_queue4_level"`
+		Speed                      types.Number `json:"speed"`
+		StormctrlBroadcastastLevel types.Number `json:"stormctrl_bcast_level"`
+		StormctrlBroadcastastRate  types.Number `json:"stormctrl_bcast_rate"`
+		StormctrlMcastLevel        types.Number `json:"stormctrl_mcast_level"`
+		StormctrlMcastRate         types.Number `json:"stormctrl_mcast_rate"`
+		StormctrlUcastLevel        types.Number `json:"stormctrl_ucast_level"`
+		StormctrlUcastRate         types.Number `json:"stormctrl_ucast_rate"`
 
 		*Alias
 	}{
@@ -93,19 +95,45 @@ func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Dot1XIDleTimeout = int(aux.Dot1XIDleTimeout)
-	dst.EgressRateLimitKbps = int(aux.EgressRateLimitKbps)
-	dst.PriorityQueue1Level = int(aux.PriorityQueue1Level)
-	dst.PriorityQueue2Level = int(aux.PriorityQueue2Level)
-	dst.PriorityQueue3Level = int(aux.PriorityQueue3Level)
-	dst.PriorityQueue4Level = int(aux.PriorityQueue4Level)
-	dst.Speed = int(aux.Speed)
-	dst.StormctrlBroadcastastLevel = int(aux.StormctrlBroadcastastLevel)
-	dst.StormctrlBroadcastastRate = int(aux.StormctrlBroadcastastRate)
-	dst.StormctrlMcastLevel = int(aux.StormctrlMcastLevel)
-	dst.StormctrlMcastRate = int(aux.StormctrlMcastRate)
-	dst.StormctrlUcastLevel = int(aux.StormctrlUcastLevel)
-	dst.StormctrlUcastRate = int(aux.StormctrlUcastRate)
+	if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
+		dst.Dot1XIDleTimeout = int(val)
+	}
+	if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
+		dst.EgressRateLimitKbps = int(val)
+	}
+	if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
+		dst.PriorityQueue1Level = int(val)
+	}
+	if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
+		dst.PriorityQueue2Level = int(val)
+	}
+	if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
+		dst.PriorityQueue3Level = int(val)
+	}
+	if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
+		dst.PriorityQueue4Level = int(val)
+	}
+	if val, err := aux.Speed.Int64(); err == nil {
+		dst.Speed = int(val)
+	}
+	if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
+		dst.StormctrlBroadcastastLevel = int(val)
+	}
+	if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
+		dst.StormctrlBroadcastastRate = int(val)
+	}
+	if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
+		dst.StormctrlMcastLevel = int(val)
+	}
+	if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
+		dst.StormctrlMcastRate = int(val)
+	}
+	if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
+		dst.StormctrlUcastLevel = int(val)
+	}
+	if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
+		dst.StormctrlUcastRate = int(val)
+	}
 
 	return nil
 }
@@ -120,10 +148,10 @@ type PortProfileQOSMarking struct {
 func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 	type Alias PortProfileQOSMarking
 	aux := &struct {
-		CosCode          emptyStringInt `json:"cos_code"`
-		DscpCode         emptyStringInt `json:"dscp_code"`
-		IPPrecedenceCode emptyStringInt `json:"ip_precedence_code"`
-		Queue            emptyStringInt `json:"queue"`
+		CosCode          types.Number `json:"cos_code"`
+		DscpCode         types.Number `json:"dscp_code"`
+		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
+		Queue            types.Number `json:"queue"`
 
 		*Alias
 	}{
@@ -134,10 +162,18 @@ func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.CosCode = int(aux.CosCode)
-	dst.DscpCode = int(aux.DscpCode)
-	dst.IPPrecedenceCode = int(aux.IPPrecedenceCode)
-	dst.Queue = int(aux.Queue)
+	if val, err := aux.CosCode.Int64(); err == nil {
+		dst.CosCode = int(val)
+	}
+	if val, err := aux.DscpCode.Int64(); err == nil {
+		dst.DscpCode = int(val)
+	}
+	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+		dst.IPPrecedenceCode = int(val)
+	}
+	if val, err := aux.Queue.Int64(); err == nil {
+		dst.Queue = int(val)
+	}
 
 	return nil
 }
@@ -154,11 +190,11 @@ type PortProfileQOSMatching struct {
 func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 	type Alias PortProfileQOSMatching
 	aux := &struct {
-		CosCode          emptyStringInt `json:"cos_code"`
-		DscpCode         emptyStringInt `json:"dscp_code"`
-		DstPort          emptyStringInt `json:"dst_port"`
-		IPPrecedenceCode emptyStringInt `json:"ip_precedence_code"`
-		SrcPort          emptyStringInt `json:"src_port"`
+		CosCode          types.Number `json:"cos_code"`
+		DscpCode         types.Number `json:"dscp_code"`
+		DstPort          types.Number `json:"dst_port"`
+		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
+		SrcPort          types.Number `json:"src_port"`
 
 		*Alias
 	}{
@@ -169,11 +205,21 @@ func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.CosCode = int(aux.CosCode)
-	dst.DscpCode = int(aux.DscpCode)
-	dst.DstPort = int(aux.DstPort)
-	dst.IPPrecedenceCode = int(aux.IPPrecedenceCode)
-	dst.SrcPort = int(aux.SrcPort)
+	if val, err := aux.CosCode.Int64(); err == nil {
+		dst.CosCode = int(val)
+	}
+	if val, err := aux.DscpCode.Int64(); err == nil {
+		dst.DscpCode = int(val)
+	}
+	if val, err := aux.DstPort.Int64(); err == nil {
+		dst.DstPort = int(val)
+	}
+	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+		dst.IPPrecedenceCode = int(val)
+	}
+	if val, err := aux.SrcPort.Int64(); err == nil {
+		dst.SrcPort = int(val)
+	}
 
 	return nil
 }
@@ -324,7 +370,6 @@ func (c *Client) updatePortProfile(
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

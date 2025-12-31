@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -60,7 +62,7 @@ type FirewallRule struct {
 func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 	type Alias FirewallRule
 	aux := &struct {
-		RuleIndex emptyStringInt `json:"rule_index"`
+		RuleIndex types.Number `json:"rule_index"`
 
 		*Alias
 	}{
@@ -71,7 +73,9 @@ func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.RuleIndex = int(aux.RuleIndex)
+	if val, err := aux.RuleIndex.Int64(); err == nil {
+		dst.RuleIndex = int(val)
+	}
 
 	return nil
 }
@@ -180,7 +184,6 @@ func (c *Client) updateFirewallRule(
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

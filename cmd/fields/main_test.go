@@ -75,7 +75,7 @@ func TestResourceTypes(t *testing.T) {
 		"Note":    NewFieldInfo("Note", "note", "string", ".{0,1024}", true, false, false, ""),
 		"Date":    NewFieldInfo("Date", "date", "string", "^$|^(20[0-9]{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])Z?$", false, false, false, ""),
 		"Mac":     NewFieldInfo("Mac", "mac", "string", "^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$", true, false, false, ""),
-		"Number":  NewFieldInfo("Number", "number", "int", "", true, false, false, "emptyStringInt"),
+		"Number":  NewFieldInfo("Number", "number", "int", "", true, false, false, "types.Number"),
 		"Boolean": NewFieldInfo("Boolean", "boolean", "bool", "", false, false, false, ""),
 		"NestedType": {
 			FieldName:       "NestedType",

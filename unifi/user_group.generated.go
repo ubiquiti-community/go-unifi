@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -33,8 +35,8 @@ type UserGroup struct {
 func (dst *UserGroup) UnmarshalJSON(b []byte) error {
 	type Alias UserGroup
 	aux := &struct {
-		QOSRateMaxDown emptyStringInt `json:"qos_rate_max_down"`
-		QOSRateMaxUp   emptyStringInt `json:"qos_rate_max_up"`
+		QOSRateMaxDown types.Number `json:"qos_rate_max_down"`
+		QOSRateMaxUp   types.Number `json:"qos_rate_max_up"`
 
 		*Alias
 	}{
@@ -45,8 +47,12 @@ func (dst *UserGroup) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.QOSRateMaxDown = int(aux.QOSRateMaxDown)
-	dst.QOSRateMaxUp = int(aux.QOSRateMaxUp)
+	if val, err := aux.QOSRateMaxDown.Int64(); err == nil {
+		dst.QOSRateMaxDown = int(val)
+	}
+	if val, err := aux.QOSRateMaxUp.Int64(); err == nil {
+		dst.QOSRateMaxUp = int(val)
+	}
 
 	return nil
 }
@@ -155,7 +161,6 @@ func (c *Client) updateUserGroup(
 		Meta meta        `json:"meta"`
 		Data []UserGroup `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

@@ -14,6 +14,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"slices"
 	"strconv"
 	"strings"
@@ -38,6 +39,9 @@ var fieldReps = []replacement{
 	{"Openvpn", "OpenVPN"},
 	{"Tftp", "TFTP"},
 	{"Wlangroup", "WLANGroup"},
+
+	{"FrrBgpdConfig", "Config"},
+	{"BgpConfig", "BGPConfig"},
 
 	{"Bc", "Broadcast"},
 	{"Dhcp", "DHCP"},
@@ -91,6 +95,7 @@ var fileReps = []replacement{
 	{"RadiusProfile", "RADIUSProfile"},
 	{"ApGroups", "APGroup"},
 	{"DnsRecord", "DNSRecord"},
+	{"BgpConfig", "BGPConfig"},
 }
 
 type Resource struct {
@@ -166,6 +171,8 @@ func NewResource(structName string, resourcePath string) *Resource {
 	case resource.StructName == "WLAN":
 		// this field removed in v6, retaining for backwards compatibility
 		baseType.Fields["WLANGroupID"] = NewFieldInfo("WLANGroupID", "wlangroup_id", "string", "", false, false, false, "")
+	case resource.StructName == "BGPConfig":
+		resource.ResourcePath = "bgp/config"
 	}
 
 	return resource
@@ -208,12 +215,6 @@ func usage() {
 
 func main() {
 	flag.Usage = usage
-
-	versionBaseDirFlag := flag.String(
-		"version-base-dir",
-		"fields",
-		"The base directory for version JSON files",
-	)
 	outputDirFlag := flag.String(
 		"output-dir",
 		"unifi",
@@ -266,7 +267,15 @@ func main() {
 		panic(err)
 	}
 
-	fieldsDir := filepath.Join(wd, *versionBaseDirFlag, fmt.Sprintf("v%s", unifiVersion))
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		panic("Unable to get the current filename")
+	}
+
+	versionBaseDir := filepath.Dir(filename)
+
+	fieldsDir := filepath.Join(wd, versionBaseDir, fmt.Sprintf("v%s", unifiVersion))
+
 	outDir := filepath.Join(wd, *outputDirFlag)
 
 	fieldsInfo, err := os.Stat(fieldsDir)
@@ -333,7 +342,13 @@ func main() {
 		urlPath := strings.ToLower(name)
 		structName := cleanName(name, fileReps)
 
+		// For settings, create a cleaner filename without "setting_" prefix
 		goFile := strcase.ToSnake(structName) + ".generated.go"
+		if strings.HasPrefix(structName, "Setting") {
+			// Remove "Setting" prefix for the file name
+			cleanStructName := strings.TrimPrefix(structName, "Setting")
+			goFile = strcase.ToSnake(cleanStructName) + ".generated.go"
+		}
 		fieldsFilePath := filepath.Join(fieldsDir, fieldsFile.Name())
 		b, err := os.ReadFile(fieldsFilePath)
 		if err != nil {
@@ -357,7 +372,7 @@ func main() {
 				switch name {
 				case "Channel", "BackupChannel", "TxPower":
 					if f.FieldType == "string" {
-						f.CustomUnmarshalType = "numberOrString"
+						f.CustomUnmarshalType = "types.Number"
 					}
 				}
 				return nil
@@ -369,7 +384,7 @@ func main() {
 					f.FieldType = "float64"
 				case "StpPriority":
 					f.FieldType = "string"
-					f.CustomUnmarshalType = "numberOrString"
+					f.CustomUnmarshalType = "types.Number"
 				case "ConfigNetwork", "EtherLighting", "MbbOverrides", "NutServer", "RpsOverride", "QOSProfile":
 					f.IsPointer = true
 				}
@@ -425,7 +440,7 @@ func main() {
 			resource.FieldProcessor = func(name string, f *FieldInfo) error {
 				if strings.HasSuffix(name, "Timeout") && name != "ArpCacheTimeout" {
 					f.FieldType = "int"
-					f.CustomUnmarshalType = "emptyStringInt"
+					f.CustomUnmarshalType = "types.Number"
 				}
 				return nil
 			}
@@ -436,7 +451,7 @@ func main() {
 					f.FieldType = "bool"
 				case "LastSeen":
 					f.FieldType = "int"
-					f.CustomUnmarshalType = "emptyStringInt"
+					f.CustomUnmarshalType = "types.Number"
 				}
 				return nil
 			}
@@ -456,7 +471,7 @@ func main() {
 					f.FieldType = "bool"
 				case "Priority", "Ttl", "Weight":
 					f.FieldType = "int"
-					f.CustomUnmarshalType = "emptyStringInt"
+					f.CustomUnmarshalType = "types.Number"
 				}
 				return nil
 			}
@@ -473,23 +488,37 @@ func main() {
 			panic(err)
 		}
 
-		_ = os.Remove(filepath.Join(outDir, goFile))
-		if err := os.WriteFile(filepath.Join(outDir, goFile), ([]byte)(code), 0o644); err != nil {
+		// Determine output directory based on whether it's a setting
+		var targetDir string
+		if resource.IsSetting() {
+			targetDir = filepath.Join(outDir, "settings")
+			// Ensure settings directory exists
+			if err := os.MkdirAll(targetDir, 0o755); err != nil {
+				panic(err)
+			}
+		} else {
+			targetDir = outDir
+		}
+
+		_ = os.Remove(filepath.Join(targetDir, goFile))
+		if err := os.WriteFile(filepath.Join(targetDir, goFile), ([]byte)(code), 0o644); err != nil {
 			panic(err)
 		}
 
-		implFile := strcase.ToSnake(structName) + ".go"
-		implFilePath := filepath.Join(outDir, implFile)
+		if !resource.IsSetting() {
+			implFile := strcase.ToSnake(structName) + ".go"
+			implFilePath := filepath.Join(targetDir, implFile)
 
-		if _, err := os.Stat(implFilePath); err != nil {
-			if errors.Is(err, os.ErrNotExist) {
-				var implCode string
-				if implCode, err = resource.generateCode(true); err != nil {
-					panic(err)
-				}
+			if _, err := os.Stat(implFilePath); err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					var implCode string
+					if implCode, err = resource.generateCode(true); err != nil {
+						panic(err)
+					}
 
-				if err := os.WriteFile(filepath.Join(implFilePath), ([]byte)(implCode), 0o644); err != nil {
-					panic(err)
+					if err := os.WriteFile(filepath.Join(implFilePath), ([]byte)(implCode), 0o644); err != nil {
+						panic(err)
+					}
 				}
 			}
 		}
@@ -528,7 +557,15 @@ func (r *Resource) IsV2() bool {
 	return slices.Contains([]string{
 		"DNSRecord",
 		"ApGroup",
+		"BGPConfig",
 	}, r.StructName)
+}
+
+func (r *Resource) CleanStructName() string {
+	if r.IsSetting() {
+		return strings.TrimPrefix(r.StructName, "Setting")
+	}
+	return r.StructName
 }
 
 func (r *Resource) processFields(fields map[string]any) {
@@ -619,7 +656,7 @@ func (r *Resource) fieldInfoFromValidation(name string, validation any) (*FieldI
 
 				omitEmpty = true
 				fieldInfo = NewFieldInfo(fieldName, name, "int", fieldValidation, omitEmpty, false, false, "")
-				fieldInfo.CustomUnmarshalType = "emptyStringInt"
+				fieldInfo.CustomUnmarshalType = "types.Number"
 				return fieldInfo, r.FieldProcessor(fieldName, fieldInfo)
 			}
 		}
@@ -659,10 +696,14 @@ func (r *Resource) generateCode(isImpl bool) (string, error) {
 	writer := io.Writer(&buf)
 
 	var tpl *template.Template
+	funcMap := template.FuncMap{
+		"trimPrefix": strings.TrimPrefix,
+	}
+
 	if isImpl {
-		tpl = template.Must(template.New("client.go.tmpl").Parse(clientGoTemplate))
+		tpl = template.Must(template.New("client.go.tmpl").Funcs(funcMap).Parse(clientGoTemplate))
 	} else {
-		tpl = template.Must(template.New("api.go.tmpl").Parse(apiGoTemplate))
+		tpl = template.Must(template.New("api.go.tmpl").Funcs(funcMap).Parse(apiGoTemplate))
 	}
 
 	err = tpl.Execute(writer, r)

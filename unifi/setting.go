@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/settings"
 )
 
 type Setting struct {
@@ -12,82 +14,27 @@ type Setting struct {
 	Key    string `json:"key"`
 }
 
-func (s *Setting) newFields() (any, error) {
-	switch s.Key {
-	case "auto_speedtest":
-		return &SettingAutoSpeedtest{}, nil
-	case "baresip":
-		return &SettingBaresip{}, nil
-	case "broadcast":
-		return &SettingBroadcast{}, nil
-	case "connectivity":
-		return &SettingConnectivity{}, nil
-	case "country":
-		return &SettingCountry{}, nil
-	case "dpi":
-		return &SettingDpi{}, nil
-	case "element_adopt":
-		return &SettingElementAdopt{}, nil
-	case "guest_access":
-		return &SettingGuestAccess{}, nil
-	// case "ips":
-	// 	return &SettingI
-	case "lcm":
-		return &SettingLcm{}, nil
-	case "locale":
-		return &SettingLocale{}, nil
-	case "mgmt":
-		return &SettingMgmt{}, nil
-	case "network_optimization":
-		return &SettingNetworkOptimization{}, nil
-	case "ntp":
-		return &SettingNtp{}, nil
-	case "porta":
-		return &SettingPorta{}, nil
-	case "provider_capabilities":
-		return &SettingProviderCapabilities{}, nil
-	case "radio_ai":
-		return &SettingRadioAi{}, nil
-	case "radius":
-		return &SettingRadius{}, nil
-	case "rsyslogd":
-		return &SettingRsyslogd{}, nil
-	case "snmp":
-		return &SettingSnmp{}, nil
-	case "super_cloudaccess":
-		return &SettingSuperCloudaccess{}, nil
-	case "super_events":
-		return &SettingSuperEvents{}, nil
-	case "super_fwupdate":
-		return &SettingSuperFwupdate{}, nil
-	case "super_identity":
-		return &SettingSuperIdentity{}, nil
-	case "super_mail":
-		return &SettingSuperMail{}, nil
-	case "super_mgmt":
-		return &SettingSuperMgmt{}, nil
-	case "super_sdn":
-		return &SettingSuperSdn{}, nil
-	case "super_smtp":
-		return &SettingSuperSmtp{}, nil
-	case "usg":
-		return &SettingUsg{}, nil
-	case "usw":
-		return &SettingUsw{}, nil
+func GetSetting[T settings.Setting](c *Client, ctx context.Context, site string) (*Setting, T, error) {
+	// Create a zero value of T to determine the key
+	var zeroValue T
+	key, err := settings.GetSettingKey(zeroValue)
+	if err != nil {
+		return nil, zeroValue, fmt.Errorf("failed to determine setting key: %w", err)
 	}
 
-	return nil, fmt.Errorf("unexpected key %q", s.Key)
-}
-
-func (c *Client) GetSetting(ctx context.Context, site, key string) (*Setting, any, error) {
 	var respBody struct {
 		Meta meta              `json:"meta"`
 		Data []json.RawMessage `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("s/%s/get/setting", site), nil, &respBody)
-	if err != nil {
-		return nil, nil, err
+	if err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting/%s", site, key),
+		nil,
+		&respBody,
+	); err != nil {
+		return nil, zeroValue, err
 	}
 
 	var raw json.RawMessage
@@ -95,7 +42,7 @@ func (c *Client) GetSetting(ctx context.Context, site, key string) (*Setting, an
 	for _, d := range respBody.Data {
 		err = json.Unmarshal(d, &setting)
 		if err != nil {
-			return nil, nil, err
+			return nil, zeroValue, err
 		}
 		if setting.Key == key {
 			raw = d
@@ -103,18 +50,76 @@ func (c *Client) GetSetting(ctx context.Context, site, key string) (*Setting, an
 		}
 	}
 	if setting == nil {
-		return nil, nil, &NotFoundError{}
+		return nil, zeroValue, &NotFoundError{}
 	}
 
-	fields, err := setting.newFields()
+	var result T
+	err = json.Unmarshal(raw, &result)
 	if err != nil {
-		return nil, nil, err
+		return nil, zeroValue, err
 	}
 
-	err = json.Unmarshal(raw, &fields)
+	return setting, result, nil
+}
+
+// ListSettings retrieves all settings for a site
+// The endpoint returns an array of all setting objects identified by their 'key' attribute.
+func (c *Client) ListSettings(ctx context.Context, site string) ([]settings.RawSetting, error) {
+	var respBody struct {
+		Meta meta                  `json:"meta"`
+		Data []settings.RawSetting `json:"data"`
+	}
+
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/get/setting", site),
+		nil,
+		&respBody,
+	)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return setting, fields, nil
+	return respBody.Data, nil
+}
+
+// UpdateSetting updates a setting using the appropriate endpoint based on the setting type
+// The setting's Key field will be automatically set based on the type.
+func (c *Client) UpdateSetting(ctx context.Context, site string, setting settings.Setting) error {
+	// Determine the key from the setting type
+	key, err := settings.GetSettingKey(setting)
+	if err != nil {
+		return fmt.Errorf("failed to determine setting key: %w", err)
+	}
+
+	// Set the key field
+	setting.SetKey(key)
+
+	var respBody struct {
+		Meta meta              `json:"meta"`
+		Data []json.RawMessage `json:"data"`
+	}
+
+	err = c.do(
+		ctx,
+		"PUT",
+		fmt.Sprintf("api/s/%s/set/setting/%s", site, key),
+		setting,
+		&respBody,
+	)
+	if err != nil {
+		return err
+	}
+
+	if len(respBody.Data) != 1 {
+		return &NotFoundError{}
+	}
+
+	// Unmarshal the response back into the setting
+	if err := json.Unmarshal(respBody.Data[0], setting); err != nil {
+		return fmt.Errorf("failed to unmarshal response: %w", err)
+	}
+
+	return nil
 }

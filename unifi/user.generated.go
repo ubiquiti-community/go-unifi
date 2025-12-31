@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -50,7 +52,7 @@ type User struct {
 func (dst *User) UnmarshalJSON(b []byte) error {
 	type Alias User
 	aux := &struct {
-		LastSeen emptyStringInt `json:"last_seen"`
+		LastSeen types.Number `json:"last_seen"`
 
 		*Alias
 	}{
@@ -61,7 +63,9 @@ func (dst *User) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.LastSeen = int(aux.LastSeen)
+	if val, err := aux.LastSeen.Int64(); err == nil {
+		dst.LastSeen = int(val)
+	}
 
 	return nil
 }
@@ -170,7 +174,6 @@ func (c *Client) updateUser(
 		Meta meta   `json:"meta"`
 		Data []User `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

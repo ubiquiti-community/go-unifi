@@ -16,15 +16,15 @@ var (
 	_ json.Marshaler
 )
 
-type BGPConfig struct {
-	ID     string `json:"_id,omitempty"`
-	SiteID string `json:"site_id,omitempty"`
+// type BGPConfig struct {
+// 	ID     string `json:"_id,omitempty"`
+// 	SiteID string `json:"site_id,omitempty"`
 
-	Enabled        bool   `json:"enabled"`
-	Config         string `json:"frr_bgpd_config,omitempty"`
-	UploadFileName string `json:"uploaded_file_name,omitempty"`
-	Description    string `json:"description,omitempty"`
-}
+// 	Enabled        bool   `json:"enabled"`
+// 	Config         string `json:"frr_bgpd_config,omitempty"`
+// 	UploadFileName string `json:"uploaded_file_name,omitempty"`
+// 	Description    string `json:"description,omitempty"`
+// }
 
 func (c *Client) GetBGPConfig(ctx context.Context, site string) (*BGPConfig, error) {
 	var respBody []BGPConfig
@@ -38,14 +38,6 @@ func (c *Client) GetBGPConfig(ctx context.Context, site string) (*BGPConfig, err
 	}
 
 	return &respBody[0], nil
-}
-
-func (c *Client) deleteBGPConfig(ctx context.Context, site string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("v2/api/site/%s/bgp/config", site), struct{}{}, nil)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (c *Client) CreateBGPConfig(
@@ -79,5 +71,9 @@ func (c *Client) UpdateBGPConfig(
 }
 
 func (c *Client) DeleteBGPConfig(ctx context.Context, site string) error {
-	return c.deleteBGPConfig(ctx, site)
+	err := c.do(ctx, "DELETE", fmt.Sprintf("v2/api/site/%s/bgp/config", site), struct{}{}, nil)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -57,9 +59,9 @@ type ChannelPlanRadioTable struct {
 func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	type Alias ChannelPlanRadioTable
 	aux := &struct {
-		Channel numberOrString `json:"channel"`
-		TxPower numberOrString `json:"tx_power"`
-		Width   emptyStringInt `json:"width"`
+		Channel types.Number `json:"channel"`
+		TxPower types.Number `json:"tx_power"`
+		Width   types.Number    `json:"width"`
 
 		*Alias
 	}{
@@ -72,7 +74,9 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	}
 	dst.Channel = string(aux.Channel)
 	dst.TxPower = string(aux.TxPower)
-	dst.Width = int(aux.Width)
+	if val, err := aux.Width.Int64(); err == nil {
+		dst.Width = int(val)
+	}
 
 	return nil
 }
@@ -181,7 +185,6 @@ func (c *Client) updateChannelPlan(
 		Meta meta          `json:"meta"`
 		Data []ChannelPlan `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

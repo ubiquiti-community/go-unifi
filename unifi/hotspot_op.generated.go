@@ -150,7 +150,6 @@ func (c *Client) updateHotspotOp(
 		Meta meta        `json:"meta"`
 		Data []HotspotOp `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

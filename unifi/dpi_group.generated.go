@@ -150,7 +150,6 @@ func (c *Client) updateDpiGroup(
 		Meta meta       `json:"meta"`
 		Data []DpiGroup `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

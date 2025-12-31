@@ -151,7 +151,6 @@ func (c *Client) updateHeatMap(
 		Meta meta      `json:"meta"`
 		Data []HeatMap `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -43,8 +45,8 @@ type Map struct {
 func (dst *Map) UnmarshalJSON(b []byte) error {
 	type Alias Map
 	aux := &struct {
-		Tilt emptyStringInt `json:"tilt"`
-		Zoom emptyStringInt `json:"zoom"`
+		Tilt types.Number `json:"tilt"`
+		Zoom types.Number `json:"zoom"`
 
 		*Alias
 	}{
@@ -55,8 +57,12 @@ func (dst *Map) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Tilt = int(aux.Tilt)
-	dst.Zoom = int(aux.Zoom)
+	if val, err := aux.Tilt.Int64(); err == nil {
+		dst.Tilt = int(val)
+	}
+	if val, err := aux.Zoom.Int64(); err == nil {
+		dst.Zoom = int(val)
+	}
 
 	return nil
 }
@@ -165,7 +171,6 @@ func (c *Client) updateMap(
 		Meta meta  `json:"meta"`
 		Data []Map `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

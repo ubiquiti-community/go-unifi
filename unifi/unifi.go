@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 )
 
-//go:generate go run ../cmd/fields/ -version-base-dir=../cmd/fields/ -output-dir=../unifi/ -latest
+//go:generate go run ../cmd/fields/ -output-dir=../unifi/ -latest
 
 const (
 	loginPath    = "/api/login"
