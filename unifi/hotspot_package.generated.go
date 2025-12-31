@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -59,12 +61,12 @@ type HotspotPackage struct {
 func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 	type Alias HotspotPackage
 	aux := &struct {
-		Hours                emptyStringInt `json:"hours"`
-		Index                emptyStringInt `json:"index"`
-		LimitDown            emptyStringInt `json:"limit_down"`
-		LimitQuota           emptyStringInt `json:"limit_quota"`
-		LimitUp              emptyStringInt `json:"limit_up"`
-		TrialDurationMinutes emptyStringInt `json:"trial_duration_minutes"`
+		Hours                types.Number `json:"hours"`
+		Index                types.Number `json:"index"`
+		LimitDown            types.Number `json:"limit_down"`
+		LimitQuota           types.Number `json:"limit_quota"`
+		LimitUp              types.Number `json:"limit_up"`
+		TrialDurationMinutes types.Number `json:"trial_duration_minutes"`
 
 		*Alias
 	}{
@@ -75,12 +77,24 @@ func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Hours = int(aux.Hours)
-	dst.Index = int(aux.Index)
-	dst.LimitDown = int(aux.LimitDown)
-	dst.LimitQuota = int(aux.LimitQuota)
-	dst.LimitUp = int(aux.LimitUp)
-	dst.TrialDurationMinutes = int(aux.TrialDurationMinutes)
+	if val, err := aux.Hours.Int64(); err == nil {
+		dst.Hours = int(val)
+	}
+	if val, err := aux.Index.Int64(); err == nil {
+		dst.Index = int(val)
+	}
+	if val, err := aux.LimitDown.Int64(); err == nil {
+		dst.LimitDown = int(val)
+	}
+	if val, err := aux.LimitQuota.Int64(); err == nil {
+		dst.LimitQuota = int(val)
+	}
+	if val, err := aux.LimitUp.Int64(); err == nil {
+		dst.LimitUp = int(val)
+	}
+	if val, err := aux.TrialDurationMinutes.Int64(); err == nil {
+		dst.TrialDurationMinutes = int(val)
+	}
 
 	return nil
 }
@@ -189,7 +203,6 @@ func (c *Client) updateHotspotPackage(
 		Meta meta             `json:"meta"`
 		Data []HotspotPackage `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

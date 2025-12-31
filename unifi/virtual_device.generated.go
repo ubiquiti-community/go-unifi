@@ -153,7 +153,6 @@ func (c *Client) updateVirtualDevice(
 		Meta meta            `json:"meta"`
 		Data []VirtualDevice `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

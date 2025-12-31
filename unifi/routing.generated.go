@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -40,7 +42,7 @@ type Routing struct {
 func (dst *Routing) UnmarshalJSON(b []byte) error {
 	type Alias Routing
 	aux := &struct {
-		StaticRouteDistance emptyStringInt `json:"static-route_distance"`
+		StaticRouteDistance types.Number `json:"static-route_distance"`
 
 		*Alias
 	}{
@@ -51,7 +53,9 @@ func (dst *Routing) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.StaticRouteDistance = int(aux.StaticRouteDistance)
+	if val, err := aux.StaticRouteDistance.Int64(); err == nil {
+		dst.StaticRouteDistance = int(val)
+	}
 
 	return nil
 }
@@ -160,7 +164,6 @@ func (c *Client) updateRouting(
 		Meta meta      `json:"meta"`
 		Data []Routing `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

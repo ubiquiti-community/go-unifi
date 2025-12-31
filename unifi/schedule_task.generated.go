@@ -172,7 +172,6 @@ func (c *Client) updateScheduleTask(
 		Meta meta           `json:"meta"`
 		Data []ScheduleTask `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

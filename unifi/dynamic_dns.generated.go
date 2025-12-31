@@ -155,7 +155,6 @@ func (c *Client) updateDynamicDNS(
 		Meta meta         `json:"meta"`
 		Data []DynamicDNS `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

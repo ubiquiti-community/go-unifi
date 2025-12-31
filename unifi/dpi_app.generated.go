@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -38,10 +40,10 @@ type DpiApp struct {
 func (dst *DpiApp) UnmarshalJSON(b []byte) error {
 	type Alias DpiApp
 	aux := &struct {
-		Apps           []emptyStringInt `json:"apps"`
-		Cats           []emptyStringInt `json:"cats"`
-		QOSRateMaxDown emptyStringInt   `json:"qos_rate_max_down"`
-		QOSRateMaxUp   emptyStringInt   `json:"qos_rate_max_up"`
+		Apps           []types.Number `json:"apps"`
+		Cats           []types.Number `json:"cats"`
+		QOSRateMaxDown types.Number   `json:"qos_rate_max_down"`
+		QOSRateMaxUp   types.Number   `json:"qos_rate_max_up"`
 
 		*Alias
 	}{
@@ -54,14 +56,22 @@ func (dst *DpiApp) UnmarshalJSON(b []byte) error {
 	}
 	dst.Apps = make([]int, len(aux.Apps))
 	for i, v := range aux.Apps {
-		dst.Apps[i] = int(v)
+		if val, err := v.Int64(); err == nil {
+			dst.Apps[i] = int(val)
+		}
 	}
 	dst.Cats = make([]int, len(aux.Cats))
 	for i, v := range aux.Cats {
-		dst.Cats[i] = int(v)
+		if val, err := v.Int64(); err == nil {
+			dst.Cats[i] = int(val)
+		}
 	}
-	dst.QOSRateMaxDown = int(aux.QOSRateMaxDown)
-	dst.QOSRateMaxUp = int(aux.QOSRateMaxUp)
+	if val, err := aux.QOSRateMaxDown.Int64(); err == nil {
+		dst.QOSRateMaxDown = int(val)
+	}
+	if val, err := aux.QOSRateMaxUp.Int64(); err == nil {
+		dst.QOSRateMaxUp = int(val)
+	}
 
 	return nil
 }
@@ -170,7 +180,6 @@ func (c *Client) updateDpiApp(
 		Meta meta     `json:"meta"`
 		Data []DpiApp `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

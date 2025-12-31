@@ -148,7 +148,6 @@ func (c *Client) updateMediaFile(
 		Meta meta        `json:"meta"`
 		Data []MediaFile `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

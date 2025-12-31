@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -47,7 +49,7 @@ type RADIUSProfile struct {
 func (dst *RADIUSProfile) UnmarshalJSON(b []byte) error {
 	type Alias RADIUSProfile
 	aux := &struct {
-		InterimUpdateInterval emptyStringInt `json:"interim_update_interval"`
+		InterimUpdateInterval types.Number `json:"interim_update_interval"`
 
 		*Alias
 	}{
@@ -58,7 +60,9 @@ func (dst *RADIUSProfile) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.InterimUpdateInterval = int(aux.InterimUpdateInterval)
+	if val, err := aux.InterimUpdateInterval.Int64(); err == nil {
+		dst.InterimUpdateInterval = int(val)
+	}
 
 	return nil
 }
@@ -72,7 +76,7 @@ type RADIUSProfileAcctServers struct {
 func (dst *RADIUSProfileAcctServers) UnmarshalJSON(b []byte) error {
 	type Alias RADIUSProfileAcctServers
 	aux := &struct {
-		Port emptyStringInt `json:"port"`
+		Port types.Number `json:"port"`
 
 		*Alias
 	}{
@@ -83,7 +87,9 @@ func (dst *RADIUSProfileAcctServers) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Port = int(aux.Port)
+	if val, err := aux.Port.Int64(); err == nil {
+		dst.Port = int(val)
+	}
 
 	return nil
 }
@@ -97,7 +103,7 @@ type RADIUSProfileAuthServers struct {
 func (dst *RADIUSProfileAuthServers) UnmarshalJSON(b []byte) error {
 	type Alias RADIUSProfileAuthServers
 	aux := &struct {
-		Port emptyStringInt `json:"port"`
+		Port types.Number `json:"port"`
 
 		*Alias
 	}{
@@ -108,7 +114,9 @@ func (dst *RADIUSProfileAuthServers) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Port = int(aux.Port)
+	if val, err := aux.Port.Int64(); err == nil {
+		dst.Port = int(val)
+	}
 
 	return nil
 }
@@ -238,7 +246,6 @@ func (c *Client) updateRADIUSProfile(
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -270,40 +272,40 @@ type Network struct {
 func (dst *Network) UnmarshalJSON(b []byte) error {
 	type Alias Network
 	aux := &struct {
-		DHCPDLeaseTime                 emptyStringInt `json:"dhcpd_leasetime"`
-		DHCPDTimeOffset                emptyStringInt `json:"dhcpd_time_offset"`
-		DHCPDV6LeaseTime               emptyStringInt `json:"dhcpdv6_leasetime"`
-		IGMPGroupmembership            emptyStringInt `json:"igmp_groupmembership"`
-		IGMPMaxresponse                emptyStringInt `json:"igmp_maxresponse"`
-		IGMPMcrtrexpiretime            emptyStringInt `json:"igmp_mcrtrexpiretime"`
-		IPSecDhGroup                   emptyStringInt `json:"ipsec_dh_group"`
-		IPSecEspDhGroup                emptyStringInt `json:"ipsec_esp_dh_group"`
-		IPSecIkeDhGroup                emptyStringInt `json:"ipsec_ike_dh_group"`
-		IPV6RaPreferredLifetime        emptyStringInt `json:"ipv6_ra_preferred_lifetime"`
-		IPV6RaValidLifetime            emptyStringInt `json:"ipv6_ra_valid_lifetime"`
-		InterfaceMtu                   emptyStringInt `json:"interface_mtu"`
-		InternetAccessEnabled          *bool          `json:"internet_access_enabled"`
-		LocalPort                      emptyStringInt `json:"local_port"`
-		OpenVPNLocalPort               emptyStringInt `json:"openvpn_local_port"`
-		OpenVPNRemotePort              emptyStringInt `json:"openvpn_remote_port"`
-		PptpcRouteDistance             emptyStringInt `json:"pptpc_route_distance"`
-		Priority                       emptyStringInt `json:"priority"`
-		RouteDistance                  emptyStringInt `json:"route_distance"`
-		UidPublicGatewayPort           emptyStringInt `json:"uid_public_gateway_port"`
-		UidVPNMaxConnectionTimeSeconds emptyStringInt `json:"uid_vpn_max_connection_time_seconds"`
-		VLAN                           emptyStringInt `json:"vlan"`
-		VrrpVrid                       emptyStringInt `json:"vrrp_vrid"`
-		WANDHCPCos                     emptyStringInt `json:"wan_dhcp_cos"`
-		WANDHCPv6Cos                   emptyStringInt `json:"wan_dhcpv6_cos"`
-		WANDHCPv6PDSize                emptyStringInt `json:"wan_dhcpv6_pd_size"`
-		WANEgressQOS                   emptyStringInt `json:"wan_egress_qos"`
-		WANFailoverPriority            emptyStringInt `json:"wan_failover_priority"`
-		WANLoadBalanceWeight           emptyStringInt `json:"wan_load_balance_weight"`
-		WANPrefixlen                   emptyStringInt `json:"wan_prefixlen"`
-		WANSmartqDownRate              emptyStringInt `json:"wan_smartq_down_rate"`
-		WANSmartqUpRate                emptyStringInt `json:"wan_smartq_up_rate"`
-		WANVLAN                        emptyStringInt `json:"wan_vlan"`
-		WireguardClientPeerPort        emptyStringInt `json:"wireguard_client_peer_port"`
+		DHCPDLeaseTime                 types.Number `json:"dhcpd_leasetime"`
+		DHCPDTimeOffset                types.Number `json:"dhcpd_time_offset"`
+		DHCPDV6LeaseTime               types.Number `json:"dhcpdv6_leasetime"`
+		IGMPGroupmembership            types.Number `json:"igmp_groupmembership"`
+		IGMPMaxresponse                types.Number `json:"igmp_maxresponse"`
+		IGMPMcrtrexpiretime            types.Number `json:"igmp_mcrtrexpiretime"`
+		IPSecDhGroup                   types.Number `json:"ipsec_dh_group"`
+		IPSecEspDhGroup                types.Number `json:"ipsec_esp_dh_group"`
+		IPSecIkeDhGroup                types.Number `json:"ipsec_ike_dh_group"`
+		IPV6RaPreferredLifetime        types.Number `json:"ipv6_ra_preferred_lifetime"`
+		IPV6RaValidLifetime            types.Number `json:"ipv6_ra_valid_lifetime"`
+		InterfaceMtu                   types.Number `json:"interface_mtu"`
+		InternetAccessEnabled          *bool       `json:"internet_access_enabled"`
+		LocalPort                      types.Number `json:"local_port"`
+		OpenVPNLocalPort               types.Number `json:"openvpn_local_port"`
+		OpenVPNRemotePort              types.Number `json:"openvpn_remote_port"`
+		PptpcRouteDistance             types.Number `json:"pptpc_route_distance"`
+		Priority                       types.Number `json:"priority"`
+		RouteDistance                  types.Number `json:"route_distance"`
+		UidPublicGatewayPort           types.Number `json:"uid_public_gateway_port"`
+		UidVPNMaxConnectionTimeSeconds types.Number `json:"uid_vpn_max_connection_time_seconds"`
+		VLAN                           types.Number `json:"vlan"`
+		VrrpVrid                       types.Number `json:"vrrp_vrid"`
+		WANDHCPCos                     types.Number `json:"wan_dhcp_cos"`
+		WANDHCPv6Cos                   types.Number `json:"wan_dhcpv6_cos"`
+		WANDHCPv6PDSize                types.Number `json:"wan_dhcpv6_pd_size"`
+		WANEgressQOS                   types.Number `json:"wan_egress_qos"`
+		WANFailoverPriority            types.Number `json:"wan_failover_priority"`
+		WANLoadBalanceWeight           types.Number `json:"wan_load_balance_weight"`
+		WANPrefixlen                   types.Number `json:"wan_prefixlen"`
+		WANSmartqDownRate              types.Number `json:"wan_smartq_down_rate"`
+		WANSmartqUpRate                types.Number `json:"wan_smartq_up_rate"`
+		WANVLAN                        types.Number `json:"wan_vlan"`
+		WireguardClientPeerPort        types.Number `json:"wireguard_client_peer_port"`
 
 		*Alias
 	}{
@@ -314,40 +316,106 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.DHCPDLeaseTime = int(aux.DHCPDLeaseTime)
-	dst.DHCPDTimeOffset = int(aux.DHCPDTimeOffset)
-	dst.DHCPDV6LeaseTime = int(aux.DHCPDV6LeaseTime)
-	dst.IGMPGroupmembership = int(aux.IGMPGroupmembership)
-	dst.IGMPMaxresponse = int(aux.IGMPMaxresponse)
-	dst.IGMPMcrtrexpiretime = int(aux.IGMPMcrtrexpiretime)
-	dst.IPSecDhGroup = int(aux.IPSecDhGroup)
-	dst.IPSecEspDhGroup = int(aux.IPSecEspDhGroup)
-	dst.IPSecIkeDhGroup = int(aux.IPSecIkeDhGroup)
-	dst.IPV6RaPreferredLifetime = int(aux.IPV6RaPreferredLifetime)
-	dst.IPV6RaValidLifetime = int(aux.IPV6RaValidLifetime)
-	dst.InterfaceMtu = int(aux.InterfaceMtu)
+	if val, err := aux.DHCPDLeaseTime.Int64(); err == nil {
+		dst.DHCPDLeaseTime = int(val)
+	}
+	if val, err := aux.DHCPDTimeOffset.Int64(); err == nil {
+		dst.DHCPDTimeOffset = int(val)
+	}
+	if val, err := aux.DHCPDV6LeaseTime.Int64(); err == nil {
+		dst.DHCPDV6LeaseTime = int(val)
+	}
+	if val, err := aux.IGMPGroupmembership.Int64(); err == nil {
+		dst.IGMPGroupmembership = int(val)
+	}
+	if val, err := aux.IGMPMaxresponse.Int64(); err == nil {
+		dst.IGMPMaxresponse = int(val)
+	}
+	if val, err := aux.IGMPMcrtrexpiretime.Int64(); err == nil {
+		dst.IGMPMcrtrexpiretime = int(val)
+	}
+	if val, err := aux.IPSecDhGroup.Int64(); err == nil {
+		dst.IPSecDhGroup = int(val)
+	}
+	if val, err := aux.IPSecEspDhGroup.Int64(); err == nil {
+		dst.IPSecEspDhGroup = int(val)
+	}
+	if val, err := aux.IPSecIkeDhGroup.Int64(); err == nil {
+		dst.IPSecIkeDhGroup = int(val)
+	}
+	if val, err := aux.IPV6RaPreferredLifetime.Int64(); err == nil {
+		dst.IPV6RaPreferredLifetime = int(val)
+	}
+	if val, err := aux.IPV6RaValidLifetime.Int64(); err == nil {
+		dst.IPV6RaValidLifetime = int(val)
+	}
+	if val, err := aux.InterfaceMtu.Int64(); err == nil {
+		dst.InterfaceMtu = int(val)
+	}
 	dst.InternetAccessEnabled = emptyBoolToTrue(aux.InternetAccessEnabled)
-	dst.LocalPort = int(aux.LocalPort)
-	dst.OpenVPNLocalPort = int(aux.OpenVPNLocalPort)
-	dst.OpenVPNRemotePort = int(aux.OpenVPNRemotePort)
-	dst.PptpcRouteDistance = int(aux.PptpcRouteDistance)
-	dst.Priority = int(aux.Priority)
-	dst.RouteDistance = int(aux.RouteDistance)
-	dst.UidPublicGatewayPort = int(aux.UidPublicGatewayPort)
-	dst.UidVPNMaxConnectionTimeSeconds = int(aux.UidVPNMaxConnectionTimeSeconds)
-	dst.VLAN = int(aux.VLAN)
-	dst.VrrpVrid = int(aux.VrrpVrid)
-	dst.WANDHCPCos = int(aux.WANDHCPCos)
-	dst.WANDHCPv6Cos = int(aux.WANDHCPv6Cos)
-	dst.WANDHCPv6PDSize = int(aux.WANDHCPv6PDSize)
-	dst.WANEgressQOS = int(aux.WANEgressQOS)
-	dst.WANFailoverPriority = int(aux.WANFailoverPriority)
-	dst.WANLoadBalanceWeight = int(aux.WANLoadBalanceWeight)
-	dst.WANPrefixlen = int(aux.WANPrefixlen)
-	dst.WANSmartqDownRate = int(aux.WANSmartqDownRate)
-	dst.WANSmartqUpRate = int(aux.WANSmartqUpRate)
-	dst.WANVLAN = int(aux.WANVLAN)
-	dst.WireguardClientPeerPort = int(aux.WireguardClientPeerPort)
+	if val, err := aux.LocalPort.Int64(); err == nil {
+		dst.LocalPort = int(val)
+	}
+	if val, err := aux.OpenVPNLocalPort.Int64(); err == nil {
+		dst.OpenVPNLocalPort = int(val)
+	}
+	if val, err := aux.OpenVPNRemotePort.Int64(); err == nil {
+		dst.OpenVPNRemotePort = int(val)
+	}
+	if val, err := aux.PptpcRouteDistance.Int64(); err == nil {
+		dst.PptpcRouteDistance = int(val)
+	}
+	if val, err := aux.Priority.Int64(); err == nil {
+		dst.Priority = int(val)
+	}
+	if val, err := aux.RouteDistance.Int64(); err == nil {
+		dst.RouteDistance = int(val)
+	}
+	if val, err := aux.UidPublicGatewayPort.Int64(); err == nil {
+		dst.UidPublicGatewayPort = int(val)
+	}
+	if val, err := aux.UidVPNMaxConnectionTimeSeconds.Int64(); err == nil {
+		dst.UidVPNMaxConnectionTimeSeconds = int(val)
+	}
+	if val, err := aux.VLAN.Int64(); err == nil {
+		dst.VLAN = int(val)
+	}
+	if val, err := aux.VrrpVrid.Int64(); err == nil {
+		dst.VrrpVrid = int(val)
+	}
+	if val, err := aux.WANDHCPCos.Int64(); err == nil {
+		dst.WANDHCPCos = int(val)
+	}
+	if val, err := aux.WANDHCPv6Cos.Int64(); err == nil {
+		dst.WANDHCPv6Cos = int(val)
+	}
+	if val, err := aux.WANDHCPv6PDSize.Int64(); err == nil {
+		dst.WANDHCPv6PDSize = int(val)
+	}
+	if val, err := aux.WANEgressQOS.Int64(); err == nil {
+		dst.WANEgressQOS = int(val)
+	}
+	if val, err := aux.WANFailoverPriority.Int64(); err == nil {
+		dst.WANFailoverPriority = int(val)
+	}
+	if val, err := aux.WANLoadBalanceWeight.Int64(); err == nil {
+		dst.WANLoadBalanceWeight = int(val)
+	}
+	if val, err := aux.WANPrefixlen.Int64(); err == nil {
+		dst.WANPrefixlen = int(val)
+	}
+	if val, err := aux.WANSmartqDownRate.Int64(); err == nil {
+		dst.WANSmartqDownRate = int(val)
+	}
+	if val, err := aux.WANSmartqUpRate.Int64(); err == nil {
+		dst.WANSmartqUpRate = int(val)
+	}
+	if val, err := aux.WANVLAN.Int64(); err == nil {
+		dst.WANVLAN = int(val)
+	}
+	if val, err := aux.WireguardClientPeerPort.Int64(); err == nil {
+		dst.WireguardClientPeerPort = int(val)
+	}
 
 	return nil
 }
@@ -404,7 +472,7 @@ type NetworkWANDHCPOptions struct {
 func (dst *NetworkWANDHCPOptions) UnmarshalJSON(b []byte) error {
 	type Alias NetworkWANDHCPOptions
 	aux := &struct {
-		OptionNumber emptyStringInt `json:"optionNumber"`
+		OptionNumber types.Number `json:"optionNumber"`
 
 		*Alias
 	}{
@@ -415,7 +483,9 @@ func (dst *NetworkWANDHCPOptions) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.OptionNumber = int(aux.OptionNumber)
+	if val, err := aux.OptionNumber.Int64(); err == nil {
+		dst.OptionNumber = int(val)
+	}
 
 	return nil
 }
@@ -428,7 +498,7 @@ type NetworkWANDHCPv6Options struct {
 func (dst *NetworkWANDHCPv6Options) UnmarshalJSON(b []byte) error {
 	type Alias NetworkWANDHCPv6Options
 	aux := &struct {
-		OptionNumber emptyStringInt `json:"optionNumber"`
+		OptionNumber types.Number `json:"optionNumber"`
 
 		*Alias
 	}{
@@ -439,7 +509,9 @@ func (dst *NetworkWANDHCPv6Options) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.OptionNumber = int(aux.OptionNumber)
+	if val, err := aux.OptionNumber.Int64(); err == nil {
+		dst.OptionNumber = int(val)
+	}
 
 	return nil
 }
@@ -452,8 +524,8 @@ type NetworkWANProviderCapabilities struct {
 func (dst *NetworkWANProviderCapabilities) UnmarshalJSON(b []byte) error {
 	type Alias NetworkWANProviderCapabilities
 	aux := &struct {
-		DownloadKilobitsPerSecond emptyStringInt `json:"download_kilobits_per_second"`
-		UploadKilobitsPerSecond   emptyStringInt `json:"upload_kilobits_per_second"`
+		DownloadKilobitsPerSecond types.Number `json:"download_kilobits_per_second"`
+		UploadKilobitsPerSecond   types.Number `json:"upload_kilobits_per_second"`
 
 		*Alias
 	}{
@@ -464,8 +536,12 @@ func (dst *NetworkWANProviderCapabilities) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.DownloadKilobitsPerSecond = int(aux.DownloadKilobitsPerSecond)
-	dst.UploadKilobitsPerSecond = int(aux.UploadKilobitsPerSecond)
+	if val, err := aux.DownloadKilobitsPerSecond.Int64(); err == nil {
+		dst.DownloadKilobitsPerSecond = int(val)
+	}
+	if val, err := aux.UploadKilobitsPerSecond.Int64(); err == nil {
+		dst.UploadKilobitsPerSecond = int(val)
+	}
 
 	return nil
 }
@@ -574,7 +650,6 @@ func (c *Client) updateNetwork(
 		Meta meta      `json:"meta"`
 		Data []Network `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

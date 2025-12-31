@@ -26,7 +26,7 @@ import (
 	"context"
 )
 
-{{ if not .IsSetting }}
+{{ if ne .StructName "BGPConfig" }}
 func (c *Client) List{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
   return c.list{{ .StructName }}(ctx, site)
 }
@@ -55,7 +55,7 @@ func (c *Client) Get{{ .StructName }}(ctx context.Context, site{{ if not .IsSett
 {{- end }}
 }
 
-{{ if not .IsSetting }}
+{{ if ne .StructName "BGPConfig" }}
 func (c *Client) Delete{{ .StructName }}(ctx context.Context, site, id string) error {
   return c.delete{{ .StructName }}(ctx, site, id)
 }
