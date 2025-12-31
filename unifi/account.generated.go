@@ -68,6 +68,38 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+func (src Account) MarshalJSON() ([]byte, error) {
+	type Alias Account
+	aux := &struct {
+		TunnelMediumType any `json:"tunnel_medium_type"`
+		TunnelType       any `json:"tunnel_type"`
+		VLAN             any `json:"vlan"`
+		*Alias
+	}{
+		Alias: (*Alias)(&src),
+	}
+
+	if src.TunnelMediumType == 0 {
+		aux.TunnelMediumType = ""
+	} else {
+		aux.TunnelMediumType = src.TunnelMediumType
+	}
+
+	if src.TunnelType == 0 {
+		aux.TunnelType = ""
+	} else {
+		aux.TunnelType = src.TunnelType
+	}
+
+	if src.VLAN == 0 {
+		aux.VLAN = ""
+	} else {
+		aux.VLAN = src.VLAN
+	}
+
+	return json.Marshal(aux)
+}
+
 func (c *Client) listAccount(ctx context.Context, site string) ([]Account, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
