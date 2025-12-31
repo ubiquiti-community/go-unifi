@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -40,9 +42,9 @@ type Account struct {
 func (dst *Account) UnmarshalJSON(b []byte) error {
 	type Alias Account
 	aux := &struct {
-		TunnelMediumType emptyStringInt `json:"tunnel_medium_type"`
-		TunnelType       emptyStringInt `json:"tunnel_type"`
-		VLAN             emptyStringInt `json:"vlan"`
+		TunnelMediumType types.Number `json:"tunnel_medium_type"`
+		TunnelType       types.Number `json:"tunnel_type"`
+		VLAN             types.Number `json:"vlan"`
 
 		*Alias
 	}{
@@ -53,9 +55,15 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.TunnelMediumType = int(aux.TunnelMediumType)
-	dst.TunnelType = int(aux.TunnelType)
-	dst.VLAN = int(aux.VLAN)
+	if val, err := aux.TunnelMediumType.Int64(); err == nil {
+		dst.TunnelMediumType = int(val)
+	}
+	if val, err := aux.TunnelType.Int64(); err == nil {
+		dst.TunnelType = int(val)
+	}
+	if val, err := aux.VLAN.Int64(); err == nil {
+		dst.VLAN = int(val)
+	}
 
 	return nil
 }
@@ -164,7 +172,6 @@ func (c *Client) updateAccount(
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

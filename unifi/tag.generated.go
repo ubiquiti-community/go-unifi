@@ -149,7 +149,6 @@ func (c *Client) updateTag(
 		Meta meta  `json:"meta"`
 		Data []Tag `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

@@ -1,0 +1,80 @@
+// Code generated from ace.jar fields *.json files
+// DO NOT EDIT.
+
+package settings
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
+)
+
+// just to fix compile issues with the import.
+var (
+	_ context.Context
+	_ fmt.Formatter
+	_ json.Marshaler
+)
+
+type GlobalAp struct {
+	BaseSetting
+
+	ApExclusions    []string `json:"ap_exclusions,omitempty"`    // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
+	NaChannelSize   int      `json:"na_channel_size,omitempty"`  // 20|40|80|160
+	NaTxPower       int      `json:"na_tx_power,omitempty"`      // [0-9]|[1-4][0-9]
+	NaTxPowerMode   string   `json:"na_tx_power_mode,omitempty"` // auto|medium|high|low|custom
+	NgChannelSize   int      `json:"ng_channel_size,omitempty"`  // 20|40
+	NgTxPower       int      `json:"ng_tx_power,omitempty"`      // [0-9]|[1-4][0-9]
+	NgTxPowerMode   string   `json:"ng_tx_power_mode,omitempty"` // auto|medium|high|low|custom
+	SixEChannelSize int      `json:"6e_channel_size,omitempty"`  // 20|40|80|160
+	SixETxPower     int      `json:"6e_tx_power,omitempty"`      // [0-9]|[1-4][0-9]
+	SixETxPowerMode string   `json:"6e_tx_power_mode,omitempty"` // auto|medium|high|low|custom
+}
+
+func (dst *GlobalAp) UnmarshalJSON(b []byte) error {
+	type Alias GlobalAp
+	aux := &struct {
+		NaChannelSize   types.Number `json:"na_channel_size"`
+		NaTxPower       types.Number `json:"na_tx_power"`
+		NgChannelSize   types.Number `json:"ng_channel_size"`
+		NgTxPower       types.Number `json:"ng_tx_power"`
+		SixEChannelSize types.Number `json:"6e_channel_size"`
+		SixETxPower     types.Number `json:"6e_tx_power"`
+
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
+	}
+
+	// First unmarshal base setting
+	if err := json.Unmarshal(b, &dst.BaseSetting); err != nil {
+		return fmt.Errorf("unable to unmarshal base setting: %w", err)
+	}
+
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if val, err := aux.NaChannelSize.Int64(); err == nil {
+		dst.NaChannelSize = int(val)
+	}
+	if val, err := aux.NaTxPower.Int64(); err == nil {
+		dst.NaTxPower = int(val)
+	}
+	if val, err := aux.NgChannelSize.Int64(); err == nil {
+		dst.NgChannelSize = int(val)
+	}
+	if val, err := aux.NgTxPower.Int64(); err == nil {
+		dst.NgTxPower = int(val)
+	}
+	if val, err := aux.SixEChannelSize.Int64(); err == nil {
+		dst.SixEChannelSize = int(val)
+	}
+	if val, err := aux.SixETxPower.Int64(); err == nil {
+		dst.SixETxPower = int(val)
+	}
+
+	return nil
+}

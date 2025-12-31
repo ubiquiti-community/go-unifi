@@ -149,7 +149,6 @@ func (c *Client) updateBroadcastGroup(
 		Meta meta             `json:"meta"`
 		Data []BroadcastGroup `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

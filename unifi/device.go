@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 //go:generate go tool golang.org/x/tools/cmd/stringer -trimprefix DeviceState -type DeviceState
@@ -91,30 +93,30 @@ type DevicePortTable struct {
 func (dst *DevicePortTable) UnmarshalJSON(b []byte) error {
 	type Alias DevicePortTable
 	aux := &struct {
-		PortIdx            emptyStringInt `json:"port_idx,omitempty"`
-		PoeCaps            emptyStringInt `json:"poe_caps,omitempty"`
-		SpeedCaps          emptyStringInt `json:"speed_caps,omitempty"`
-		Anomalies          emptyStringInt `json:"anomalies,omitempty"`
-		MacTableCount      emptyStringInt `json:"mac_table_count,omitempty"`
-		RxBroadcast        emptyStringInt `json:"rx_broadcast,omitempty"`
-		RxBytes            emptyStringInt `json:"rx_bytes,omitempty"`
-		RxDropped          emptyStringInt `json:"rx_dropped,omitempty"`
-		RxErrors           emptyStringInt `json:"rx_errors,omitempty"`
-		RxMulticast        emptyStringInt `json:"rx_multicast,omitempty"`
-		RxPackets          emptyStringInt `json:"rx_packets,omitempty"`
-		Satisfaction       emptyStringInt `json:"satisfaction,omitempty"`
-		SatisfactionReason emptyStringInt `json:"satisfaction_reason,omitempty"`
-		Speed              emptyStringInt `json:"speed,omitempty"`
-		StpPathcost        emptyStringInt `json:"stp_pathcost,omitempty"`
-		TxBroadcast        emptyStringInt `json:"tx_broadcast,omitempty"`
-		TxBytes            emptyStringInt `json:"tx_bytes,omitempty"`
-		TxDropped          emptyStringInt `json:"tx_dropped,omitempty"`
-		TxErrors           emptyStringInt `json:"tx_errors,omitempty"`
-		TxMulticast        emptyStringInt `json:"tx_multicast,omitempty"`
-		TxPackets          emptyStringInt `json:"tx_packets,omitempty"`
-		StormctrlBcastRate emptyStringInt `json:"stormctrl_bcast_rate,omitempty"`
-		StormctrlMcastRate emptyStringInt `json:"stormctrl_mcast_rate,omitempty"`
-		StormctrlUcastRate emptyStringInt `json:"stormctrl_ucast_rate,omitempty"`
+		PortIdx            types.Number `json:"port_idx,omitempty"`
+		PoeCaps            types.Number `json:"poe_caps,omitempty"`
+		SpeedCaps          types.Number `json:"speed_caps,omitempty"`
+		Anomalies          types.Number `json:"anomalies,omitempty"`
+		MacTableCount      types.Number `json:"mac_table_count,omitempty"`
+		RxBroadcast        types.Number `json:"rx_broadcast,omitempty"`
+		RxBytes            types.Number `json:"rx_bytes,omitempty"`
+		RxDropped          types.Number `json:"rx_dropped,omitempty"`
+		RxErrors           types.Number `json:"rx_errors,omitempty"`
+		RxMulticast        types.Number `json:"rx_multicast,omitempty"`
+		RxPackets          types.Number `json:"rx_packets,omitempty"`
+		Satisfaction       types.Number `json:"satisfaction,omitempty"`
+		SatisfactionReason types.Number `json:"satisfaction_reason,omitempty"`
+		Speed              types.Number `json:"speed,omitempty"`
+		StpPathcost        types.Number `json:"stp_pathcost,omitempty"`
+		TxBroadcast        types.Number `json:"tx_broadcast,omitempty"`
+		TxBytes            types.Number `json:"tx_bytes,omitempty"`
+		TxDropped          types.Number `json:"tx_dropped,omitempty"`
+		TxErrors           types.Number `json:"tx_errors,omitempty"`
+		TxMulticast        types.Number `json:"tx_multicast,omitempty"`
+		TxPackets          types.Number `json:"tx_packets,omitempty"`
+		StormctrlBcastRate types.Number `json:"stormctrl_bcast_rate,omitempty"`
+		StormctrlMcastRate types.Number `json:"stormctrl_mcast_rate,omitempty"`
+		StormctrlUcastRate types.Number `json:"stormctrl_ucast_rate,omitempty"`
 
 		*Alias
 	}{
@@ -126,30 +128,78 @@ func (dst *DevicePortTable) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 
-	dst.PortIdx = int(aux.PortIdx)
-	dst.PoeCaps = int(aux.PoeCaps)
-	dst.SpeedCaps = int(aux.SpeedCaps)
-	dst.Anomalies = int(aux.Anomalies)
-	dst.MacTableCount = int(aux.MacTableCount)
-	dst.RxBroadcast = int(aux.RxBroadcast)
-	dst.RxBytes = int(aux.RxBytes)
-	dst.RxDropped = int(aux.RxDropped)
-	dst.RxErrors = int(aux.RxErrors)
-	dst.RxMulticast = int(aux.RxMulticast)
-	dst.RxPackets = int(aux.RxPackets)
-	dst.Satisfaction = int(aux.Satisfaction)
-	dst.SatisfactionReason = int(aux.SatisfactionReason)
-	dst.Speed = int(aux.Speed)
-	dst.StpPathcost = int(aux.StpPathcost)
-	dst.TxBroadcast = int(aux.TxBroadcast)
-	dst.TxBytes = int64(aux.TxBytes)
-	dst.TxDropped = int(aux.TxDropped)
-	dst.TxErrors = int(aux.TxErrors)
-	dst.TxMulticast = int(aux.TxMulticast)
-	dst.TxPackets = int(aux.TxPackets)
-	dst.StormctrlBcastRate = int(aux.StormctrlBcastRate)
-	dst.StormctrlMcastRate = int(aux.StormctrlMcastRate)
-	dst.StormctrlUcastRate = int(aux.StormctrlUcastRate)
+	if portIdx, err := aux.PortIdx.Int64(); err != nil {
+		dst.PortIdx = int(portIdx)
+	}
+	if poeCaps, err := aux.PoeCaps.Int64(); err != nil {
+		dst.PoeCaps = int(poeCaps)
+	}
+	if speedCaps, err := aux.SpeedCaps.Int64(); err != nil {
+		dst.SpeedCaps = int(speedCaps)
+	}
+	if anomalies, err := aux.Anomalies.Int64(); err != nil {
+		dst.Anomalies = int(anomalies)
+	}
+	if macTableCount, err := aux.MacTableCount.Int64(); err != nil {
+		dst.MacTableCount = int(macTableCount)
+	}
+	if rxBroadcast, err := aux.RxBroadcast.Int64(); err != nil {
+		dst.RxBroadcast = int(rxBroadcast)
+	}
+	if rxBytes, err := aux.RxBytes.Int64(); err != nil {
+		dst.RxBytes = int(rxBytes)
+	}
+	if rxDropped, err := aux.RxDropped.Int64(); err != nil {
+		dst.RxDropped = int(rxDropped)
+	}
+	if rxErrors, err := aux.RxErrors.Int64(); err != nil {
+		dst.RxErrors = int(rxErrors)
+	}
+	if rxMulticast, err := aux.RxMulticast.Int64(); err != nil {
+		dst.RxMulticast = int(rxMulticast)
+	}
+	if rxPackets, err := aux.RxPackets.Int64(); err != nil {
+		dst.RxPackets = int(rxPackets)
+	}
+	if satisfaction, err := aux.Satisfaction.Int64(); err != nil {
+		dst.Satisfaction = int(satisfaction)
+	}
+	if satisfactionReason, err := aux.SatisfactionReason.Int64(); err != nil {
+		dst.SatisfactionReason = int(satisfactionReason)
+	}
+	if speed, err := aux.Speed.Int64(); err != nil {
+		dst.Speed = int(speed)
+	}
+	if stpPathcost, err := aux.StpPathcost.Int64(); err != nil {
+		dst.StpPathcost = int(stpPathcost)
+	}
+	if txBroadcast, err := aux.TxBroadcast.Int64(); err != nil {
+		dst.TxBroadcast = int(txBroadcast)
+	}
+	if txBytes, err := aux.TxBytes.Int64(); err != nil {
+		dst.TxBytes = txBytes
+	}
+	if txDropped, err := aux.TxDropped.Int64(); err != nil {
+		dst.TxDropped = int(txDropped)
+	}
+	if txErrors, err := aux.TxErrors.Int64(); err != nil {
+		dst.TxErrors = int(txErrors)
+	}
+	if txMulticast, err := aux.TxMulticast.Int64(); err != nil {
+		dst.TxMulticast = int(txMulticast)
+	}
+	if txPackets, err := aux.TxPackets.Int64(); err != nil {
+		dst.TxPackets = int(txPackets)
+	}
+	if stormctrlBcastRate, err := aux.StormctrlBcastRate.Int64(); err != nil {
+		dst.StormctrlBcastRate = int(stormctrlBcastRate)
+	}
+	if stormctrlMcastRate, err := aux.StormctrlMcastRate.Int64(); err != nil {
+		dst.StormctrlMcastRate = int(stormctrlMcastRate)
+	}
+	if stormctrlUcastRate, err := aux.StormctrlUcastRate.Int64(); err != nil {
+		dst.StormctrlUcastRate = int(stormctrlUcastRate)
+	}
 
 	return nil
 }

@@ -175,7 +175,6 @@ func (c *Client) updateDashboard(
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

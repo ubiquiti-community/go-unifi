@@ -9,23 +9,44 @@
 	{{- if ne .CustomUnmarshalFunc "" }}
 		dst.{{ .FieldName }}= {{ .CustomUnmarshalFunc }}(aux.{{ .FieldName }})
 	{{- else if eq .CustomUnmarshalType "" }}{{else}}
-		{{- if .IsArray }}
+		{{- if eq .CustomUnmarshalType "types.Number" }}
+			{{- if .IsArray }}
+	dst.{{ .FieldName }} = make([]{{ .FieldType }}, len(aux.{{ .FieldName }}))
+	for i, v := range aux.{{ .FieldName }} {
+		if val, err := v.Int64(); err == nil {
+			dst.{{ .FieldName }}[i] = {{ .FieldType }}(val)
+		}
+	}
+			{{- else }}
+	if val, err := aux.{{ .FieldName }}.Int64(); err == nil {
+		dst.{{ .FieldName }} = {{ .FieldType }}(val)
+	}
+			{{- end }}
+		{{- else }}
+			{{- if .IsArray }}
 		dst.{{ .FieldName }}= make([]{{ .FieldType }}, len(aux.{{ .FieldName }}))
 		for i, v := range aux.{{ .FieldName }} {
 				dst.{{ .FieldName }}[i] = {{ .FieldType }}(v)
 		}
-		{{- else }}
+			{{- else }}
 		dst.{{ .FieldName }} = {{ .FieldType }}(aux.{{ .FieldName }})
+			{{- end }}
 		{{- end }}{{- end }}{{- end }}
 // Code generated from ace.jar fields *.json files
 // DO NOT EDIT.
 
+{{ if .IsSetting }}
+package settings
+{{ else }}
 package unifi
+{{ end }}
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -33,9 +54,45 @@ var (
 	_ context.Context
 	_ fmt.Formatter
 	_ json.Marshaler
+	_ types.Number
 )
 
 {{ range $k, $v := .Types }}
+{{- if and (eq $k $structName) ($.IsSetting) }}
+{{- /* For settings, strip the "Setting" prefix from struct name */ -}}
+type {{ $.CleanStructName }} struct {
+	BaseSetting
+	{{ range $fk, $fv := $v.Fields }}{{ if not $fv }}
+	{{ else }}{{- if not (or (eq $fv.FieldName "ID") (eq $fv.FieldName "SiteID") (eq $fv.FieldName "Hidden") (eq $fv.FieldName "HiddenID") (eq $fv.FieldName "NoDelete") (eq $fv.FieldName "NoEdit") (eq $fv.FieldName "Key")) }}{{- template "field" $fv }}{{ end }}{{ end }}{{ end }}
+}
+
+func (dst *{{ $.CleanStructName }}) UnmarshalJSON(b []byte) error {
+	type Alias {{ $.CleanStructName }}
+	aux := &struct {
+			{{- range $fk, $fv := $v.Fields }}{{ if not $fv }}
+			{{- else }}{{- if not (or (eq $fv.FieldName "ID") (eq $fv.FieldName "SiteID") (eq $fv.FieldName "Hidden") (eq $fv.FieldName "HiddenID") (eq $fv.FieldName "NoDelete") (eq $fv.FieldName "NoEdit") (eq $fv.FieldName "Key")) }}{{- template "field-customUnmarshalType" $fv }}{{ end }}{{ end }}{{- end }}
+
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
+	}
+
+	// First unmarshal base setting
+	if err := json.Unmarshal(b, &dst.BaseSetting); err != nil {
+		return fmt.Errorf("unable to unmarshal base setting: %w", err)
+	}
+
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+
+		{{- range $fk, $fv := $v.Fields }}{{ if not $fv }}
+		{{- else }}{{- if not (or (eq $fv.FieldName "ID") (eq $fv.FieldName "SiteID") (eq $fv.FieldName "Hidden") (eq $fv.FieldName "HiddenID") (eq $fv.FieldName "NoDelete") (eq $fv.FieldName "NoEdit") (eq $fv.FieldName "Key")) }}{{- template "typecast" $fv }}{{ end }}{{ end }}{{ end }}
+
+	return nil
+}
+{{- else }}
 type {{ $k }} struct {
 	{{ range $fk, $fv := $v.Fields }}{{ if not $fv }}
 	{{ else }}{{- template "field" $fv }}{{ end }}{{ end }}
@@ -62,9 +119,10 @@ func (dst *{{ $k }}) UnmarshalJSON(b []byte) error {
 
 	return nil
 }
+{{- end }}
 {{ end }}
 
-{{ if not .IsSetting }}
+{{ if and (not .IsSetting) (ne .StructName "BGPConfig") }}
 func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
 {{- if .IsV2 }}
 	var respBody []{{ .StructName }}
@@ -78,7 +136,7 @@ func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}", site),
+		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}", site),
 		nil,
 		&respBody,
 	)
@@ -94,35 +152,23 @@ func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .
 }
 {{- end }}
 
-{{ if not .IsV2 }}
+{{ if not .IsSetting }}
 func (c *Client) get{{ .StructName }}(
 	ctx context.Context,
 	site string,
-{{- if not .IsSetting }}
 	id string,
-{{- end }}
 ) (*{{ .StructName }}, error) {
 	var respBody struct {
 		Meta meta `json:"meta"`
 		Data []{{ .StructName }} `json:"data"`
 	}
-{{- if .IsSetting }}
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("api/s/%s/get/setting/{{ .ResourcePath }}", site),
+		fmt.Sprintf("api/s/%s/{{ if eq .StructName "Device" }}stat/{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, id),
 		nil,
 		&respBody,
 	)
-{{- else }}
-	err := c.do(
-		ctx,
-		"GET",
-		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, id),
-		nil,
-		&respBody,
-	)
-{{- end }}
 	if err != nil {
 		return nil, err
 	}
@@ -193,6 +239,7 @@ func (c *Client) create{{ .StructName }}(
 }
 {{- end }}
 
+{{ if and (not .IsSetting) (ne .StructName "BGPConfig") }}
 func (c *Client) update{{ .StructName }}(
 	ctx context.Context,
 	site string,
@@ -206,16 +253,6 @@ func (c *Client) update{{ .StructName }}(
 		Data []{{ .StructName }} `json:"data"`
 	}
 {{- end }}
-{{ if .IsSetting }}
-	d.Key = "{{ .ResourcePath }}"
-	err := c.do(
-		ctx,
-		"PUT",
-		fmt.Sprintf("api/s/%s/set/setting/{{ .ResourcePath }}", site),
-		d,
-		&respBody,
-	)
-{{- else }}
 	err := c.do(
 		ctx,
 		"PUT",
@@ -223,7 +260,6 @@ func (c *Client) update{{ .StructName }}(
 		d,
 		&respBody,
 	)
-{{- end }}
 	if err != nil {
 		return nil, err
 	}
@@ -239,3 +275,4 @@ func (c *Client) update{{ .StructName }}(
 	return &res, nil
 {{- end }}
 }
+{{- end }}

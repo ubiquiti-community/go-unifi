@@ -148,7 +148,6 @@ func (c *Client) updateWLANGroup(
 		Meta meta        `json:"meta"`
 		Data []WLANGroup `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

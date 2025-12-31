@@ -192,7 +192,6 @@ func (c *Client) updateSpatialRecord(
 		Meta meta            `json:"meta"`
 		Data []SpatialRecord `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

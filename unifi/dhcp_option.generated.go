@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -35,7 +37,7 @@ type DHCPOption struct {
 func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	type Alias DHCPOption
 	aux := &struct {
-		Width emptyStringInt `json:"width"`
+		Width types.Number `json:"width"`
 
 		*Alias
 	}{
@@ -46,7 +48,9 @@ func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Width = int(aux.Width)
+	if val, err := aux.Width.Int64(); err == nil {
+		dst.Width = int(val)
+	}
 
 	return nil
 }
@@ -155,7 +159,6 @@ func (c *Client) updateDHCPOption(
 		Meta meta         `json:"meta"`
 		Data []DHCPOption `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

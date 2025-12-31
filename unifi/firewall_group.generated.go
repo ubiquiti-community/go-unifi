@@ -150,7 +150,6 @@ func (c *Client) updateFirewallGroup(
 		Meta meta            `json:"meta"`
 		Data []FirewallGroup `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

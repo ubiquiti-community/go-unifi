@@ -182,7 +182,6 @@ func (c *Client) updatePortForward(
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
 	}
-
 	err := c.do(
 		ctx,
 		"PUT",

@@ -7,6 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -38,10 +40,10 @@ type DNSRecord struct {
 func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 	type Alias DNSRecord
 	aux := &struct {
-		Port     emptyStringInt `json:"port"`
-		Priority emptyStringInt `json:"priority"`
-		Ttl      emptyStringInt `json:"ttl"`
-		Weight   emptyStringInt `json:"weight"`
+		Port     types.Number `json:"port"`
+		Priority types.Number `json:"priority"`
+		Ttl      types.Number `json:"ttl"`
+		Weight   types.Number `json:"weight"`
 
 		*Alias
 	}{
@@ -52,10 +54,18 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Port = int(aux.Port)
-	dst.Priority = int(aux.Priority)
-	dst.Ttl = int(aux.Ttl)
-	dst.Weight = int(aux.Weight)
+	if val, err := aux.Port.Int64(); err == nil {
+		dst.Port = int(val)
+	}
+	if val, err := aux.Priority.Int64(); err == nil {
+		dst.Priority = int(val)
+	}
+	if val, err := aux.Ttl.Int64(); err == nil {
+		dst.Ttl = int(val)
+	}
+	if val, err := aux.Weight.Int64(); err == nil {
+		dst.Weight = int(val)
+	}
 
 	return nil
 }
@@ -74,6 +84,34 @@ func (c *Client) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, e
 		return nil, err
 	}
 	return respBody, nil
+}
+
+func (c *Client) getDNSRecord(
+	ctx context.Context,
+	site string,
+	id string,
+) (*DNSRecord, error) {
+	var respBody struct {
+		Meta meta        `json:"meta"`
+		Data []DNSRecord `json:"data"`
+	}
+	err := c.do(
+		ctx,
+		"GET",
+		fmt.Sprintf("api/s/%s/rest/static-dns/%s", site, id),
+		nil,
+		&respBody,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(respBody.Data) != 1 {
+		return nil, &NotFoundError{}
+	}
+
+	d := respBody.Data[0]
+	return &d, nil
 }
 
 func (c *Client) deleteDNSRecord(
@@ -121,7 +159,6 @@ func (c *Client) updateDNSRecord(
 	d *DNSRecord,
 ) (*DNSRecord, error) {
 	var respBody DNSRecord
-
 	err := c.do(
 		ctx,
 		"PUT",
