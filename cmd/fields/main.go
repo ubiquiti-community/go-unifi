@@ -64,11 +64,13 @@ var fieldReps = []replacement{
 	{"Networkgroup", "NetworkGroup"},
 	{"Pd", "PD"},
 	{"Pmf", "PMF"},
+	{"pnp", "PnP"},
 	{"Portconf", "PortProfile"},
 	{"Qos", "QOS"},
 	{"Radiusprofile", "RADIUSProfile"},
 	{"Radius", "RADIUS"},
 	{"Ssid", "SSID"},
+	{"Smartq", "SmartQ"},
 	{"Startdate", "StartDate"},
 	{"Starttime", "StartTime"},
 	{"Stopdate", "StopDate"},
@@ -159,7 +161,11 @@ func NewResource(structName string, resourcePath string) *Resource {
 	case resource.StructName == "DNSRecord":
 		resource.ResourcePath = "static-dns"
 	case resource.StructName == "Network":
-		baseType.Fields["WANEgressQOSEnabled"] = NewFieldInfo("WANEgressQOSEnabled", "wan_egress_qos_enabled", "bool", "", true, false, false, "")
+		baseType.Fields["WANEgressQOSEnabled"] = NewFieldInfo("WANEgressQOSEnabled", "wan_egress_qos_enabled", "bool", "", true, false, true, "")
+		baseType.Fields["UPnPEnabled"] = NewFieldInfo("UPnPEnabled", "upnp_enabled", "bool", "", true, false, true, "")
+		baseType.Fields["UPnPWANInterface"] = NewFieldInfo("UPnPWANInterface", "upnp_wan_interface", "string", "", false, false, false, "")
+		baseType.Fields["UPnPNatPMPEnabled"] = NewFieldInfo("UPnPNatPMPEnabled", "upnp_nat_pmp_enabled", "bool", "", true, false, true, "")
+		baseType.Fields["UPnPSecureMode"] = NewFieldInfo("UPnPSecureMode", "upnp_secure_mode", "bool", "", true, false, true, "")
 	case resource.StructName == "Device":
 		baseType.Fields["PortTable"] = NewFieldInfo("PortTable", "port_table", "[]DevicePortTable", "", true, false, false, "")
 		baseType.Fields[" MAC"] = NewFieldInfo("MAC", "mac", "string", "", true, false, false, "")
@@ -276,7 +282,7 @@ func main() {
 
 	versionBaseDir := filepath.Dir(filename)
 
-	fieldsDir := filepath.Join(wd, versionBaseDir, fmt.Sprintf("v%s", unifiVersion))
+	fieldsDir := filepath.Join(versionBaseDir, fmt.Sprintf("v%s", unifiVersion))
 
 	outDir := filepath.Join(wd, *outputDirFlag)
 
@@ -301,6 +307,13 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
+		// defer func() {
+		// 	err = os.RemoveAll(fieldsDir)
+		// 	if err != nil {
+		// 		panic(err)
+		// 	}
+		// }()
 
 		err = copyCustom(fieldsDir)
 		if err != nil {

@@ -11,6 +11,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"path"
+	"reflect"
 	"strings"
 	"sync"
 
@@ -30,10 +31,18 @@ func (err *LoginRequiredError) Error() string {
 	return "login required"
 }
 
-type NotFoundError struct{}
+type NotFoundError struct {
+	Type  string
+	Attr  string
+	Value string
+}
 
 func (err *NotFoundError) Error() string {
-	return "not found"
+	if err.Attr != "" && err.Value != "" {
+		return fmt.Sprintf("not found: type=%s, attr=%s, value=%s", err.Type, err.Attr, err.Value)
+	} else {
+		return fmt.Sprintf("not found: type=%s", err.Type)
+	}
 }
 
 type APIError struct {
@@ -248,7 +257,10 @@ func (c *Client) do(
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusNotFound {
-		return &NotFoundError{}
+		t := reflect.TypeOf(respBody)
+		return &NotFoundError{
+			Type: t.String(),
+		}
 	}
 
 	if c.apiKey == "" {

@@ -45,7 +45,30 @@ func (c *Client) GetSite(ctx context.Context, id string) (*Site, error) {
 		}
 	}
 
-	return nil, &NotFoundError{}
+	return nil, &NotFoundError{
+		Type:  "Site",
+		Attr:  "ID",
+		Value: id,
+	}
+}
+
+func (c *Client) GetSiteByName(ctx context.Context, name string) (*Site, error) {
+	sites, err := c.ListSites(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, s := range sites {
+		if s.Name == name {
+			return &s, nil
+		}
+	}
+
+	return nil, &NotFoundError{
+		Type:  "Site",
+		Attr:  "Name",
+		Value: name,
+	}
 }
 
 func (c *Client) CreateSite(ctx context.Context, description string) ([]Site, error) {

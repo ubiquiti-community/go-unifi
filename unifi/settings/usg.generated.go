@@ -72,11 +72,11 @@ type Usg struct {
 	TimeoutSettingPreference       string                    `json:"timeout_setting_preference,omitempty"` // auto|manual
 	UDPOtherTimeout                int                       `json:"udp_other_timeout,omitempty"`
 	UDPStreamTimeout               int                       `json:"udp_stream_timeout,omitempty"`
+	UPnPEnabled                    bool                      `json:"upnp_enabled"`
+	UPnPNATPmpEnabled              bool                      `json:"upnp_nat_pmp_enabled"`
+	UPnPSecureMode                 bool                      `json:"upnp_secure_mode"`
+	UPnPWANInterface               string                    `json:"upnp_wan_interface,omitempty"` // WAN[2-9]?
 	UnbindWANMonitors              bool                      `json:"unbind_wan_monitors"`
-	UpnpEnabled                    bool                      `json:"upnp_enabled"`
-	UpnpNATPmpEnabled              bool                      `json:"upnp_nat_pmp_enabled"`
-	UpnpSecureMode                 bool                      `json:"upnp_secure_mode"`
-	UpnpWANInterface               string                    `json:"upnp_wan_interface,omitempty"` // WAN[2-9]?
 }
 
 func (dst *Usg) UnmarshalJSON(b []byte) error {
