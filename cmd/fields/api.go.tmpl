@@ -122,8 +122,9 @@ func (dst *{{ $k }}) UnmarshalJSON(b []byte) error {
 {{- end }}
 {{ end }}
 
-{{ if and (not .IsSetting) (ne .StructName "BGPConfig") }}
-func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
+{{- if not .IsSetting }}
+{{- if ne .StructName "BGPConfig" }}
+func (c *ApiClient) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
 {{- if .IsV2 }}
 	var respBody []{{ .StructName }}
 {{- else }}
@@ -152,20 +153,43 @@ func (c *Client) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .
 }
 {{- end }}
 
-{{ if not .IsSetting }}
-func (c *Client) get{{ .StructName }}(
+func (c *ApiClient) get{{ .StructName }}(
 	ctx context.Context,
 	site string,
+{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
 	id string,
+{{- end }}
 ) (*{{ .StructName }}, error) {
+{{- if and .IsV2 (ne .StructName "BGPConfig") }}
+	respBody, err := c.list{{ .StructName }}(ctx, site)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(respBody) == 0 {
+		return nil, &NotFoundError{}
+	}
+
+	for _, val := range respBody {
+		if val.ID == id {
+			return &val, nil
+		}
+	}
+
+	return nil, &NotFoundError{}
+{{- else }}
+	{{- if ne .StructName "BGPConfig" }}
 	var respBody struct {
 		Meta meta `json:"meta"`
 		Data []{{ .StructName }} `json:"data"`
 	}
+	{{- else }}
+	var respBody []{{ .StructName }}
+	{{- end }}
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("api/s/%s/{{ if eq .StructName "Device" }}stat/{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, id),
+		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}{{ if ne .StructName "BGPConfig" }}/%s{{ end }}", site{{ if ne .StructName "BGPConfig" }}, id{{ end }}),
 		nil,
 		&respBody,
 	)
@@ -173,25 +197,34 @@ func (c *Client) get{{ .StructName }}(
 		return nil, err
 	}
 
+	{{- if ne .StructName "BGPConfig" }}
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
 
 	d := respBody.Data[0]
-	return &d, nil
-}
-{{- end }}
+	{{- else }}
+	if len(respBody) != 1 {
+		return nil, &NotFoundError{}
+	}
 
-{{ if not .IsSetting }}
-func (c *Client) delete{{ .StructName }}(
+	d := respBody[0]
+	{{- end }}
+	return &d, nil
+{{- end }}
+}
+
+func (c *ApiClient) delete{{ .StructName }}(
 	ctx context.Context,
 	site string,
+{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
 	id string,
+{{- end }}
 ) error {
 	err := c.do(
 		ctx,
 		"DELETE",
-		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, id),
+		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}{{ if ne .StructName "BGPConfig" }}/%s{{ end }}", site{{ if ne .StructName "BGPConfig" }}, id{{ end }}),
 		struct{}{},
 		nil,
 	)
@@ -201,7 +234,7 @@ func (c *Client) delete{{ .StructName }}(
 	return nil
 }
 
-func (c *Client) create{{ .StructName }}(
+func (c *ApiClient) create{{ .StructName }}(
 	ctx context.Context,
 	site string,
 	d *{{ .StructName }},
@@ -237,10 +270,9 @@ func (c *Client) create{{ .StructName }}(
 	return &res, nil
 {{- end }}
 }
-{{- end }}
 
-{{ if and (not .IsSetting) (ne .StructName "BGPConfig") }}
-func (c *Client) update{{ .StructName }}(
+{{ if ne .StructName "BGPConfig" }}
+func (c *ApiClient) update{{ .StructName }}(
 	ctx context.Context,
 	site string,
 	d *{{ .StructName }},
@@ -275,4 +307,5 @@ func (c *Client) update{{ .StructName }}(
 	return &res, nil
 {{- end }}
 }
+{{- end }}
 {{- end }}

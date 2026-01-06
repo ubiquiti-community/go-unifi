@@ -143,7 +143,7 @@ func (dst *RADIUSProfileXCaCrts) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listRADIUSProfile(ctx context.Context, site string) ([]RADIUSProfile, error) {
+func (c *ApiClient) listRADIUSProfile(ctx context.Context, site string) ([]RADIUSProfile, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []RADIUSProfile `json:"data"`
@@ -162,7 +162,7 @@ func (c *Client) listRADIUSProfile(ctx context.Context, site string) ([]RADIUSPr
 	return respBody.Data, nil
 }
 
-func (c *Client) getRADIUSProfile(
+func (c *ApiClient) getRADIUSProfile(
 	ctx context.Context,
 	site string,
 	id string,
@@ -181,7 +181,6 @@ func (c *Client) getRADIUSProfile(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -190,7 +189,7 @@ func (c *Client) getRADIUSProfile(
 	return &d, nil
 }
 
-func (c *Client) deleteRADIUSProfile(
+func (c *ApiClient) deleteRADIUSProfile(
 	ctx context.Context,
 	site string,
 	id string,
@@ -208,7 +207,7 @@ func (c *Client) deleteRADIUSProfile(
 	return nil
 }
 
-func (c *Client) createRADIUSProfile(
+func (c *ApiClient) createRADIUSProfile(
 	ctx context.Context,
 	site string,
 	d *RADIUSProfile,
@@ -238,7 +237,7 @@ func (c *Client) createRADIUSProfile(
 	return &res, nil
 }
 
-func (c *Client) updateRADIUSProfile(
+func (c *ApiClient) updateRADIUSProfile(
 	ctx context.Context,
 	site string,
 	d *RADIUSProfile,

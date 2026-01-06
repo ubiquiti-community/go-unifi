@@ -61,7 +61,7 @@ func (dst *Routing) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listRouting(ctx context.Context, site string) ([]Routing, error) {
+func (c *ApiClient) listRouting(ctx context.Context, site string) ([]Routing, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Routing `json:"data"`
@@ -80,7 +80,7 @@ func (c *Client) listRouting(ctx context.Context, site string) ([]Routing, error
 	return respBody.Data, nil
 }
 
-func (c *Client) getRouting(
+func (c *ApiClient) getRouting(
 	ctx context.Context,
 	site string,
 	id string,
@@ -99,7 +99,6 @@ func (c *Client) getRouting(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -108,7 +107,7 @@ func (c *Client) getRouting(
 	return &d, nil
 }
 
-func (c *Client) deleteRouting(
+func (c *ApiClient) deleteRouting(
 	ctx context.Context,
 	site string,
 	id string,
@@ -126,7 +125,7 @@ func (c *Client) deleteRouting(
 	return nil
 }
 
-func (c *Client) createRouting(
+func (c *ApiClient) createRouting(
 	ctx context.Context,
 	site string,
 	d *Routing,
@@ -156,7 +155,7 @@ func (c *Client) createRouting(
 	return &res, nil
 }
 
-func (c *Client) updateRouting(
+func (c *ApiClient) updateRouting(
 	ctx context.Context,
 	site string,
 	d *Routing,

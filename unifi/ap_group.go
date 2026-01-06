@@ -25,7 +25,7 @@ type APGroup struct {
 	DeviceMacs []string `json:"device_macs"`
 }
 
-func (c *Client) ListAPGroup(ctx context.Context, site string) ([]APGroup, error) {
+func (c *ApiClient) ListAPGroup(ctx context.Context, site string) ([]APGroup, error) {
 	var respBody []APGroup
 
 	err := c.do(ctx, "GET", fmt.Sprintf("v2/api/site/%s/apgroups", site), nil, &respBody)
@@ -63,7 +63,7 @@ func (c *Client) ListAPGroup(ctx context.Context, site string) ([]APGroup, error
 // 	return nil
 // }
 
-func (c *Client) CreateAPGroup(ctx context.Context, site string, d *APGroup) (*APGroup, error) {
+func (c *ApiClient) CreateAPGroup(ctx context.Context, site string, d *APGroup) (*APGroup, error) {
 	var respBody APGroup
 
 	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/apgroups", site), d, &respBody)

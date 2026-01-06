@@ -204,23 +204,23 @@ func (dst *DevicePortTable) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) ListDevice(ctx context.Context, site string) ([]Device, error) {
+func (c *ApiClient) ListDevice(ctx context.Context, site string) ([]Device, error) {
 	return c.listDevice(ctx, site)
 }
 
-func (c *Client) GetDeviceByMAC(ctx context.Context, site, mac string) (*Device, error) {
+func (c *ApiClient) GetDeviceByMAC(ctx context.Context, site, mac string) (*Device, error) {
 	return c.getDevice(ctx, site, mac)
 }
 
-func (c *Client) DeleteDevice(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteDevice(ctx context.Context, site, id string) error {
 	return c.deleteDevice(ctx, site, id)
 }
 
-func (c *Client) CreateDevice(ctx context.Context, site string, d *Device) (*Device, error) {
+func (c *ApiClient) CreateDevice(ctx context.Context, site string, d *Device) (*Device, error) {
 	return c.createDevice(ctx, site, d)
 }
 
-func (c *Client) UpdateDevice(ctx context.Context, site string, d *Device) (*Device, error) {
+func (c *ApiClient) UpdateDevice(ctx context.Context, site string, d *Device) (*Device, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []Device `json:"data"`
@@ -315,7 +315,7 @@ func deepEqualJSON(a, b any) bool {
 	return string(aJSON) == string(bJSON)
 }
 
-func (c *Client) GetDevice(ctx context.Context, site, id string) (*Device, error) {
+func (c *ApiClient) GetDevice(ctx context.Context, site, id string) (*Device, error) {
 	devices, err := c.ListDevice(ctx, site)
 	if err != nil {
 		return nil, err
@@ -330,7 +330,7 @@ func (c *Client) GetDevice(ctx context.Context, site, id string) (*Device, error
 	return nil, &NotFoundError{}
 }
 
-func (c *Client) AdoptDevice(ctx context.Context, site, mac string) error {
+func (c *ApiClient) AdoptDevice(ctx context.Context, site, mac string) error {
 	reqBody := struct {
 		Cmd string `json:"cmd"`
 		MAC string `json:"mac"`
@@ -351,7 +351,7 @@ func (c *Client) AdoptDevice(ctx context.Context, site, mac string) error {
 	return nil
 }
 
-func (c *Client) ForgetDevice(ctx context.Context, site, mac string) error {
+func (c *ApiClient) ForgetDevice(ctx context.Context, site, mac string) error {
 	reqBody := struct {
 		Cmd  string   `json:"cmd"`
 		MACs []string `json:"macs"`

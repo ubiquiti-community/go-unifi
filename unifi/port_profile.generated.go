@@ -267,7 +267,7 @@ func (dst *PortProfileQOSProfile) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listPortProfile(ctx context.Context, site string) ([]PortProfile, error) {
+func (c *ApiClient) listPortProfile(ctx context.Context, site string) ([]PortProfile, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
@@ -286,7 +286,7 @@ func (c *Client) listPortProfile(ctx context.Context, site string) ([]PortProfil
 	return respBody.Data, nil
 }
 
-func (c *Client) getPortProfile(
+func (c *ApiClient) getPortProfile(
 	ctx context.Context,
 	site string,
 	id string,
@@ -305,7 +305,6 @@ func (c *Client) getPortProfile(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -314,7 +313,7 @@ func (c *Client) getPortProfile(
 	return &d, nil
 }
 
-func (c *Client) deletePortProfile(
+func (c *ApiClient) deletePortProfile(
 	ctx context.Context,
 	site string,
 	id string,
@@ -332,7 +331,7 @@ func (c *Client) deletePortProfile(
 	return nil
 }
 
-func (c *Client) createPortProfile(
+func (c *ApiClient) createPortProfile(
 	ctx context.Context,
 	site string,
 	d *PortProfile,
@@ -362,7 +361,7 @@ func (c *Client) createPortProfile(
 	return &res, nil
 }
 
-func (c *Client) updatePortProfile(
+func (c *ApiClient) updatePortProfile(
 	ctx context.Context,
 	site string,
 	d *PortProfile,

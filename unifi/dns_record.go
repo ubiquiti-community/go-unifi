@@ -7,11 +7,11 @@ import (
 	"context"
 )
 
-func (c *Client) ListDNSRecord(ctx context.Context, site string) ([]DNSRecord, error) {
+func (c *ApiClient) ListDNSRecord(ctx context.Context, site string) ([]DNSRecord, error) {
 	return c.listDNSRecord(ctx, site)
 }
 
-func (c *Client) GetDNSRecord(ctx context.Context, site, id string) (*DNSRecord, error) {
+func (c *ApiClient) GetDNSRecord(ctx context.Context, site, id string) (*DNSRecord, error) {
 	respBody, err := c.listDNSRecord(ctx, site)
 	if err != nil {
 		return nil, err
@@ -30,11 +30,11 @@ func (c *Client) GetDNSRecord(ctx context.Context, site, id string) (*DNSRecord,
 	return nil, &NotFoundError{}
 }
 
-func (c *Client) DeleteDNSRecord(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteDNSRecord(ctx context.Context, site, id string) error {
 	return c.deleteDNSRecord(ctx, site, id)
 }
 
-func (c *Client) CreateDNSRecord(
+func (c *ApiClient) CreateDNSRecord(
 	ctx context.Context,
 	site string,
 	d *DNSRecord,
@@ -42,7 +42,7 @@ func (c *Client) CreateDNSRecord(
 	return c.createDNSRecord(ctx, site, d)
 }
 
-func (c *Client) UpdateDNSRecord(
+func (c *ApiClient) UpdateDNSRecord(
 	ctx context.Context,
 	site string,
 	d *DNSRecord,

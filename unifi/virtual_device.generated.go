@@ -52,7 +52,7 @@ func (dst *VirtualDevice) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listVirtualDevice(ctx context.Context, site string) ([]VirtualDevice, error) {
+func (c *ApiClient) listVirtualDevice(ctx context.Context, site string) ([]VirtualDevice, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []VirtualDevice `json:"data"`
@@ -71,7 +71,7 @@ func (c *Client) listVirtualDevice(ctx context.Context, site string) ([]VirtualD
 	return respBody.Data, nil
 }
 
-func (c *Client) getVirtualDevice(
+func (c *ApiClient) getVirtualDevice(
 	ctx context.Context,
 	site string,
 	id string,
@@ -90,7 +90,6 @@ func (c *Client) getVirtualDevice(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -99,7 +98,7 @@ func (c *Client) getVirtualDevice(
 	return &d, nil
 }
 
-func (c *Client) deleteVirtualDevice(
+func (c *ApiClient) deleteVirtualDevice(
 	ctx context.Context,
 	site string,
 	id string,
@@ -117,7 +116,7 @@ func (c *Client) deleteVirtualDevice(
 	return nil
 }
 
-func (c *Client) createVirtualDevice(
+func (c *ApiClient) createVirtualDevice(
 	ctx context.Context,
 	site string,
 	d *VirtualDevice,
@@ -147,7 +146,7 @@ func (c *Client) createVirtualDevice(
 	return &res, nil
 }
 
-func (c *Client) updateVirtualDevice(
+func (c *ApiClient) updateVirtualDevice(
 	ctx context.Context,
 	site string,
 	d *VirtualDevice,

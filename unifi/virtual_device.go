@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListVirtualDevice(ctx context.Context, site string) ([]VirtualDevice, error) {
+func (c *ApiClient) ListVirtualDevice(ctx context.Context, site string) ([]VirtualDevice, error) {
 	return c.listVirtualDevice(ctx, site)
 }
 
-func (c *Client) GetVirtualDevice(ctx context.Context, site, id string) (*VirtualDevice, error) {
+func (c *ApiClient) GetVirtualDevice(ctx context.Context, site, id string) (*VirtualDevice, error) {
 	return c.getVirtualDevice(ctx, site, id)
 }
 
-func (c *Client) DeleteVirtualDevice(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteVirtualDevice(ctx context.Context, site, id string) error {
 	return c.deleteVirtualDevice(ctx, site, id)
 }
 
-func (c *Client) CreateVirtualDevice(
+func (c *ApiClient) CreateVirtualDevice(
 	ctx context.Context,
 	site string,
 	d *VirtualDevice,
@@ -27,7 +27,7 @@ func (c *Client) CreateVirtualDevice(
 	return c.createVirtualDevice(ctx, site, d)
 }
 
-func (c *Client) UpdateVirtualDevice(
+func (c *ApiClient) UpdateVirtualDevice(
 	ctx context.Context,
 	site string,
 	d *VirtualDevice,

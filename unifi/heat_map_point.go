@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListHeatMapPoint(ctx context.Context, site string) ([]HeatMapPoint, error) {
+func (c *ApiClient) ListHeatMapPoint(ctx context.Context, site string) ([]HeatMapPoint, error) {
 	return c.listHeatMapPoint(ctx, site)
 }
 
-func (c *Client) GetHeatMapPoint(ctx context.Context, site, id string) (*HeatMapPoint, error) {
+func (c *ApiClient) GetHeatMapPoint(ctx context.Context, site, id string) (*HeatMapPoint, error) {
 	return c.getHeatMapPoint(ctx, site, id)
 }
 
-func (c *Client) DeleteHeatMapPoint(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteHeatMapPoint(ctx context.Context, site, id string) error {
 	return c.deleteHeatMapPoint(ctx, site, id)
 }
 
-func (c *Client) CreateHeatMapPoint(
+func (c *ApiClient) CreateHeatMapPoint(
 	ctx context.Context,
 	site string,
 	d *HeatMapPoint,
@@ -27,7 +27,7 @@ func (c *Client) CreateHeatMapPoint(
 	return c.createHeatMapPoint(ctx, site, d)
 }
 
-func (c *Client) UpdateHeatMapPoint(
+func (c *ApiClient) UpdateHeatMapPoint(
 	ctx context.Context,
 	site string,
 	d *HeatMapPoint,

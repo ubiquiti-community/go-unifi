@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListBroadcastGroup(ctx context.Context, site string) ([]BroadcastGroup, error) {
+func (c *ApiClient) ListBroadcastGroup(ctx context.Context, site string) ([]BroadcastGroup, error) {
 	return c.listBroadcastGroup(ctx, site)
 }
 
-func (c *Client) GetBroadcastGroup(ctx context.Context, site, id string) (*BroadcastGroup, error) {
+func (c *ApiClient) GetBroadcastGroup(ctx context.Context, site, id string) (*BroadcastGroup, error) {
 	return c.getBroadcastGroup(ctx, site, id)
 }
 
-func (c *Client) DeleteBroadcastGroup(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteBroadcastGroup(ctx context.Context, site, id string) error {
 	return c.deleteBroadcastGroup(ctx, site, id)
 }
 
-func (c *Client) CreateBroadcastGroup(
+func (c *ApiClient) CreateBroadcastGroup(
 	ctx context.Context,
 	site string,
 	d *BroadcastGroup,
@@ -27,7 +27,7 @@ func (c *Client) CreateBroadcastGroup(
 	return c.createBroadcastGroup(ctx, site, d)
 }
 
-func (c *Client) UpdateBroadcastGroup(
+func (c *ApiClient) UpdateBroadcastGroup(
 	ctx context.Context,
 	site string,
 	d *BroadcastGroup,

@@ -71,7 +71,7 @@ func (dst *ScheduleTaskUpgradeTargets) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listScheduleTask(ctx context.Context, site string) ([]ScheduleTask, error) {
+func (c *ApiClient) listScheduleTask(ctx context.Context, site string) ([]ScheduleTask, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []ScheduleTask `json:"data"`
@@ -90,7 +90,7 @@ func (c *Client) listScheduleTask(ctx context.Context, site string) ([]ScheduleT
 	return respBody.Data, nil
 }
 
-func (c *Client) getScheduleTask(
+func (c *ApiClient) getScheduleTask(
 	ctx context.Context,
 	site string,
 	id string,
@@ -109,7 +109,6 @@ func (c *Client) getScheduleTask(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -118,7 +117,7 @@ func (c *Client) getScheduleTask(
 	return &d, nil
 }
 
-func (c *Client) deleteScheduleTask(
+func (c *ApiClient) deleteScheduleTask(
 	ctx context.Context,
 	site string,
 	id string,
@@ -136,7 +135,7 @@ func (c *Client) deleteScheduleTask(
 	return nil
 }
 
-func (c *Client) createScheduleTask(
+func (c *ApiClient) createScheduleTask(
 	ctx context.Context,
 	site string,
 	d *ScheduleTask,
@@ -166,7 +165,7 @@ func (c *Client) createScheduleTask(
 	return &res, nil
 }
 
-func (c *Client) updateScheduleTask(
+func (c *ApiClient) updateScheduleTask(
 	ctx context.Context,
 	site string,
 	d *ScheduleTask,

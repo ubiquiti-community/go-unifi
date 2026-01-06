@@ -81,7 +81,7 @@ func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listFirewallRule(ctx context.Context, site string) ([]FirewallRule, error) {
+func (c *ApiClient) listFirewallRule(ctx context.Context, site string) ([]FirewallRule, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []FirewallRule `json:"data"`
@@ -100,7 +100,7 @@ func (c *Client) listFirewallRule(ctx context.Context, site string) ([]FirewallR
 	return respBody.Data, nil
 }
 
-func (c *Client) getFirewallRule(
+func (c *ApiClient) getFirewallRule(
 	ctx context.Context,
 	site string,
 	id string,
@@ -119,7 +119,6 @@ func (c *Client) getFirewallRule(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -128,7 +127,7 @@ func (c *Client) getFirewallRule(
 	return &d, nil
 }
 
-func (c *Client) deleteFirewallRule(
+func (c *ApiClient) deleteFirewallRule(
 	ctx context.Context,
 	site string,
 	id string,
@@ -146,7 +145,7 @@ func (c *Client) deleteFirewallRule(
 	return nil
 }
 
-func (c *Client) createFirewallRule(
+func (c *ApiClient) createFirewallRule(
 	ctx context.Context,
 	site string,
 	d *FirewallRule,
@@ -176,7 +175,7 @@ func (c *Client) createFirewallRule(
 	return &res, nil
 }
 
-func (c *Client) updateFirewallRule(
+func (c *ApiClient) updateFirewallRule(
 	ctx context.Context,
 	site string,
 	d *FirewallRule,

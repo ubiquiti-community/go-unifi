@@ -48,7 +48,7 @@ func (dst *Tag) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listTag(ctx context.Context, site string) ([]Tag, error) {
+func (c *ApiClient) listTag(ctx context.Context, site string) ([]Tag, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Tag `json:"data"`
@@ -67,7 +67,7 @@ func (c *Client) listTag(ctx context.Context, site string) ([]Tag, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getTag(
+func (c *ApiClient) getTag(
 	ctx context.Context,
 	site string,
 	id string,
@@ -86,7 +86,6 @@ func (c *Client) getTag(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -95,7 +94,7 @@ func (c *Client) getTag(
 	return &d, nil
 }
 
-func (c *Client) deleteTag(
+func (c *ApiClient) deleteTag(
 	ctx context.Context,
 	site string,
 	id string,
@@ -113,7 +112,7 @@ func (c *Client) deleteTag(
 	return nil
 }
 
-func (c *Client) createTag(
+func (c *ApiClient) createTag(
 	ctx context.Context,
 	site string,
 	d *Tag,
@@ -143,7 +142,7 @@ func (c *Client) createTag(
 	return &res, nil
 }
 
-func (c *Client) updateTag(
+func (c *ApiClient) updateTag(
 	ctx context.Context,
 	site string,
 	d *Tag,

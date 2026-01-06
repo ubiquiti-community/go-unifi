@@ -486,7 +486,7 @@ func (dst *Hotspot2ConfVenueName) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listHotspot2Conf(ctx context.Context, site string) ([]Hotspot2Conf, error) {
+func (c *ApiClient) listHotspot2Conf(ctx context.Context, site string) ([]Hotspot2Conf, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []Hotspot2Conf `json:"data"`
@@ -505,7 +505,7 @@ func (c *Client) listHotspot2Conf(ctx context.Context, site string) ([]Hotspot2C
 	return respBody.Data, nil
 }
 
-func (c *Client) getHotspot2Conf(
+func (c *ApiClient) getHotspot2Conf(
 	ctx context.Context,
 	site string,
 	id string,
@@ -524,7 +524,6 @@ func (c *Client) getHotspot2Conf(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -533,7 +532,7 @@ func (c *Client) getHotspot2Conf(
 	return &d, nil
 }
 
-func (c *Client) deleteHotspot2Conf(
+func (c *ApiClient) deleteHotspot2Conf(
 	ctx context.Context,
 	site string,
 	id string,
@@ -551,7 +550,7 @@ func (c *Client) deleteHotspot2Conf(
 	return nil
 }
 
-func (c *Client) createHotspot2Conf(
+func (c *ApiClient) createHotspot2Conf(
 	ctx context.Context,
 	site string,
 	d *Hotspot2Conf,
@@ -581,7 +580,7 @@ func (c *Client) createHotspot2Conf(
 	return &res, nil
 }
 
-func (c *Client) updateHotspot2Conf(
+func (c *ApiClient) updateHotspot2Conf(
 	ctx context.Context,
 	site string,
 	d *Hotspot2Conf,

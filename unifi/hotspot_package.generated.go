@@ -100,7 +100,7 @@ func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listHotspotPackage(ctx context.Context, site string) ([]HotspotPackage, error) {
+func (c *ApiClient) listHotspotPackage(ctx context.Context, site string) ([]HotspotPackage, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []HotspotPackage `json:"data"`
@@ -119,7 +119,7 @@ func (c *Client) listHotspotPackage(ctx context.Context, site string) ([]Hotspot
 	return respBody.Data, nil
 }
 
-func (c *Client) getHotspotPackage(
+func (c *ApiClient) getHotspotPackage(
 	ctx context.Context,
 	site string,
 	id string,
@@ -138,7 +138,6 @@ func (c *Client) getHotspotPackage(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -147,7 +146,7 @@ func (c *Client) getHotspotPackage(
 	return &d, nil
 }
 
-func (c *Client) deleteHotspotPackage(
+func (c *ApiClient) deleteHotspotPackage(
 	ctx context.Context,
 	site string,
 	id string,
@@ -165,7 +164,7 @@ func (c *Client) deleteHotspotPackage(
 	return nil
 }
 
-func (c *Client) createHotspotPackage(
+func (c *ApiClient) createHotspotPackage(
 	ctx context.Context,
 	site string,
 	d *HotspotPackage,
@@ -195,7 +194,7 @@ func (c *Client) createHotspotPackage(
 	return &res, nil
 }
 
-func (c *Client) updateHotspotPackage(
+func (c *ApiClient) updateHotspotPackage(
 	ctx context.Context,
 	site string,
 	d *HotspotPackage,

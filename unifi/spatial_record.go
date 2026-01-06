@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListSpatialRecord(ctx context.Context, site string) ([]SpatialRecord, error) {
+func (c *ApiClient) ListSpatialRecord(ctx context.Context, site string) ([]SpatialRecord, error) {
 	return c.listSpatialRecord(ctx, site)
 }
 
-func (c *Client) GetSpatialRecord(ctx context.Context, site, id string) (*SpatialRecord, error) {
+func (c *ApiClient) GetSpatialRecord(ctx context.Context, site, id string) (*SpatialRecord, error) {
 	return c.getSpatialRecord(ctx, site, id)
 }
 
-func (c *Client) DeleteSpatialRecord(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteSpatialRecord(ctx context.Context, site, id string) error {
 	return c.deleteSpatialRecord(ctx, site, id)
 }
 
-func (c *Client) CreateSpatialRecord(
+func (c *ApiClient) CreateSpatialRecord(
 	ctx context.Context,
 	site string,
 	d *SpatialRecord,
@@ -27,7 +27,7 @@ func (c *Client) CreateSpatialRecord(
 	return c.createSpatialRecord(ctx, site, d)
 }
 
-func (c *Client) UpdateSpatialRecord(
+func (c *ApiClient) UpdateSpatialRecord(
 	ctx context.Context,
 	site string,
 	d *SpatialRecord,

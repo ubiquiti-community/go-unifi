@@ -49,7 +49,7 @@ func (dst *FirewallGroup) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listFirewallGroup(ctx context.Context, site string) ([]FirewallGroup, error) {
+func (c *ApiClient) listFirewallGroup(ctx context.Context, site string) ([]FirewallGroup, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []FirewallGroup `json:"data"`
@@ -68,7 +68,7 @@ func (c *Client) listFirewallGroup(ctx context.Context, site string) ([]Firewall
 	return respBody.Data, nil
 }
 
-func (c *Client) getFirewallGroup(
+func (c *ApiClient) getFirewallGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -87,7 +87,6 @@ func (c *Client) getFirewallGroup(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -96,7 +95,7 @@ func (c *Client) getFirewallGroup(
 	return &d, nil
 }
 
-func (c *Client) deleteFirewallGroup(
+func (c *ApiClient) deleteFirewallGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -114,7 +113,7 @@ func (c *Client) deleteFirewallGroup(
 	return nil
 }
 
-func (c *Client) createFirewallGroup(
+func (c *ApiClient) createFirewallGroup(
 	ctx context.Context,
 	site string,
 	d *FirewallGroup,
@@ -144,7 +143,7 @@ func (c *Client) createFirewallGroup(
 	return &res, nil
 }
 
-func (c *Client) updateFirewallGroup(
+func (c *ApiClient) updateFirewallGroup(
 	ctx context.Context,
 	site string,
 	d *FirewallGroup,

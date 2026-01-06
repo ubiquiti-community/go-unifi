@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListHotspot2Conf(ctx context.Context, site string) ([]Hotspot2Conf, error) {
+func (c *ApiClient) ListHotspot2Conf(ctx context.Context, site string) ([]Hotspot2Conf, error) {
 	return c.listHotspot2Conf(ctx, site)
 }
 
-func (c *Client) GetHotspot2Conf(ctx context.Context, site, id string) (*Hotspot2Conf, error) {
+func (c *ApiClient) GetHotspot2Conf(ctx context.Context, site, id string) (*Hotspot2Conf, error) {
 	return c.getHotspot2Conf(ctx, site, id)
 }
 
-func (c *Client) DeleteHotspot2Conf(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteHotspot2Conf(ctx context.Context, site, id string) error {
 	return c.deleteHotspot2Conf(ctx, site, id)
 }
 
-func (c *Client) CreateHotspot2Conf(
+func (c *ApiClient) CreateHotspot2Conf(
 	ctx context.Context,
 	site string,
 	d *Hotspot2Conf,
@@ -27,7 +27,7 @@ func (c *Client) CreateHotspot2Conf(
 	return c.createHotspot2Conf(ctx, site, d)
 }
 
-func (c *Client) UpdateHotspot2Conf(
+func (c *ApiClient) UpdateHotspot2Conf(
 	ctx context.Context,
 	site string,
 	d *Hotspot2Conf,

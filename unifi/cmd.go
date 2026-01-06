@@ -19,7 +19,7 @@ type Cmd struct {
 	SiteId   string `json:"site_id,omitempty"`
 }
 
-func (c *Client) ExecuteCmd(ctx context.Context, site string, mgr string, cmd Cmd) (any, error) {
+func (c *ApiClient) ExecuteCmd(ctx context.Context, site string, mgr string, cmd Cmd) (any, error) {
 	var respBody struct{}
 
 	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/cmd/%s", site, mgr), &cmd, &respBody)

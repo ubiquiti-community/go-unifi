@@ -74,7 +74,7 @@ func (dst *DashboardModules) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listDashboard(ctx context.Context, site string) ([]Dashboard, error) {
+func (c *ApiClient) listDashboard(ctx context.Context, site string) ([]Dashboard, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []Dashboard `json:"data"`
@@ -93,7 +93,7 @@ func (c *Client) listDashboard(ctx context.Context, site string) ([]Dashboard, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getDashboard(
+func (c *ApiClient) getDashboard(
 	ctx context.Context,
 	site string,
 	id string,
@@ -112,7 +112,6 @@ func (c *Client) getDashboard(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -121,7 +120,7 @@ func (c *Client) getDashboard(
 	return &d, nil
 }
 
-func (c *Client) deleteDashboard(
+func (c *ApiClient) deleteDashboard(
 	ctx context.Context,
 	site string,
 	id string,
@@ -139,7 +138,7 @@ func (c *Client) deleteDashboard(
 	return nil
 }
 
-func (c *Client) createDashboard(
+func (c *ApiClient) createDashboard(
 	ctx context.Context,
 	site string,
 	d *Dashboard,
@@ -169,7 +168,7 @@ func (c *Client) createDashboard(
 	return &res, nil
 }
 
-func (c *Client) updateDashboard(
+func (c *ApiClient) updateDashboard(
 	ctx context.Context,
 	site string,
 	d *Dashboard,

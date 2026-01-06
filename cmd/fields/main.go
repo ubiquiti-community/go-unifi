@@ -98,6 +98,8 @@ var fileReps = []replacement{
 	{"ApGroups", "APGroup"},
 	{"DnsRecord", "DNSRecord"},
 	{"BgpConfig", "BGPConfig"},
+	{"User", "Client"},
+	{"UserGroup", "ClientGroup"},
 }
 
 type Resource struct {
@@ -160,6 +162,14 @@ func NewResource(structName string, resourcePath string) *Resource {
 		}
 	case resource.StructName == "DNSRecord":
 		resource.ResourcePath = "static-dns"
+	case resource.StructName == "FirewallZone":
+		resource.ResourcePath = "firewall/zone"
+	case resource.StructName == "OSPFRouter":
+		resource.ResourcePath = "ospf/router"
+	case resource.StructName == "FirewallPolicy":
+		resource.ResourcePath = "firewall-policies"
+	case resource.StructName == "TrafficRoute":
+		resource.ResourcePath = "trafficroutes"
 	case resource.StructName == "Network":
 		baseType.Fields["WANEgressQOSEnabled"] = NewFieldInfo("WANEgressQOSEnabled", "wan_egress_qos_enabled", "bool", "", true, false, true, "")
 		baseType.Fields["UPnPEnabled"] = NewFieldInfo("UPnPEnabled", "upnp_enabled", "bool", "", true, false, true, "")
@@ -359,9 +369,9 @@ func main() {
 
 		// For settings, create a cleaner filename without "setting_" prefix
 		goFile := strcase.ToSnake(structName) + ".generated.go"
-		if strings.HasPrefix(structName, "Setting") {
+		if after, ok0 := strings.CutPrefix(structName, "Setting"); ok0 {
 			// Remove "Setting" prefix for the file name
-			cleanStructName := strings.TrimPrefix(structName, "Setting")
+			cleanStructName := after
 			goFile = strcase.ToSnake(cleanStructName) + ".generated.go"
 		}
 		fieldsFilePath := filepath.Join(fieldsDir, fieldsFile.Name())
@@ -570,9 +580,13 @@ func (r *Resource) IsDevice() bool {
 
 func (r *Resource) IsV2() bool {
 	return slices.Contains([]string{
-		"DNSRecord",
 		"ApGroup",
 		"BGPConfig",
+		"DNSRecord",
+		"FirewallPolicy",
+		"FirewallZone",
+		"OSPFRouter",
+		"TrafficRoute",
 	}, r.StructName)
 }
 

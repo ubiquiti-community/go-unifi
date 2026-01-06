@@ -68,7 +68,7 @@ func (dst *Map) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listMap(ctx context.Context, site string) ([]Map, error) {
+func (c *ApiClient) listMap(ctx context.Context, site string) ([]Map, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
 		Data []Map `json:"data"`
@@ -87,7 +87,7 @@ func (c *Client) listMap(ctx context.Context, site string) ([]Map, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getMap(
+func (c *ApiClient) getMap(
 	ctx context.Context,
 	site string,
 	id string,
@@ -106,7 +106,6 @@ func (c *Client) getMap(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -115,7 +114,7 @@ func (c *Client) getMap(
 	return &d, nil
 }
 
-func (c *Client) deleteMap(
+func (c *ApiClient) deleteMap(
 	ctx context.Context,
 	site string,
 	id string,
@@ -133,7 +132,7 @@ func (c *Client) deleteMap(
 	return nil
 }
 
-func (c *Client) createMap(
+func (c *ApiClient) createMap(
 	ctx context.Context,
 	site string,
 	d *Map,
@@ -163,7 +162,7 @@ func (c *Client) createMap(
 	return &res, nil
 }
 
-func (c *Client) updateMap(
+func (c *ApiClient) updateMap(
 	ctx context.Context,
 	site string,
 	d *Map,

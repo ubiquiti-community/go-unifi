@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListMediaFile(ctx context.Context, site string) ([]MediaFile, error) {
+func (c *ApiClient) ListMediaFile(ctx context.Context, site string) ([]MediaFile, error) {
 	return c.listMediaFile(ctx, site)
 }
 
-func (c *Client) GetMediaFile(ctx context.Context, site, id string) (*MediaFile, error) {
+func (c *ApiClient) GetMediaFile(ctx context.Context, site, id string) (*MediaFile, error) {
 	return c.getMediaFile(ctx, site, id)
 }
 
-func (c *Client) DeleteMediaFile(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteMediaFile(ctx context.Context, site, id string) error {
 	return c.deleteMediaFile(ctx, site, id)
 }
 
-func (c *Client) CreateMediaFile(
+func (c *ApiClient) CreateMediaFile(
 	ctx context.Context,
 	site string,
 	d *MediaFile,
@@ -27,7 +27,7 @@ func (c *Client) CreateMediaFile(
 	return c.createMediaFile(ctx, site, d)
 }
 
-func (c *Client) UpdateMediaFile(
+func (c *ApiClient) UpdateMediaFile(
 	ctx context.Context,
 	site string,
 	d *MediaFile,

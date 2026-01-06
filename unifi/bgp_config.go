@@ -16,31 +16,11 @@ var (
 	_ json.Marshaler
 )
 
-// type BGPConfig struct {
-// 	ID     string `json:"_id,omitempty"`
-// 	SiteID string `json:"site_id,omitempty"`
-
-// 	Enabled        bool   `json:"enabled"`
-// 	Config         string `json:"frr_bgpd_config,omitempty"`
-// 	UploadFileName string `json:"uploaded_file_name,omitempty"`
-// 	Description    string `json:"description,omitempty"`
-// }
-
-func (c *Client) GetBGPConfig(ctx context.Context, site string) (*BGPConfig, error) {
-	var respBody []BGPConfig
-
-	err := c.do(ctx, "GET", fmt.Sprintf("v2/api/site/%s/bgp/config", site), nil, &respBody)
-	if err != nil {
-		return nil, err
-	}
-	if len(respBody) == 0 {
-		return nil, fmt.Errorf("no BGP config found for site %s", site)
-	}
-
-	return &respBody[0], nil
+func (c *ApiClient) GetBGPConfig(ctx context.Context, site string) (*BGPConfig, error) {
+	return c.getBGPConfig(ctx, site)
 }
 
-func (c *Client) CreateBGPConfig(
+func (c *ApiClient) CreateBGPConfig(
 	ctx context.Context,
 	site string,
 	d *BGPConfig,
@@ -48,7 +28,7 @@ func (c *Client) CreateBGPConfig(
 	return c.createBGPConfig(ctx, site, d)
 }
 
-func (c *Client) UpdateBGPConfig(
+func (c *ApiClient) UpdateBGPConfig(
 	ctx context.Context,
 	site string,
 	d *BGPConfig,
@@ -56,10 +36,6 @@ func (c *Client) UpdateBGPConfig(
 	return c.createBGPConfig(ctx, site, d)
 }
 
-func (c *Client) DeleteBGPConfig(ctx context.Context, site string) error {
-	err := c.do(ctx, "DELETE", fmt.Sprintf("v2/api/site/%s/bgp/config", site), struct{}{}, nil)
-	if err != nil {
-		return err
-	}
-	return nil
+func (c *ApiClient) DeleteBGPConfig(ctx context.Context, site string) error {
+	return c.deleteBGPConfig(ctx, site)
 }

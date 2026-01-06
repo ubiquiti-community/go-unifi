@@ -10,19 +10,19 @@ type FirewallRuleIndexUpdate struct {
 	RuleIndex int    `json:"rule_index,string"`
 }
 
-func (c *Client) ListFirewallRule(ctx context.Context, site string) ([]FirewallRule, error) {
+func (c *ApiClient) ListFirewallRule(ctx context.Context, site string) ([]FirewallRule, error) {
 	return c.listFirewallRule(ctx, site)
 }
 
-func (c *Client) GetFirewallRule(ctx context.Context, site, id string) (*FirewallRule, error) {
+func (c *ApiClient) GetFirewallRule(ctx context.Context, site, id string) (*FirewallRule, error) {
 	return c.getFirewallRule(ctx, site, id)
 }
 
-func (c *Client) DeleteFirewallRule(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteFirewallRule(ctx context.Context, site, id string) error {
 	return c.deleteFirewallRule(ctx, site, id)
 }
 
-func (c *Client) CreateFirewallRule(
+func (c *ApiClient) CreateFirewallRule(
 	ctx context.Context,
 	site string,
 	d *FirewallRule,
@@ -30,7 +30,7 @@ func (c *Client) CreateFirewallRule(
 	return c.createFirewallRule(ctx, site, d)
 }
 
-func (c *Client) UpdateFirewallRule(
+func (c *ApiClient) UpdateFirewallRule(
 	ctx context.Context,
 	site string,
 	d *FirewallRule,
@@ -38,7 +38,7 @@ func (c *Client) UpdateFirewallRule(
 	return c.updateFirewallRule(ctx, site, d)
 }
 
-func (c *Client) ReorderFirewallRules(
+func (c *ApiClient) ReorderFirewallRules(
 	ctx context.Context,
 	site, ruleset string,
 	reorder []FirewallRuleIndexUpdate,

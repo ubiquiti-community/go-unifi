@@ -81,7 +81,7 @@ func (dst *PortForwardDestinationIPs) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listPortForward(ctx context.Context, site string) ([]PortForward, error) {
+func (c *ApiClient) listPortForward(ctx context.Context, site string) ([]PortForward, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortForward `json:"data"`
@@ -100,7 +100,7 @@ func (c *Client) listPortForward(ctx context.Context, site string) ([]PortForwar
 	return respBody.Data, nil
 }
 
-func (c *Client) getPortForward(
+func (c *ApiClient) getPortForward(
 	ctx context.Context,
 	site string,
 	id string,
@@ -119,7 +119,6 @@ func (c *Client) getPortForward(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -128,7 +127,7 @@ func (c *Client) getPortForward(
 	return &d, nil
 }
 
-func (c *Client) deletePortForward(
+func (c *ApiClient) deletePortForward(
 	ctx context.Context,
 	site string,
 	id string,
@@ -146,7 +145,7 @@ func (c *Client) deletePortForward(
 	return nil
 }
 
-func (c *Client) createPortForward(
+func (c *ApiClient) createPortForward(
 	ctx context.Context,
 	site string,
 	d *PortForward,
@@ -176,7 +175,7 @@ func (c *Client) createPortForward(
 	return &res, nil
 }
 
-func (c *Client) updatePortForward(
+func (c *ApiClient) updatePortForward(
 	ctx context.Context,
 	site string,
 	d *PortForward,

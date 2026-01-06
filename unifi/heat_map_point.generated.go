@@ -51,7 +51,7 @@ func (dst *HeatMapPoint) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listHeatMapPoint(ctx context.Context, site string) ([]HeatMapPoint, error) {
+func (c *ApiClient) listHeatMapPoint(ctx context.Context, site string) ([]HeatMapPoint, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
 		Data []HeatMapPoint `json:"data"`
@@ -70,7 +70,7 @@ func (c *Client) listHeatMapPoint(ctx context.Context, site string) ([]HeatMapPo
 	return respBody.Data, nil
 }
 
-func (c *Client) getHeatMapPoint(
+func (c *ApiClient) getHeatMapPoint(
 	ctx context.Context,
 	site string,
 	id string,
@@ -89,7 +89,6 @@ func (c *Client) getHeatMapPoint(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -98,7 +97,7 @@ func (c *Client) getHeatMapPoint(
 	return &d, nil
 }
 
-func (c *Client) deleteHeatMapPoint(
+func (c *ApiClient) deleteHeatMapPoint(
 	ctx context.Context,
 	site string,
 	id string,
@@ -116,7 +115,7 @@ func (c *Client) deleteHeatMapPoint(
 	return nil
 }
 
-func (c *Client) createHeatMapPoint(
+func (c *ApiClient) createHeatMapPoint(
 	ctx context.Context,
 	site string,
 	d *HeatMapPoint,
@@ -146,7 +145,7 @@ func (c *Client) createHeatMapPoint(
 	return &res, nil
 }
 
-func (c *Client) updateHeatMapPoint(
+func (c *ApiClient) updateHeatMapPoint(
 	ctx context.Context,
 	site string,
 	d *HeatMapPoint,

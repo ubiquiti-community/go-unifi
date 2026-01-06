@@ -6,7 +6,7 @@ import (
 	"slices"
 )
 
-func (c *Client) DeleteNetwork(ctx context.Context, site, id, name string) error {
+func (c *ApiClient) DeleteNetwork(ctx context.Context, site, id, name string) error {
 	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/networkconf/%s", site, id), struct {
 		Name string `json:"name"`
 	}{
@@ -18,15 +18,15 @@ func (c *Client) DeleteNetwork(ctx context.Context, site, id, name string) error
 	return nil
 }
 
-func (c *Client) ListNetwork(ctx context.Context, site string) ([]Network, error) {
+func (c *ApiClient) ListNetwork(ctx context.Context, site string) ([]Network, error) {
 	return c.listNetwork(ctx, site)
 }
 
-func (c *Client) GetNetwork(ctx context.Context, site, id string) (*Network, error) {
+func (c *ApiClient) GetNetwork(ctx context.Context, site, id string) (*Network, error) {
 	return c.getNetwork(ctx, site, id)
 }
 
-func (c *Client) GetNetworkByName(ctx context.Context, site, name string) (*Network, error) {
+func (c *ApiClient) GetNetworkByName(ctx context.Context, site, name string) (*Network, error) {
 	networks, err := c.listNetwork(ctx, site)
 	if err != nil {
 		return nil, err
@@ -41,10 +41,10 @@ func (c *Client) GetNetworkByName(ctx context.Context, site, name string) (*Netw
 	return &network, nil
 }
 
-func (c *Client) CreateNetwork(ctx context.Context, site string, d *Network) (*Network, error) {
+func (c *ApiClient) CreateNetwork(ctx context.Context, site string, d *Network) (*Network, error) {
 	return c.createNetwork(ctx, site, d)
 }
 
-func (c *Client) UpdateNetwork(ctx context.Context, site string, d *Network) (*Network, error) {
+func (c *ApiClient) UpdateNetwork(ctx context.Context, site string, d *Network) (*Network, error) {
 	return c.updateNetwork(ctx, site, d)
 }

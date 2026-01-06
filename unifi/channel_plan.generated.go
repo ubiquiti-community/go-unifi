@@ -86,7 +86,7 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listChannelPlan(ctx context.Context, site string) ([]ChannelPlan, error) {
+func (c *ApiClient) listChannelPlan(ctx context.Context, site string) ([]ChannelPlan, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []ChannelPlan `json:"data"`
@@ -105,7 +105,7 @@ func (c *Client) listChannelPlan(ctx context.Context, site string) ([]ChannelPla
 	return respBody.Data, nil
 }
 
-func (c *Client) getChannelPlan(
+func (c *ApiClient) getChannelPlan(
 	ctx context.Context,
 	site string,
 	id string,
@@ -124,7 +124,6 @@ func (c *Client) getChannelPlan(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -133,7 +132,7 @@ func (c *Client) getChannelPlan(
 	return &d, nil
 }
 
-func (c *Client) deleteChannelPlan(
+func (c *ApiClient) deleteChannelPlan(
 	ctx context.Context,
 	site string,
 	id string,
@@ -151,7 +150,7 @@ func (c *Client) deleteChannelPlan(
 	return nil
 }
 
-func (c *Client) createChannelPlan(
+func (c *ApiClient) createChannelPlan(
 	ctx context.Context,
 	site string,
 	d *ChannelPlan,
@@ -181,7 +180,7 @@ func (c *Client) createChannelPlan(
 	return &res, nil
 }
 
-func (c *Client) updateChannelPlan(
+func (c *ApiClient) updateChannelPlan(
 	ctx context.Context,
 	site string,
 	d *ChannelPlan,

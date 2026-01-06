@@ -813,7 +813,7 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listDevice(ctx context.Context, site string) ([]Device, error) {
+func (c *ApiClient) listDevice(ctx context.Context, site string) ([]Device, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
 		Data []Device `json:"data"`
@@ -832,7 +832,7 @@ func (c *Client) listDevice(ctx context.Context, site string) ([]Device, error) 
 	return respBody.Data, nil
 }
 
-func (c *Client) getDevice(
+func (c *ApiClient) getDevice(
 	ctx context.Context,
 	site string,
 	id string,
@@ -851,7 +851,6 @@ func (c *Client) getDevice(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -860,7 +859,7 @@ func (c *Client) getDevice(
 	return &d, nil
 }
 
-func (c *Client) deleteDevice(
+func (c *ApiClient) deleteDevice(
 	ctx context.Context,
 	site string,
 	id string,
@@ -878,7 +877,7 @@ func (c *Client) deleteDevice(
 	return nil
 }
 
-func (c *Client) createDevice(
+func (c *ApiClient) createDevice(
 	ctx context.Context,
 	site string,
 	d *Device,
@@ -908,7 +907,7 @@ func (c *Client) createDevice(
 	return &res, nil
 }
 
-func (c *Client) updateDevice(
+func (c *ApiClient) updateDevice(
 	ctx context.Context,
 	site string,
 	d *Device,

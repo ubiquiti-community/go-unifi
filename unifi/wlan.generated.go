@@ -607,7 +607,7 @@ func (dst *WLANVenueName) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listWLAN(ctx context.Context, site string) ([]WLAN, error) {
+func (c *ApiClient) listWLAN(ctx context.Context, site string) ([]WLAN, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
 		Data []WLAN `json:"data"`
@@ -626,7 +626,7 @@ func (c *Client) listWLAN(ctx context.Context, site string) ([]WLAN, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getWLAN(
+func (c *ApiClient) getWLAN(
 	ctx context.Context,
 	site string,
 	id string,
@@ -645,7 +645,6 @@ func (c *Client) getWLAN(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -654,7 +653,7 @@ func (c *Client) getWLAN(
 	return &d, nil
 }
 
-func (c *Client) deleteWLAN(
+func (c *ApiClient) deleteWLAN(
 	ctx context.Context,
 	site string,
 	id string,
@@ -672,7 +671,7 @@ func (c *Client) deleteWLAN(
 	return nil
 }
 
-func (c *Client) createWLAN(
+func (c *ApiClient) createWLAN(
 	ctx context.Context,
 	site string,
 	d *WLAN,
@@ -702,7 +701,7 @@ func (c *Client) createWLAN(
 	return &res, nil
 }
 
-func (c *Client) updateWLAN(
+func (c *ApiClient) updateWLAN(
 	ctx context.Context,
 	site string,
 	d *WLAN,

@@ -47,7 +47,7 @@ func (dst *MediaFile) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listMediaFile(ctx context.Context, site string) ([]MediaFile, error) {
+func (c *ApiClient) listMediaFile(ctx context.Context, site string) ([]MediaFile, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []MediaFile `json:"data"`
@@ -66,7 +66,7 @@ func (c *Client) listMediaFile(ctx context.Context, site string) ([]MediaFile, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getMediaFile(
+func (c *ApiClient) getMediaFile(
 	ctx context.Context,
 	site string,
 	id string,
@@ -85,7 +85,6 @@ func (c *Client) getMediaFile(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -94,7 +93,7 @@ func (c *Client) getMediaFile(
 	return &d, nil
 }
 
-func (c *Client) deleteMediaFile(
+func (c *ApiClient) deleteMediaFile(
 	ctx context.Context,
 	site string,
 	id string,
@@ -112,7 +111,7 @@ func (c *Client) deleteMediaFile(
 	return nil
 }
 
-func (c *Client) createMediaFile(
+func (c *ApiClient) createMediaFile(
 	ctx context.Context,
 	site string,
 	d *MediaFile,
@@ -142,7 +141,7 @@ func (c *Client) createMediaFile(
 	return &res, nil
 }
 
-func (c *Client) updateMediaFile(
+func (c *ApiClient) updateMediaFile(
 	ctx context.Context,
 	site string,
 	d *MediaFile,

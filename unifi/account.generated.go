@@ -69,7 +69,7 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listAccount(ctx context.Context, site string) ([]Account, error) {
+func (c *ApiClient) listAccount(ctx context.Context, site string) ([]Account, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Account `json:"data"`
@@ -88,7 +88,7 @@ func (c *Client) listAccount(ctx context.Context, site string) ([]Account, error
 	return respBody.Data, nil
 }
 
-func (c *Client) getAccount(
+func (c *ApiClient) getAccount(
 	ctx context.Context,
 	site string,
 	id string,
@@ -107,7 +107,6 @@ func (c *Client) getAccount(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -116,7 +115,7 @@ func (c *Client) getAccount(
 	return &d, nil
 }
 
-func (c *Client) deleteAccount(
+func (c *ApiClient) deleteAccount(
 	ctx context.Context,
 	site string,
 	id string,
@@ -134,7 +133,7 @@ func (c *Client) deleteAccount(
 	return nil
 }
 
-func (c *Client) createAccount(
+func (c *ApiClient) createAccount(
 	ctx context.Context,
 	site string,
 	d *Account,
@@ -164,7 +163,7 @@ func (c *Client) createAccount(
 	return &res, nil
 }
 
-func (c *Client) updateAccount(
+func (c *ApiClient) updateAccount(
 	ctx context.Context,
 	site string,
 	d *Account,

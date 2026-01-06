@@ -14,7 +14,7 @@ type Setting struct {
 	Key    string `json:"key"`
 }
 
-func GetSetting[T settings.Setting](c *Client, ctx context.Context, site string) (*Setting, T, error) {
+func GetSetting[T settings.Setting](c *ApiClient, ctx context.Context, site string) (*Setting, T, error) {
 	// Create a zero value of T to determine the key
 	var zeroValue T
 	key, err := settings.GetSettingKey(zeroValue)
@@ -64,7 +64,7 @@ func GetSetting[T settings.Setting](c *Client, ctx context.Context, site string)
 
 // ListSettings retrieves all settings for a site
 // The endpoint returns an array of all setting objects identified by their 'key' attribute.
-func (c *Client) ListSettings(ctx context.Context, site string) ([]settings.RawSetting, error) {
+func (c *ApiClient) ListSettings(ctx context.Context, site string) ([]settings.RawSetting, error) {
 	var respBody struct {
 		Meta meta                  `json:"meta"`
 		Data []settings.RawSetting `json:"data"`
@@ -86,7 +86,7 @@ func (c *Client) ListSettings(ctx context.Context, site string) ([]settings.RawS
 
 // UpdateSetting updates a setting using the appropriate endpoint based on the setting type
 // The setting's Key field will be automatically set based on the type.
-func (c *Client) UpdateSetting(ctx context.Context, site string, setting settings.Setting) error {
+func (c *ApiClient) UpdateSetting(ctx context.Context, site string, setting settings.Setting) error {
 	// Determine the key from the setting type
 	key, err := settings.GetSettingKey(setting)
 	if err != nil {

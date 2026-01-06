@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListRADIUSProfile(ctx context.Context, site string) ([]RADIUSProfile, error) {
+func (c *ApiClient) ListRADIUSProfile(ctx context.Context, site string) ([]RADIUSProfile, error) {
 	return c.listRADIUSProfile(ctx, site)
 }
 
-func (c *Client) GetRADIUSProfile(ctx context.Context, site, id string) (*RADIUSProfile, error) {
+func (c *ApiClient) GetRADIUSProfile(ctx context.Context, site, id string) (*RADIUSProfile, error) {
 	return c.getRADIUSProfile(ctx, site, id)
 }
 
-func (c *Client) DeleteRADIUSProfile(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteRADIUSProfile(ctx context.Context, site, id string) error {
 	return c.deleteRADIUSProfile(ctx, site, id)
 }
 
-func (c *Client) CreateRADIUSProfile(
+func (c *ApiClient) CreateRADIUSProfile(
 	ctx context.Context,
 	site string,
 	d *RADIUSProfile,
@@ -27,7 +27,7 @@ func (c *Client) CreateRADIUSProfile(
 	return c.createRADIUSProfile(ctx, site, d)
 }
 
-func (c *Client) UpdateRADIUSProfile(
+func (c *ApiClient) UpdateRADIUSProfile(
 	ctx context.Context,
 	site string,
 	d *RADIUSProfile,

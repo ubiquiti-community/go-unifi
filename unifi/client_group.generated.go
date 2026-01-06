@@ -19,7 +19,7 @@ var (
 	_ types.Number
 )
 
-type UserGroup struct {
+type ClientGroup struct {
 	ID     string `json:"_id,omitempty"`
 	SiteID string `json:"site_id,omitempty"`
 
@@ -33,8 +33,8 @@ type UserGroup struct {
 	QOSRateMaxUp   int    `json:"qos_rate_max_up,omitempty"`   // -1|[2-9]|[1-9][0-9]{1,4}|100000
 }
 
-func (dst *UserGroup) UnmarshalJSON(b []byte) error {
-	type Alias UserGroup
+func (dst *ClientGroup) UnmarshalJSON(b []byte) error {
+	type Alias ClientGroup
 	aux := &struct {
 		QOSRateMaxDown types.Number `json:"qos_rate_max_down"`
 		QOSRateMaxUp   types.Number `json:"qos_rate_max_up"`
@@ -58,10 +58,10 @@ func (dst *UserGroup) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listUserGroup(ctx context.Context, site string) ([]UserGroup, error) {
+func (c *ApiClient) listClientGroup(ctx context.Context, site string) ([]ClientGroup, error) {
 	var respBody struct {
-		Meta meta        `json:"meta"`
-		Data []UserGroup `json:"data"`
+		Meta meta          `json:"meta"`
+		Data []ClientGroup `json:"data"`
 	}
 
 	err := c.do(
@@ -77,14 +77,14 @@ func (c *Client) listUserGroup(ctx context.Context, site string) ([]UserGroup, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getUserGroup(
+func (c *ApiClient) getClientGroup(
 	ctx context.Context,
 	site string,
 	id string,
-) (*UserGroup, error) {
+) (*ClientGroup, error) {
 	var respBody struct {
-		Meta meta        `json:"meta"`
-		Data []UserGroup `json:"data"`
+		Meta meta          `json:"meta"`
+		Data []ClientGroup `json:"data"`
 	}
 	err := c.do(
 		ctx,
@@ -96,7 +96,6 @@ func (c *Client) getUserGroup(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -105,7 +104,7 @@ func (c *Client) getUserGroup(
 	return &d, nil
 }
 
-func (c *Client) deleteUserGroup(
+func (c *ApiClient) deleteClientGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -123,14 +122,14 @@ func (c *Client) deleteUserGroup(
 	return nil
 }
 
-func (c *Client) createUserGroup(
+func (c *ApiClient) createClientGroup(
 	ctx context.Context,
 	site string,
-	d *UserGroup,
-) (*UserGroup, error) {
+	d *ClientGroup,
+) (*ClientGroup, error) {
 	var respBody struct {
-		Meta meta        `json:"meta"`
-		Data []UserGroup `json:"data"`
+		Meta meta          `json:"meta"`
+		Data []ClientGroup `json:"data"`
 	}
 
 	err := c.do(
@@ -153,14 +152,14 @@ func (c *Client) createUserGroup(
 	return &res, nil
 }
 
-func (c *Client) updateUserGroup(
+func (c *ApiClient) updateClientGroup(
 	ctx context.Context,
 	site string,
-	d *UserGroup,
-) (*UserGroup, error) {
+	d *ClientGroup,
+) (*ClientGroup, error) {
 	var respBody struct {
-		Meta meta        `json:"meta"`
-		Data []UserGroup `json:"data"`
+		Meta meta          `json:"meta"`
+		Data []ClientGroup `json:"data"`
 	}
 	err := c.do(
 		ctx,

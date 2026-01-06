@@ -27,44 +27,31 @@ import (
 )
 
 {{ if ne .StructName "BGPConfig" }}
-func (c *Client) List{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
+func (c *ApiClient) List{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
   return c.list{{ .StructName }}(ctx, site)
 }
 {{- end }}
 
-func (c *Client) Get{{ .StructName }}(ctx context.Context, site{{ if not .IsSetting }}, id{{ end }} string) (*{{ .StructName }}, error) {
-{{- if .IsV2 }}
-	respBody, err := c.list{{ .StructName }}(ctx, site)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(respBody) == 0 {
-		return nil, &NotFoundError{}
-	}
-
-	for _, val := range respBody {
-		if val.ID == id {
-			return &val, nil
-		}
-	}
-
-	return nil, &NotFoundError{}
-{{- else }}
-	return c.get{{ .StructName }}(ctx, site{{ if not .IsSetting }}, id{{ end }})
+func (c *ApiClient) Get{{ .StructName }}(
+	ctx context.Context,
+	site,
+{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
+	id string,
 {{- end }}
+) (*{{ .StructName }}, error) {
+	return c.get{{ .StructName }}(ctx, site{{ if and (not .IsSetting) (ne .StructName "BGPConfig") }}, id{{ end }})
+}
+
+func (c *ApiClient) Delete{{ .StructName }}(ctx context.Context, site{{ if ne .StructName "BGPConfig" }}, id string{{ end }}) error {
+  return c.delete{{ .StructName }}(ctx, site{{ if ne .StructName "BGPConfig" }}, id{{ end }})
 }
 
 {{ if ne .StructName "BGPConfig" }}
-func (c *Client) Delete{{ .StructName }}(ctx context.Context, site, id string) error {
-  return c.delete{{ .StructName }}(ctx, site, id)
-}
-
-func (c *Client) Create{{ .StructName }}(ctx context.Context, site string, d *{{ .StructName }}) (*{{ .StructName }}, error) {
+func (c *ApiClient) Create{{ .StructName }}(ctx context.Context, site string, d *{{ .StructName }}) (*{{ .StructName }}, error) {
   return c.create{{ .StructName }}(ctx, site, d)
 }
 {{- end }}
 
-func (c *Client) Update{{ .StructName }}(ctx context.Context, site string, d *{{ .StructName }}) (*{{ .StructName }}, error) {
+func (c *ApiClient) Update{{ .StructName }}(ctx context.Context, site string, d *{{ .StructName }}) (*{{ .StructName }}, error) {
   return c.update{{ .StructName }}(ctx, site, d)
 }

@@ -4,19 +4,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListPortProfile(ctx context.Context, site string) ([]PortProfile, error) {
+func (c *ApiClient) ListPortProfile(ctx context.Context, site string) ([]PortProfile, error) {
 	return c.listPortProfile(ctx, site)
 }
 
-func (c *Client) GetPortProfile(ctx context.Context, site, id string) (*PortProfile, error) {
+func (c *ApiClient) GetPortProfile(ctx context.Context, site, id string) (*PortProfile, error) {
 	return c.getPortProfile(ctx, site, id)
 }
 
-func (c *Client) DeletePortProfile(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeletePortProfile(ctx context.Context, site, id string) error {
 	return c.deletePortProfile(ctx, site, id)
 }
 
-func (c *Client) CreatePortProfile(
+func (c *ApiClient) CreatePortProfile(
 	ctx context.Context,
 	site string,
 	d *PortProfile,
@@ -24,7 +24,7 @@ func (c *Client) CreatePortProfile(
 	return c.createPortProfile(ctx, site, d)
 }
 
-func (c *Client) UpdatePortProfile(
+func (c *ApiClient) UpdatePortProfile(
 	ctx context.Context,
 	site string,
 	d *PortProfile,

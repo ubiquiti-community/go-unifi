@@ -49,7 +49,7 @@ func (dst *HotspotOp) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listHotspotOp(ctx context.Context, site string) ([]HotspotOp, error) {
+func (c *ApiClient) listHotspotOp(ctx context.Context, site string) ([]HotspotOp, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []HotspotOp `json:"data"`
@@ -68,7 +68,7 @@ func (c *Client) listHotspotOp(ctx context.Context, site string) ([]HotspotOp, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getHotspotOp(
+func (c *ApiClient) getHotspotOp(
 	ctx context.Context,
 	site string,
 	id string,
@@ -87,7 +87,6 @@ func (c *Client) getHotspotOp(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -96,7 +95,7 @@ func (c *Client) getHotspotOp(
 	return &d, nil
 }
 
-func (c *Client) deleteHotspotOp(
+func (c *ApiClient) deleteHotspotOp(
 	ctx context.Context,
 	site string,
 	id string,
@@ -114,7 +113,7 @@ func (c *Client) deleteHotspotOp(
 	return nil
 }
 
-func (c *Client) createHotspotOp(
+func (c *ApiClient) createHotspotOp(
 	ctx context.Context,
 	site string,
 	d *HotspotOp,
@@ -144,7 +143,7 @@ func (c *Client) createHotspotOp(
 	return &res, nil
 }
 
-func (c *Client) updateHotspotOp(
+func (c *ApiClient) updateHotspotOp(
 	ctx context.Context,
 	site string,
 	d *HotspotOp,

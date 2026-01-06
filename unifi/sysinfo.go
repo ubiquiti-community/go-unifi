@@ -66,7 +66,7 @@ type sysInfo struct {
 	*/
 }
 
-func (c *Client) sysinfo(ctx context.Context, id string) (*sysInfo, error) {
+func (c *ApiClient) sysinfo(ctx context.Context, id string) (*sysInfo, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []sysInfo `json:"data"`

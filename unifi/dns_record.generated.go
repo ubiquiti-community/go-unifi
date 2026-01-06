@@ -71,7 +71,7 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, error) {
+func (c *ApiClient) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, error) {
 	var respBody []DNSRecord
 
 	err := c.do(
@@ -87,35 +87,30 @@ func (c *Client) listDNSRecord(ctx context.Context, site string) ([]DNSRecord, e
 	return respBody, nil
 }
 
-func (c *Client) getDNSRecord(
+func (c *ApiClient) getDNSRecord(
 	ctx context.Context,
 	site string,
 	id string,
 ) (*DNSRecord, error) {
-	var respBody struct {
-		Meta meta        `json:"meta"`
-		Data []DNSRecord `json:"data"`
-	}
-	err := c.do(
-		ctx,
-		"GET",
-		fmt.Sprintf("api/s/%s/rest/static-dns/%s", site, id),
-		nil,
-		&respBody,
-	)
+	respBody, err := c.listDNSRecord(ctx, site)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(respBody.Data) != 1 {
+	if len(respBody) == 0 {
 		return nil, &NotFoundError{}
 	}
 
-	d := respBody.Data[0]
-	return &d, nil
+	for _, val := range respBody {
+		if val.ID == id {
+			return &val, nil
+		}
+	}
+
+	return nil, &NotFoundError{}
 }
 
-func (c *Client) deleteDNSRecord(
+func (c *ApiClient) deleteDNSRecord(
 	ctx context.Context,
 	site string,
 	id string,
@@ -133,7 +128,7 @@ func (c *Client) deleteDNSRecord(
 	return nil
 }
 
-func (c *Client) createDNSRecord(
+func (c *ApiClient) createDNSRecord(
 	ctx context.Context,
 	site string,
 	d *DNSRecord,
@@ -154,7 +149,7 @@ func (c *Client) createDNSRecord(
 	return &respBody, nil
 }
 
-func (c *Client) updateDNSRecord(
+func (c *ApiClient) updateDNSRecord(
 	ctx context.Context,
 	site string,
 	d *DNSRecord,

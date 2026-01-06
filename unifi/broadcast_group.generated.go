@@ -48,7 +48,7 @@ func (dst *BroadcastGroup) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listBroadcastGroup(ctx context.Context, site string) ([]BroadcastGroup, error) {
+func (c *ApiClient) listBroadcastGroup(ctx context.Context, site string) ([]BroadcastGroup, error) {
 	var respBody struct {
 		Meta meta             `json:"meta"`
 		Data []BroadcastGroup `json:"data"`
@@ -67,7 +67,7 @@ func (c *Client) listBroadcastGroup(ctx context.Context, site string) ([]Broadca
 	return respBody.Data, nil
 }
 
-func (c *Client) getBroadcastGroup(
+func (c *ApiClient) getBroadcastGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -86,7 +86,6 @@ func (c *Client) getBroadcastGroup(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -95,7 +94,7 @@ func (c *Client) getBroadcastGroup(
 	return &d, nil
 }
 
-func (c *Client) deleteBroadcastGroup(
+func (c *ApiClient) deleteBroadcastGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -113,7 +112,7 @@ func (c *Client) deleteBroadcastGroup(
 	return nil
 }
 
-func (c *Client) createBroadcastGroup(
+func (c *ApiClient) createBroadcastGroup(
 	ctx context.Context,
 	site string,
 	d *BroadcastGroup,
@@ -143,7 +142,7 @@ func (c *Client) createBroadcastGroup(
 	return &res, nil
 }
 
-func (c *Client) updateBroadcastGroup(
+func (c *ApiClient) updateBroadcastGroup(
 	ctx context.Context,
 	site string,
 	d *BroadcastGroup,

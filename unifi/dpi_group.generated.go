@@ -49,7 +49,7 @@ func (dst *DpiGroup) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listDpiGroup(ctx context.Context, site string) ([]DpiGroup, error) {
+func (c *ApiClient) listDpiGroup(ctx context.Context, site string) ([]DpiGroup, error) {
 	var respBody struct {
 		Meta meta       `json:"meta"`
 		Data []DpiGroup `json:"data"`
@@ -68,7 +68,7 @@ func (c *Client) listDpiGroup(ctx context.Context, site string) ([]DpiGroup, err
 	return respBody.Data, nil
 }
 
-func (c *Client) getDpiGroup(
+func (c *ApiClient) getDpiGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -87,7 +87,6 @@ func (c *Client) getDpiGroup(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -96,7 +95,7 @@ func (c *Client) getDpiGroup(
 	return &d, nil
 }
 
-func (c *Client) deleteDpiGroup(
+func (c *ApiClient) deleteDpiGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -114,7 +113,7 @@ func (c *Client) deleteDpiGroup(
 	return nil
 }
 
-func (c *Client) createDpiGroup(
+func (c *ApiClient) createDpiGroup(
 	ctx context.Context,
 	site string,
 	d *DpiGroup,
@@ -144,7 +143,7 @@ func (c *Client) createDpiGroup(
 	return &res, nil
 }
 
-func (c *Client) updateDpiGroup(
+func (c *ApiClient) updateDpiGroup(
 	ctx context.Context,
 	site string,
 	d *DpiGroup,

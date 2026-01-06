@@ -19,7 +19,7 @@ var (
 	_ types.Number
 )
 
-type User struct {
+type Client struct {
 	ID     string `json:"_id,omitempty"`
 	SiteID string `json:"site_id,omitempty"`
 
@@ -28,15 +28,12 @@ type User struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	DevIdOverride int    `json:"dev_id_override,omitempty"` // non-generated field
-	IP            string `json:"ip,omitempty"`              // non-generated field
-
-	Blocked                       bool     `json:"blocked,omitempty"`
+	Blocked                       string   `json:"blocked,omitempty"`
 	FixedApEnabled                bool     `json:"fixed_ap_enabled"`
 	FixedApMAC                    string   `json:"fixed_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	FixedIP                       string   `json:"fixed_ip,omitempty"`
 	Hostname                      string   `json:"hostname,omitempty"`
-	LastSeen                      int      `json:"last_seen,omitempty"`
+	LastSeen                      string   `json:"last_seen,omitempty"`
 	LocalDNSRecord                string   `json:"local_dns_record,omitempty"`
 	LocalDNSRecordEnabled         bool     `json:"local_dns_record_enabled"`
 	MAC                           string   `json:"mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
@@ -50,11 +47,9 @@ type User struct {
 	VirtualNetworkOverrideID      string   `json:"virtual_network_override_id,omitempty"`
 }
 
-func (dst *User) UnmarshalJSON(b []byte) error {
-	type Alias User
+func (dst *Client) UnmarshalJSON(b []byte) error {
+	type Alias Client
 	aux := &struct {
-		LastSeen types.Number `json:"last_seen"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -64,17 +59,14 @@ func (dst *User) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if val, err := aux.LastSeen.Int64(); err == nil {
-		dst.LastSeen = int(val)
-	}
 
 	return nil
 }
 
-func (c *Client) listUser(ctx context.Context, site string) ([]User, error) {
+func (c *ApiClient) listClient(ctx context.Context, site string) ([]Client, error) {
 	var respBody struct {
-		Meta meta   `json:"meta"`
-		Data []User `json:"data"`
+		Meta meta     `json:"meta"`
+		Data []Client `json:"data"`
 	}
 
 	err := c.do(
@@ -90,14 +82,14 @@ func (c *Client) listUser(ctx context.Context, site string) ([]User, error) {
 	return respBody.Data, nil
 }
 
-func (c *Client) getUser(
+func (c *ApiClient) getClient(
 	ctx context.Context,
 	site string,
 	id string,
-) (*User, error) {
+) (*Client, error) {
 	var respBody struct {
-		Meta meta   `json:"meta"`
-		Data []User `json:"data"`
+		Meta meta     `json:"meta"`
+		Data []Client `json:"data"`
 	}
 	err := c.do(
 		ctx,
@@ -109,7 +101,6 @@ func (c *Client) getUser(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -118,7 +109,7 @@ func (c *Client) getUser(
 	return &d, nil
 }
 
-func (c *Client) deleteUser(
+func (c *ApiClient) deleteClient(
 	ctx context.Context,
 	site string,
 	id string,
@@ -136,14 +127,14 @@ func (c *Client) deleteUser(
 	return nil
 }
 
-func (c *Client) createUser(
+func (c *ApiClient) createClient(
 	ctx context.Context,
 	site string,
-	d *User,
-) (*User, error) {
+	d *Client,
+) (*Client, error) {
 	var respBody struct {
-		Meta meta   `json:"meta"`
-		Data []User `json:"data"`
+		Meta meta     `json:"meta"`
+		Data []Client `json:"data"`
 	}
 
 	err := c.do(
@@ -166,14 +157,14 @@ func (c *Client) createUser(
 	return &res, nil
 }
 
-func (c *Client) updateUser(
+func (c *ApiClient) updateClient(
 	ctx context.Context,
 	site string,
-	d *User,
-) (*User, error) {
+	d *Client,
+) (*Client, error) {
 	var respBody struct {
-		Meta meta   `json:"meta"`
-		Data []User `json:"data"`
+		Meta meta     `json:"meta"`
+		Data []Client `json:"data"`
 	}
 	err := c.do(
 		ctx,

@@ -56,7 +56,7 @@ func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listDHCPOption(ctx context.Context, site string) ([]DHCPOption, error) {
+func (c *ApiClient) listDHCPOption(ctx context.Context, site string) ([]DHCPOption, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []DHCPOption `json:"data"`
@@ -75,7 +75,7 @@ func (c *Client) listDHCPOption(ctx context.Context, site string) ([]DHCPOption,
 	return respBody.Data, nil
 }
 
-func (c *Client) getDHCPOption(
+func (c *ApiClient) getDHCPOption(
 	ctx context.Context,
 	site string,
 	id string,
@@ -94,7 +94,6 @@ func (c *Client) getDHCPOption(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -103,7 +102,7 @@ func (c *Client) getDHCPOption(
 	return &d, nil
 }
 
-func (c *Client) deleteDHCPOption(
+func (c *ApiClient) deleteDHCPOption(
 	ctx context.Context,
 	site string,
 	id string,
@@ -121,7 +120,7 @@ func (c *Client) deleteDHCPOption(
 	return nil
 }
 
-func (c *Client) createDHCPOption(
+func (c *ApiClient) createDHCPOption(
 	ctx context.Context,
 	site string,
 	d *DHCPOption,
@@ -151,7 +150,7 @@ func (c *Client) createDHCPOption(
 	return &res, nil
 }
 
-func (c *Client) updateDHCPOption(
+func (c *ApiClient) updateDHCPOption(
 	ctx context.Context,
 	site string,
 	d *DHCPOption,

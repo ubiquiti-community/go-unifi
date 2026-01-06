@@ -54,7 +54,7 @@ func (dst *DynamicDNS) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listDynamicDNS(ctx context.Context, site string) ([]DynamicDNS, error) {
+func (c *ApiClient) listDynamicDNS(ctx context.Context, site string) ([]DynamicDNS, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
 		Data []DynamicDNS `json:"data"`
@@ -73,7 +73,7 @@ func (c *Client) listDynamicDNS(ctx context.Context, site string) ([]DynamicDNS,
 	return respBody.Data, nil
 }
 
-func (c *Client) getDynamicDNS(
+func (c *ApiClient) getDynamicDNS(
 	ctx context.Context,
 	site string,
 	id string,
@@ -92,7 +92,6 @@ func (c *Client) getDynamicDNS(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -101,7 +100,7 @@ func (c *Client) getDynamicDNS(
 	return &d, nil
 }
 
-func (c *Client) deleteDynamicDNS(
+func (c *ApiClient) deleteDynamicDNS(
 	ctx context.Context,
 	site string,
 	id string,
@@ -119,7 +118,7 @@ func (c *Client) deleteDynamicDNS(
 	return nil
 }
 
-func (c *Client) createDynamicDNS(
+func (c *ApiClient) createDynamicDNS(
 	ctx context.Context,
 	site string,
 	d *DynamicDNS,
@@ -149,7 +148,7 @@ func (c *Client) createDynamicDNS(
 	return &res, nil
 }
 
-func (c *Client) updateDynamicDNS(
+func (c *ApiClient) updateDynamicDNS(
 	ctx context.Context,
 	site string,
 	d *DynamicDNS,

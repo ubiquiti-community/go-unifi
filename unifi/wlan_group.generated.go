@@ -47,7 +47,7 @@ func (dst *WLANGroup) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listWLANGroup(ctx context.Context, site string) ([]WLANGroup, error) {
+func (c *ApiClient) listWLANGroup(ctx context.Context, site string) ([]WLANGroup, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
 		Data []WLANGroup `json:"data"`
@@ -66,7 +66,7 @@ func (c *Client) listWLANGroup(ctx context.Context, site string) ([]WLANGroup, e
 	return respBody.Data, nil
 }
 
-func (c *Client) getWLANGroup(
+func (c *ApiClient) getWLANGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -85,7 +85,6 @@ func (c *Client) getWLANGroup(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -94,7 +93,7 @@ func (c *Client) getWLANGroup(
 	return &d, nil
 }
 
-func (c *Client) deleteWLANGroup(
+func (c *ApiClient) deleteWLANGroup(
 	ctx context.Context,
 	site string,
 	id string,
@@ -112,7 +111,7 @@ func (c *Client) deleteWLANGroup(
 	return nil
 }
 
-func (c *Client) createWLANGroup(
+func (c *ApiClient) createWLANGroup(
 	ctx context.Context,
 	site string,
 	d *WLANGroup,
@@ -142,7 +141,7 @@ func (c *Client) createWLANGroup(
 	return &res, nil
 }
 
-func (c *Client) updateWLANGroup(
+func (c *ApiClient) updateWLANGroup(
 	ctx context.Context,
 	site string,
 	d *WLANGroup,

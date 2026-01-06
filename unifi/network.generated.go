@@ -552,7 +552,7 @@ func (dst *NetworkWANProviderCapabilities) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listNetwork(ctx context.Context, site string) ([]Network, error) {
+func (c *ApiClient) listNetwork(ctx context.Context, site string) ([]Network, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []Network `json:"data"`
@@ -571,7 +571,7 @@ func (c *Client) listNetwork(ctx context.Context, site string) ([]Network, error
 	return respBody.Data, nil
 }
 
-func (c *Client) getNetwork(
+func (c *ApiClient) getNetwork(
 	ctx context.Context,
 	site string,
 	id string,
@@ -590,7 +590,6 @@ func (c *Client) getNetwork(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -599,7 +598,7 @@ func (c *Client) getNetwork(
 	return &d, nil
 }
 
-func (c *Client) deleteNetwork(
+func (c *ApiClient) deleteNetwork(
 	ctx context.Context,
 	site string,
 	id string,
@@ -617,7 +616,7 @@ func (c *Client) deleteNetwork(
 	return nil
 }
 
-func (c *Client) createNetwork(
+func (c *ApiClient) createNetwork(
 	ctx context.Context,
 	site string,
 	d *Network,
@@ -647,7 +646,7 @@ func (c *Client) createNetwork(
 	return &res, nil
 }
 
-func (c *Client) updateNetwork(
+func (c *ApiClient) updateNetwork(
 	ctx context.Context,
 	site string,
 	d *Network,

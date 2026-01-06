@@ -50,43 +50,37 @@ func (dst *BGPConfig) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) getBGPConfig(
+func (c *ApiClient) getBGPConfig(
 	ctx context.Context,
 	site string,
-	id string,
 ) (*BGPConfig, error) {
-	var respBody struct {
-		Meta meta        `json:"meta"`
-		Data []BGPConfig `json:"data"`
-	}
+	var respBody []BGPConfig
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("api/s/%s/rest/bgp/config/%s", site, id),
+		fmt.Sprintf("v2/api/site/%s/bgp/config", site),
 		nil,
 		&respBody,
 	)
 	if err != nil {
 		return nil, err
 	}
-
-	if len(respBody.Data) != 1 {
+	if len(respBody) != 1 {
 		return nil, &NotFoundError{}
 	}
 
-	d := respBody.Data[0]
+	d := respBody[0]
 	return &d, nil
 }
 
-func (c *Client) deleteBGPConfig(
+func (c *ApiClient) deleteBGPConfig(
 	ctx context.Context,
 	site string,
-	id string,
 ) error {
 	err := c.do(
 		ctx,
 		"DELETE",
-		fmt.Sprintf("v2/api/site/%s/bgp/config/%s", site, id),
+		fmt.Sprintf("v2/api/site/%s/bgp/config", site),
 		struct{}{},
 		nil,
 	)
@@ -96,7 +90,7 @@ func (c *Client) deleteBGPConfig(
 	return nil
 }
 
-func (c *Client) createBGPConfig(
+func (c *ApiClient) createBGPConfig(
 	ctx context.Context,
 	site string,
 	d *BGPConfig,

@@ -54,7 +54,7 @@ func (err *APIError) Error() string {
 	return err.Message
 }
 
-type Client struct {
+type ApiClient struct {
 	// single thread client calls for CSRF, etc.
 	sync.Mutex
 
@@ -70,19 +70,19 @@ type Client struct {
 	version string
 }
 
-func (c *Client) CSRFToken() string {
+func (c *ApiClient) CSRFToken() string {
 	return c.csrf
 }
 
-func (c *Client) Version() string {
+func (c *ApiClient) Version() string {
 	return c.version
 }
 
-func (c *Client) SetAPIKey(apiKey string) {
+func (c *ApiClient) SetAPIKey(apiKey string) {
 	c.apiKey = apiKey
 }
 
-func (c *Client) SetBaseURL(base string) error {
+func (c *ApiClient) SetBaseURL(base string) error {
 	var err error
 	c.baseURL, err = url.Parse(base)
 	if err != nil {
@@ -97,12 +97,12 @@ func (c *Client) SetBaseURL(base string) error {
 	return nil
 }
 
-func (c *Client) SetHTTPClient(hc *retryablehttp.Client) error {
+func (c *ApiClient) SetHTTPClient(hc *retryablehttp.Client) error {
 	c.c = hc
 	return nil
 }
 
-func (c *Client) setAPIUrlStyle(ctx context.Context) error {
+func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
 	// check if new style API
 	// this is modified from the unifi-poller (https://github.com/unifi-poller/unifi) implementation.
 	// see https://github.com/unifi-poller/unifi/blob/4dc44f11f61a2e08bf7ec5b20c71d5bced837b5d/unifi.go#L101-L104
@@ -136,13 +136,17 @@ func (c *Client) setAPIUrlStyle(ctx context.Context) error {
 		return nil
 	}
 
-	// The old version returns a "302" (to /manage) for a / request
-	c.apiPath = "/"
-	c.loginPath = loginPath
-	return nil
+	if resp.StatusCode == http.StatusFound {
+		// The old version returns a "302" (to /manage) for a / request
+		c.apiPath = "/"
+		c.loginPath = loginPath
+		return nil
+	}
+
+	return errors.New("failed to get api url style")
 }
 
-func (c *Client) Login(ctx context.Context, user, pass string) error {
+func (c *ApiClient) Login(ctx context.Context, user, pass string) error {
 	if c.c == nil {
 		c.c = retryablehttp.NewClient()
 
@@ -201,7 +205,7 @@ func (c *Client) Login(ctx context.Context, user, pass string) error {
 	return nil
 }
 
-func (c *Client) do(
+func (c *ApiClient) do(
 	ctx context.Context,
 	method, relativeURL string,
 	reqBody any,

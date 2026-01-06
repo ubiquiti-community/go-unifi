@@ -7,19 +7,19 @@ import (
 	"context"
 )
 
-func (c *Client) ListScheduleTask(ctx context.Context, site string) ([]ScheduleTask, error) {
+func (c *ApiClient) ListScheduleTask(ctx context.Context, site string) ([]ScheduleTask, error) {
 	return c.listScheduleTask(ctx, site)
 }
 
-func (c *Client) GetScheduleTask(ctx context.Context, site, id string) (*ScheduleTask, error) {
+func (c *ApiClient) GetScheduleTask(ctx context.Context, site, id string) (*ScheduleTask, error) {
 	return c.getScheduleTask(ctx, site, id)
 }
 
-func (c *Client) DeleteScheduleTask(ctx context.Context, site, id string) error {
+func (c *ApiClient) DeleteScheduleTask(ctx context.Context, site, id string) error {
 	return c.deleteScheduleTask(ctx, site, id)
 }
 
-func (c *Client) CreateScheduleTask(
+func (c *ApiClient) CreateScheduleTask(
 	ctx context.Context,
 	site string,
 	d *ScheduleTask,
@@ -27,7 +27,7 @@ func (c *Client) CreateScheduleTask(
 	return c.createScheduleTask(ctx, site, d)
 }
 
-func (c *Client) UpdateScheduleTask(
+func (c *ApiClient) UpdateScheduleTask(
 	ctx context.Context,
 	site string,
 	d *ScheduleTask,

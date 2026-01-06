@@ -91,7 +91,7 @@ func (dst *SpatialRecordPosition) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *Client) listSpatialRecord(ctx context.Context, site string) ([]SpatialRecord, error) {
+func (c *ApiClient) listSpatialRecord(ctx context.Context, site string) ([]SpatialRecord, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
 		Data []SpatialRecord `json:"data"`
@@ -110,7 +110,7 @@ func (c *Client) listSpatialRecord(ctx context.Context, site string) ([]SpatialR
 	return respBody.Data, nil
 }
 
-func (c *Client) getSpatialRecord(
+func (c *ApiClient) getSpatialRecord(
 	ctx context.Context,
 	site string,
 	id string,
@@ -129,7 +129,6 @@ func (c *Client) getSpatialRecord(
 	if err != nil {
 		return nil, err
 	}
-
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
@@ -138,7 +137,7 @@ func (c *Client) getSpatialRecord(
 	return &d, nil
 }
 
-func (c *Client) deleteSpatialRecord(
+func (c *ApiClient) deleteSpatialRecord(
 	ctx context.Context,
 	site string,
 	id string,
@@ -156,7 +155,7 @@ func (c *Client) deleteSpatialRecord(
 	return nil
 }
 
-func (c *Client) createSpatialRecord(
+func (c *ApiClient) createSpatialRecord(
 	ctx context.Context,
 	site string,
 	d *SpatialRecord,
@@ -186,7 +185,7 @@ func (c *Client) createSpatialRecord(
 	return &res, nil
 }
 
-func (c *Client) updateSpatialRecord(
+func (c *ApiClient) updateSpatialRecord(
 	ctx context.Context,
 	site string,
 	d *SpatialRecord,
