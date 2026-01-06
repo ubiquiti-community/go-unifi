@@ -45,14 +45,7 @@ func (c *Client) CreateBGPConfig(
 	site string,
 	d *BGPConfig,
 ) (*BGPConfig, error) {
-	var respBody BGPConfig
-
-	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/bgp/config", site), d, &respBody)
-	if err != nil {
-		return nil, err
-	}
-
-	return &respBody, nil
+	return c.createBGPConfig(ctx, site, d)
 }
 
 func (c *Client) UpdateBGPConfig(
@@ -60,14 +53,7 @@ func (c *Client) UpdateBGPConfig(
 	site string,
 	d *BGPConfig,
 ) (*BGPConfig, error) {
-	var respBody BGPConfig
-
-	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/bgp/config", site), d, &respBody)
-	if err != nil {
-		return nil, err
-	}
-
-	return &respBody, nil
+	return c.createBGPConfig(ctx, site, d)
 }
 
 func (c *Client) DeleteBGPConfig(ctx context.Context, site string) error {

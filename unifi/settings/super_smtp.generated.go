@@ -16,6 +16,7 @@ var (
 	_ context.Context
 	_ fmt.Formatter
 	_ json.Marshaler
+	_ types.Number
 )
 
 type SuperSmtp struct {

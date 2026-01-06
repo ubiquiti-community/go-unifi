@@ -158,6 +158,8 @@ func NewResource(structName string, resourcePath string) *Resource {
 		}
 	case resource.StructName == "DNSRecord":
 		resource.ResourcePath = "static-dns"
+	case resource.StructName == "Network":
+		baseType.Fields["WANEgressQOSEnabled"] = NewFieldInfo("WANEgressQOSEnabled", "wan_egress_qos_enabled", "bool", "", true, false, false, "")
 	case resource.StructName == "Device":
 		baseType.Fields["PortTable"] = NewFieldInfo("PortTable", "port_table", "[]DevicePortTable", "", true, false, false, "")
 		baseType.Fields[" MAC"] = NewFieldInfo("MAC", "mac", "string", "", true, false, false, "")

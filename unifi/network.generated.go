@@ -16,6 +16,7 @@ var (
 	_ context.Context
 	_ fmt.Formatter
 	_ json.Marshaler
+	_ types.Number
 )
 
 type Network struct {
@@ -215,7 +216,8 @@ type Network struct {
 	WANDNSPreference                              string                          `json:"wan_dns_preference,omitempty"` // auto|manual
 	WANDsliteRemoteHost                           string                          `json:"wan_dslite_remote_host,omitempty"`
 	WANDsliteRemoteHostAuto                       bool                            `json:"wan_dslite_remote_host_auto"`
-	WANEgressQOS                                  int                             `json:"wan_egress_qos,omitempty"`          // [1-7]|^$
+	WANEgressQOS                                  int                             `json:"wan_egress_qos,omitempty"` // [1-7]|^$
+	WANEgressQOSEnabled                           bool                            `json:"wan_egress_qos_enabled,omitempty"`
 	WANFailoverPriority                           int                             `json:"wan_failover_priority,omitempty"`   // [1-9]
 	WANGateway                                    string                          `json:"wan_gateway,omitempty"`             // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 	WANGatewayV6                                  string                          `json:"wan_gateway_v6"`                    // ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$|^$
@@ -284,7 +286,7 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		IPV6RaPreferredLifetime        types.Number `json:"ipv6_ra_preferred_lifetime"`
 		IPV6RaValidLifetime            types.Number `json:"ipv6_ra_valid_lifetime"`
 		InterfaceMtu                   types.Number `json:"interface_mtu"`
-		InternetAccessEnabled          *bool       `json:"internet_access_enabled"`
+		InternetAccessEnabled          *bool        `json:"internet_access_enabled"`
 		LocalPort                      types.Number `json:"local_port"`
 		OpenVPNLocalPort               types.Number `json:"openvpn_local_port"`
 		OpenVPNRemotePort              types.Number `json:"openvpn_remote_port"`

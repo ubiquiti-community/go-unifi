@@ -16,6 +16,7 @@ var (
 	_ context.Context
 	_ fmt.Formatter
 	_ json.Marshaler
+	_ types.Number
 )
 
 type Device struct {
@@ -121,17 +122,17 @@ type Device struct {
 func (dst *Device) UnmarshalJSON(b []byte) error {
 	type Alias Device
 	aux := &struct {
-		GatewayVrrpPriority        types.Number    `json:"gateway_vrrp_priority"`
-		LcmBrightness              types.Number    `json:"lcm_brightness"`
-		LcmIDleTimeout             types.Number    `json:"lcm_idle_timeout"`
-		LcmOrientationOverride     types.Number    `json:"lcm_orientation_override"`
-		LedOverrideColorBrightness types.Number    `json:"led_override_color_brightness"`
-		LteHardLimit               types.Number    `json:"lte_hard_limit"`
-		LteSimPin                  types.Number    `json:"lte_sim_pin"`
-		LteSoftLimit               types.Number    `json:"lte_soft_limit"`
-		PowerSourceCtrlBudget      types.Number    `json:"power_source_ctrl_budget"`
+		GatewayVrrpPriority        types.Number `json:"gateway_vrrp_priority"`
+		LcmBrightness              types.Number `json:"lcm_brightness"`
+		LcmIDleTimeout             types.Number `json:"lcm_idle_timeout"`
+		LcmOrientationOverride     types.Number `json:"lcm_orientation_override"`
+		LedOverrideColorBrightness types.Number `json:"led_override_color_brightness"`
+		LteHardLimit               types.Number `json:"lte_hard_limit"`
+		LteSimPin                  types.Number `json:"lte_sim_pin"`
+		LteSoftLimit               types.Number `json:"lte_soft_limit"`
+		PowerSourceCtrlBudget      types.Number `json:"power_source_ctrl_budget"`
 		StpPriority                types.Number `json:"stp_priority"`
-		Volume                     types.Number    `json:"volume"`
+		Volume                     types.Number `json:"volume"`
 
 		*Alias
 	}{
@@ -169,7 +170,9 @@ func (dst *Device) UnmarshalJSON(b []byte) error {
 	if val, err := aux.PowerSourceCtrlBudget.Int64(); err == nil {
 		dst.PowerSourceCtrlBudget = int(val)
 	}
-	dst.StpPriority = string(aux.StpPriority)
+	if val, err := aux.StpPriority.Int64(); err == nil {
+		dst.StpPriority = string(val)
+	}
 	if val, err := aux.Volume.Int64(); err == nil {
 		dst.Volume = int(val)
 	}

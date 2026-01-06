@@ -16,6 +16,7 @@ var (
 	_ context.Context
 	_ fmt.Formatter
 	_ json.Marshaler
+	_ types.Number
 )
 
 type ChannelPlan struct {
@@ -61,7 +62,7 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	aux := &struct {
 		Channel types.Number `json:"channel"`
 		TxPower types.Number `json:"tx_power"`
-		Width   types.Number    `json:"width"`
+		Width   types.Number `json:"width"`
 
 		*Alias
 	}{
@@ -72,8 +73,12 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Channel = string(aux.Channel)
-	dst.TxPower = string(aux.TxPower)
+	if val, err := aux.Channel.Int64(); err == nil {
+		dst.Channel = string(val)
+	}
+	if val, err := aux.TxPower.Int64(); err == nil {
+		dst.TxPower = string(val)
+	}
 	if val, err := aux.Width.Int64(); err == nil {
 		dst.Width = int(val)
 	}
