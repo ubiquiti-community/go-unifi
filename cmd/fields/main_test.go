@@ -19,8 +19,8 @@ func TestFieldInfoFromValidation(t *testing.T) {
 		{"string", ".{0,32}", true, ".{0,32}"},
 		{"string", "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$", false, "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$"},
 
-		{"int", "^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$", true, "^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$"},
-		{"int", "", true, "^[0-9]*$"},
+		{"int64", "^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$", true, "^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$"},
+		{"int64", "", true, "^[0-9]*$"},
 
 		{"float64", "", true, "[-+]?[0-9]*\\.?[0-9]+"},
 		// this one is really an error as the . is not escaped
@@ -31,7 +31,7 @@ func TestFieldInfoFromValidation(t *testing.T) {
 		{"bool", "", false, "true|false"},
 	} {
 		t.Run(fmt.Sprintf("%d %s %s", i, c.expectedType, c.validation), func(t *testing.T) {
-			resource := &Resource{
+			resource := &ResourceInfo{
 				StructName:     "TestType",
 				Types:          make(map[string]*FieldInfo),
 				FieldProcessor: func(name string, f *FieldInfo) error { return nil },
@@ -75,7 +75,7 @@ func TestResourceTypes(t *testing.T) {
 		"Note":    NewFieldInfo("Note", "note", "string", ".{0,1024}", true, false, false, ""),
 		"Date":    NewFieldInfo("Date", "date", "string", "^$|^(20[0-9]{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])Z?$", false, false, false, ""),
 		"MAC":     NewFieldInfo("MAC", "mac", "string", "^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$", true, false, false, ""),
-		"Number":  NewFieldInfo("Number", "number", "int", "", true, false, false, "types.Number"),
+		"Number":  NewFieldInfo("Number", "number", "int64", "", true, false, false, "types.Number"),
 		"Boolean": NewFieldInfo("Boolean", "boolean", "bool", "", false, false, false, ""),
 		"NestedType": {
 			FieldName:       "NestedType",
@@ -127,7 +127,7 @@ func TestResourceTypes(t *testing.T) {
 		expectedStruct["Struct"].Fields[k] = v
 	}
 
-	expectation := &Resource{
+	expectation := &ResourceInfo{
 		StructName:   "Struct",
 		ResourcePath: "path",
 

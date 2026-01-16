@@ -29,8 +29,8 @@ type GuestAccess struct {
 	CustomIP                               string   `json:"custom_ip"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	EcEnabled                              bool     `json:"ec_enabled"`
 	Expire                                 string   `json:"expire,omitempty"`        // [\d]+|custom
-	ExpireNumber                           int      `json:"expire_number,omitempty"` // ^[1-9][0-9]{0,5}|1000000$
-	ExpireUnit                             int      `json:"expire_unit,omitempty"`   // 1|60|1440
+	ExpireNumber                           int64    `json:"expire_number,omitempty"` // ^[1-9][0-9]{0,5}|1000000$
+	ExpireUnit                             int64    `json:"expire_unit,omitempty"`   // 1|60|1440
 	FacebookAppID                          string   `json:"facebook_app_id,omitempty"`
 	FacebookEnabled                        bool     `json:"facebook_enabled"`
 	FacebookScopeEmail                     bool     `json:"facebook_scope_email"`
@@ -56,8 +56,8 @@ type GuestAccess struct {
 	PortalCustomizedBgType                 string   `json:"portal_customized_bg_type,omitempty"`     // color|image|gallery
 	PortalCustomizedBoxColor               string   `json:"portal_customized_box_color"`             // ^#[a-zA-Z0-9]{6}$|^#[a-zA-Z0-9]{3}$|^$
 	PortalCustomizedBoxLinkColor           string   `json:"portal_customized_box_link_color"`        // ^#[a-zA-Z0-9]{6}$|^#[a-zA-Z0-9]{3}$|^$
-	PortalCustomizedBoxOpacity             int      `json:"portal_customized_box_opacity,omitempty"` // ^[1-9][0-9]?$|^100$|^$
-	PortalCustomizedBoxRADIUS              int      `json:"portal_customized_box_radius,omitempty"`  // [0-9]|[1-4][0-9]|50
+	PortalCustomizedBoxOpacity             int64    `json:"portal_customized_box_opacity,omitempty"` // ^[1-9][0-9]?$|^100$|^$
+	PortalCustomizedBoxRADIUS              int64    `json:"portal_customized_box_radius,omitempty"`  // [0-9]|[1-4][0-9]|50
 	PortalCustomizedBoxTextColor           string   `json:"portal_customized_box_text_color"`        // ^#[a-zA-Z0-9]{6}$|^#[a-zA-Z0-9]{3}$|^$
 	PortalCustomizedButtonColor            string   `json:"portal_customized_button_color"`          // ^#[a-zA-Z0-9]{6}$|^#[a-zA-Z0-9]{3}$|^$
 	PortalCustomizedButtonText             string   `json:"portal_customized_button_text,omitempty"`
@@ -67,7 +67,7 @@ type GuestAccess struct {
 	PortalCustomizedLogoEnabled            bool     `json:"portal_customized_logo_enabled"`
 	PortalCustomizedLogoFilename           string   `json:"portal_customized_logo_filename,omitempty"`
 	PortalCustomizedLogoPosition           string   `json:"portal_customized_logo_position,omitempty"` // left|center|right
-	PortalCustomizedLogoSize               int      `json:"portal_customized_logo_size,omitempty"`     // 6[4-9]|[7-9][0-9]|1[0-8][0-9]|19[0-2]
+	PortalCustomizedLogoSize               int64    `json:"portal_customized_logo_size,omitempty"`     // 6[4-9]|[7-9][0-9]|1[0-8][0-9]|19[0-2]
 	PortalCustomizedSuccessText            string   `json:"portal_customized_success_text,omitempty"`
 	PortalCustomizedTextColor              string   `json:"portal_customized_text_color"` // ^#[a-zA-Z0-9]{6}$|^#[a-zA-Z0-9]{3}$|^$
 	PortalCustomizedTitle                  string   `json:"portal_customized_title,omitempty"`
@@ -84,7 +84,7 @@ type GuestAccess struct {
 	QuickpayTestmode                       bool     `json:"quickpay_testmode"`
 	RADIUSAuthType                         string   `json:"radius_auth_type,omitempty"` // chap|mschapv2
 	RADIUSDisconnectEnabled                bool     `json:"radius_disconnect_enabled"`
-	RADIUSDisconnectPort                   int      `json:"radius_disconnect_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
+	RADIUSDisconnectPort                   int64    `json:"radius_disconnect_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
 	RADIUSEnabled                          bool     `json:"radius_enabled"`
 	RADIUSProfileID                        string   `json:"radiusprofile_id,omitempty"`
 	RedirectEnabled                        bool     `json:"redirect_enabled"`
@@ -146,22 +146,22 @@ func (dst *GuestAccess) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.ExpireNumber.Int64(); err == nil {
-		dst.ExpireNumber = int(val)
+		dst.ExpireNumber = int64(val)
 	}
 	if val, err := aux.ExpireUnit.Int64(); err == nil {
-		dst.ExpireUnit = int(val)
+		dst.ExpireUnit = int64(val)
 	}
 	if val, err := aux.PortalCustomizedBoxOpacity.Int64(); err == nil {
-		dst.PortalCustomizedBoxOpacity = int(val)
+		dst.PortalCustomizedBoxOpacity = int64(val)
 	}
 	if val, err := aux.PortalCustomizedBoxRADIUS.Int64(); err == nil {
-		dst.PortalCustomizedBoxRADIUS = int(val)
+		dst.PortalCustomizedBoxRADIUS = int64(val)
 	}
 	if val, err := aux.PortalCustomizedLogoSize.Int64(); err == nil {
-		dst.PortalCustomizedLogoSize = int(val)
+		dst.PortalCustomizedLogoSize = int64(val)
 	}
 	if val, err := aux.RADIUSDisconnectPort.Int64(); err == nil {
-		dst.RADIUSDisconnectPort = int(val)
+		dst.RADIUSDisconnectPort = int64(val)
 	}
 
 	return nil

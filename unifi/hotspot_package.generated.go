@@ -32,12 +32,12 @@ type HotspotPackage struct {
 	ChargedAs                      string  `json:"charged_as,omitempty"`
 	Currency                       string  `json:"currency,omitempty"` // [A-Z]{3}
 	CustomPaymentFieldsEnabled     bool    `json:"custom_payment_fields_enabled"`
-	Hours                          int     `json:"hours,omitempty"`
-	Index                          int     `json:"index,omitempty"`
-	LimitDown                      int     `json:"limit_down,omitempty"`
+	Hours                          int64   `json:"hours,omitempty"`
+	Index                          int64   `json:"index,omitempty"`
+	LimitDown                      int64   `json:"limit_down,omitempty"`
 	LimitOverwrite                 bool    `json:"limit_overwrite"`
-	LimitQuota                     int     `json:"limit_quota,omitempty"`
-	LimitUp                        int     `json:"limit_up,omitempty"`
+	LimitQuota                     int64   `json:"limit_quota,omitempty"`
+	LimitUp                        int64   `json:"limit_up,omitempty"`
 	Name                           string  `json:"name,omitempty"`
 	PaymentFieldsAddressEnabled    bool    `json:"payment_fields_address_enabled"`
 	PaymentFieldsAddressRequired   bool    `json:"payment_fields_address_required"`
@@ -55,7 +55,7 @@ type HotspotPackage struct {
 	PaymentFieldsStateRequired     bool    `json:"payment_fields_state_required"`
 	PaymentFieldsZipEnabled        bool    `json:"payment_fields_zip_enabled"`
 	PaymentFieldsZipRequired       bool    `json:"payment_fields_zip_required"`
-	TrialDurationMinutes           int     `json:"trial_duration_minutes,omitempty"`
+	TrialDurationMinutes           int64   `json:"trial_duration_minutes,omitempty"`
 	TrialReset                     float64 `json:"trial_reset,omitempty"`
 }
 
@@ -79,22 +79,22 @@ func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Hours.Int64(); err == nil {
-		dst.Hours = int(val)
+		dst.Hours = int64(val)
 	}
 	if val, err := aux.Index.Int64(); err == nil {
-		dst.Index = int(val)
+		dst.Index = int64(val)
 	}
 	if val, err := aux.LimitDown.Int64(); err == nil {
-		dst.LimitDown = int(val)
+		dst.LimitDown = int64(val)
 	}
 	if val, err := aux.LimitQuota.Int64(); err == nil {
-		dst.LimitQuota = int(val)
+		dst.LimitQuota = int64(val)
 	}
 	if val, err := aux.LimitUp.Int64(); err == nil {
-		dst.LimitUp = int(val)
+		dst.LimitUp = int64(val)
 	}
 	if val, err := aux.TrialDurationMinutes.Int64(); err == nil {
-		dst.TrialDurationMinutes = int(val)
+		dst.TrialDurationMinutes = int64(val)
 	}
 
 	return nil

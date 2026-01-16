@@ -30,12 +30,12 @@ type DNSRecord struct {
 
 	Enabled    bool   `json:"enabled"`
 	Key        string `json:"key,omitempty"`         // .{1,128}
-	Port       int    `json:"port,omitempty"`        // [1-9][0-9]{0,4}
-	Priority   int    `json:"priority,omitempty"`    // .{1,128}
+	Port       int64  `json:"port,omitempty"`        // [1-9][0-9]{0,4}
+	Priority   int64  `json:"priority,omitempty"`    // .{1,128}
 	RecordType string `json:"record_type,omitempty"` // A|AAAA|CNAME|MX|NS|PTR|SOA|SRV|TXT
-	Ttl        int    `json:"ttl,omitempty"`
+	Ttl        int64  `json:"ttl,omitempty"`
 	Value      string `json:"value,omitempty"` // .{1,256}
-	Weight     int    `json:"weight,omitempty"`
+	Weight     int64  `json:"weight,omitempty"`
 }
 
 func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
@@ -56,16 +56,16 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int(val)
+		dst.Port = int64(val)
 	}
 	if val, err := aux.Priority.Int64(); err == nil {
-		dst.Priority = int(val)
+		dst.Priority = int64(val)
 	}
 	if val, err := aux.Ttl.Int64(); err == nil {
-		dst.Ttl = int(val)
+		dst.Ttl = int64(val)
 	}
 	if val, err := aux.Weight.Int64(); err == nil {
-		dst.Weight = int(val)
+		dst.Weight = int64(val)
 	}
 
 	return nil

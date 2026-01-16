@@ -28,14 +28,14 @@ type DpiApp struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	Apps           []int  `json:"apps,omitempty"`
-	Blocked        bool   `json:"blocked"`
-	Cats           []int  `json:"cats,omitempty"`
-	Enabled        bool   `json:"enabled"`
-	Log            bool   `json:"log"`
-	Name           string `json:"name,omitempty"`              // .{1,128}
-	QOSRateMaxDown int    `json:"qos_rate_max_down,omitempty"` // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
-	QOSRateMaxUp   int    `json:"qos_rate_max_up,omitempty"`   // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
+	Apps           []int64 `json:"apps,omitempty"`
+	Blocked        bool    `json:"blocked"`
+	Cats           []int64 `json:"cats,omitempty"`
+	Enabled        bool    `json:"enabled"`
+	Log            bool    `json:"log"`
+	Name           string  `json:"name,omitempty"`              // .{1,128}
+	QOSRateMaxDown int64   `json:"qos_rate_max_down,omitempty"` // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
+	QOSRateMaxUp   int64   `json:"qos_rate_max_up,omitempty"`   // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
 }
 
 func (dst *DpiApp) UnmarshalJSON(b []byte) error {
@@ -55,23 +55,23 @@ func (dst *DpiApp) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Apps = make([]int, len(aux.Apps))
+	dst.Apps = make([]int64, len(aux.Apps))
 	for i, v := range aux.Apps {
 		if val, err := v.Int64(); err == nil {
-			dst.Apps[i] = int(val)
+			dst.Apps[i] = int64(val)
 		}
 	}
-	dst.Cats = make([]int, len(aux.Cats))
+	dst.Cats = make([]int64, len(aux.Cats))
 	for i, v := range aux.Cats {
 		if val, err := v.Int64(); err == nil {
-			dst.Cats[i] = int(val)
+			dst.Cats[i] = int64(val)
 		}
 	}
 	if val, err := aux.QOSRateMaxDown.Int64(); err == nil {
-		dst.QOSRateMaxDown = int(val)
+		dst.QOSRateMaxDown = int64(val)
 	}
 	if val, err := aux.QOSRateMaxUp.Int64(); err == nil {
-		dst.QOSRateMaxUp = int(val)
+		dst.QOSRateMaxUp = int64(val)
 	}
 
 	return nil

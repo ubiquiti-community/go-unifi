@@ -13,7 +13,7 @@ func TestNetworkUnmarshalJSON(t *testing.T) {
 		expected func(n *unifi.Network)
 		json     string
 	}{
-		"int vlan": {
+		"int64 vlan": {
 			expected: func(n *unifi.Network) { n.VLAN = 1 },
 			json:     `{ "vlan": 1 }`,
 		},
@@ -26,7 +26,7 @@ func TestNetworkUnmarshalJSON(t *testing.T) {
 			json:     `{ "vlan": "" }`,
 		},
 
-		"int dhcpd_leasetime": {
+		"int64 dhcpd_leasetime": {
 			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = 1 },
 			json:     `{ "dhcpd_leasetime": 1 }`,
 		},
@@ -39,7 +39,7 @@ func TestNetworkUnmarshalJSON(t *testing.T) {
 			json:     `{ "dhcpd_leasetime": "" }`,
 		},
 
-		"int wan_egress_qos": {
+		"int64 wan_egress_qos": {
 			expected: func(n *unifi.Network) { n.WANEgressQOS = 1 },
 			json:     `{ "wan_egress_qos": 1 }`,
 		},
@@ -52,7 +52,7 @@ func TestNetworkUnmarshalJSON(t *testing.T) {
 			json:     `{ "wan_egress_qos": "" }`,
 		},
 
-		"int wan_vlan": {
+		"int64 wan_vlan": {
 			expected: func(n *unifi.Network) { n.WANVLAN = 1 },
 			json:     `{ "wan_vlan": 1 }`,
 		},

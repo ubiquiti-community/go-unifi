@@ -22,7 +22,7 @@ var (
 type Country struct {
 	BaseSetting
 
-	Code int `json:"code,omitempty"`
+	Code int64 `json:"code,omitempty"`
 }
 
 func (dst *Country) UnmarshalJSON(b []byte) error {
@@ -45,7 +45,7 @@ func (dst *Country) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Code.Int64(); err == nil {
-		dst.Code = int(val)
+		dst.Code = int64(val)
 	}
 
 	return nil

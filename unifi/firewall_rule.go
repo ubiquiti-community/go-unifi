@@ -7,7 +7,7 @@ import (
 
 type FirewallRuleIndexUpdate struct {
 	Id        string `json:"_id"`
-	RuleIndex int    `json:"rule_index,string"`
+	RuleIndex int64  `json:"rule_index,string"`
 }
 
 func (c *ApiClient) ListFirewallRule(ctx context.Context, site string) ([]FirewallRule, error) {

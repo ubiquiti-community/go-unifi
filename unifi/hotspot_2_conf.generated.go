@@ -28,34 +28,34 @@ type Hotspot2Conf struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	AnqpDomainID            int                                 `json:"anqp_domain_id,omitempty"` // ^0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]|$
+	AnqpDomainID            int64                               `json:"anqp_domain_id,omitempty"` // ^0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]|$
 	Capab                   []Hotspot2ConfCapab                 `json:"capab,omitempty"`
 	CellularNetworkList     []Hotspot2ConfCellularNetworkList   `json:"cellular_network_list,omitempty"`
-	DeauthReqTimeout        int                                 `json:"deauth_req_timeout,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9]|3[0-5][0-9][0-9]|3600
+	DeauthReqTimeout        int64                               `json:"deauth_req_timeout,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9]|3[0-5][0-9][0-9]|3600
 	DisableDgaf             bool                                `json:"disable_dgaf"`
 	DomainNameList          []string                            `json:"domain_name_list,omitempty"` // .{1,128}
 	FriendlyName            []Hotspot2ConfFriendlyName          `json:"friendly_name,omitempty"`
 	GasAdvanced             bool                                `json:"gas_advanced"`
-	GasComebackDelay        int                                 `json:"gas_comeback_delay,omitempty"`
-	GasFragLimit            int                                 `json:"gas_frag_limit,omitempty"`
+	GasComebackDelay        int64                               `json:"gas_comeback_delay,omitempty"`
+	GasFragLimit            int64                               `json:"gas_frag_limit,omitempty"`
 	Hessid                  string                              `json:"hessid"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$|^$
 	HessidUsed              bool                                `json:"hessid_used"`
-	IPaddrTypeAvailV4       int                                 `json:"ipaddr_type_avail_v4,omitempty"` // 0|1|2|3|4|5|6|7
-	IPaddrTypeAvailV6       int                                 `json:"ipaddr_type_avail_v6,omitempty"` // 0|1|2
+	IPaddrTypeAvailV4       int64                               `json:"ipaddr_type_avail_v4,omitempty"` // 0|1|2|3|4|5|6|7
+	IPaddrTypeAvailV6       int64                               `json:"ipaddr_type_avail_v6,omitempty"` // 0|1|2
 	Icons                   []Hotspot2ConfIcons                 `json:"icons,omitempty"`
-	MetricsDownlinkLoad     int                                 `json:"metrics_downlink_load,omitempty"`
+	MetricsDownlinkLoad     int64                               `json:"metrics_downlink_load,omitempty"`
 	MetricsDownlinkLoadSet  bool                                `json:"metrics_downlink_load_set"`
-	MetricsDownlinkSpeed    int                                 `json:"metrics_downlink_speed,omitempty"`
+	MetricsDownlinkSpeed    int64                               `json:"metrics_downlink_speed,omitempty"`
 	MetricsDownlinkSpeedSet bool                                `json:"metrics_downlink_speed_set"`
 	MetricsInfoAtCapacity   bool                                `json:"metrics_info_at_capacity"`
 	MetricsInfoLinkStatus   string                              `json:"metrics_info_link_status,omitempty"` // up|down|test
 	MetricsInfoSymmetric    bool                                `json:"metrics_info_symmetric"`
-	MetricsMeasurement      int                                 `json:"metrics_measurement,omitempty"`
+	MetricsMeasurement      int64                               `json:"metrics_measurement,omitempty"`
 	MetricsMeasurementSet   bool                                `json:"metrics_measurement_set"`
 	MetricsStatus           bool                                `json:"metrics_status"`
-	MetricsUplinkLoad       int                                 `json:"metrics_uplink_load,omitempty"`
+	MetricsUplinkLoad       int64                               `json:"metrics_uplink_load,omitempty"`
 	MetricsUplinkLoadSet    bool                                `json:"metrics_uplink_load_set"`
-	MetricsUplinkSpeed      int                                 `json:"metrics_uplink_speed,omitempty"`
+	MetricsUplinkSpeed      int64                               `json:"metrics_uplink_speed,omitempty"`
 	MetricsUplinkSpeedSet   bool                                `json:"metrics_uplink_speed_set"`
 	NaiRealmList            []Hotspot2ConfNaiRealmList          `json:"nai_realm_list,omitempty"`
 	Name                    string                              `json:"name,omitempty"` // .{1,128}
@@ -63,9 +63,9 @@ type Hotspot2Conf struct {
 	NetworkAccessEsr        bool                                `json:"network_access_esr"`
 	NetworkAccessInternet   bool                                `json:"network_access_internet"`
 	NetworkAccessUesa       bool                                `json:"network_access_uesa"`
-	NetworkAuthType         int                                 `json:"network_auth_type,omitempty"` // -1|0|1|2|3
+	NetworkAuthType         int64                               `json:"network_auth_type,omitempty"` // -1|0|1|2|3
 	NetworkAuthUrl          string                              `json:"network_auth_url,omitempty"`
-	NetworkType             int                                 `json:"network_type,omitempty"` // 0|1|2|3|4|5|14|15
+	NetworkType             int64                               `json:"network_type,omitempty"` // 0|1|2|3|4|5|14|15
 	Osu                     []Hotspot2ConfOsu                   `json:"osu,omitempty"`
 	OsuSSID                 string                              `json:"osu_ssid,omitempty"`
 	QOSMapDcsp              []Hotspot2ConfQOSMapDcsp            `json:"qos_map_dcsp,omitempty"`
@@ -74,10 +74,10 @@ type Hotspot2Conf struct {
 	RoamingConsortiumList   []Hotspot2ConfRoamingConsortiumList `json:"roaming_consortium_list,omitempty"`
 	SaveTimestamp           string                              `json:"save_timestamp,omitempty"`
 	TCFilename              string                              `json:"t_c_filename,omitempty"` // .{1,256}
-	TCTimestamp             int                                 `json:"t_c_timestamp,omitempty"`
-	VenueGroup              int                                 `json:"venue_group,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11
+	TCTimestamp             int64                               `json:"t_c_timestamp,omitempty"`
+	VenueGroup              int64                               `json:"venue_group,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11
 	VenueName               []Hotspot2ConfVenueName             `json:"venue_name,omitempty"`
-	VenueType               int                                 `json:"venue_type,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15
+	VenueType               int64                               `json:"venue_type,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15
 }
 
 func (dst *Hotspot2Conf) UnmarshalJSON(b []byte) error {
@@ -110,59 +110,59 @@ func (dst *Hotspot2Conf) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AnqpDomainID.Int64(); err == nil {
-		dst.AnqpDomainID = int(val)
+		dst.AnqpDomainID = int64(val)
 	}
 	if val, err := aux.DeauthReqTimeout.Int64(); err == nil {
-		dst.DeauthReqTimeout = int(val)
+		dst.DeauthReqTimeout = int64(val)
 	}
 	if val, err := aux.GasComebackDelay.Int64(); err == nil {
-		dst.GasComebackDelay = int(val)
+		dst.GasComebackDelay = int64(val)
 	}
 	if val, err := aux.GasFragLimit.Int64(); err == nil {
-		dst.GasFragLimit = int(val)
+		dst.GasFragLimit = int64(val)
 	}
 	if val, err := aux.IPaddrTypeAvailV4.Int64(); err == nil {
-		dst.IPaddrTypeAvailV4 = int(val)
+		dst.IPaddrTypeAvailV4 = int64(val)
 	}
 	if val, err := aux.IPaddrTypeAvailV6.Int64(); err == nil {
-		dst.IPaddrTypeAvailV6 = int(val)
+		dst.IPaddrTypeAvailV6 = int64(val)
 	}
 	if val, err := aux.MetricsDownlinkLoad.Int64(); err == nil {
-		dst.MetricsDownlinkLoad = int(val)
+		dst.MetricsDownlinkLoad = int64(val)
 	}
 	if val, err := aux.MetricsDownlinkSpeed.Int64(); err == nil {
-		dst.MetricsDownlinkSpeed = int(val)
+		dst.MetricsDownlinkSpeed = int64(val)
 	}
 	if val, err := aux.MetricsMeasurement.Int64(); err == nil {
-		dst.MetricsMeasurement = int(val)
+		dst.MetricsMeasurement = int64(val)
 	}
 	if val, err := aux.MetricsUplinkLoad.Int64(); err == nil {
-		dst.MetricsUplinkLoad = int(val)
+		dst.MetricsUplinkLoad = int64(val)
 	}
 	if val, err := aux.MetricsUplinkSpeed.Int64(); err == nil {
-		dst.MetricsUplinkSpeed = int(val)
+		dst.MetricsUplinkSpeed = int64(val)
 	}
 	if val, err := aux.NetworkAuthType.Int64(); err == nil {
-		dst.NetworkAuthType = int(val)
+		dst.NetworkAuthType = int64(val)
 	}
 	if val, err := aux.NetworkType.Int64(); err == nil {
-		dst.NetworkType = int(val)
+		dst.NetworkType = int64(val)
 	}
 	if val, err := aux.TCTimestamp.Int64(); err == nil {
-		dst.TCTimestamp = int(val)
+		dst.TCTimestamp = int64(val)
 	}
 	if val, err := aux.VenueGroup.Int64(); err == nil {
-		dst.VenueGroup = int(val)
+		dst.VenueGroup = int64(val)
 	}
 	if val, err := aux.VenueType.Int64(); err == nil {
-		dst.VenueType = int(val)
+		dst.VenueType = int64(val)
 	}
 
 	return nil
 }
 
 type Hotspot2ConfCapab struct {
-	Port     int    `json:"port,omitempty"`     // ^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])|$
+	Port     int64  `json:"port,omitempty"`     // ^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])|$
 	Protocol string `json:"protocol,omitempty"` // icmp|tcp_udp|tcp|udp|esp
 	Status   string `json:"status,omitempty"`   // closed|open|unknown
 }
@@ -182,15 +182,15 @@ func (dst *Hotspot2ConfCapab) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int(val)
+		dst.Port = int64(val)
 	}
 
 	return nil
 }
 
 type Hotspot2ConfCellularNetworkList struct {
-	Mcc  int    `json:"mcc,omitempty"`
-	Mnc  int    `json:"mnc,omitempty"`
+	Mcc  int64  `json:"mcc,omitempty"`
+	Mnc  int64  `json:"mnc,omitempty"`
 	Name string `json:"name,omitempty"` // .{1,128}
 }
 
@@ -210,10 +210,10 @@ func (dst *Hotspot2ConfCellularNetworkList) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Mcc.Int64(); err == nil {
-		dst.Mcc = int(val)
+		dst.Mcc = int64(val)
 	}
 	if val, err := aux.Mnc.Int64(); err == nil {
-		dst.Mnc = int(val)
+		dst.Mnc = int64(val)
 	}
 
 	return nil
@@ -284,12 +284,12 @@ func (dst *Hotspot2ConfIcon) UnmarshalJSON(b []byte) error {
 type Hotspot2ConfIcons struct {
 	Data     string `json:"data,omitempty"`
 	Filename string `json:"filename,omitempty"` // .{1,256}
-	Height   int    `json:"height,omitempty"`
+	Height   int64  `json:"height,omitempty"`
 	Language string `json:"language,omitempty"` // [a-z]{3}
 	Media    string `json:"media,omitempty"`    // .{1,256}
 	Name     string `json:"name,omitempty"`     // .{1,256}
-	Size     int    `json:"size,omitempty"`
-	Width    int    `json:"width,omitempty"`
+	Size     int64  `json:"size,omitempty"`
+	Width    int64  `json:"width,omitempty"`
 }
 
 func (dst *Hotspot2ConfIcons) UnmarshalJSON(b []byte) error {
@@ -309,13 +309,13 @@ func (dst *Hotspot2ConfIcons) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Height.Int64(); err == nil {
-		dst.Height = int(val)
+		dst.Height = int64(val)
 	}
 	if val, err := aux.Size.Int64(); err == nil {
-		dst.Size = int(val)
+		dst.Size = int64(val)
 	}
 	if val, err := aux.Width.Int64(); err == nil {
-		dst.Width = int(val)
+		dst.Width = int64(val)
 	}
 
 	return nil
@@ -324,8 +324,8 @@ func (dst *Hotspot2ConfIcons) UnmarshalJSON(b []byte) error {
 type Hotspot2ConfNaiRealmList struct {
 	AuthIDs   string `json:"auth_ids,omitempty"`
 	AuthVals  string `json:"auth_vals,omitempty"`
-	EapMethod int    `json:"eap_method,omitempty"` // 13|21|18|23|50
-	Encoding  int    `json:"encoding,omitempty"`   // 0|1
+	EapMethod int64  `json:"eap_method,omitempty"` // 13|21|18|23|50
+	Encoding  int64  `json:"encoding,omitempty"`   // 0|1
 	Name      string `json:"name,omitempty"`       // .{1,128}
 	Status    bool   `json:"status"`
 }
@@ -346,10 +346,10 @@ func (dst *Hotspot2ConfNaiRealmList) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.EapMethod.Int64(); err == nil {
-		dst.EapMethod = int(val)
+		dst.EapMethod = int64(val)
 	}
 	if val, err := aux.Encoding.Int64(); err == nil {
-		dst.Encoding = int(val)
+		dst.Encoding = int64(val)
 	}
 
 	return nil
@@ -384,8 +384,8 @@ func (dst *Hotspot2ConfOsu) UnmarshalJSON(b []byte) error {
 }
 
 type Hotspot2ConfQOSMapDcsp struct {
-	High int `json:"high,omitempty"`
-	Low  int `json:"low,omitempty"`
+	High int64 `json:"high,omitempty"`
+	Low  int64 `json:"low,omitempty"`
 }
 
 func (dst *Hotspot2ConfQOSMapDcsp) UnmarshalJSON(b []byte) error {
@@ -404,18 +404,18 @@ func (dst *Hotspot2ConfQOSMapDcsp) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.High.Int64(); err == nil {
-		dst.High = int(val)
+		dst.High = int64(val)
 	}
 	if val, err := aux.Low.Int64(); err == nil {
-		dst.Low = int(val)
+		dst.Low = int64(val)
 	}
 
 	return nil
 }
 
 type Hotspot2ConfQOSMapExceptions struct {
-	Dcsp int `json:"dcsp,omitempty"`
-	Up   int `json:"up,omitempty"` // [0-7]
+	Dcsp int64 `json:"dcsp,omitempty"`
+	Up   int64 `json:"up,omitempty"` // [0-7]
 }
 
 func (dst *Hotspot2ConfQOSMapExceptions) UnmarshalJSON(b []byte) error {
@@ -434,10 +434,10 @@ func (dst *Hotspot2ConfQOSMapExceptions) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Dcsp.Int64(); err == nil {
-		dst.Dcsp = int(val)
+		dst.Dcsp = int64(val)
 	}
 	if val, err := aux.Up.Int64(); err == nil {
-		dst.Up = int(val)
+		dst.Up = int64(val)
 	}
 
 	return nil

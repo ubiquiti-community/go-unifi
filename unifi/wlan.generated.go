@@ -38,15 +38,15 @@ type WLAN struct {
 	CountryBeacon               bool                       `json:"country_beacon"`
 	DPIEnabled                  bool                       `json:"dpi_enabled"`
 	DPIgroupID                  string                     `json:"dpigroup_id"`         // [\d\w]+|^$
-	DTIM6E                      int                        `json:"dtim_6e,omitempty"`   // ^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	DTIM6E                      int64                      `json:"dtim_6e,omitempty"`   // ^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DTIMMode                    string                     `json:"dtim_mode,omitempty"` // default|custom
-	DTIMNa                      int                        `json:"dtim_na,omitempty"`   // ^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
-	DTIMNg                      int                        `json:"dtim_ng,omitempty"`   // ^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	DTIMNa                      int64                      `json:"dtim_na,omitempty"`   // ^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	DTIMNg                      int64                      `json:"dtim_ng,omitempty"`   // ^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	ElementAdopt                bool                       `json:"element_adopt"`
 	Enabled                     bool                       `json:"enabled"`
 	EnhancedIot                 bool                       `json:"enhanced_iot"`
 	FastRoamingEnabled          bool                       `json:"fast_roaming_enabled"`
-	GroupRekey                  int                        `json:"group_rekey,omitempty"` // ^(0|[6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
+	GroupRekey                  int64                      `json:"group_rekey,omitempty"` // ^(0|[6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
 	HideSSID                    bool                       `json:"hide_ssid"`
 	Hotspot2                    WLANHotspot2               `json:"hotspot2,omitempty"`
 	Hotspot2ConfEnabled         bool                       `json:"hotspot2conf_enabled"`
@@ -60,10 +60,10 @@ type WLAN struct {
 	MdnsProxyCustom             []WLANMdnsProxyCustom      `json:"mdns_proxy_custom,omitempty"`
 	MdnsProxyMode               string                     `json:"mdns_proxy_mode,omitempty"` // off|auto|custom
 	MinrateNaAdvertisingRates   bool                       `json:"minrate_na_advertising_rates"`
-	MinrateNaDataRateKbps       int                        `json:"minrate_na_data_rate_kbps,omitempty"`
+	MinrateNaDataRateKbps       int64                      `json:"minrate_na_data_rate_kbps,omitempty"`
 	MinrateNaEnabled            bool                       `json:"minrate_na_enabled"`
 	MinrateNgAdvertisingRates   bool                       `json:"minrate_ng_advertising_rates"`
-	MinrateNgDataRateKbps       int                        `json:"minrate_ng_data_rate_kbps,omitempty"`
+	MinrateNgDataRateKbps       int64                      `json:"minrate_ng_data_rate_kbps,omitempty"`
 	MinrateNgEnabled            bool                       `json:"minrate_ng_enabled"`
 	MinrateSettingPreference    string                     `json:"minrate_setting_preference,omitempty"` // auto|manual
 	MloEnabled                  bool                       `json:"mlo_enabled"`
@@ -89,13 +89,13 @@ type WLAN struct {
 	RADIUSMACaclEmptyPassword   bool                       `json:"radius_macacl_empty_password"`
 	RADIUSMACaclFormat          string                     `json:"radius_macacl_format,omitempty"` // none_lower|hyphen_lower|colon_lower|none_upper|hyphen_upper|colon_upper
 	RADIUSProfileID             string                     `json:"radiusprofile_id,omitempty"`
-	RoamClusterID               int                        `json:"roam_cluster_id,omitempty"` // [0-9]|[1-2][0-9]|[3][0-1]|^$
+	RoamClusterID               int64                      `json:"roam_cluster_id,omitempty"` // [0-9]|[1-2][0-9]|[3][0-1]|^$
 	RrmEnabled                  bool                       `json:"rrm_enabled"`
-	SaeAntiClogging             int                        `json:"sae_anti_clogging,omitempty"`
-	SaeGroups                   []int                      `json:"sae_groups,omitempty"`
+	SaeAntiClogging             int64                      `json:"sae_anti_clogging,omitempty"`
+	SaeGroups                   []int64                    `json:"sae_groups,omitempty"`
 	SaePsk                      []WLANSaePsk               `json:"sae_psk,omitempty"`
 	SaePskVLANRequired          bool                       `json:"sae_psk_vlan_required"`
-	SaeSync                     int                        `json:"sae_sync,omitempty"`
+	SaeSync                     int64                      `json:"sae_sync,omitempty"`
 	Schedule                    []string                   `json:"schedule,omitempty"` // (sun|mon|tue|wed|thu|fri|sat)(\-(sun|mon|tue|wed|thu|fri|sat))?\|([0-2][0-9][0-5][0-9])\-([0-2][0-9][0-5][0-9])
 	ScheduleEnabled             bool                       `json:"schedule_enabled"`
 	ScheduleReversed            bool                       `json:"schedule_reversed"`
@@ -106,9 +106,9 @@ type WLAN struct {
 	UapsdEnabled                bool                       `json:"uapsd_enabled"`
 	UidWorkspaceUrl             string                     `json:"uid_workspace_url,omitempty"`
 	UserGroupID                 string                     `json:"usergroup_id,omitempty"`
-	VLAN                        int                        `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-5]|^$
+	VLAN                        int64                      `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-5]|^$
 	VLANEnabled                 bool                       `json:"vlan_enabled"`
-	WEPIDX                      int                        `json:"wep_idx,omitempty"`    // [1-4]
+	WEPIDX                      int64                      `json:"wep_idx,omitempty"`    // [1-4]
 	WLANBand                    string                     `json:"wlan_band,omitempty"`  // 2g|5g|both
 	WLANBands                   []string                   `json:"wlan_bands,omitempty"` // 2g|5g|6g
 	WLANGroupID                 string                     `json:"wlangroup_id"`
@@ -150,50 +150,50 @@ func (dst *WLAN) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DTIM6E.Int64(); err == nil {
-		dst.DTIM6E = int(val)
+		dst.DTIM6E = int64(val)
 	}
 	if val, err := aux.DTIMNa.Int64(); err == nil {
-		dst.DTIMNa = int(val)
+		dst.DTIMNa = int64(val)
 	}
 	if val, err := aux.DTIMNg.Int64(); err == nil {
-		dst.DTIMNg = int(val)
+		dst.DTIMNg = int64(val)
 	}
 	if val, err := aux.GroupRekey.Int64(); err == nil {
-		dst.GroupRekey = int(val)
+		dst.GroupRekey = int64(val)
 	}
 	if val, err := aux.MinrateNaDataRateKbps.Int64(); err == nil {
-		dst.MinrateNaDataRateKbps = int(val)
+		dst.MinrateNaDataRateKbps = int64(val)
 	}
 	if val, err := aux.MinrateNgDataRateKbps.Int64(); err == nil {
-		dst.MinrateNgDataRateKbps = int(val)
+		dst.MinrateNgDataRateKbps = int64(val)
 	}
 	if val, err := aux.RoamClusterID.Int64(); err == nil {
-		dst.RoamClusterID = int(val)
+		dst.RoamClusterID = int64(val)
 	}
 	if val, err := aux.SaeAntiClogging.Int64(); err == nil {
-		dst.SaeAntiClogging = int(val)
+		dst.SaeAntiClogging = int64(val)
 	}
-	dst.SaeGroups = make([]int, len(aux.SaeGroups))
+	dst.SaeGroups = make([]int64, len(aux.SaeGroups))
 	for i, v := range aux.SaeGroups {
 		if val, err := v.Int64(); err == nil {
-			dst.SaeGroups[i] = int(val)
+			dst.SaeGroups[i] = int64(val)
 		}
 	}
 	if val, err := aux.SaeSync.Int64(); err == nil {
-		dst.SaeSync = int(val)
+		dst.SaeSync = int64(val)
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int(val)
+		dst.VLAN = int64(val)
 	}
 	if val, err := aux.WEPIDX.Int64(); err == nil {
-		dst.WEPIDX = int(val)
+		dst.WEPIDX = int64(val)
 	}
 
 	return nil
 }
 
 type WLANCapab struct {
-	Port     int    `json:"port,omitempty"`     // ^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])|$
+	Port     int64  `json:"port,omitempty"`     // ^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])|$
 	Protocol string `json:"protocol,omitempty"` // icmp|tcp_udp|tcp|udp|esp
 	Status   string `json:"status,omitempty"`   // closed|open|unknown
 }
@@ -213,16 +213,16 @@ func (dst *WLANCapab) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int(val)
+		dst.Port = int64(val)
 	}
 
 	return nil
 }
 
 type WLANCellularNetworkList struct {
-	CountryCode int    `json:"country_code,omitempty"` // [1-9]{1}[0-9]{0,3}
-	Mcc         int    `json:"mcc,omitempty"`
-	Mnc         int    `json:"mnc,omitempty"`
+	CountryCode int64  `json:"country_code,omitempty"` // [1-9]{1}[0-9]{0,3}
+	Mcc         int64  `json:"mcc,omitempty"`
+	Mnc         int64  `json:"mnc,omitempty"`
 	Name        string `json:"name,omitempty"` // .{1,128}
 }
 
@@ -243,13 +243,13 @@ func (dst *WLANCellularNetworkList) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.CountryCode.Int64(); err == nil {
-		dst.CountryCode = int(val)
+		dst.CountryCode = int64(val)
 	}
 	if val, err := aux.Mcc.Int64(); err == nil {
-		dst.Mcc = int(val)
+		dst.Mcc = int64(val)
 	}
 	if val, err := aux.Mnc.Int64(); err == nil {
-		dst.Mnc = int(val)
+		dst.Mnc = int64(val)
 	}
 
 	return nil
@@ -302,28 +302,28 @@ type WLANHotspot2 struct {
 	CellularNetworkList     []WLANCellularNetworkList   `json:"cellular_network_list,omitempty"`
 	DomainNameList          []string                    `json:"domain_name_list,omitempty"` // .{1,128}
 	FriendlyName            []WLANFriendlyName          `json:"friendly_name,omitempty"`
-	IPaddrTypeAvailV4       int                         `json:"ipaddr_type_avail_v4,omitempty"` // 0|1|2|3|4|5|6|7
-	IPaddrTypeAvailV6       int                         `json:"ipaddr_type_avail_v6,omitempty"` // 0|1|2
-	MetricsDownlinkLoad     int                         `json:"metrics_downlink_load,omitempty"`
+	IPaddrTypeAvailV4       int64                       `json:"ipaddr_type_avail_v4,omitempty"` // 0|1|2|3|4|5|6|7
+	IPaddrTypeAvailV6       int64                       `json:"ipaddr_type_avail_v6,omitempty"` // 0|1|2
+	MetricsDownlinkLoad     int64                       `json:"metrics_downlink_load,omitempty"`
 	MetricsDownlinkLoadSet  bool                        `json:"metrics_downlink_load_set"`
-	MetricsDownlinkSpeed    int                         `json:"metrics_downlink_speed,omitempty"`
+	MetricsDownlinkSpeed    int64                       `json:"metrics_downlink_speed,omitempty"`
 	MetricsDownlinkSpeedSet bool                        `json:"metrics_downlink_speed_set"`
 	MetricsInfoAtCapacity   bool                        `json:"metrics_info_at_capacity"`
 	MetricsInfoLinkStatus   string                      `json:"metrics_info_link_status,omitempty"` // up|down|test
 	MetricsInfoSymmetric    bool                        `json:"metrics_info_symmetric"`
-	MetricsMeasurement      int                         `json:"metrics_measurement,omitempty"`
+	MetricsMeasurement      int64                       `json:"metrics_measurement,omitempty"`
 	MetricsMeasurementSet   bool                        `json:"metrics_measurement_set"`
 	MetricsStatus           bool                        `json:"metrics_status"`
-	MetricsUplinkLoad       int                         `json:"metrics_uplink_load,omitempty"`
+	MetricsUplinkLoad       int64                       `json:"metrics_uplink_load,omitempty"`
 	MetricsUplinkLoadSet    bool                        `json:"metrics_uplink_load_set"`
-	MetricsUplinkSpeed      int                         `json:"metrics_uplink_speed,omitempty"`
+	MetricsUplinkSpeed      int64                       `json:"metrics_uplink_speed,omitempty"`
 	MetricsUplinkSpeedSet   bool                        `json:"metrics_uplink_speed_set"`
 	NaiRealmList            []WLANNaiRealmList          `json:"nai_realm_list,omitempty"`
-	NetworkType             int                         `json:"network_type,omitempty"` // 0|1|2|3|4|5|14|15
+	NetworkType             int64                       `json:"network_type,omitempty"` // 0|1|2|3|4|5|14|15
 	RoamingConsortiumList   []WLANRoamingConsortiumList `json:"roaming_consortium_list,omitempty"`
-	VenueGroup              int                         `json:"venue_group,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11
+	VenueGroup              int64                       `json:"venue_group,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11
 	VenueName               []WLANVenueName             `json:"venue_name,omitempty"`
-	VenueType               int                         `json:"venue_type,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15
+	VenueType               int64                       `json:"venue_type,omitempty"` // 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15
 }
 
 func (dst *WLANHotspot2) UnmarshalJSON(b []byte) error {
@@ -350,34 +350,34 @@ func (dst *WLANHotspot2) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.IPaddrTypeAvailV4.Int64(); err == nil {
-		dst.IPaddrTypeAvailV4 = int(val)
+		dst.IPaddrTypeAvailV4 = int64(val)
 	}
 	if val, err := aux.IPaddrTypeAvailV6.Int64(); err == nil {
-		dst.IPaddrTypeAvailV6 = int(val)
+		dst.IPaddrTypeAvailV6 = int64(val)
 	}
 	if val, err := aux.MetricsDownlinkLoad.Int64(); err == nil {
-		dst.MetricsDownlinkLoad = int(val)
+		dst.MetricsDownlinkLoad = int64(val)
 	}
 	if val, err := aux.MetricsDownlinkSpeed.Int64(); err == nil {
-		dst.MetricsDownlinkSpeed = int(val)
+		dst.MetricsDownlinkSpeed = int64(val)
 	}
 	if val, err := aux.MetricsMeasurement.Int64(); err == nil {
-		dst.MetricsMeasurement = int(val)
+		dst.MetricsMeasurement = int64(val)
 	}
 	if val, err := aux.MetricsUplinkLoad.Int64(); err == nil {
-		dst.MetricsUplinkLoad = int(val)
+		dst.MetricsUplinkLoad = int64(val)
 	}
 	if val, err := aux.MetricsUplinkSpeed.Int64(); err == nil {
-		dst.MetricsUplinkSpeed = int(val)
+		dst.MetricsUplinkSpeed = int64(val)
 	}
 	if val, err := aux.NetworkType.Int64(); err == nil {
-		dst.NetworkType = int(val)
+		dst.NetworkType = int64(val)
 	}
 	if val, err := aux.VenueGroup.Int64(); err == nil {
-		dst.VenueGroup = int(val)
+		dst.VenueGroup = int64(val)
 	}
 	if val, err := aux.VenueType.Int64(); err == nil {
-		dst.VenueType = int(val)
+		dst.VenueType = int64(val)
 	}
 
 	return nil
@@ -411,12 +411,12 @@ func (dst *WLANMdnsProxyCustom) UnmarshalJSON(b []byte) error {
 }
 
 type WLANNaiRealmList struct {
-	AuthIDs   []int  `json:"auth_ids,omitempty"`   // 0|1|2|3|4|5
-	AuthVals  []int  `json:"auth_vals,omitempty"`  // 0|1|2|3|4|5|6|7|8|9|10
-	EapMethod int    `json:"eap_method,omitempty"` // 13|21|18|23|50
-	Encoding  int    `json:"encoding,omitempty"`   // 0|1
-	Name      string `json:"name,omitempty"`       // .{1,128}
-	Status    bool   `json:"status"`
+	AuthIDs   []int64 `json:"auth_ids,omitempty"`   // 0|1|2|3|4|5
+	AuthVals  []int64 `json:"auth_vals,omitempty"`  // 0|1|2|3|4|5|6|7|8|9|10
+	EapMethod int64   `json:"eap_method,omitempty"` // 13|21|18|23|50
+	Encoding  int64   `json:"encoding,omitempty"`   // 0|1
+	Name      string  `json:"name,omitempty"`       // .{1,128}
+	Status    bool    `json:"status"`
 }
 
 func (dst *WLANNaiRealmList) UnmarshalJSON(b []byte) error {
@@ -436,23 +436,23 @@ func (dst *WLANNaiRealmList) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.AuthIDs = make([]int, len(aux.AuthIDs))
+	dst.AuthIDs = make([]int64, len(aux.AuthIDs))
 	for i, v := range aux.AuthIDs {
 		if val, err := v.Int64(); err == nil {
-			dst.AuthIDs[i] = int(val)
+			dst.AuthIDs[i] = int64(val)
 		}
 	}
-	dst.AuthVals = make([]int, len(aux.AuthVals))
+	dst.AuthVals = make([]int64, len(aux.AuthVals))
 	for i, v := range aux.AuthVals {
 		if val, err := v.Int64(); err == nil {
-			dst.AuthVals[i] = int(val)
+			dst.AuthVals[i] = int64(val)
 		}
 	}
 	if val, err := aux.EapMethod.Int64(); err == nil {
-		dst.EapMethod = int(val)
+		dst.EapMethod = int64(val)
 	}
 	if val, err := aux.Encoding.Int64(); err == nil {
-		dst.Encoding = int(val)
+		dst.Encoding = int64(val)
 	}
 
 	return nil
@@ -524,7 +524,7 @@ type WLANSaePsk struct {
 	ID   string `json:"id,omitempty"`   // .{0,128}
 	MAC  string `json:"mac,omitempty"`  // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	Psk  string `json:"psk,omitempty"`  // [\x20-\x7E]{8,255}
-	VLAN int    `json:"vlan,omitempty"` // [0-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-5]|^$
+	VLAN int64  `json:"vlan,omitempty"` // [0-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-5]|^$
 }
 
 func (dst *WLANSaePsk) UnmarshalJSON(b []byte) error {
@@ -542,18 +542,18 @@ func (dst *WLANSaePsk) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int(val)
+		dst.VLAN = int64(val)
 	}
 
 	return nil
 }
 
 type WLANScheduleWithDuration struct {
-	DurationMinutes int      `json:"duration_minutes,omitempty"`   // ^[1-9][0-9]*$
+	DurationMinutes int64    `json:"duration_minutes,omitempty"`   // ^[1-9][0-9]*$
 	Name            string   `json:"name,omitempty"`               // .*
 	StartDaysOfWeek []string `json:"start_days_of_week,omitempty"` // ^(sun|mon|tue|wed|thu|fri|sat)$
-	StartHour       int      `json:"start_hour,omitempty"`         // ^(1?[0-9])|(2[0-3])$
-	StartMinute     int      `json:"start_minute,omitempty"`       // ^[0-5]?[0-9]$
+	StartHour       int64    `json:"start_hour,omitempty"`         // ^(1?[0-9])|(2[0-3])$
+	StartMinute     int64    `json:"start_minute,omitempty"`       // ^[0-5]?[0-9]$
 }
 
 func (dst *WLANScheduleWithDuration) UnmarshalJSON(b []byte) error {
@@ -573,13 +573,13 @@ func (dst *WLANScheduleWithDuration) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DurationMinutes.Int64(); err == nil {
-		dst.DurationMinutes = int(val)
+		dst.DurationMinutes = int64(val)
 	}
 	if val, err := aux.StartHour.Int64(); err == nil {
-		dst.StartHour = int(val)
+		dst.StartHour = int64(val)
 	}
 	if val, err := aux.StartMinute.Int64(); err == nil {
-		dst.StartMinute = int(val)
+		dst.StartMinute = int64(val)
 	}
 
 	return nil

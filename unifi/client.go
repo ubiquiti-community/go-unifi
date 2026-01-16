@@ -151,7 +151,7 @@ func (c *ApiClient) KickClientByMAC(ctx context.Context, site, mac string) error
 func (c *ApiClient) OverrideClientFingerprint(
 	ctx context.Context,
 	site, mac string,
-	devIdOveride int,
+	devIdOveride int64,
 ) error {
 	reqBody := map[string]any{
 		"mac":             mac,
@@ -168,7 +168,7 @@ func (c *ApiClient) OverrideClientFingerprint(
 
 	var respBody struct {
 		Mac           string `json:"mac"`
-		DevIdOverride int    `json:"dev_id_override"`
+		DevIdOverride int64  `json:"dev_id_override"`
 		SearchQuery   string `json:"search_query"`
 	}
 

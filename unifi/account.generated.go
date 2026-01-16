@@ -33,10 +33,10 @@ type Account struct {
 	Name             string   `json:"name,omitempty"` // ^[^"' ]+$
 	NetworkID        string   `json:"networkconf_id,omitempty"`
 	TunnelConfigType string   `json:"tunnel_config_type,omitempty"` // vpn|802.1x|custom
-	TunnelMediumType int      `json:"tunnel_medium_type,omitempty"` // [1-9]|1[0-5]|^$
-	TunnelType       int      `json:"tunnel_type,omitempty"`        // [1-9]|1[0-3]|^$
+	TunnelMediumType int64    `json:"tunnel_medium_type,omitempty"` // [1-9]|1[0-5]|^$
+	TunnelType       int64    `json:"tunnel_type,omitempty"`        // [1-9]|1[0-3]|^$
 	UlpUserID        string   `json:"ulp_user_id,omitempty"`
-	VLAN             int      `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|400[0-9]|^$
+	VLAN             int64    `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|400[0-9]|^$
 	XPassword        string   `json:"x_password,omitempty"`
 }
 
@@ -57,13 +57,13 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.TunnelMediumType.Int64(); err == nil {
-		dst.TunnelMediumType = int(val)
+		dst.TunnelMediumType = int64(val)
 	}
 	if val, err := aux.TunnelType.Int64(); err == nil {
-		dst.TunnelType = int(val)
+		dst.TunnelType = int64(val)
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int(val)
+		dst.VLAN = int64(val)
 	}
 
 	return nil

@@ -61,7 +61,7 @@ type TrafficRouteIPAddresses struct {
 	IPOrSubnet string   `json:"ip_or_subnet,omitempty"`
 	IPVersion  string   `json:"ip_version,omitempty"` // BOTH|IPV4|IPV6
 	PortRanges []string `json:"port_ranges,omitempty"`
-	Ports      []int    `json:"ports,omitempty"` // [1-9][0-9]{0,4}
+	Ports      []int64  `json:"ports,omitempty"` // [1-9][0-9]{0,4}
 }
 
 func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
@@ -78,10 +78,10 @@ func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	dst.Ports = make([]int, len(aux.Ports))
+	dst.Ports = make([]int64, len(aux.Ports))
 	for i, v := range aux.Ports {
 		if val, err := v.Int64(); err == nil {
-			dst.Ports[i] = int(val)
+			dst.Ports[i] = int64(val)
 		}
 	}
 

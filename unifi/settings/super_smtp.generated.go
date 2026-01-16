@@ -24,7 +24,7 @@ type SuperSmtp struct {
 
 	Enabled   bool   `json:"enabled"`
 	Host      string `json:"host,omitempty"`
-	Port      int    `json:"port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]|^$
+	Port      int64  `json:"port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]|^$
 	Sender    string `json:"sender,omitempty"`
 	UseAuth   bool   `json:"use_auth"`
 	UseSender bool   `json:"use_sender"`
@@ -53,7 +53,7 @@ func (dst *SuperSmtp) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int(val)
+		dst.Port = int64(val)
 	}
 
 	return nil

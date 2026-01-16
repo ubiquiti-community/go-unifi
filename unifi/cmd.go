@@ -14,7 +14,7 @@ var (
 type Cmd struct {
 	Command  string `json:"cmd"`
 	Mac      string `json:"mac,omitempty"`
-	PortIdx  *int   `json:"port_idx,omitempty"`
+	PortIdx  *int64 `json:"port_idx,omitempty"`
 	FileName string `json:"filename,omitempty"`
 	SiteId   string `json:"site_id,omitempty"`
 }

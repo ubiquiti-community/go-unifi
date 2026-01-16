@@ -9,7 +9,7 @@ import (
 )
 
 //go:generate go tool golang.org/x/tools/cmd/stringer -trimprefix DeviceState -type DeviceState
-type DeviceState int
+type DeviceState int64
 
 const (
 	DeviceStateUnknown          DeviceState = 0
@@ -28,19 +28,19 @@ const (
 
 type DeviceLastConnection struct {
 	MAC      string `json:"mac,omitempty"`
-	LastSeen int    `json:"last_seen,omitempty"`
+	LastSeen int64  `json:"last_seen,omitempty"`
 }
 type DevicePortTable struct {
-	PortIdx             int                  `json:"port_idx,omitempty"`
+	PortIdx             int64                `json:"port_idx,omitempty"`
 	Media               string               `json:"media,omitempty"`
 	PortPoe             bool                 `json:"port_poe,omitempty"`
-	PoeCaps             int                  `json:"poe_caps,omitempty"`
-	SpeedCaps           int                  `json:"speed_caps,omitempty"`
+	PoeCaps             int64                `json:"poe_caps,omitempty"`
+	SpeedCaps           int64                `json:"speed_caps,omitempty"`
 	LastConnection      DeviceLastConnection `json:"last_connection,omitempty"`
 	OpMode              string               `json:"op_mode,omitempty"`
 	Forward             string               `json:"forward,omitempty"`
 	PoeMode             string               `json:"poe_mode,omitempty"`
-	Anomalies           int                  `json:"anomalies,omitempty"`
+	Anomalies           int64                `json:"anomalies,omitempty"`
 	Autoneg             bool                 `json:"autoneg,omitempty"`
 	Dot1XMode           string               `json:"dot1x_mode,omitempty"`
 	Dot1XStatus         string               `json:"dot1x_status,omitempty"`
@@ -50,30 +50,30 @@ type DevicePortTable struct {
 	FullDuplex          bool                 `json:"full_duplex,omitempty"`
 	IsUplink            bool                 `json:"is_uplink,omitempty"`
 	Jumbo               bool                 `json:"jumbo,omitempty"`
-	MacTableCount       int                  `json:"mac_table_count,omitempty"`
+	MacTableCount       int64                `json:"mac_table_count,omitempty"`
 	PoeClass            string               `json:"poe_class,omitempty"`
 	PoeCurrent          string               `json:"poe_current,omitempty"`
 	PoeEnable           bool                 `json:"poe_enable,omitempty"`
 	PoeGood             bool                 `json:"poe_good,omitempty"`
 	PoePower            string               `json:"poe_power,omitempty"`
 	PoeVoltage          string               `json:"poe_voltage,omitempty"`
-	RxBroadcast         int                  `json:"rx_broadcast,omitempty"`
-	RxBytes             int                  `json:"rx_bytes,omitempty"`
-	RxDropped           int                  `json:"rx_dropped,omitempty"`
-	RxErrors            int                  `json:"rx_errors,omitempty"`
-	RxMulticast         int                  `json:"rx_multicast,omitempty"`
-	RxPackets           int                  `json:"rx_packets,omitempty"`
-	Satisfaction        int                  `json:"satisfaction,omitempty"`
-	SatisfactionReason  int                  `json:"satisfaction_reason,omitempty"`
-	Speed               int                  `json:"speed,omitempty"`
-	StpPathcost         int                  `json:"stp_pathcost,omitempty"`
+	RxBroadcast         int64                `json:"rx_broadcast,omitempty"`
+	RxBytes             int64                `json:"rx_bytes,omitempty"`
+	RxDropped           int64                `json:"rx_dropped,omitempty"`
+	RxErrors            int64                `json:"rx_errors,omitempty"`
+	RxMulticast         int64                `json:"rx_multicast,omitempty"`
+	RxPackets           int64                `json:"rx_packets,omitempty"`
+	Satisfaction        int64                `json:"satisfaction,omitempty"`
+	SatisfactionReason  int64                `json:"satisfaction_reason,omitempty"`
+	Speed               int64                `json:"speed,omitempty"`
+	StpPathcost         int64                `json:"stp_pathcost,omitempty"`
 	StpState            string               `json:"stp_state,omitempty"`
-	TxBroadcast         int                  `json:"tx_broadcast,omitempty"`
+	TxBroadcast         int64                `json:"tx_broadcast,omitempty"`
 	TxBytes             int64                `json:"tx_bytes,omitempty"`
-	TxDropped           int                  `json:"tx_dropped,omitempty"`
-	TxErrors            int                  `json:"tx_errors,omitempty"`
-	TxMulticast         int                  `json:"tx_multicast,omitempty"`
-	TxPackets           int                  `json:"tx_packets,omitempty"`
+	TxDropped           int64                `json:"tx_dropped,omitempty"`
+	TxErrors            int64                `json:"tx_errors,omitempty"`
+	TxMulticast         int64                `json:"tx_multicast,omitempty"`
+	TxPackets           int64                `json:"tx_packets,omitempty"`
 	Up                  bool                 `json:"up,omitempty"`
 	TxBytesR            float64              `json:"tx_bytes-r,omitempty"`
 	RxBytesR            float64              `json:"rx_bytes-r,omitempty"`
@@ -82,9 +82,9 @@ type DevicePortTable struct {
 	NativeNetworkconfID string               `json:"native_networkconf_id,omitempty"`
 	Name                string               `json:"name,omitempty"`
 	SettingPreference   string               `json:"setting_preference,omitempty"`
-	StormctrlBcastRate  int                  `json:"stormctrl_bcast_rate,omitempty"`
-	StormctrlMcastRate  int                  `json:"stormctrl_mcast_rate,omitempty"`
-	StormctrlUcastRate  int                  `json:"stormctrl_ucast_rate,omitempty"`
+	StormctrlBcastRate  int64                `json:"stormctrl_bcast_rate,omitempty"`
+	StormctrlMcastRate  int64                `json:"stormctrl_mcast_rate,omitempty"`
+	StormctrlUcastRate  int64                `json:"stormctrl_ucast_rate,omitempty"`
 	TaggedVlanMgmt      string               `json:"tagged_vlan_mgmt,omitempty"`
 	Masked              bool                 `json:"masked,omitempty"`
 	AggregatedBy        bool                 `json:"aggregated_by,omitempty"`
@@ -129,76 +129,76 @@ func (dst *DevicePortTable) UnmarshalJSON(b []byte) error {
 	}
 
 	if portIdx, err := aux.PortIdx.Int64(); err != nil {
-		dst.PortIdx = int(portIdx)
+		dst.PortIdx = portIdx
 	}
 	if poeCaps, err := aux.PoeCaps.Int64(); err != nil {
-		dst.PoeCaps = int(poeCaps)
+		dst.PoeCaps = poeCaps
 	}
 	if speedCaps, err := aux.SpeedCaps.Int64(); err != nil {
-		dst.SpeedCaps = int(speedCaps)
+		dst.SpeedCaps = speedCaps
 	}
 	if anomalies, err := aux.Anomalies.Int64(); err != nil {
-		dst.Anomalies = int(anomalies)
+		dst.Anomalies = anomalies
 	}
 	if macTableCount, err := aux.MacTableCount.Int64(); err != nil {
-		dst.MacTableCount = int(macTableCount)
+		dst.MacTableCount = macTableCount
 	}
 	if rxBroadcast, err := aux.RxBroadcast.Int64(); err != nil {
-		dst.RxBroadcast = int(rxBroadcast)
+		dst.RxBroadcast = rxBroadcast
 	}
 	if rxBytes, err := aux.RxBytes.Int64(); err != nil {
-		dst.RxBytes = int(rxBytes)
+		dst.RxBytes = rxBytes
 	}
 	if rxDropped, err := aux.RxDropped.Int64(); err != nil {
-		dst.RxDropped = int(rxDropped)
+		dst.RxDropped = rxDropped
 	}
 	if rxErrors, err := aux.RxErrors.Int64(); err != nil {
-		dst.RxErrors = int(rxErrors)
+		dst.RxErrors = rxErrors
 	}
 	if rxMulticast, err := aux.RxMulticast.Int64(); err != nil {
-		dst.RxMulticast = int(rxMulticast)
+		dst.RxMulticast = rxMulticast
 	}
 	if rxPackets, err := aux.RxPackets.Int64(); err != nil {
-		dst.RxPackets = int(rxPackets)
+		dst.RxPackets = rxPackets
 	}
 	if satisfaction, err := aux.Satisfaction.Int64(); err != nil {
-		dst.Satisfaction = int(satisfaction)
+		dst.Satisfaction = satisfaction
 	}
 	if satisfactionReason, err := aux.SatisfactionReason.Int64(); err != nil {
-		dst.SatisfactionReason = int(satisfactionReason)
+		dst.SatisfactionReason = satisfactionReason
 	}
 	if speed, err := aux.Speed.Int64(); err != nil {
-		dst.Speed = int(speed)
+		dst.Speed = speed
 	}
 	if stpPathcost, err := aux.StpPathcost.Int64(); err != nil {
-		dst.StpPathcost = int(stpPathcost)
+		dst.StpPathcost = stpPathcost
 	}
 	if txBroadcast, err := aux.TxBroadcast.Int64(); err != nil {
-		dst.TxBroadcast = int(txBroadcast)
+		dst.TxBroadcast = txBroadcast
 	}
 	if txBytes, err := aux.TxBytes.Int64(); err != nil {
 		dst.TxBytes = txBytes
 	}
 	if txDropped, err := aux.TxDropped.Int64(); err != nil {
-		dst.TxDropped = int(txDropped)
+		dst.TxDropped = txDropped
 	}
 	if txErrors, err := aux.TxErrors.Int64(); err != nil {
-		dst.TxErrors = int(txErrors)
+		dst.TxErrors = txErrors
 	}
 	if txMulticast, err := aux.TxMulticast.Int64(); err != nil {
-		dst.TxMulticast = int(txMulticast)
+		dst.TxMulticast = txMulticast
 	}
 	if txPackets, err := aux.TxPackets.Int64(); err != nil {
-		dst.TxPackets = int(txPackets)
+		dst.TxPackets = txPackets
 	}
 	if stormctrlBcastRate, err := aux.StormctrlBcastRate.Int64(); err != nil {
-		dst.StormctrlBcastRate = int(stormctrlBcastRate)
+		dst.StormctrlBcastRate = stormctrlBcastRate
 	}
 	if stormctrlMcastRate, err := aux.StormctrlMcastRate.Int64(); err != nil {
-		dst.StormctrlMcastRate = int(stormctrlMcastRate)
+		dst.StormctrlMcastRate = stormctrlMcastRate
 	}
 	if stormctrlUcastRate, err := aux.StormctrlUcastRate.Int64(); err != nil {
-		dst.StormctrlUcastRate = int(stormctrlUcastRate)
+		dst.StormctrlUcastRate = stormctrlUcastRate
 	}
 
 	return nil

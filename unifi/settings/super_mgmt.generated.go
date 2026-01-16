@@ -25,12 +25,12 @@ type SuperMgmt struct {
 	AnalyticsDisapprovedFor                  string   `json:"analytics_disapproved_for,omitempty"`
 	AutoUpgrade                              bool     `json:"auto_upgrade"`
 	AutobackupCronExpr                       string   `json:"autobackup_cron_expr,omitempty"`
-	AutobackupDays                           int      `json:"autobackup_days,omitempty"`
+	AutobackupDays                           int64    `json:"autobackup_days,omitempty"`
 	AutobackupEnabled                        bool     `json:"autobackup_enabled"`
 	AutobackupGcsBucket                      string   `json:"autobackup_gcs_bucket,omitempty"`
 	AutobackupGcsCertificatePath             string   `json:"autobackup_gcs_certificate_path,omitempty"`
 	AutobackupLocalPath                      string   `json:"autobackup_local_path,omitempty"`
-	AutobackupMaxFiles                       int      `json:"autobackup_max_files,omitempty"`
+	AutobackupMaxFiles                       int64    `json:"autobackup_max_files,omitempty"`
 	AutobackupPostActions                    []string `json:"autobackup_post_actions,omitempty"` // copy_local|copy_gcs|copy_cloud
 	AutobackupTimezone                       string   `json:"autobackup_timezone,omitempty"`
 	BackupToCloudEnabled                     bool     `json:"backup_to_cloud_enabled"`
@@ -44,11 +44,11 @@ type SuperMgmt struct {
 	ContactInfoState                         string   `json:"contact_info_state,omitempty"`
 	ContactInfoZip                           string   `json:"contact_info_zip,omitempty"`
 	DataRetentionSettingPreference           string   `json:"data_retention_setting_preference,omitempty"` // auto|manual
-	DataRetentionTimeInHoursFor5MinutesScale int      `json:"data_retention_time_in_hours_for_5minutes_scale,omitempty"`
-	DataRetentionTimeInHoursForDailyScale    int      `json:"data_retention_time_in_hours_for_daily_scale,omitempty"`
-	DataRetentionTimeInHoursForHourlyScale   int      `json:"data_retention_time_in_hours_for_hourly_scale,omitempty"`
-	DataRetentionTimeInHoursForMonthlyScale  int      `json:"data_retention_time_in_hours_for_monthly_scale,omitempty"`
-	DataRetentionTimeInHoursForOthers        int      `json:"data_retention_time_in_hours_for_others,omitempty"`
+	DataRetentionTimeInHoursFor5MinutesScale int64    `json:"data_retention_time_in_hours_for_5minutes_scale,omitempty"`
+	DataRetentionTimeInHoursForDailyScale    int64    `json:"data_retention_time_in_hours_for_daily_scale,omitempty"`
+	DataRetentionTimeInHoursForHourlyScale   int64    `json:"data_retention_time_in_hours_for_hourly_scale,omitempty"`
+	DataRetentionTimeInHoursForMonthlyScale  int64    `json:"data_retention_time_in_hours_for_monthly_scale,omitempty"`
+	DataRetentionTimeInHoursForOthers        int64    `json:"data_retention_time_in_hours_for_others,omitempty"`
 	DefaultSiteDeviceAuthPasswordAlert       string   `json:"default_site_device_auth_password_alert,omitempty"` // false
 	Discoverable                             bool     `json:"discoverable"`
 	EnableAnalytics                          bool     `json:"enable_analytics"`
@@ -57,8 +57,8 @@ type SuperMgmt struct {
 	LedEnabled                               bool     `json:"led_enabled"`
 	LiveChat                                 string   `json:"live_chat,omitempty"`    // disabled|super-only|everyone
 	LiveUpdates                              string   `json:"live_updates,omitempty"` // disabled|live|auto
-	MinimumUsableHdSpace                     int      `json:"minimum_usable_hd_space,omitempty"`
-	MinimumUsableSdSpace                     int      `json:"minimum_usable_sd_space,omitempty"`
+	MinimumUsableHdSpace                     int64    `json:"minimum_usable_hd_space,omitempty"`
+	MinimumUsableSdSpace                     int64    `json:"minimum_usable_sd_space,omitempty"`
 	MultipleSitesEnabled                     bool     `json:"multiple_sites_enabled"`
 	OverrideInformHost                       bool     `json:"override_inform_host"`
 	OverrideInformHostLocation               string   `json:"override_inform_host_location,omitempty"`
@@ -96,31 +96,31 @@ func (dst *SuperMgmt) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AutobackupDays.Int64(); err == nil {
-		dst.AutobackupDays = int(val)
+		dst.AutobackupDays = int64(val)
 	}
 	if val, err := aux.AutobackupMaxFiles.Int64(); err == nil {
-		dst.AutobackupMaxFiles = int(val)
+		dst.AutobackupMaxFiles = int64(val)
 	}
 	if val, err := aux.DataRetentionTimeInHoursFor5MinutesScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursFor5MinutesScale = int(val)
+		dst.DataRetentionTimeInHoursFor5MinutesScale = int64(val)
 	}
 	if val, err := aux.DataRetentionTimeInHoursForDailyScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForDailyScale = int(val)
+		dst.DataRetentionTimeInHoursForDailyScale = int64(val)
 	}
 	if val, err := aux.DataRetentionTimeInHoursForHourlyScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForHourlyScale = int(val)
+		dst.DataRetentionTimeInHoursForHourlyScale = int64(val)
 	}
 	if val, err := aux.DataRetentionTimeInHoursForMonthlyScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForMonthlyScale = int(val)
+		dst.DataRetentionTimeInHoursForMonthlyScale = int64(val)
 	}
 	if val, err := aux.DataRetentionTimeInHoursForOthers.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForOthers = int(val)
+		dst.DataRetentionTimeInHoursForOthers = int64(val)
 	}
 	if val, err := aux.MinimumUsableHdSpace.Int64(); err == nil {
-		dst.MinimumUsableHdSpace = int(val)
+		dst.MinimumUsableHdSpace = int64(val)
 	}
 	if val, err := aux.MinimumUsableSdSpace.Int64(); err == nil {
-		dst.MinimumUsableSdSpace = int(val)
+		dst.MinimumUsableSdSpace = int64(val)
 	}
 
 	return nil

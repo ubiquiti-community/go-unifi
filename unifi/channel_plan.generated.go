@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -54,7 +55,7 @@ type ChannelPlanRadioTable struct {
 	Name        string `json:"name,omitempty"`          // [a-z]*[0-9]*
 	TxPower     string `json:"tx_power,omitempty"`      // [\d]+|auto
 	TxPowerMode string `json:"tx_power_mode,omitempty"` // auto|medium|high|low|custom
-	Width       int    `json:"width,omitempty"`         // 20|40|80|160
+	Width       int64  `json:"width,omitempty"`         // 20|40|80|160
 }
 
 func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
@@ -74,13 +75,13 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Channel.Int64(); err == nil {
-		dst.Channel = string(val)
+		dst.Channel = strconv.FormatInt(val, 10)
 	}
 	if val, err := aux.TxPower.Int64(); err == nil {
-		dst.TxPower = string(val)
+		dst.TxPower = strconv.FormatInt(val, 10)
 	}
 	if val, err := aux.Width.Int64(); err == nil {
-		dst.Width = int(val)
+		dst.Width = val
 	}
 
 	return nil
