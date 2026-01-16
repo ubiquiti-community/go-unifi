@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Usg struct {
@@ -115,55 +117,55 @@ func (dst *Usg) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.ArpCacheBaseReachable.Int64(); err == nil {
-		dst.ArpCacheBaseReachable = int64(val)
+		dst.ArpCacheBaseReachable = val
 	}
 	if val, err := aux.DHCPRelayHopCount.Int64(); err == nil {
-		dst.DHCPRelayHopCount = int64(val)
+		dst.DHCPRelayHopCount = val
 	}
 	if val, err := aux.DHCPRelayMaxSize.Int64(); err == nil {
-		dst.DHCPRelayMaxSize = int64(val)
+		dst.DHCPRelayMaxSize = val
 	}
 	if val, err := aux.DHCPRelayPort.Int64(); err == nil {
-		dst.DHCPRelayPort = int64(val)
+		dst.DHCPRelayPort = val
 	}
 	if val, err := aux.ICMPTimeout.Int64(); err == nil {
-		dst.ICMPTimeout = int64(val)
+		dst.ICMPTimeout = val
 	}
 	if val, err := aux.MssClampMss.Int64(); err == nil {
-		dst.MssClampMss = int64(val)
+		dst.MssClampMss = val
 	}
 	if val, err := aux.OtherTimeout.Int64(); err == nil {
-		dst.OtherTimeout = int64(val)
+		dst.OtherTimeout = val
 	}
 	if val, err := aux.TCPCloseTimeout.Int64(); err == nil {
-		dst.TCPCloseTimeout = int64(val)
+		dst.TCPCloseTimeout = val
 	}
 	if val, err := aux.TCPCloseWaitTimeout.Int64(); err == nil {
-		dst.TCPCloseWaitTimeout = int64(val)
+		dst.TCPCloseWaitTimeout = val
 	}
 	if val, err := aux.TCPEstablishedTimeout.Int64(); err == nil {
-		dst.TCPEstablishedTimeout = int64(val)
+		dst.TCPEstablishedTimeout = val
 	}
 	if val, err := aux.TCPFinWaitTimeout.Int64(); err == nil {
-		dst.TCPFinWaitTimeout = int64(val)
+		dst.TCPFinWaitTimeout = val
 	}
 	if val, err := aux.TCPLastAckTimeout.Int64(); err == nil {
-		dst.TCPLastAckTimeout = int64(val)
+		dst.TCPLastAckTimeout = val
 	}
 	if val, err := aux.TCPSynRecvTimeout.Int64(); err == nil {
-		dst.TCPSynRecvTimeout = int64(val)
+		dst.TCPSynRecvTimeout = val
 	}
 	if val, err := aux.TCPSynSentTimeout.Int64(); err == nil {
-		dst.TCPSynSentTimeout = int64(val)
+		dst.TCPSynSentTimeout = val
 	}
 	if val, err := aux.TCPTimeWaitTimeout.Int64(); err == nil {
-		dst.TCPTimeWaitTimeout = int64(val)
+		dst.TCPTimeWaitTimeout = val
 	}
 	if val, err := aux.UDPOtherTimeout.Int64(); err == nil {
-		dst.UDPOtherTimeout = int64(val)
+		dst.UDPOtherTimeout = val
 	}
 	if val, err := aux.UDPStreamTimeout.Int64(); err == nil {
-		dst.UDPStreamTimeout = int64(val)
+		dst.UDPStreamTimeout = val
 	}
 
 	return nil

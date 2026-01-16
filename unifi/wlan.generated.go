@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type WLAN struct {
@@ -150,43 +152,43 @@ func (dst *WLAN) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DTIM6E.Int64(); err == nil {
-		dst.DTIM6E = int64(val)
+		dst.DTIM6E = val
 	}
 	if val, err := aux.DTIMNa.Int64(); err == nil {
-		dst.DTIMNa = int64(val)
+		dst.DTIMNa = val
 	}
 	if val, err := aux.DTIMNg.Int64(); err == nil {
-		dst.DTIMNg = int64(val)
+		dst.DTIMNg = val
 	}
 	if val, err := aux.GroupRekey.Int64(); err == nil {
-		dst.GroupRekey = int64(val)
+		dst.GroupRekey = val
 	}
 	if val, err := aux.MinrateNaDataRateKbps.Int64(); err == nil {
-		dst.MinrateNaDataRateKbps = int64(val)
+		dst.MinrateNaDataRateKbps = val
 	}
 	if val, err := aux.MinrateNgDataRateKbps.Int64(); err == nil {
-		dst.MinrateNgDataRateKbps = int64(val)
+		dst.MinrateNgDataRateKbps = val
 	}
 	if val, err := aux.RoamClusterID.Int64(); err == nil {
-		dst.RoamClusterID = int64(val)
+		dst.RoamClusterID = val
 	}
 	if val, err := aux.SaeAntiClogging.Int64(); err == nil {
-		dst.SaeAntiClogging = int64(val)
+		dst.SaeAntiClogging = val
 	}
 	dst.SaeGroups = make([]int64, len(aux.SaeGroups))
 	for i, v := range aux.SaeGroups {
 		if val, err := v.Int64(); err == nil {
-			dst.SaeGroups[i] = int64(val)
+			dst.SaeGroups[i] = val
 		}
 	}
 	if val, err := aux.SaeSync.Int64(); err == nil {
-		dst.SaeSync = int64(val)
+		dst.SaeSync = val
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int64(val)
+		dst.VLAN = val
 	}
 	if val, err := aux.WEPIDX.Int64(); err == nil {
-		dst.WEPIDX = int64(val)
+		dst.WEPIDX = val
 	}
 
 	return nil
@@ -213,7 +215,7 @@ func (dst *WLANCapab) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 
 	return nil
@@ -243,13 +245,13 @@ func (dst *WLANCellularNetworkList) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.CountryCode.Int64(); err == nil {
-		dst.CountryCode = int64(val)
+		dst.CountryCode = val
 	}
 	if val, err := aux.Mcc.Int64(); err == nil {
-		dst.Mcc = int64(val)
+		dst.Mcc = val
 	}
 	if val, err := aux.Mnc.Int64(); err == nil {
-		dst.Mnc = int64(val)
+		dst.Mnc = val
 	}
 
 	return nil
@@ -350,34 +352,34 @@ func (dst *WLANHotspot2) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.IPaddrTypeAvailV4.Int64(); err == nil {
-		dst.IPaddrTypeAvailV4 = int64(val)
+		dst.IPaddrTypeAvailV4 = val
 	}
 	if val, err := aux.IPaddrTypeAvailV6.Int64(); err == nil {
-		dst.IPaddrTypeAvailV6 = int64(val)
+		dst.IPaddrTypeAvailV6 = val
 	}
 	if val, err := aux.MetricsDownlinkLoad.Int64(); err == nil {
-		dst.MetricsDownlinkLoad = int64(val)
+		dst.MetricsDownlinkLoad = val
 	}
 	if val, err := aux.MetricsDownlinkSpeed.Int64(); err == nil {
-		dst.MetricsDownlinkSpeed = int64(val)
+		dst.MetricsDownlinkSpeed = val
 	}
 	if val, err := aux.MetricsMeasurement.Int64(); err == nil {
-		dst.MetricsMeasurement = int64(val)
+		dst.MetricsMeasurement = val
 	}
 	if val, err := aux.MetricsUplinkLoad.Int64(); err == nil {
-		dst.MetricsUplinkLoad = int64(val)
+		dst.MetricsUplinkLoad = val
 	}
 	if val, err := aux.MetricsUplinkSpeed.Int64(); err == nil {
-		dst.MetricsUplinkSpeed = int64(val)
+		dst.MetricsUplinkSpeed = val
 	}
 	if val, err := aux.NetworkType.Int64(); err == nil {
-		dst.NetworkType = int64(val)
+		dst.NetworkType = val
 	}
 	if val, err := aux.VenueGroup.Int64(); err == nil {
-		dst.VenueGroup = int64(val)
+		dst.VenueGroup = val
 	}
 	if val, err := aux.VenueType.Int64(); err == nil {
-		dst.VenueType = int64(val)
+		dst.VenueType = val
 	}
 
 	return nil
@@ -439,20 +441,20 @@ func (dst *WLANNaiRealmList) UnmarshalJSON(b []byte) error {
 	dst.AuthIDs = make([]int64, len(aux.AuthIDs))
 	for i, v := range aux.AuthIDs {
 		if val, err := v.Int64(); err == nil {
-			dst.AuthIDs[i] = int64(val)
+			dst.AuthIDs[i] = val
 		}
 	}
 	dst.AuthVals = make([]int64, len(aux.AuthVals))
 	for i, v := range aux.AuthVals {
 		if val, err := v.Int64(); err == nil {
-			dst.AuthVals[i] = int64(val)
+			dst.AuthVals[i] = val
 		}
 	}
 	if val, err := aux.EapMethod.Int64(); err == nil {
-		dst.EapMethod = int64(val)
+		dst.EapMethod = val
 	}
 	if val, err := aux.Encoding.Int64(); err == nil {
-		dst.Encoding = int64(val)
+		dst.Encoding = val
 	}
 
 	return nil
@@ -542,7 +544,7 @@ func (dst *WLANSaePsk) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int64(val)
+		dst.VLAN = val
 	}
 
 	return nil
@@ -573,13 +575,13 @@ func (dst *WLANScheduleWithDuration) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DurationMinutes.Int64(); err == nil {
-		dst.DurationMinutes = int64(val)
+		dst.DurationMinutes = val
 	}
 	if val, err := aux.StartHour.Int64(); err == nil {
-		dst.StartHour = int64(val)
+		dst.StartHour = val
 	}
 	if val, err := aux.StartMinute.Int64(); err == nil {
-		dst.StartMinute = int64(val)
+		dst.StartMinute = val
 	}
 
 	return nil

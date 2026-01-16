@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type DNSRecord struct {
@@ -56,16 +58,16 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 	if val, err := aux.Priority.Int64(); err == nil {
-		dst.Priority = int64(val)
+		dst.Priority = val
 	}
 	if val, err := aux.Ttl.Int64(); err == nil {
-		dst.Ttl = int64(val)
+		dst.Ttl = val
 	}
 	if val, err := aux.Weight.Int64(); err == nil {
-		dst.Weight = int64(val)
+		dst.Weight = val
 	}
 
 	return nil

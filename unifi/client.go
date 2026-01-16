@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+	"net/url"
 )
 
 // GetClientByMAC returns slightly different information than GetClient, as they
@@ -186,8 +187,39 @@ func (c *ApiClient) OverrideClientFingerprint(
 	return nil
 }
 
-func (c *ApiClient) ListClient(ctx context.Context, site string) ([]Client, error) {
-	return c.listClient(ctx, site)
+// ListClient returns all clients, optionally filtered by query parameters.
+// The query parameter can contain any field from the Client struct to filter results.
+// For example: map[string]string{"network_id": "abc123", "blocked": "true"}.
+func (c *ApiClient) ListClient(ctx context.Context, site string, query ...map[string]string) ([]Client, error) {
+	var respBody struct {
+		Meta meta     `json:"meta"`
+		Data []Client `json:"data"`
+	}
+
+	// Build URL with query parameters
+	apiURL := fmt.Sprintf("api/s/%s/rest/user", site)
+	if len(query) > 0 {
+		params := url.Values{}
+		for _, q := range query {
+			for k, v := range q {
+				params.Add(k, v)
+			}
+		}
+		queryString := params.Encode()
+		apiURL = fmt.Sprintf("%s?%s", apiURL, queryString)
+	}
+
+	err := c.do(
+		ctx,
+		"GET",
+		apiURL,
+		nil,
+		&respBody,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return respBody.Data, nil
 }
 
 // GetClient returns information about a user from the REST endpoint.

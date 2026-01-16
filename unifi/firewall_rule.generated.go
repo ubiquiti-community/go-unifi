@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type FirewallRule struct {
@@ -75,7 +77,7 @@ func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.RuleIndex.Int64(); err == nil {
-		dst.RuleIndex = int64(val)
+		dst.RuleIndex = val
 	}
 
 	return nil

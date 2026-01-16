@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type EtherLighting struct {

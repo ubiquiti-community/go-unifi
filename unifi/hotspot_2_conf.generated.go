@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Hotspot2Conf struct {
@@ -110,52 +112,52 @@ func (dst *Hotspot2Conf) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AnqpDomainID.Int64(); err == nil {
-		dst.AnqpDomainID = int64(val)
+		dst.AnqpDomainID = val
 	}
 	if val, err := aux.DeauthReqTimeout.Int64(); err == nil {
-		dst.DeauthReqTimeout = int64(val)
+		dst.DeauthReqTimeout = val
 	}
 	if val, err := aux.GasComebackDelay.Int64(); err == nil {
-		dst.GasComebackDelay = int64(val)
+		dst.GasComebackDelay = val
 	}
 	if val, err := aux.GasFragLimit.Int64(); err == nil {
-		dst.GasFragLimit = int64(val)
+		dst.GasFragLimit = val
 	}
 	if val, err := aux.IPaddrTypeAvailV4.Int64(); err == nil {
-		dst.IPaddrTypeAvailV4 = int64(val)
+		dst.IPaddrTypeAvailV4 = val
 	}
 	if val, err := aux.IPaddrTypeAvailV6.Int64(); err == nil {
-		dst.IPaddrTypeAvailV6 = int64(val)
+		dst.IPaddrTypeAvailV6 = val
 	}
 	if val, err := aux.MetricsDownlinkLoad.Int64(); err == nil {
-		dst.MetricsDownlinkLoad = int64(val)
+		dst.MetricsDownlinkLoad = val
 	}
 	if val, err := aux.MetricsDownlinkSpeed.Int64(); err == nil {
-		dst.MetricsDownlinkSpeed = int64(val)
+		dst.MetricsDownlinkSpeed = val
 	}
 	if val, err := aux.MetricsMeasurement.Int64(); err == nil {
-		dst.MetricsMeasurement = int64(val)
+		dst.MetricsMeasurement = val
 	}
 	if val, err := aux.MetricsUplinkLoad.Int64(); err == nil {
-		dst.MetricsUplinkLoad = int64(val)
+		dst.MetricsUplinkLoad = val
 	}
 	if val, err := aux.MetricsUplinkSpeed.Int64(); err == nil {
-		dst.MetricsUplinkSpeed = int64(val)
+		dst.MetricsUplinkSpeed = val
 	}
 	if val, err := aux.NetworkAuthType.Int64(); err == nil {
-		dst.NetworkAuthType = int64(val)
+		dst.NetworkAuthType = val
 	}
 	if val, err := aux.NetworkType.Int64(); err == nil {
-		dst.NetworkType = int64(val)
+		dst.NetworkType = val
 	}
 	if val, err := aux.TCTimestamp.Int64(); err == nil {
-		dst.TCTimestamp = int64(val)
+		dst.TCTimestamp = val
 	}
 	if val, err := aux.VenueGroup.Int64(); err == nil {
-		dst.VenueGroup = int64(val)
+		dst.VenueGroup = val
 	}
 	if val, err := aux.VenueType.Int64(); err == nil {
-		dst.VenueType = int64(val)
+		dst.VenueType = val
 	}
 
 	return nil
@@ -182,7 +184,7 @@ func (dst *Hotspot2ConfCapab) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 
 	return nil
@@ -210,10 +212,10 @@ func (dst *Hotspot2ConfCellularNetworkList) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Mcc.Int64(); err == nil {
-		dst.Mcc = int64(val)
+		dst.Mcc = val
 	}
 	if val, err := aux.Mnc.Int64(); err == nil {
-		dst.Mnc = int64(val)
+		dst.Mnc = val
 	}
 
 	return nil
@@ -309,13 +311,13 @@ func (dst *Hotspot2ConfIcons) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Height.Int64(); err == nil {
-		dst.Height = int64(val)
+		dst.Height = val
 	}
 	if val, err := aux.Size.Int64(); err == nil {
-		dst.Size = int64(val)
+		dst.Size = val
 	}
 	if val, err := aux.Width.Int64(); err == nil {
-		dst.Width = int64(val)
+		dst.Width = val
 	}
 
 	return nil
@@ -346,10 +348,10 @@ func (dst *Hotspot2ConfNaiRealmList) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.EapMethod.Int64(); err == nil {
-		dst.EapMethod = int64(val)
+		dst.EapMethod = val
 	}
 	if val, err := aux.Encoding.Int64(); err == nil {
-		dst.Encoding = int64(val)
+		dst.Encoding = val
 	}
 
 	return nil
@@ -404,10 +406,10 @@ func (dst *Hotspot2ConfQOSMapDcsp) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.High.Int64(); err == nil {
-		dst.High = int64(val)
+		dst.High = val
 	}
 	if val, err := aux.Low.Int64(); err == nil {
-		dst.Low = int64(val)
+		dst.Low = val
 	}
 
 	return nil
@@ -434,10 +436,10 @@ func (dst *Hotspot2ConfQOSMapExceptions) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Dcsp.Int64(); err == nil {
-		dst.Dcsp = int64(val)
+		dst.Dcsp = val
 	}
 	if val, err := aux.Up.Int64(); err == nil {
-		dst.Up = int64(val)
+		dst.Up = val
 	}
 
 	return nil

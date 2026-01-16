@@ -26,6 +26,42 @@ func TestBuildStringValidators(t *testing.T) {
 			wantType:   "OneOf",
 		},
 		{
+			name:       "length between pattern",
+			validation: ".{0,128}",
+			wantCount:  1,
+			wantType:   "LengthBetween",
+		},
+		{
+			name:       "length at least pattern",
+			validation: ".{1,}",
+			wantCount:  1,
+			wantType:   "LengthAtLeast",
+		},
+		{
+			name:       "exact length pattern",
+			validation: ".{32}",
+			wantCount:  1,
+			wantType:   "LengthBetween",
+		},
+		{
+			name:       "hex pattern 32 chars",
+			validation: "[0-9A-Fa-f]{32}",
+			wantCount:  1,
+			wantType:   "LengthBetween",
+		},
+		{
+			name:       "hex pattern 512 chars",
+			validation: "[0-9A-Fa-f]{512}",
+			wantCount:  1,
+			wantType:   "LengthBetween",
+		},
+		{
+			name:       "color hex pattern",
+			validation: "^#(?:[0-9a-fA-F]{3}){1,2}$",
+			wantCount:  1,
+			wantType:   "LengthBetween",
+		},
+		{
 			name:       "regex pattern",
 			validation: "^[a-z]+$",
 			wantCount:  1,
@@ -60,6 +96,12 @@ func TestBuildStringValidators(t *testing.T) {
 				}
 				if tt.wantType == "RegexMatches" && !strings.Contains(schemaDefContains, "stringvalidator.RegexMatches") {
 					t.Errorf("expected RegexMatches validator, got %s", schemaDefContains)
+				}
+				if tt.wantType == "LengthBetween" && !strings.Contains(schemaDefContains, "stringvalidator.LengthBetween") {
+					t.Errorf("expected LengthBetween validator, got %s", schemaDefContains)
+				}
+				if tt.wantType == "LengthAtLeast" && !strings.Contains(schemaDefContains, "stringvalidator.LengthAtLeast") {
+					t.Errorf("expected LengthAtLeast validator, got %s", schemaDefContains)
 				}
 			}
 		})

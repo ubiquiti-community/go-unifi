@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type ClientGroup struct {
@@ -49,10 +51,10 @@ func (dst *ClientGroup) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.QOSRateMaxDown.Int64(); err == nil {
-		dst.QOSRateMaxDown = int64(val)
+		dst.QOSRateMaxDown = val
 	}
 	if val, err := aux.QOSRateMaxUp.Int64(); err == nil {
-		dst.QOSRateMaxUp = int64(val)
+		dst.QOSRateMaxUp = val
 	}
 
 	return nil

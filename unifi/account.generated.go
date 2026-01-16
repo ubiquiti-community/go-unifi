@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Account struct {
@@ -57,13 +59,13 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.TunnelMediumType.Int64(); err == nil {
-		dst.TunnelMediumType = int64(val)
+		dst.TunnelMediumType = val
 	}
 	if val, err := aux.TunnelType.Int64(); err == nil {
-		dst.TunnelType = int64(val)
+		dst.TunnelType = val
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int64(val)
+		dst.VLAN = val
 	}
 
 	return nil

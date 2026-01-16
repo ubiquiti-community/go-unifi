@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Network struct {
@@ -323,104 +325,104 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DHCPDLeaseTime.Int64(); err == nil {
-		dst.DHCPDLeaseTime = int64(val)
+		dst.DHCPDLeaseTime = val
 	}
 	if val, err := aux.DHCPDTimeOffset.Int64(); err == nil {
-		dst.DHCPDTimeOffset = int64(val)
+		dst.DHCPDTimeOffset = val
 	}
 	if val, err := aux.DHCPDV6LeaseTime.Int64(); err == nil {
-		dst.DHCPDV6LeaseTime = int64(val)
+		dst.DHCPDV6LeaseTime = val
 	}
 	if val, err := aux.IGMPGroupmembership.Int64(); err == nil {
-		dst.IGMPGroupmembership = int64(val)
+		dst.IGMPGroupmembership = val
 	}
 	if val, err := aux.IGMPMaxresponse.Int64(); err == nil {
-		dst.IGMPMaxresponse = int64(val)
+		dst.IGMPMaxresponse = val
 	}
 	if val, err := aux.IGMPMcrtrexpiretime.Int64(); err == nil {
-		dst.IGMPMcrtrexpiretime = int64(val)
+		dst.IGMPMcrtrexpiretime = val
 	}
 	if val, err := aux.IPSecDhGroup.Int64(); err == nil {
-		dst.IPSecDhGroup = int64(val)
+		dst.IPSecDhGroup = val
 	}
 	if val, err := aux.IPSecEspDhGroup.Int64(); err == nil {
-		dst.IPSecEspDhGroup = int64(val)
+		dst.IPSecEspDhGroup = val
 	}
 	if val, err := aux.IPSecIkeDhGroup.Int64(); err == nil {
-		dst.IPSecIkeDhGroup = int64(val)
+		dst.IPSecIkeDhGroup = val
 	}
 	if val, err := aux.IPV6RaPreferredLifetime.Int64(); err == nil {
-		dst.IPV6RaPreferredLifetime = int64(val)
+		dst.IPV6RaPreferredLifetime = val
 	}
 	if val, err := aux.IPV6RaValidLifetime.Int64(); err == nil {
-		dst.IPV6RaValidLifetime = int64(val)
+		dst.IPV6RaValidLifetime = val
 	}
 	if val, err := aux.InterfaceMtu.Int64(); err == nil {
-		dst.InterfaceMtu = int64(val)
+		dst.InterfaceMtu = val
 	}
 	dst.InternetAccessEnabled = emptyBoolToTrue(aux.InternetAccessEnabled)
 	if val, err := aux.LocalPort.Int64(); err == nil {
-		dst.LocalPort = int64(val)
+		dst.LocalPort = val
 	}
 	if val, err := aux.OpenVPNLocalPort.Int64(); err == nil {
-		dst.OpenVPNLocalPort = int64(val)
+		dst.OpenVPNLocalPort = val
 	}
 	if val, err := aux.OpenVPNRemotePort.Int64(); err == nil {
-		dst.OpenVPNRemotePort = int64(val)
+		dst.OpenVPNRemotePort = val
 	}
 	if val, err := aux.PptpcRouteDistance.Int64(); err == nil {
-		dst.PptpcRouteDistance = int64(val)
+		dst.PptpcRouteDistance = val
 	}
 	if val, err := aux.Priority.Int64(); err == nil {
-		dst.Priority = int64(val)
+		dst.Priority = val
 	}
 	if val, err := aux.RouteDistance.Int64(); err == nil {
-		dst.RouteDistance = int64(val)
+		dst.RouteDistance = val
 	}
 	if val, err := aux.UidPublicGatewayPort.Int64(); err == nil {
-		dst.UidPublicGatewayPort = int64(val)
+		dst.UidPublicGatewayPort = val
 	}
 	if val, err := aux.UidVPNMaxConnectionTimeSeconds.Int64(); err == nil {
-		dst.UidVPNMaxConnectionTimeSeconds = int64(val)
+		dst.UidVPNMaxConnectionTimeSeconds = val
 	}
 	if val, err := aux.VLAN.Int64(); err == nil {
-		dst.VLAN = int64(val)
+		dst.VLAN = val
 	}
 	if val, err := aux.VrrpVrid.Int64(); err == nil {
-		dst.VrrpVrid = int64(val)
+		dst.VrrpVrid = val
 	}
 	if val, err := aux.WANDHCPCos.Int64(); err == nil {
-		dst.WANDHCPCos = int64(val)
+		dst.WANDHCPCos = val
 	}
 	if val, err := aux.WANDHCPv6Cos.Int64(); err == nil {
-		dst.WANDHCPv6Cos = int64(val)
+		dst.WANDHCPv6Cos = val
 	}
 	if val, err := aux.WANDHCPv6PDSize.Int64(); err == nil {
-		dst.WANDHCPv6PDSize = int64(val)
+		dst.WANDHCPv6PDSize = val
 	}
 	if val, err := aux.WANEgressQOS.Int64(); err == nil {
-		dst.WANEgressQOS = int64(val)
+		dst.WANEgressQOS = val
 	}
 	if val, err := aux.WANFailoverPriority.Int64(); err == nil {
-		dst.WANFailoverPriority = int64(val)
+		dst.WANFailoverPriority = val
 	}
 	if val, err := aux.WANLoadBalanceWeight.Int64(); err == nil {
-		dst.WANLoadBalanceWeight = int64(val)
+		dst.WANLoadBalanceWeight = val
 	}
 	if val, err := aux.WANPrefixlen.Int64(); err == nil {
-		dst.WANPrefixlen = int64(val)
+		dst.WANPrefixlen = val
 	}
 	if val, err := aux.WANSmartQDownRate.Int64(); err == nil {
-		dst.WANSmartQDownRate = int64(val)
+		dst.WANSmartQDownRate = val
 	}
 	if val, err := aux.WANSmartQUpRate.Int64(); err == nil {
-		dst.WANSmartQUpRate = int64(val)
+		dst.WANSmartQUpRate = val
 	}
 	if val, err := aux.WANVLAN.Int64(); err == nil {
-		dst.WANVLAN = int64(val)
+		dst.WANVLAN = val
 	}
 	if val, err := aux.WireguardClientPeerPort.Int64(); err == nil {
-		dst.WireguardClientPeerPort = int64(val)
+		dst.WireguardClientPeerPort = val
 	}
 
 	return nil
@@ -490,7 +492,7 @@ func (dst *NetworkWANDHCPOptions) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.OptionNumber.Int64(); err == nil {
-		dst.OptionNumber = int64(val)
+		dst.OptionNumber = val
 	}
 
 	return nil
@@ -516,7 +518,7 @@ func (dst *NetworkWANDHCPv6Options) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.OptionNumber.Int64(); err == nil {
-		dst.OptionNumber = int64(val)
+		dst.OptionNumber = val
 	}
 
 	return nil
@@ -543,10 +545,10 @@ func (dst *NetworkWANProviderCapabilities) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DownloadKilobitsPerSecond.Int64(); err == nil {
-		dst.DownloadKilobitsPerSecond = int64(val)
+		dst.DownloadKilobitsPerSecond = val
 	}
 	if val, err := aux.UploadKilobitsPerSecond.Int64(); err == nil {
-		dst.UploadKilobitsPerSecond = int64(val)
+		dst.UploadKilobitsPerSecond = val
 	}
 
 	return nil

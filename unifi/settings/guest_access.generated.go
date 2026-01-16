@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type GuestAccess struct {
@@ -146,22 +148,22 @@ func (dst *GuestAccess) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.ExpireNumber.Int64(); err == nil {
-		dst.ExpireNumber = int64(val)
+		dst.ExpireNumber = val
 	}
 	if val, err := aux.ExpireUnit.Int64(); err == nil {
-		dst.ExpireUnit = int64(val)
+		dst.ExpireUnit = val
 	}
 	if val, err := aux.PortalCustomizedBoxOpacity.Int64(); err == nil {
-		dst.PortalCustomizedBoxOpacity = int64(val)
+		dst.PortalCustomizedBoxOpacity = val
 	}
 	if val, err := aux.PortalCustomizedBoxRADIUS.Int64(); err == nil {
-		dst.PortalCustomizedBoxRADIUS = int64(val)
+		dst.PortalCustomizedBoxRADIUS = val
 	}
 	if val, err := aux.PortalCustomizedLogoSize.Int64(); err == nil {
-		dst.PortalCustomizedLogoSize = int64(val)
+		dst.PortalCustomizedLogoSize = val
 	}
 	if val, err := aux.RADIUSDisconnectPort.Int64(); err == nil {
-		dst.RADIUSDisconnectPort = int64(val)
+		dst.RADIUSDisconnectPort = val
 	}
 
 	return nil

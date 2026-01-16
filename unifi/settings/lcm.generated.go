@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Lcm struct {
@@ -50,10 +52,10 @@ func (dst *Lcm) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Brightness.Int64(); err == nil {
-		dst.Brightness = int64(val)
+		dst.Brightness = val
 	}
 	if val, err := aux.IDleTimeout.Int64(); err == nil {
-		dst.IDleTimeout = int64(val)
+		dst.IDleTimeout = val
 	}
 
 	return nil

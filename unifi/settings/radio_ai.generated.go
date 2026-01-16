@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type RadioAi struct {
@@ -68,31 +70,31 @@ func (dst *RadioAi) UnmarshalJSON(b []byte) error {
 	dst.Channels6E = make([]int64, len(aux.Channels6E))
 	for i, v := range aux.Channels6E {
 		if val, err := v.Int64(); err == nil {
-			dst.Channels6E[i] = int64(val)
+			dst.Channels6E[i] = val
 		}
 	}
 	dst.ChannelsNa = make([]int64, len(aux.ChannelsNa))
 	for i, v := range aux.ChannelsNa {
 		if val, err := v.Int64(); err == nil {
-			dst.ChannelsNa[i] = int64(val)
+			dst.ChannelsNa[i] = val
 		}
 	}
 	dst.ChannelsNg = make([]int64, len(aux.ChannelsNg))
 	for i, v := range aux.ChannelsNg {
 		if val, err := v.Int64(); err == nil {
-			dst.ChannelsNg[i] = int64(val)
+			dst.ChannelsNg[i] = val
 		}
 	}
 	dst.HtModesNa = make([]int64, len(aux.HtModesNa))
 	for i, v := range aux.HtModesNa {
 		if val, err := v.Int64(); err == nil {
-			dst.HtModesNa[i] = int64(val)
+			dst.HtModesNa[i] = val
 		}
 	}
 	dst.HtModesNg = make([]int64, len(aux.HtModesNg))
 	for i, v := range aux.HtModesNg {
 		if val, err := v.Int64(); err == nil {
-			dst.HtModesNg[i] = int64(val)
+			dst.HtModesNg[i] = val
 		}
 	}
 
@@ -121,10 +123,10 @@ func (dst *SettingRadioAiChannelsBlacklist) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Channel.Int64(); err == nil {
-		dst.Channel = int64(val)
+		dst.Channel = val
 	}
 	if val, err := aux.ChannelWidth.Int64(); err == nil {
-		dst.ChannelWidth = int64(val)
+		dst.ChannelWidth = val
 	}
 
 	return nil
@@ -151,7 +153,7 @@ func (dst *SettingRadioAiRadiosConfiguration) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.ChannelWidth.Int64(); err == nil {
-		dst.ChannelWidth = int64(val)
+		dst.ChannelWidth = val
 	}
 
 	return nil

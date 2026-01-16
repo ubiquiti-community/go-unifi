@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Netflow struct {
@@ -60,22 +62,22 @@ func (dst *Netflow) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.EngineID.Int64(); err == nil {
-		dst.EngineID = int64(val)
+		dst.EngineID = val
 	}
 	if val, err := aux.ExportFrequency.Int64(); err == nil {
-		dst.ExportFrequency = int64(val)
+		dst.ExportFrequency = val
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 	if val, err := aux.RefreshRate.Int64(); err == nil {
-		dst.RefreshRate = int64(val)
+		dst.RefreshRate = val
 	}
 	if val, err := aux.SamplingRate.Int64(); err == nil {
-		dst.SamplingRate = int64(val)
+		dst.SamplingRate = val
 	}
 	if val, err := aux.Version.Int64(); err == nil {
-		dst.Version = int64(val)
+		dst.Version = val
 	}
 
 	return nil

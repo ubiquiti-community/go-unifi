@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Radius struct {
@@ -54,13 +56,13 @@ func (dst *Radius) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AcctPort.Int64(); err == nil {
-		dst.AcctPort = int64(val)
+		dst.AcctPort = val
 	}
 	if val, err := aux.AuthPort.Int64(); err == nil {
-		dst.AuthPort = int64(val)
+		dst.AuthPort = val
 	}
 	if val, err := aux.InterimUpdateInterval.Int64(); err == nil {
-		dst.InterimUpdateInterval = int64(val)
+		dst.InterimUpdateInterval = val
 	}
 
 	return nil

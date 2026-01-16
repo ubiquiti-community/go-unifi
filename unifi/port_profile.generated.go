@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type PortProfile struct {
@@ -97,43 +99,43 @@ func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
-		dst.Dot1XIDleTimeout = int64(val)
+		dst.Dot1XIDleTimeout = val
 	}
 	if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
-		dst.EgressRateLimitKbps = int64(val)
+		dst.EgressRateLimitKbps = val
 	}
 	if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
-		dst.PriorityQueue1Level = int64(val)
+		dst.PriorityQueue1Level = val
 	}
 	if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
-		dst.PriorityQueue2Level = int64(val)
+		dst.PriorityQueue2Level = val
 	}
 	if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
-		dst.PriorityQueue3Level = int64(val)
+		dst.PriorityQueue3Level = val
 	}
 	if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
-		dst.PriorityQueue4Level = int64(val)
+		dst.PriorityQueue4Level = val
 	}
 	if val, err := aux.Speed.Int64(); err == nil {
-		dst.Speed = int64(val)
+		dst.Speed = val
 	}
 	if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
-		dst.StormctrlBroadcastastLevel = int64(val)
+		dst.StormctrlBroadcastastLevel = val
 	}
 	if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
-		dst.StormctrlBroadcastastRate = int64(val)
+		dst.StormctrlBroadcastastRate = val
 	}
 	if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
-		dst.StormctrlMcastLevel = int64(val)
+		dst.StormctrlMcastLevel = val
 	}
 	if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
-		dst.StormctrlMcastRate = int64(val)
+		dst.StormctrlMcastRate = val
 	}
 	if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
-		dst.StormctrlUcastLevel = int64(val)
+		dst.StormctrlUcastLevel = val
 	}
 	if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
-		dst.StormctrlUcastRate = int64(val)
+		dst.StormctrlUcastRate = val
 	}
 
 	return nil
@@ -164,16 +166,16 @@ func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = int64(val)
+		dst.CosCode = val
 	}
 	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = int64(val)
+		dst.DscpCode = val
 	}
 	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = int64(val)
+		dst.IPPrecedenceCode = val
 	}
 	if val, err := aux.Queue.Int64(); err == nil {
-		dst.Queue = int64(val)
+		dst.Queue = val
 	}
 
 	return nil
@@ -207,19 +209,19 @@ func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = int64(val)
+		dst.CosCode = val
 	}
 	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = int64(val)
+		dst.DscpCode = val
 	}
 	if val, err := aux.DstPort.Int64(); err == nil {
-		dst.DstPort = int64(val)
+		dst.DstPort = val
 	}
 	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = int64(val)
+		dst.IPPrecedenceCode = val
 	}
 	if val, err := aux.SrcPort.Int64(); err == nil {
-		dst.SrcPort = int64(val)
+		dst.SrcPort = val
 	}
 
 	return nil
