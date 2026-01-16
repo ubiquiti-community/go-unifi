@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type GlobalAp struct {
@@ -59,22 +61,22 @@ func (dst *GlobalAp) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.NaChannelSize.Int64(); err == nil {
-		dst.NaChannelSize = int64(val)
+		dst.NaChannelSize = val
 	}
 	if val, err := aux.NaTxPower.Int64(); err == nil {
-		dst.NaTxPower = int64(val)
+		dst.NaTxPower = val
 	}
 	if val, err := aux.NgChannelSize.Int64(); err == nil {
-		dst.NgChannelSize = int64(val)
+		dst.NgChannelSize = val
 	}
 	if val, err := aux.NgTxPower.Int64(); err == nil {
-		dst.NgTxPower = int64(val)
+		dst.NgTxPower = val
 	}
 	if val, err := aux.SixEChannelSize.Int64(); err == nil {
-		dst.SixEChannelSize = int64(val)
+		dst.SixEChannelSize = val
 	}
 	if val, err := aux.SixETxPower.Int64(); err == nil {
-		dst.SixETxPower = int64(val)
+		dst.SixETxPower = val
 	}
 
 	return nil

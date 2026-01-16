@@ -14,12 +14,20 @@
 	dst.{{ .FieldName }} = make([]{{ .FieldType }}, len(aux.{{ .FieldName }}))
 	for i, v := range aux.{{ .FieldName }} {
 		if val, err := v.Int64(); err == nil {
-			dst.{{ .FieldName }}[i] = {{ .FieldType }}(val)
+			{{- if eq .FieldType "string" }}
+			dst.{{ .FieldName }}[i] = strconv.FormatInt(val, 10)
+			{{- else }}
+			dst.{{ .FieldName }}[i] = val
+			{{- end }}
 		}
 	}
 			{{- else }}
 	if val, err := aux.{{ .FieldName }}.Int64(); err == nil {
-		dst.{{ .FieldName }} = {{ .FieldType }}(val)
+		{{- if eq .FieldType "string" }}
+		dst.{{ .FieldName }} = strconv.FormatInt(val, 10)
+		{{- else }}
+		dst.{{ .FieldName }} = val
+		{{- end }}
 	}
 			{{- end }}
 		{{- else }}
@@ -45,6 +53,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -55,6 +64,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 {{ range $k, $v := .Types }}

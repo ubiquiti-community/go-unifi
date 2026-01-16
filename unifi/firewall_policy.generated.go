@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type FirewallPolicy struct {
@@ -64,7 +66,7 @@ func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Index.Int64(); err == nil {
-		dst.Index = int64(val)
+		dst.Index = val
 	}
 
 	return nil
@@ -98,7 +100,7 @@ func (dst *FirewallPolicyDestination) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 
 	return nil
@@ -157,7 +159,7 @@ func (dst *FirewallPolicySource) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 
 	return nil

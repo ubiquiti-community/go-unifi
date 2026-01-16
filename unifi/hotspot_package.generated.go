@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type HotspotPackage struct {
@@ -79,22 +81,22 @@ func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Hours.Int64(); err == nil {
-		dst.Hours = int64(val)
+		dst.Hours = val
 	}
 	if val, err := aux.Index.Int64(); err == nil {
-		dst.Index = int64(val)
+		dst.Index = val
 	}
 	if val, err := aux.LimitDown.Int64(); err == nil {
-		dst.LimitDown = int64(val)
+		dst.LimitDown = val
 	}
 	if val, err := aux.LimitQuota.Int64(); err == nil {
-		dst.LimitQuota = int64(val)
+		dst.LimitQuota = val
 	}
 	if val, err := aux.LimitUp.Int64(); err == nil {
-		dst.LimitUp = int64(val)
+		dst.LimitUp = val
 	}
 	if val, err := aux.TrialDurationMinutes.Int64(); err == nil {
-		dst.TrialDurationMinutes = int64(val)
+		dst.TrialDurationMinutes = val
 	}
 
 	return nil

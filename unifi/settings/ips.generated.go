@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Ips struct {
@@ -80,10 +82,10 @@ func (dst *SettingIpsAlerts) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Gid.Int64(); err == nil {
-		dst.Gid = int64(val)
+		dst.Gid = val
 	}
 	if val, err := aux.ID.Int64(); err == nil {
-		dst.ID = int64(val)
+		dst.ID = val
 	}
 
 	return nil

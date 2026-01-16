@@ -187,7 +187,8 @@ func (g *SpecificationGenerator) fieldToDataSourceAttribute(r *ResourceInfo, fie
 
 	// Use JSONName directly as it's already in the correct Terraform format
 	name := toTerraformName(field.FieldName)
-	externalType := g.buildAssociatedExternalType(r, field)
+	_ = g.buildAssociatedExternalType(r, field)
+	var externalType *schema.AssociatedExternalType = nil
 
 	attr := &datasource.Attribute{
 		Name: name,
@@ -239,9 +240,9 @@ func (g *SpecificationGenerator) fieldToDataSourceAttribute(r *ResourceInfo, fie
 			ComputedOptionalRequired: "computed",
 			AssociatedExternalType:   externalType,
 		}
-		if validators := g.buildInt64Validators(field.FieldValidation); len(validators) > 0 {
-			intAttr.Validators = validators
-		}
+		// if validators := g.buildInt64Validators(field.FieldValidation); len(validators) > 0 {
+		// 	intAttr.Validators = validators
+		// }
 		attr.Int64 = intAttr
 	case "float64":
 		attr.Float64 = &datasource.Float64Attribute{
@@ -253,9 +254,9 @@ func (g *SpecificationGenerator) fieldToDataSourceAttribute(r *ResourceInfo, fie
 			ComputedOptionalRequired: "computed",
 			AssociatedExternalType:   externalType,
 		}
-		if validators := g.buildStringValidators(field.FieldValidation); len(validators) > 0 {
-			strAttr.Validators = validators
-		}
+		// if validators := g.buildStringValidators(field.FieldValidation); len(validators) > 0 {
+		// 	strAttr.Validators = validators
+		// }
 		attr.String = strAttr
 	default:
 		// Check if it's a custom type defined in Types
@@ -369,7 +370,8 @@ func (g *SpecificationGenerator) fieldToResourceAttribute(r *ResourceInfo, field
 
 	// Use JSONName directly as it's already in the correct Terraform format
 	name := toTerraformName(field.FieldName)
-	externalType := g.buildAssociatedExternalType(r, field)
+	_ = g.buildAssociatedExternalType(r, field)
+	var externalType *schema.AssociatedExternalType = nil
 	computedOptionalRequired := g.determineComputedOptionalRequired(field)
 
 	attr := &resource.Attribute{
@@ -422,9 +424,9 @@ func (g *SpecificationGenerator) fieldToResourceAttribute(r *ResourceInfo, field
 			ComputedOptionalRequired: computedOptionalRequired,
 			AssociatedExternalType:   externalType,
 		}
-		if validators := g.buildInt64Validators(field.FieldValidation); len(validators) > 0 {
-			intAttr.Validators = validators
-		}
+		// if validators := g.buildInt64Validators(field.FieldValidation); len(validators) > 0 {
+		// 	intAttr.Validators = validators
+		// }
 		attr.Int64 = intAttr
 	case "float64":
 		attr.Float64 = &resource.Float64Attribute{
@@ -436,9 +438,9 @@ func (g *SpecificationGenerator) fieldToResourceAttribute(r *ResourceInfo, field
 			ComputedOptionalRequired: computedOptionalRequired,
 			AssociatedExternalType:   externalType,
 		}
-		if validators := g.buildStringValidators(field.FieldValidation); len(validators) > 0 {
-			strAttr.Validators = validators
-		}
+		// if validators := g.buildStringValidators(field.FieldValidation); len(validators) > 0 {
+		// 	strAttr.Validators = validators
+		// }
 		attr.String = strAttr
 	default:
 		// Check if it's a custom type defined in Types
@@ -620,24 +622,140 @@ func (g *SpecificationGenerator) buildStringValidators(validation string) []sche
 				},
 			})
 		}
-	} else if strings.HasPrefix(validation, "^") || strings.Contains(validation, "[") {
-		// It's a regex pattern
-		// Escape the validation string for Go code
-		escapedValidation := strings.ReplaceAll(validation, "\\", "\\\\")
-		escapedValidation = strings.ReplaceAll(escapedValidation, "\"", "\\\"")
-		schemaDefinition := fmt.Sprintf(`stringvalidator.RegexMatches(regexp.MustCompile("%s"), "")`, escapedValidation)
-		validators = append(validators, schema.StringValidator{
-			Custom: &schema.CustomValidator{
-				Imports: []code.Import{
-					{Path: "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"},
-					{Path: "regexp"},
-				},
-				SchemaDefinition: schemaDefinition,
-			},
-		})
+	} else if validation != "" {
+		// It's a regex pattern - translate to appropriate validator
+		translatedValidators := g.translateRegexToValidators(validation)
+		validators = append(validators, translatedValidators...)
 	}
 
 	return validators
+}
+
+// translateRegexToValidators converts a regex pattern to appropriate Terraform validators.
+func (g *SpecificationGenerator) translateRegexToValidators(pattern string) []schema.StringValidator {
+	validators := make([]schema.StringValidator, 0)
+
+	// Try to translate to specific validators
+	if validator := g.tryLengthValidator(pattern); validator != nil {
+		validators = append(validators, *validator)
+		return validators
+	}
+
+	if validator := g.tryHexValidator(pattern); validator != nil {
+		validators = append(validators, *validator)
+		return validators
+	}
+
+	if validator := g.tryColorHexValidator(pattern); validator != nil {
+		validators = append(validators, *validator)
+		return validators
+	}
+
+	// For complex patterns, use RegexMatches but with proper escaping
+	// Replace problematic characters to avoid escape sequence issues
+	safePattern := strings.ReplaceAll(pattern, `"`, `'`)
+	schemaDefinition := fmt.Sprintf("stringvalidator.RegexMatches(regexp.MustCompile(`%s`), \"\")", safePattern)
+	validators = append(validators, schema.StringValidator{
+		Custom: &schema.CustomValidator{
+			Imports: []code.Import{
+				{Path: "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"},
+				{Path: "regexp"},
+			},
+			SchemaDefinition: schemaDefinition,
+		},
+	})
+
+	return validators
+}
+
+// tryLengthValidator attempts to create a length-based validator from a regex pattern.
+func (g *SpecificationGenerator) tryLengthValidator(pattern string) *schema.StringValidator {
+	// Pattern: .{min,max} or .{exact} or .{min,}
+	lengthPattern := regexp.MustCompile(`^\.\{(\d+)(?:,(\d*))?\}$`)
+	matches := lengthPattern.FindStringSubmatch(pattern)
+
+	if len(matches) > 0 {
+		min := matches[1]
+		max := matches[2] // Will be empty if no comma or if .{min,}
+		hasComma := strings.Contains(pattern, ",")
+
+		var schemaDefinition string
+
+		if !hasComma {
+			// Exact length: .{n} (no comma in pattern)
+			schemaDefinition = fmt.Sprintf("stringvalidator.LengthBetween(%s, %s)", min, min)
+		} else if max == "" {
+			// Minimum length: .{min,} (comma but no max)
+			minInt, _ := strconv.Atoi(min)
+			schemaDefinition = fmt.Sprintf("stringvalidator.LengthAtLeast(%d)", minInt)
+		} else {
+			// Range: .{min,max}
+			minInt, _ := strconv.Atoi(min)
+			maxInt, _ := strconv.Atoi(max)
+			schemaDefinition = fmt.Sprintf("stringvalidator.LengthBetween(%d, %d)", minInt, maxInt)
+		}
+
+		return &schema.StringValidator{
+			Custom: &schema.CustomValidator{
+				Imports: []code.Import{
+					{Path: "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"},
+				},
+				SchemaDefinition: schemaDefinition,
+			},
+		}
+	}
+
+	return nil
+}
+
+// tryHexValidator attempts to create a validator for hexadecimal patterns.
+func (g *SpecificationGenerator) tryHexValidator(pattern string) *schema.StringValidator {
+	// Pattern: [0-9A-Fa-f]{n} or [0-9a-fA-F]{n}
+	hexPattern := regexp.MustCompile(`^\[0-9A-Fa-f\]\{(\d+)\}$|^\[0-9a-fA-F\]\{(\d+)\}$`)
+	matches := hexPattern.FindStringSubmatch(pattern)
+
+	if len(matches) > 0 {
+		length := matches[1]
+		if length == "" {
+			length = matches[2]
+		}
+
+		lengthInt, _ := strconv.Atoi(length)
+
+		// Use length validator combined with regex for hex characters
+		schemaDefinition := fmt.Sprintf("stringvalidator.LengthBetween(%d, %d)", lengthInt, lengthInt)
+
+		return &schema.StringValidator{
+			Custom: &schema.CustomValidator{
+				Imports: []code.Import{
+					{Path: "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"},
+				},
+				SchemaDefinition: schemaDefinition,
+			},
+		}
+	}
+
+	return nil
+}
+
+// tryColorHexValidator attempts to create a validator for color hex codes.
+func (g *SpecificationGenerator) tryColorHexValidator(pattern string) *schema.StringValidator {
+	// Pattern: ^#(?:[0-9a-fA-F]{3}){1,2}$
+	if strings.Contains(pattern, "#") && strings.Contains(pattern, "[0-9a-fA-F]{3}") {
+		// This is a color hex pattern - use LengthBetween for #RGB or #RRGGBB
+		schemaDefinition := "stringvalidator.LengthBetween(4, 7)" // #RGB (4) to #RRGGBB (7)
+
+		return &schema.StringValidator{
+			Custom: &schema.CustomValidator{
+				Imports: []code.Import{
+					{Path: "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"},
+				},
+				SchemaDefinition: schemaDefinition,
+			},
+		}
+	}
+
+	return nil
 }
 
 // buildInt64Validators creates int64 validators from validation string.

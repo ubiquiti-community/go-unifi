@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type TrafficRoute struct {
@@ -81,7 +83,7 @@ func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
 	dst.Ports = make([]int64, len(aux.Ports))
 	for i, v := range aux.Ports {
 		if val, err := v.Int64(); err == nil {
-			dst.Ports[i] = int64(val)
+			dst.Ports[i] = val
 		}
 	}
 

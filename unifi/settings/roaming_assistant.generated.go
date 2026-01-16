@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type RoamingAssistant struct {
@@ -46,7 +48,7 @@ func (dst *RoamingAssistant) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Rssi.Int64(); err == nil {
-		dst.Rssi = int64(val)
+		dst.Rssi = val
 	}
 
 	return nil

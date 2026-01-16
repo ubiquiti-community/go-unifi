@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type SuperMgmt struct {
@@ -96,31 +98,31 @@ func (dst *SuperMgmt) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AutobackupDays.Int64(); err == nil {
-		dst.AutobackupDays = int64(val)
+		dst.AutobackupDays = val
 	}
 	if val, err := aux.AutobackupMaxFiles.Int64(); err == nil {
-		dst.AutobackupMaxFiles = int64(val)
+		dst.AutobackupMaxFiles = val
 	}
 	if val, err := aux.DataRetentionTimeInHoursFor5MinutesScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursFor5MinutesScale = int64(val)
+		dst.DataRetentionTimeInHoursFor5MinutesScale = val
 	}
 	if val, err := aux.DataRetentionTimeInHoursForDailyScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForDailyScale = int64(val)
+		dst.DataRetentionTimeInHoursForDailyScale = val
 	}
 	if val, err := aux.DataRetentionTimeInHoursForHourlyScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForHourlyScale = int64(val)
+		dst.DataRetentionTimeInHoursForHourlyScale = val
 	}
 	if val, err := aux.DataRetentionTimeInHoursForMonthlyScale.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForMonthlyScale = int64(val)
+		dst.DataRetentionTimeInHoursForMonthlyScale = val
 	}
 	if val, err := aux.DataRetentionTimeInHoursForOthers.Int64(); err == nil {
-		dst.DataRetentionTimeInHoursForOthers = int64(val)
+		dst.DataRetentionTimeInHoursForOthers = val
 	}
 	if val, err := aux.MinimumUsableHdSpace.Int64(); err == nil {
-		dst.MinimumUsableHdSpace = int64(val)
+		dst.MinimumUsableHdSpace = val
 	}
 	if val, err := aux.MinimumUsableSdSpace.Int64(); err == nil {
-		dst.MinimumUsableSdSpace = int64(val)
+		dst.MinimumUsableSdSpace = val
 	}
 
 	return nil

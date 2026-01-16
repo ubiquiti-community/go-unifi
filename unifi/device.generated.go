@@ -18,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Device struct {
@@ -145,16 +146,16 @@ func (dst *Device) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.GatewayVrrpPriority.Int64(); err == nil {
-		dst.GatewayVrrpPriority = int64(val)
+		dst.GatewayVrrpPriority = val
 	}
 	if val, err := aux.LcmBrightness.Int64(); err == nil {
-		dst.LcmBrightness = int64(val)
+		dst.LcmBrightness = val
 	}
 	if val, err := aux.LcmIDleTimeout.Int64(); err == nil {
-		dst.LcmIDleTimeout = int64(val)
+		dst.LcmIDleTimeout = val
 	}
 	if val, err := aux.LcmOrientationOverride.Int64(); err == nil {
-		dst.LcmOrientationOverride = int64(val)
+		dst.LcmOrientationOverride = val
 	}
 	if val, err := aux.LedOverrideColorBrightness.Int64(); err == nil {
 		dst.LedOverrideColorBrightness = val
@@ -255,7 +256,7 @@ func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Brightness.Int64(); err == nil {
-		dst.Brightness = int64(val)
+		dst.Brightness = val
 	}
 
 	return nil
@@ -303,7 +304,7 @@ func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.PrimarySlot.Int64(); err == nil {
-		dst.PrimarySlot = int64(val)
+		dst.PrimarySlot = val
 	}
 
 	return nil
@@ -333,7 +334,7 @@ func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = int64(val)
+		dst.Port = val
 	}
 
 	return nil
@@ -361,7 +362,7 @@ func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Index.Int64(); err == nil {
-		dst.Index = int64(val)
+		dst.Index = val
 	}
 
 	return nil
@@ -447,53 +448,53 @@ func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	dst.AggregateMembers = make([]int64, len(aux.AggregateMembers))
 	for i, v := range aux.AggregateMembers {
 		if val, err := v.Int64(); err == nil {
-			dst.AggregateMembers[i] = int64(val)
+			dst.AggregateMembers[i] = val
 		}
 	}
 	if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
-		dst.Dot1XIDleTimeout = int64(val)
+		dst.Dot1XIDleTimeout = val
 	}
 	if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
-		dst.EgressRateLimitKbps = int64(val)
+		dst.EgressRateLimitKbps = val
 	}
 	if val, err := aux.MirrorPortIDX.Int64(); err == nil {
-		dst.MirrorPortIDX = int64(val)
+		dst.MirrorPortIDX = val
 	}
 	if val, err := aux.PortIDX.Int64(); err == nil {
-		dst.PortIDX = int64(val)
+		dst.PortIDX = val
 	}
 	if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
-		dst.PriorityQueue1Level = int64(val)
+		dst.PriorityQueue1Level = val
 	}
 	if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
-		dst.PriorityQueue2Level = int64(val)
+		dst.PriorityQueue2Level = val
 	}
 	if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
-		dst.PriorityQueue3Level = int64(val)
+		dst.PriorityQueue3Level = val
 	}
 	if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
-		dst.PriorityQueue4Level = int64(val)
+		dst.PriorityQueue4Level = val
 	}
 	if val, err := aux.Speed.Int64(); err == nil {
-		dst.Speed = int64(val)
+		dst.Speed = val
 	}
 	if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
-		dst.StormctrlBroadcastastLevel = int64(val)
+		dst.StormctrlBroadcastastLevel = val
 	}
 	if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
-		dst.StormctrlBroadcastastRate = int64(val)
+		dst.StormctrlBroadcastastRate = val
 	}
 	if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
-		dst.StormctrlMcastLevel = int64(val)
+		dst.StormctrlMcastLevel = val
 	}
 	if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
-		dst.StormctrlMcastRate = int64(val)
+		dst.StormctrlMcastRate = val
 	}
 	if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
-		dst.StormctrlUcastLevel = int64(val)
+		dst.StormctrlUcastLevel = val
 	}
 	if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
-		dst.StormctrlUcastRate = int64(val)
+		dst.StormctrlUcastRate = val
 	}
 
 	return nil
@@ -524,16 +525,16 @@ func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = int64(val)
+		dst.CosCode = val
 	}
 	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = int64(val)
+		dst.DscpCode = val
 	}
 	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = int64(val)
+		dst.IPPrecedenceCode = val
 	}
 	if val, err := aux.Queue.Int64(); err == nil {
-		dst.Queue = int64(val)
+		dst.Queue = val
 	}
 
 	return nil
@@ -567,19 +568,19 @@ func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = int64(val)
+		dst.CosCode = val
 	}
 	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = int64(val)
+		dst.DscpCode = val
 	}
 	if val, err := aux.DstPort.Int64(); err == nil {
-		dst.DstPort = int64(val)
+		dst.DstPort = val
 	}
 	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = int64(val)
+		dst.IPPrecedenceCode = val
 	}
 	if val, err := aux.SrcPort.Int64(); err == nil {
-		dst.SrcPort = int64(val)
+		dst.SrcPort = val
 	}
 
 	return nil
@@ -692,25 +693,25 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AntennaGain.Int64(); err == nil {
-		dst.AntennaGain = int64(val)
+		dst.AntennaGain = val
 	}
 	if val, err := aux.AntennaID.Int64(); err == nil {
-		dst.AntennaID = int64(val)
+		dst.AntennaID = val
 	}
 	if val, err := aux.AssistedRoamingRssi.Int64(); err == nil {
-		dst.AssistedRoamingRssi = int64(val)
+		dst.AssistedRoamingRssi = val
 	}
 	if val, err := aux.Ht.Int64(); err == nil {
-		dst.Ht = int64(val)
+		dst.Ht = val
 	}
 	if val, err := aux.Maxsta.Int64(); err == nil {
-		dst.Maxsta = int64(val)
+		dst.Maxsta = val
 	}
 	if val, err := aux.MinRssi.Int64(); err == nil {
-		dst.MinRssi = int64(val)
+		dst.MinRssi = val
 	}
 	if val, err := aux.SensLevel.Int64(); err == nil {
-		dst.SensLevel = int64(val)
+		dst.SensLevel = val
 	}
 
 	return nil
@@ -758,7 +759,7 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.PortIDX.Int64(); err == nil {
-		dst.PortIDX = int64(val)
+		dst.PortIDX = val
 	}
 
 	return nil
@@ -796,19 +797,19 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.DataHardLimitBytes.Int64(); err == nil {
-		dst.DataHardLimitBytes = int64(val)
+		dst.DataHardLimitBytes = val
 	}
 	if val, err := aux.DataSoftLimitBytes.Int64(); err == nil {
-		dst.DataSoftLimitBytes = int64(val)
+		dst.DataSoftLimitBytes = val
 	}
 	if val, err := aux.DataWarningThreshold.Int64(); err == nil {
-		dst.DataWarningThreshold = int64(val)
+		dst.DataWarningThreshold = val
 	}
 	if val, err := aux.ResetDate.Int64(); err == nil {
-		dst.ResetDate = int64(val)
+		dst.ResetDate = val
 	}
 	if val, err := aux.Slot.Int64(); err == nil {
-		dst.Slot = int64(val)
+		dst.Slot = val
 	}
 
 	return nil

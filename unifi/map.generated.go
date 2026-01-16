@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Map struct {
@@ -59,10 +61,10 @@ func (dst *Map) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.Tilt.Int64(); err == nil {
-		dst.Tilt = int64(val)
+		dst.Tilt = val
 	}
 	if val, err := aux.Zoom.Int64(); err == nil {
-		dst.Zoom = int64(val)
+		dst.Zoom = val
 	}
 
 	return nil

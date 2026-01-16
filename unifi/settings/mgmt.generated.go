@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -17,6 +18,7 @@ var (
 	_ fmt.Formatter
 	_ json.Marshaler
 	_ types.Number
+	_ strconv.NumError
 )
 
 type Mgmt struct {
@@ -64,7 +66,7 @@ func (dst *Mgmt) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	if val, err := aux.AutoUpgradeHour.Int64(); err == nil {
-		dst.AutoUpgradeHour = int64(val)
+		dst.AutoUpgradeHour = val
 	}
 
 	return nil
