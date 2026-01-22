@@ -26,27 +26,20 @@ type Netflow struct {
 
 	AutoEngineIDEnabled bool     `json:"auto_engine_id_enabled"`
 	Enabled             bool     `json:"enabled"`
-	EngineID            int64    `json:"engine_id,omitempty"` // ^$|[1-9][0-9]*
-	ExportFrequency     int64    `json:"export_frequency,omitempty"`
+	EngineID            *int64   `json:"engine_id,omitempty"` // ^$|[1-9][0-9]*
+	ExportFrequency     *int64   `json:"export_frequency,omitempty"`
 	NetworkIDs          []string `json:"network_ids,omitempty"`
-	Port                int64    `json:"port,omitempty"` // 102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
-	RefreshRate         int64    `json:"refresh_rate,omitempty"`
+	Port                *int64   `json:"port,omitempty"` // 102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
+	RefreshRate         *int64   `json:"refresh_rate,omitempty"`
 	SamplingMode        string   `json:"sampling_mode,omitempty"` // off|hash|random|deterministic
-	SamplingRate        int64    `json:"sampling_rate,omitempty"` // [2-9]|[1-9][0-9]{1,3}|1[0-5][0-9]{3}|16[0-2][0-9]{2}|163[0-7][0-9]|1638[0-3]|^$
+	SamplingRate        *int64   `json:"sampling_rate,omitempty"` // [2-9]|[1-9][0-9]{1,3}|1[0-5][0-9]{3}|16[0-2][0-9]{2}|163[0-7][0-9]|1638[0-3]|^$
 	Server              string   `json:"server,omitempty"`        // .{0,252}[^\.]$
-	Version             int64    `json:"version,omitempty"`       // 5|9|10
+	Version             *int64   `json:"version,omitempty"`       // 5|9|10
 }
 
 func (dst *Netflow) UnmarshalJSON(b []byte) error {
 	type Alias Netflow
 	aux := &struct {
-		EngineID        types.Number `json:"engine_id"`
-		ExportFrequency types.Number `json:"export_frequency"`
-		Port            types.Number `json:"port"`
-		RefreshRate     types.Number `json:"refresh_rate"`
-		SamplingRate    types.Number `json:"sampling_rate"`
-		Version         types.Number `json:"version"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -60,24 +53,6 @@ func (dst *Netflow) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.EngineID.Int64(); err == nil {
-		dst.EngineID = val
-	}
-	if val, err := aux.ExportFrequency.Int64(); err == nil {
-		dst.ExportFrequency = val
-	}
-	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = val
-	}
-	if val, err := aux.RefreshRate.Int64(); err == nil {
-		dst.RefreshRate = val
-	}
-	if val, err := aux.SamplingRate.Int64(); err == nil {
-		dst.SamplingRate = val
-	}
-	if val, err := aux.Version.Int64(); err == nil {
-		dst.Version = val
 	}
 
 	return nil

@@ -185,59 +185,7 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		baseType.Fields["State"] = NewFieldInfo("State", "state", "DeviceState", "", false, false, false, "")
 		baseType.Fields["Type"] = NewFieldInfo("Type", "type", fields.String, "", true, false, false, "")
 	case resource.StructName == "Client":
-		baseType.Fields[" IP"] = NewFieldInfo("IP", "ip", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" LastIP"] = NewFieldInfo("LastIP", "last_ip", fields.String, "", true, false, false, "")
-		baseType.Fields[" DevIdOverride"] = NewFieldInfo("DevIdOverride", "dev_id_override", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" OUI"] = NewFieldInfo("OUI", "oui", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" FirstSeen"] = NewFieldInfo("FirstSeen", "first_seen", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" IsGuest"] = NewFieldInfo("IsGuest", "is_guest", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" DisconnectTimestamp"] = NewFieldInfo("DisconnectTimestamp", "disconnect_timestamp", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" IsWired"] = NewFieldInfo("IsWired", "is_wired", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" LastIPv6"] = NewFieldInfo("LastIPv6", "last_ipv6", fields.String, "", true, true, false, "")
-		baseType.Fields[" LastUplinkName"] = NewFieldInfo("LastUplinkName", "last_uplink_name", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" LastUplinkMAC"] = NewFieldInfo("LastUplinkMAC", "last_uplink_mac", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" LastConnectionNetworkName"] = NewFieldInfo("LastConnectionNetworkName", "last_connection_network_name", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" LastUplinkRemotePort"] = NewFieldInfo("LastUplinkRemotePort", "last_uplink_remote_port", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" FingerprintOverride"] = NewFieldInfo("FingerprintOverride", "fingerprint_override", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" LastConnectionNetworkID"] = NewFieldInfo("LastConnectionNetworkID", "last_connection_network_id", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" Noted"] = NewFieldInfo("Noted", "noted", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" Last1xIdentity"] = NewFieldInfo("Last1xIdentity", "last_1x_identity", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" AssocTime"] = NewFieldInfo("AssocTime", "assoc_time", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" LatestAssocTime"] = NewFieldInfo("LatestAssocTime", "latest_assoc_time", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" UserID"] = NewFieldInfo("UserID", "user_id", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" UptimeByUSW"] = NewFieldInfo("UptimeByUSW", "_uptime_by_usw", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" LastSeenByUSW"] = NewFieldInfo("LastSeenByUSW", "_last_seen_by_usw", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" IsGuestByUSW"] = NewFieldInfo("IsGuestByUSW", "_is_guest_by_usw", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" SwMAC"] = NewFieldInfo("SwMAC", "sw_mac", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" WiredRateMbps"] = NewFieldInfo("WiredRateMbps", "wired_rate_mbps", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" SwDepth"] = NewFieldInfo("SwDepth", "sw_depth", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" Network"] = NewFieldInfo("Network", "network", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" VLAN"] = NewFieldInfo("VLAN", "vlan", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" Satisfaction"] = NewFieldInfo("Satisfaction", "satisfaction", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" Anomalies"] = NewFieldInfo("Anomalies", "anomalies", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" Uptime"] = NewFieldInfo("Uptime", "uptime", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" SwPort"] = NewFieldInfo("SwPort", "sw_port", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiredTxBytes"] = NewFieldInfo("WiredTxBytes", "wired-tx_bytes", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiredRxBytes"] = NewFieldInfo("WiredRxBytes", "wired-rx_bytes", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiredTxPackets"] = NewFieldInfo("WiredTxPackets", "wired-tx_packets", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiredRxPackets"] = NewFieldInfo("WiredRxPackets", "wired-rx_packets", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" UptimeByUGW"] = NewFieldInfo("UptimeByUGW", "_uptime_by_ugw", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" LastSeenByUGW"] = NewFieldInfo("LastSeenByUGW", "_last_seen_by_ugw", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" IsGuestByUGW"] = NewFieldInfo("IsGuestByUGW", "_is_guest_by_ugw", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" GWMAC"] = NewFieldInfo("GWMAC", "gw_mac", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" GWVLAN"] = NewFieldInfo("GWVLAN", "gw_vlan", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" LastReachableByGW"] = NewFieldInfo("LastReachableByGW", "_last_reachable_by_gw", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" Authorized"] = NewFieldInfo("Authorized", "authorized", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" QOSPolicyApplied"] = NewFieldInfo("QOSPolicyApplied", "qos_policy_applied", fields.Bool, "non-generated field", true, false, false, "")
-		baseType.Fields[" IPv6Addresses"] = NewFieldInfo("IPv6Addresses", "ipv6_addresses", fields.String, "", true, true, false, "")
-		baseType.Fields[" HostnameSource"] = NewFieldInfo("HostnameSource", "hostname_source", fields.String, "non-generated field", true, false, false, "")
-		baseType.Fields[" WiredTxBytesR"] = NewFieldInfo("WiredTxBytesR", "wired-tx_bytes-r", "float64", "non-generated field", true, false, false, "")
-		baseType.Fields[" WiredRxBytesR"] = NewFieldInfo("WiredRxBytesR", "wired-rx_bytes-r", "float64", "non-generated field", true, false, false, "")
-		baseType.Fields[" TxRetries"] = NewFieldInfo("TxRetries", "tx_retries", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiFiTxAttempts"] = NewFieldInfo("WiFiTxAttempts", "wifi_tx_attempts", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiFiTxDropped"] = NewFieldInfo("WiFiTxDropped", "wifi_tx_dropped", fields.Int, "non-generated field", true, false, true, "")
-		baseType.Fields[" WiFiTxRetriesPercentage"] = NewFieldInfo("WiFiTxRetriesPercentage", "wifi_tx_retries_percentage", "float64", "non-generated field", true, false, false, "")
-		baseType.Fields[" EagerlyDiscovered"] = NewFieldInfo("EagerlyDiscovered", "eagerly_discovered", fields.Bool, "non-generated field", true, false, false, "")
+		baseType.Fields[" DisplayName"] = NewFieldInfo("DisplayName", "display_name", fields.String, "non-generated field", true, false, false, "")
 	case resource.StructName == "WLAN":
 		// this field removed in v6, retaining for backwards compatibility
 		baseType.Fields["WLANGroupID"] = NewFieldInfo("WLANGroupID", "wlangroup_id", fields.String, "", false, false, false, "")
@@ -473,7 +421,7 @@ func main() {
 				case "X", "Y":
 					f.FieldType = "float64"
 				case "StpPriority":
-					f.FieldType = fields.String
+					f.FieldType = fields.Int
 					f.CustomUnmarshalType = fields.Number
 				case "ConfigNetwork", "EtherLighting", "MbbOverrides", "NutServer", "RpsOverride", "QOSProfile":
 					f.IsPointer = true
@@ -540,6 +488,11 @@ func main() {
 				switch name {
 				case "Blocked":
 					f.FieldType = fields.Bool
+					f.IsPointer = true
+				case "VirtualNetworkOverrideEnabled":
+					f.FieldType = fields.Bool
+					f.IsPointer = true
+					f.OmitEmpty = true
 				case "LastSeen":
 					f.FieldType = fields.Int
 					f.IsPointer = true
@@ -715,6 +668,7 @@ func (r *ResourceInfo) fieldInfoFromValidation(name string, validation any) (*Fi
 
 		fieldInfo.OmitEmpty = true
 		fieldInfo.IsArray = true
+		fieldInfo.IsPointer = false
 
 		err = r.FieldProcessor(fieldName, fieldInfo)
 		return fieldInfo, err
@@ -765,8 +719,8 @@ func (r *ResourceInfo) fieldInfoFromValidation(name string, validation any) (*Fi
 				}
 
 				omitEmpty = true
-				fieldInfo = NewFieldInfo(fieldName, name, fields.Int, fieldValidation, omitEmpty, false, false, "")
-				fieldInfo.CustomUnmarshalType = fields.Number
+				fieldInfo = NewFieldInfo(fieldName, name, fields.Int, fieldValidation, omitEmpty, false, true, "")
+				// fieldInfo.CustomUnmarshalType = fields.Number
 				return fieldInfo, r.FieldProcessor(fieldName, fieldInfo)
 			}
 		}

@@ -31,8 +31,8 @@ type Rsyslogd struct {
 	LogAllContents              bool     `json:"log_all_contents"`
 	NetconsoleEnabled           bool     `json:"netconsole_enabled"`
 	NetconsoleHost              string   `json:"netconsole_host,omitempty"`
-	NetconsolePort              int64    `json:"netconsole_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
-	Port                        int64    `json:"port,omitempty"`            // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
+	NetconsolePort              *int64   `json:"netconsole_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
+	Port                        *int64   `json:"port,omitempty"`            // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
 	ThisController              bool     `json:"this_controller"`
 	ThisControllerEncryptedOnly bool     `json:"this_controller_encrypted_only"`
 }
@@ -40,9 +40,6 @@ type Rsyslogd struct {
 func (dst *Rsyslogd) UnmarshalJSON(b []byte) error {
 	type Alias Rsyslogd
 	aux := &struct {
-		NetconsolePort types.Number `json:"netconsole_port"`
-		Port           types.Number `json:"port"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -56,12 +53,6 @@ func (dst *Rsyslogd) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.NetconsolePort.Int64(); err == nil {
-		dst.NetconsolePort = val
-	}
-	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = val
 	}
 
 	return nil

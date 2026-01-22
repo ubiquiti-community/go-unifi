@@ -25,11 +25,11 @@ type Radius struct {
 	BaseSetting
 
 	AccountingEnabled     bool   `json:"accounting_enabled"`
-	AcctPort              int64  `json:"acct_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
-	AuthPort              int64  `json:"auth_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
+	AcctPort              *int64 `json:"acct_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
+	AuthPort              *int64 `json:"auth_port,omitempty"` // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]
 	ConfigureWholeNetwork bool   `json:"configure_whole_network"`
 	Enabled               bool   `json:"enabled"`
-	InterimUpdateInterval int64  `json:"interim_update_interval,omitempty"` // ^([6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
+	InterimUpdateInterval *int64 `json:"interim_update_interval,omitempty"` // ^([6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
 	TunneledReply         bool   `json:"tunneled_reply"`
 	XSecret               string `json:"x_secret,omitempty"` // ^[^\\"' ]{1,48}$
 }
@@ -37,10 +37,6 @@ type Radius struct {
 func (dst *Radius) UnmarshalJSON(b []byte) error {
 	type Alias Radius
 	aux := &struct {
-		AcctPort              types.Number `json:"acct_port"`
-		AuthPort              types.Number `json:"auth_port"`
-		InterimUpdateInterval types.Number `json:"interim_update_interval"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -54,15 +50,6 @@ func (dst *Radius) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.AcctPort.Int64(); err == nil {
-		dst.AcctPort = val
-	}
-	if val, err := aux.AuthPort.Int64(); err == nil {
-		dst.AuthPort = val
-	}
-	if val, err := aux.InterimUpdateInterval.Int64(); err == nil {
-		dst.InterimUpdateInterval = val
 	}
 
 	return nil

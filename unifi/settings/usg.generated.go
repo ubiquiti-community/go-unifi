@@ -24,15 +24,15 @@ var (
 type Usg struct {
 	BaseSetting
 
-	ArpCacheBaseReachable          int64                     `json:"arp_cache_base_reachable,omitempty"` // ^$|^[1-9]{1}[0-9]{0,4}$
+	ArpCacheBaseReachable          *int64                    `json:"arp_cache_base_reachable,omitempty"` // ^$|^[1-9]{1}[0-9]{0,4}$
 	ArpCacheTimeout                string                    `json:"arp_cache_timeout,omitempty"`        // normal|min-dhcp-lease|custom
 	BroadcastPing                  bool                      `json:"broadcast_ping"`
 	DHCPDHostfileUpdate            bool                      `json:"dhcpd_hostfile_update"`
 	DHCPDUseDNSmasq                bool                      `json:"dhcpd_use_dnsmasq"`
 	DHCPRelayAgentsPackets         string                    `json:"dhcp_relay_agents_packets"`      // append|discard|forward|replace|^$
-	DHCPRelayHopCount              int64                     `json:"dhcp_relay_hop_count,omitempty"` // ([1-9]|[1-8][0-9]|9[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])|^$
-	DHCPRelayMaxSize               int64                     `json:"dhcp_relay_max_size,omitempty"`  // (6[4-9]|[7-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1[0-3][0-9]{2}|1400)|^$
-	DHCPRelayPort                  int64                     `json:"dhcp_relay_port,omitempty"`      // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]|^$
+	DHCPRelayHopCount              *int64                    `json:"dhcp_relay_hop_count,omitempty"` // ([1-9]|[1-8][0-9]|9[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])|^$
+	DHCPRelayMaxSize               *int64                    `json:"dhcp_relay_max_size,omitempty"`  // (6[4-9]|[7-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1[0-3][0-9]{2}|1400)|^$
+	DHCPRelayPort                  *int64                    `json:"dhcp_relay_port,omitempty"`      // [1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5]|^$
 	DHCPRelayServer1               string                    `json:"dhcp_relay_server_1"`            // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPRelayServer2               string                    `json:"dhcp_relay_server_2"`            // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPRelayServer3               string                    `json:"dhcp_relay_server_3"`            // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
@@ -52,7 +52,7 @@ type Usg struct {
 	LldpEnableAll                  bool                      `json:"lldp_enable_all"`
 	MdnsEnabled                    bool                      `json:"mdns_enabled"`
 	MssClamp                       string                    `json:"mss_clamp,omitempty"`     // auto|custom|disabled
-	MssClampMss                    int64                     `json:"mss_clamp_mss,omitempty"` // [1-9][0-9]{2,3}
+	MssClampMss                    *int64                    `json:"mss_clamp_mss,omitempty"` // [1-9][0-9]{2,3}
 	OffloadAccounting              bool                      `json:"offload_accounting"`
 	OffloadL2Blocking              bool                      `json:"offload_l2_blocking"`
 	OffloadSch                     bool                      `json:"offload_sch"`
@@ -84,12 +84,7 @@ type Usg struct {
 func (dst *Usg) UnmarshalJSON(b []byte) error {
 	type Alias Usg
 	aux := &struct {
-		ArpCacheBaseReachable types.Number `json:"arp_cache_base_reachable"`
-		DHCPRelayHopCount     types.Number `json:"dhcp_relay_hop_count"`
-		DHCPRelayMaxSize      types.Number `json:"dhcp_relay_max_size"`
-		DHCPRelayPort         types.Number `json:"dhcp_relay_port"`
 		ICMPTimeout           types.Number `json:"icmp_timeout"`
-		MssClampMss           types.Number `json:"mss_clamp_mss"`
 		OtherTimeout          types.Number `json:"other_timeout"`
 		TCPCloseTimeout       types.Number `json:"tcp_close_timeout"`
 		TCPCloseWaitTimeout   types.Number `json:"tcp_close_wait_timeout"`
@@ -116,23 +111,8 @@ func (dst *Usg) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if val, err := aux.ArpCacheBaseReachable.Int64(); err == nil {
-		dst.ArpCacheBaseReachable = val
-	}
-	if val, err := aux.DHCPRelayHopCount.Int64(); err == nil {
-		dst.DHCPRelayHopCount = val
-	}
-	if val, err := aux.DHCPRelayMaxSize.Int64(); err == nil {
-		dst.DHCPRelayMaxSize = val
-	}
-	if val, err := aux.DHCPRelayPort.Int64(); err == nil {
-		dst.DHCPRelayPort = val
-	}
 	if val, err := aux.ICMPTimeout.Int64(); err == nil {
 		dst.ICMPTimeout = val
-	}
-	if val, err := aux.MssClampMss.Int64(); err == nil {
-		dst.MssClampMss = val
 	}
 	if val, err := aux.OtherTimeout.Int64(); err == nil {
 		dst.OtherTimeout = val

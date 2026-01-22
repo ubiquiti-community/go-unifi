@@ -40,7 +40,7 @@ type FirewallPolicy struct {
 	ICMPTypename          string                    `json:"icmp_typename,omitempty"`    // ANY|SPECIFIC|LIST|OBJECT
 	ICMPV6Typename        string                    `json:"icmp_v6_typename,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	IPVersion             string                    `json:"ip_version,omitempty"`       // BOTH|IPV4|IPV6
-	Index                 int64                     `json:"index,omitempty"`            // [1-9][0-9]+
+	Index                 *int64                    `json:"index,omitempty"`            // [1-9][0-9]+
 	Logging               bool                      `json:"logging"`
 	MatchIPSec            bool                      `json:"match_ip_sec"`
 	MatchOppositeProtocol bool                      `json:"match_opposite_protocol"`
@@ -54,8 +54,6 @@ type FirewallPolicy struct {
 func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 	type Alias FirewallPolicy
 	aux := &struct {
-		Index types.Number `json:"index"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -64,9 +62,6 @@ func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Index.Int64(); err == nil {
-		dst.Index = val
 	}
 
 	return nil
@@ -79,7 +74,7 @@ type FirewallPolicyDestination struct {
 	MatchOppositePorts bool     `json:"match_opposite_ports"`
 	MatchingTarget     string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|MAC
 	MatchingTargetType string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
-	Port               int64    `json:"port,omitempty"`                 // [1-9][0-9]{0,4}
+	Port               *int64   `json:"port,omitempty"`                 // [1-9][0-9]{0,4}
 	PortGroupID        string   `json:"port_group_id,omitempty"`
 	PortMatchingType   string   `json:"port_matching_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	ZoneID             string   `json:"zone_id,omitempty"`
@@ -88,8 +83,6 @@ type FirewallPolicyDestination struct {
 func (dst *FirewallPolicyDestination) UnmarshalJSON(b []byte) error {
 	type Alias FirewallPolicyDestination
 	aux := &struct {
-		Port types.Number `json:"port"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -98,9 +91,6 @@ func (dst *FirewallPolicyDestination) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = val
 	}
 
 	return nil
@@ -138,7 +128,7 @@ type FirewallPolicySource struct {
 	MatchOppositePorts bool     `json:"match_opposite_ports"`
 	MatchingTarget     string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|MAC
 	MatchingTargetType string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
-	Port               int64    `json:"port,omitempty"`                 // [1-9][0-9]{0,4}
+	Port               *int64   `json:"port,omitempty"`                 // [1-9][0-9]{0,4}
 	PortGroupID        string   `json:"port_group_id,omitempty"`
 	PortMatchingType   string   `json:"port_matching_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	ZoneID             string   `json:"zone_id,omitempty"`
@@ -147,8 +137,6 @@ type FirewallPolicySource struct {
 func (dst *FirewallPolicySource) UnmarshalJSON(b []byte) error {
 	type Alias FirewallPolicySource
 	aux := &struct {
-		Port types.Number `json:"port"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -157,9 +145,6 @@ func (dst *FirewallPolicySource) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = val
 	}
 
 	return nil

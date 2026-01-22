@@ -38,19 +38,16 @@ type Map struct {
 	OffsetTop  float64 `json:"offset_top,omitempty"`
 	Opacity    float64 `json:"opacity,omitempty"` // ^(0(\.[\d]{1,2})?|1)$|^$
 	Selected   bool    `json:"selected"`
-	Tilt       int64   `json:"tilt,omitempty"`
+	Tilt       *int64  `json:"tilt,omitempty"`
 	Type       string  `json:"type,omitempty"` // designerMap|imageMap|googleMap
 	Unit       string  `json:"unit,omitempty"` // m|f
 	Upp        float64 `json:"upp,omitempty"`
-	Zoom       int64   `json:"zoom,omitempty"`
+	Zoom       *int64  `json:"zoom,omitempty"`
 }
 
 func (dst *Map) UnmarshalJSON(b []byte) error {
 	type Alias Map
 	aux := &struct {
-		Tilt types.Number `json:"tilt"`
-		Zoom types.Number `json:"zoom"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -59,12 +56,6 @@ func (dst *Map) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Tilt.Int64(); err == nil {
-		dst.Tilt = val
-	}
-	if val, err := aux.Zoom.Int64(); err == nil {
-		dst.Zoom = val
 	}
 
 	return nil

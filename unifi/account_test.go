@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/ubiquiti-community/go-unifi/unifi"
+	"github.com/ubiquiti-community/terraform-provider-unifi/unifi/util"
 )
 
 func TestAccountMarshalJSON(t *testing.T) {
@@ -20,9 +21,9 @@ func TestAccountMarshalJSON(t *testing.T) {
 		"response": {
 			`{"vlan":10,"tunnel_type":1,"tunnel_medium_type":1}`,
 			unifi.Account{
-				VLAN:             10,
-				TunnelType:       1,
-				TunnelMediumType: 1,
+				VLAN:             util.Ptr[int64](10),
+				TunnelType:       util.Ptr[int64](1),
+				TunnelMediumType: util.Ptr[int64](1),
 			},
 		},
 	} {

@@ -27,7 +27,7 @@ type Mgmt struct {
 	AdvancedFeatureEnabled  bool                  `json:"advanced_feature_enabled"`
 	AlertEnabled            bool                  `json:"alert_enabled"`
 	AutoUpgrade             bool                  `json:"auto_upgrade"`
-	AutoUpgradeHour         int64                 `json:"auto_upgrade_hour,omitempty"` // [0-9]|1[0-9]|2[0-3]|^$
+	AutoUpgradeHour         *int64                `json:"auto_upgrade_hour,omitempty"` // [0-9]|1[0-9]|2[0-3]|^$
 	BootSound               bool                  `json:"boot_sound"`
 	DebugToolsEnabled       bool                  `json:"debug_tools_enabled"`
 	DirectConnectEnabled    bool                  `json:"direct_connect_enabled"`
@@ -49,8 +49,6 @@ type Mgmt struct {
 func (dst *Mgmt) UnmarshalJSON(b []byte) error {
 	type Alias Mgmt
 	aux := &struct {
-		AutoUpgradeHour types.Number `json:"auto_upgrade_hour"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -64,9 +62,6 @@ func (dst *Mgmt) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.AutoUpgradeHour.Int64(); err == nil {
-		dst.AutoUpgradeHour = val
 	}
 
 	return nil

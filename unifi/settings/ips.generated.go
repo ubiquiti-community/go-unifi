@@ -59,8 +59,8 @@ func (dst *Ips) UnmarshalJSON(b []byte) error {
 
 type SettingIpsAlerts struct {
 	Category  string               `json:"category,omitempty"`
-	Gid       int64                `json:"gid,omitempty"`
-	ID        int64                `json:"id,omitempty"`
+	Gid       *int64               `json:"gid,omitempty"`
+	ID        *int64               `json:"id,omitempty"`
 	Signature string               `json:"signature,omitempty"`
 	Tracking  []SettingIpsTracking `json:"tracking,omitempty"`
 	Type      string               `json:"type,omitempty"` // all|track
@@ -69,9 +69,6 @@ type SettingIpsAlerts struct {
 func (dst *SettingIpsAlerts) UnmarshalJSON(b []byte) error {
 	type Alias SettingIpsAlerts
 	aux := &struct {
-		Gid types.Number `json:"gid"`
-		ID  types.Number `json:"id"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -80,12 +77,6 @@ func (dst *SettingIpsAlerts) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Gid.Int64(); err == nil {
-		dst.Gid = val
-	}
-	if val, err := aux.ID.Int64(); err == nil {
-		dst.ID = val
 	}
 
 	return nil

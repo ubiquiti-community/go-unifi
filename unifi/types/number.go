@@ -47,3 +47,11 @@ func (n Number) Float64() (float64, error) {
 func (n Number) Int64() (int64, error) {
 	return json.Number(n).Int64()
 }
+
+func (n Number) Int64Pointer() *int64 {
+	val, err := n.Int64()
+	if err != nil {
+		return nil
+	}
+	return &val
+}

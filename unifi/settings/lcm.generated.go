@@ -24,19 +24,16 @@ var (
 type Lcm struct {
 	BaseSetting
 
-	Brightness  int64 `json:"brightness,omitempty"` // [1-9]|[1-9][0-9]|100
-	Enabled     bool  `json:"enabled"`
-	IDleTimeout int64 `json:"idle_timeout,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9]|3[0-5][0-9][0-9]|3600
-	Sync        bool  `json:"sync"`
-	TouchEvent  bool  `json:"touch_event"`
+	Brightness  *int64 `json:"brightness,omitempty"` // [1-9]|[1-9][0-9]|100
+	Enabled     bool   `json:"enabled"`
+	IDleTimeout *int64 `json:"idle_timeout,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9]|3[0-5][0-9][0-9]|3600
+	Sync        bool   `json:"sync"`
+	TouchEvent  bool   `json:"touch_event"`
 }
 
 func (dst *Lcm) UnmarshalJSON(b []byte) error {
 	type Alias Lcm
 	aux := &struct {
-		Brightness  types.Number `json:"brightness"`
-		IDleTimeout types.Number `json:"idle_timeout"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -50,12 +47,6 @@ func (dst *Lcm) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Brightness.Int64(); err == nil {
-		dst.Brightness = val
-	}
-	if val, err := aux.IDleTimeout.Int64(); err == nil {
-		dst.IDleTimeout = val
 	}
 
 	return nil

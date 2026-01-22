@@ -2,75 +2,25 @@ package unifi
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"maps"
-	"net/url"
+	"strings"
 )
 
 // GetClientByMAC returns slightly different information than GetClient, as they
 // use separate endpoints for their lookups. Specifically IP is only returned
 // by this method.
 func (c *ApiClient) GetClientByMAC(ctx context.Context, site, mac string) (*Client, error) {
-	var respBody struct {
-		Meta meta     `json:"meta"`
-		Data []Client `json:"data"`
-	}
-
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/stat/user/%s", site, mac), nil, &respBody)
+	resp, err := c.ListClient(ctx, site, map[string]string{"mac": mac})
 	if err != nil {
 		return nil, err
 	}
-
-	if len(respBody.Data) != 1 {
+	if len(resp) != 1 {
 		return nil, &NotFoundError{}
 	}
+	d := resp[0]
 
-	d := respBody.Data[0]
 	return &d, nil
-}
-
-func (c *ApiClient) CreateClient(ctx context.Context, site string, d *Client) (*Client, error) {
-	reqBody := struct {
-		Objects []struct {
-			Data *Client `json:"data"`
-		} `json:"objects"`
-	}{
-		Objects: []struct {
-			Data *Client `json:"data"`
-		}{
-			{Data: d},
-		},
-	}
-
-	var respBody struct {
-		Meta meta `json:"meta"`
-		Data []struct {
-			Meta meta     `json:"meta"`
-			Data []Client `json:"data"`
-		} `json:"data"`
-	}
-
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/group/user", site), reqBody, &respBody)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(respBody.Data) != 1 {
-		return nil, errors.New("malformed group response")
-	}
-
-	if err := respBody.Data[0].Meta.error(); err != nil {
-		return nil, err
-	}
-
-	if len(respBody.Data[0].Data) != 1 {
-		return nil, &NotFoundError{}
-	}
-
-	user := respBody.Data[0].Data[0]
-
-	return &user, nil
 }
 
 func (c *ApiClient) stamgr(
@@ -199,14 +149,14 @@ func (c *ApiClient) ListClient(ctx context.Context, site string, query ...map[st
 	// Build URL with query parameters
 	apiURL := fmt.Sprintf("api/s/%s/rest/user", site)
 	if len(query) > 0 {
-		params := url.Values{}
+		// Build query string manually to avoid URL-encoding colons in MAC addresses
+		var parts []string
 		for _, q := range query {
 			for k, v := range q {
-				params.Add(k, v)
+				parts = append(parts, k+"="+v)
 			}
 		}
-		queryString := params.Encode()
-		apiURL = fmt.Sprintf("%s?%s", apiURL, queryString)
+		apiURL = fmt.Sprintf("%s?%s", apiURL, strings.Join(parts, "&"))
 	}
 
 	err := c.do(
@@ -220,6 +170,10 @@ func (c *ApiClient) ListClient(ctx context.Context, site string, query ...map[st
 		return nil, err
 	}
 	return respBody.Data, nil
+}
+
+func (c *ApiClient) CreateClient(ctx context.Context, site string, d *Client) (*Client, error) {
+	return c.createClient(ctx, site, d)
 }
 
 // GetClient returns information about a user from the REST endpoint.

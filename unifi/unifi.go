@@ -68,6 +68,9 @@ type ApiClient struct {
 	csrf string
 
 	version string
+
+	// Cloud Connector support
+	cloudConsoleID string // Console ID for Cloud Connector API proxy
 }
 
 func (c *ApiClient) CSRFToken() string {
@@ -100,6 +103,138 @@ func (c *ApiClient) SetBaseURL(base string) error {
 func (c *ApiClient) SetHTTPClient(hc *retryablehttp.Client) error {
 	c.c = hc
 	return nil
+}
+
+// GetHosts retrieves the list of UniFi hosts from the Site Manager API.
+// This requires an API key and is typically the first step in using the Cloud Connector API.
+func (c *ApiClient) GetHosts(ctx context.Context) (*UnifiHostList, error) {
+	if c.apiKey == "" {
+		return nil, errors.New("API key required to fetch hosts from Site Manager API")
+	}
+
+	var hostList UnifiHostList
+	err := c.do(ctx, "GET", "https://api.ui.com/v1/hosts", nil, &hostList)
+	if err != nil {
+		return nil, fmt.Errorf("unable to fetch hosts: %w", err)
+	}
+
+	return &hostList, nil
+}
+
+// SetCloudConsoleID configures the client to use the Cloud Connector API for all requests.
+// When set, all API calls will be proxied through https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/...
+// This requires an API key and console firmware >= 5.0.3.
+func (c *ApiClient) SetCloudConsoleID(consoleID string) {
+	c.cloudConsoleID = consoleID
+	if consoleID != "" {
+		// When using cloud connector, force the base URL to api.ui.com
+		c.baseURL, _ = url.Parse("https://api.ui.com")
+		c.apiPath = "/proxy/network"
+	}
+}
+
+// GetCloudConsoleID returns the currently configured cloud console ID.
+func (c *ApiClient) GetCloudConsoleID() string {
+	return c.cloudConsoleID
+}
+
+// EnableCloudConnector fetches available hosts and configures the client to use
+// the Cloud Connector API. Selection priority:
+// 1. If hostIndex >= 0: uses the host at that index
+// 2. If hostIndex < 0: defaults to the first host where owner=true
+// 3. Falls back to the first host if no owner found
+// Returns the selected console ID and any error encountered.
+func (c *ApiClient) EnableCloudConnector(ctx context.Context, hostIndex int) (string, error) {
+	hosts, err := c.GetHosts(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	if len(hosts.Data) == 0 {
+		return "", errors.New("no hosts found in Site Manager API")
+	}
+
+	var selectedHost *UnifiHost
+
+	// If explicit index provided, use it
+	if hostIndex >= 0 && hostIndex < len(hosts.Data) {
+		selectedHost = &hosts.Data[hostIndex]
+	} else {
+		// Default to first owner host
+		for i := range hosts.Data {
+			if hosts.Data[i].Owner {
+				selectedHost = &hosts.Data[i]
+				break
+			}
+		}
+		// Fallback to first host if no owner found
+		if selectedHost == nil {
+			selectedHost = &hosts.Data[0]
+		}
+	}
+
+	c.SetCloudConsoleID(selectedHost.ID)
+	return selectedHost.ID, nil
+}
+
+// EnableCloudConnectorByID configures the client to use the Cloud Connector API
+// with a specific console ID without fetching the hosts list.
+func (c *ApiClient) EnableCloudConnectorByID(consoleID string) {
+	c.SetCloudConsoleID(consoleID)
+}
+
+// EnableCloudConnectorByHardwareID fetches available hosts and configures the client
+// to use the Cloud Connector API with the host matching the specified hardware ID.
+// Returns the selected console ID and any error encountered.
+func (c *ApiClient) EnableCloudConnectorByHardwareID(ctx context.Context, hardwareID string) (string, error) {
+	hosts, err := c.GetHosts(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	host := FindHostByHardwareID(hosts, hardwareID)
+	if host == nil {
+		return "", fmt.Errorf("no host found with hardware ID: %s", hardwareID)
+	}
+
+	c.SetCloudConsoleID(host.ID)
+	return host.ID, nil
+}
+
+// FindHostByHardwareID searches a host list for a specific hardware ID.
+// Returns nil if not found.
+func FindHostByHardwareID(hostList *UnifiHostList, hardwareID string) *UnifiHost {
+	if hostList == nil {
+		return nil
+	}
+
+	for i := range hostList.Data {
+		if hostList.Data[i].HardwareID == hardwareID {
+			return &hostList.Data[i]
+		}
+	}
+	return nil
+}
+
+// FindOwnerHost returns the first host where owner=true.
+// Returns nil if no owner host found.
+func FindOwnerHost(hostList *UnifiHostList) *UnifiHost {
+	if hostList == nil {
+		return nil
+	}
+
+	for i := range hostList.Data {
+		if hostList.Data[i].Owner {
+			return &hostList.Data[i]
+		}
+	}
+	return nil
+}
+
+// DisableCloudConnector disables Cloud Connector mode and returns to direct API access.
+// Note: You will need to reconfigure the base URL for direct access.
+func (c *ApiClient) DisableCloudConnector() {
+	c.cloudConsoleID = ""
 }
 
 func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
@@ -234,7 +369,16 @@ func (c *ApiClient) do(
 	if err != nil {
 		return fmt.Errorf("unable to parse URL: %s %s %w", method, relativeURL, err)
 	}
-	if !strings.HasPrefix(relativeURL, "/") && !reqURL.IsAbs() {
+
+	// Handle Cloud Connector API routing
+	if c.cloudConsoleID != "" && !reqURL.IsAbs() && !strings.HasPrefix(relativeURL, "/v1/hosts") {
+		// Route through Cloud Connector proxy: /v1/connector/consoles/{id}/proxy/...
+		if !strings.HasPrefix(relativeURL, "/") {
+			reqURL.Path = path.Join(c.apiPath, reqURL.Path)
+		}
+		reqURL.Path = path.Join("/v1/connector/consoles", c.cloudConsoleID, reqURL.Path)
+	} else if !strings.HasPrefix(relativeURL, "/") && !reqURL.IsAbs() {
+		// Regular API path handling
 		reqURL.Path = path.Join(c.apiPath, reqURL.Path)
 	}
 

@@ -49,25 +49,25 @@ type Device struct {
 	FanModeOverride             string                    `json:"fan_mode_override,omitempty"` // default|quiet
 	FlowctrlEnabled             bool                      `json:"flowctrl_enabled,omitempty"`
 	GatewayVrrpMode             string                    `json:"gateway_vrrp_mode,omitempty"`     // primary|secondary
-	GatewayVrrpPriority         int64                     `json:"gateway_vrrp_priority,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]
+	GatewayVrrpPriority         *int64                    `json:"gateway_vrrp_priority,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]
 	GreenApEnabled              bool                      `json:"green_ap_enabled,omitempty"`
 	HardwareOffload             bool                      `json:"hardware_offload,omitempty"`
 	HeightInMeters              float64                   `json:"heightInMeters,omitempty"`
 	Hostname                    string                    `json:"hostname,omitempty"` // .{1,128}
 	JumboframeEnabled           bool                      `json:"jumboframe_enabled,omitempty"`
-	LcmBrightness               int64                     `json:"lcm_brightness,omitempty"` // [1-9]|[1-9][0-9]|100
+	LcmBrightness               *int64                    `json:"lcm_brightness,omitempty"` // [1-9]|[1-9][0-9]|100
 	LcmBrightnessOverride       bool                      `json:"lcm_brightness_override,omitempty"`
-	LcmIDleTimeout              int64                     `json:"lcm_idle_timeout,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9]|3[0-5][0-9][0-9]|3600
+	LcmIDleTimeout              *int64                    `json:"lcm_idle_timeout,omitempty"` // [1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9]|3[0-5][0-9][0-9]|3600
 	LcmIDleTimeoutOverride      bool                      `json:"lcm_idle_timeout_override,omitempty"`
 	LcmNightModeBegins          string                    `json:"lcm_night_mode_begins,omitempty"`    // (^$)|(^(0[1-9])|(1[0-9])|(2[0-3])):([0-5][0-9]$)
 	LcmNightModeEnds            string                    `json:"lcm_night_mode_ends,omitempty"`      // (^$)|(^(0[1-9])|(1[0-9])|(2[0-3])):([0-5][0-9]$)
-	LcmOrientationOverride      int64                     `json:"lcm_orientation_override,omitempty"` // 0|90|180|270
+	LcmOrientationOverride      *int64                    `json:"lcm_orientation_override,omitempty"` // 0|90|180|270
 	LcmSettingsRestrictedAccess bool                      `json:"lcm_settings_restricted_access,omitempty"`
 	LcmTrackerEnabled           bool                      `json:"lcm_tracker_enabled,omitempty"`
 	LcmTrackerSeed              string                    `json:"lcm_tracker_seed,omitempty"`              // .{0,50}
 	LedOverride                 string                    `json:"led_override,omitempty"`                  // default|on|off
 	LedOverrideColor            string                    `json:"led_override_color,omitempty"`            // ^#(?:[0-9a-fA-F]{3}){1,2}$
-	LedOverrideColorBrightness  int64                     `json:"led_override_color_brightness,omitempty"` // ^[0-9][0-9]?$|^100$
+	LedOverrideColorBrightness  *int64                    `json:"led_override_color_brightness,omitempty"` // ^[0-9][0-9]?$|^100$
 	Locked                      bool                      `json:"locked,omitempty"`
 	LowpfmodeOverride           bool                      `json:"lowpfmode_override,omitempty"`
 	LteApn                      string                    `json:"lte_apn,omitempty"`       // .{1,128}
@@ -75,12 +75,12 @@ type Device struct {
 	LteDataLimitEnabled         bool                      `json:"lte_data_limit_enabled,omitempty"`
 	LteDataWarningEnabled       bool                      `json:"lte_data_warning_enabled,omitempty"`
 	LteExtAnt                   bool                      `json:"lte_ext_ant,omitempty"`
-	LteHardLimit                int64                     `json:"lte_hard_limit,omitempty"`
+	LteHardLimit                *int64                    `json:"lte_hard_limit,omitempty"`
 	LtePassword                 string                    `json:"lte_password,omitempty"`
 	LtePoe                      bool                      `json:"lte_poe,omitempty"`
 	LteRoamingAllowed           bool                      `json:"lte_roaming_allowed,omitempty"`
-	LteSimPin                   int64                     `json:"lte_sim_pin,omitempty"`
-	LteSoftLimit                int64                     `json:"lte_soft_limit,omitempty"`
+	LteSimPin                   *int64                    `json:"lte_sim_pin,omitempty"`
+	LteSoftLimit                *int64                    `json:"lte_soft_limit,omitempty"`
 	LteUsername                 string                    `json:"lte_username,omitempty"`
 	MapID                       string                    `json:"map_id,omitempty"`
 	MbbOverrides                *DeviceMbbOverrides       `json:"mbb_overrides,omitempty"`
@@ -98,7 +98,7 @@ type Device struct {
 	PortOverrides               []DevicePortOverrides     `json:"port_overrides"`
 	PortTable                   []DevicePortTable         `json:"port_table,omitempty"`
 	PowerSourceCtrl             string                    `json:"power_source_ctrl,omitempty"`        // auto|8023af|8023at|8023bt-type3|8023bt-type4|pasv24|poe-injector|ac|adapter|dc|rps
-	PowerSourceCtrlBudget       int64                     `json:"power_source_ctrl_budget,omitempty"` // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]
+	PowerSourceCtrlBudget       *int64                    `json:"power_source_ctrl_budget,omitempty"` // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]
 	PowerSourceCtrlEnabled      bool                      `json:"power_source_ctrl_enabled,omitempty"`
 	PtmpApMAC                   string                    `json:"ptmp_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
 	PtpApMAC                    string                    `json:"ptp_ap_mac,omitempty"`  // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
@@ -110,12 +110,12 @@ type Device struct {
 	SnmpLocation                string                    `json:"snmp_location,omitempty"` // .{0,255}
 	State                       DeviceState               `json:"state"`
 	StationMode                 string                    `json:"station_mode,omitempty"` // ptp|ptmp|wifi
-	StpPriority                 string                    `json:"stp_priority,omitempty"` // 0|4096|8192|12288|16384|20480|24576|28672|32768|36864|40960|45056|49152|53248|57344|61440
+	StpPriority                 *int64                    `json:"stp_priority,omitempty"` // 0|4096|8192|12288|16384|20480|24576|28672|32768|36864|40960|45056|49152|53248|57344|61440
 	StpVersion                  string                    `json:"stp_version,omitempty"`  // stp|rstp|disabled
 	SwitchVLANEnabled           bool                      `json:"switch_vlan_enabled,omitempty"`
 	Type                        string                    `json:"type,omitempty"`
 	UbbPairName                 string                    `json:"ubb_pair_name,omitempty"` // .{1,128}
-	Volume                      int64                     `json:"volume,omitempty"`        // [0-9]|[1-9][0-9]|100
+	Volume                      *int64                    `json:"volume,omitempty"`        // [0-9]|[1-9][0-9]|100
 	X                           float64                   `json:"x,omitempty"`
 	XBaresipPassword            string                    `json:"x_baresip_password,omitempty"` // ^[a-zA-Z0-9_.\-!~*'()]*
 	Y                           float64                   `json:"y,omitempty"`
@@ -124,17 +124,7 @@ type Device struct {
 func (dst *Device) UnmarshalJSON(b []byte) error {
 	type Alias Device
 	aux := &struct {
-		GatewayVrrpPriority        types.Number `json:"gateway_vrrp_priority"`
-		LcmBrightness              types.Number `json:"lcm_brightness"`
-		LcmIDleTimeout             types.Number `json:"lcm_idle_timeout"`
-		LcmOrientationOverride     types.Number `json:"lcm_orientation_override"`
-		LedOverrideColorBrightness types.Number `json:"led_override_color_brightness"`
-		LteHardLimit               types.Number `json:"lte_hard_limit"`
-		LteSimPin                  types.Number `json:"lte_sim_pin"`
-		LteSoftLimit               types.Number `json:"lte_soft_limit"`
-		PowerSourceCtrlBudget      types.Number `json:"power_source_ctrl_budget"`
-		StpPriority                types.Number `json:"stp_priority"`
-		Volume                     types.Number `json:"volume"`
+		StpPriority types.Number `json:"stp_priority"`
 
 		*Alias
 	}{
@@ -145,38 +135,8 @@ func (dst *Device) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if val, err := aux.GatewayVrrpPriority.Int64(); err == nil {
-		dst.GatewayVrrpPriority = val
-	}
-	if val, err := aux.LcmBrightness.Int64(); err == nil {
-		dst.LcmBrightness = val
-	}
-	if val, err := aux.LcmIDleTimeout.Int64(); err == nil {
-		dst.LcmIDleTimeout = val
-	}
-	if val, err := aux.LcmOrientationOverride.Int64(); err == nil {
-		dst.LcmOrientationOverride = val
-	}
-	if val, err := aux.LedOverrideColorBrightness.Int64(); err == nil {
-		dst.LedOverrideColorBrightness = val
-	}
-	if val, err := aux.LteHardLimit.Int64(); err == nil {
-		dst.LteHardLimit = val
-	}
-	if val, err := aux.LteSimPin.Int64(); err == nil {
-		dst.LteSimPin = val
-	}
-	if val, err := aux.LteSoftLimit.Int64(); err == nil {
-		dst.LteSoftLimit = val
-	}
-	if val, err := aux.PowerSourceCtrlBudget.Int64(); err == nil {
-		dst.PowerSourceCtrlBudget = val
-	}
 	if val, err := aux.StpPriority.Int64(); err == nil {
-		dst.StpPriority = strconv.FormatInt(val, 10)
-	}
-	if val, err := aux.Volume.Int64(); err == nil {
-		dst.Volume = val
+		dst.StpPriority = &val
 	}
 
 	return nil
@@ -236,7 +196,7 @@ func (dst *DeviceCurrentApn) UnmarshalJSON(b []byte) error {
 
 type DeviceEtherLighting struct {
 	Behavior   string `json:"behavior,omitempty"`   // breath|steady
-	Brightness int64  `json:"brightness,omitempty"` // [1-9]|[1-9][0-9]|100
+	Brightness *int64 `json:"brightness,omitempty"` // [1-9]|[1-9][0-9]|100
 	LedMode    string `json:"led_mode,omitempty"`   // standard|etherlighting
 	Mode       string `json:"mode,omitempty"`       // speed|network
 }
@@ -244,8 +204,6 @@ type DeviceEtherLighting struct {
 func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 	type Alias DeviceEtherLighting
 	aux := &struct {
-		Brightness types.Number `json:"brightness"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -254,9 +212,6 @@ func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Brightness.Int64(); err == nil {
-		dst.Brightness = val
 	}
 
 	return nil
@@ -285,15 +240,13 @@ func (dst *DeviceEthernetOverrides) UnmarshalJSON(b []byte) error {
 }
 
 type DeviceMbbOverrides struct {
-	PrimarySlot int64       `json:"primary_slot,omitempty"` // 1|2
+	PrimarySlot *int64      `json:"primary_slot,omitempty"` // 1|2
 	Sim         []DeviceSim `json:"sim,omitempty"`
 }
 
 func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DeviceMbbOverrides
 	aux := &struct {
-		PrimarySlot types.Number `json:"primary_slot"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -302,9 +255,6 @@ func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.PrimarySlot.Int64(); err == nil {
-		dst.PrimarySlot = val
 	}
 
 	return nil
@@ -315,15 +265,13 @@ type DeviceNutServer struct {
 	Enabled            bool   `json:"enabled,omitempty"`
 	ID                 string `json:"id,omitempty"`
 	Password           string `json:"password,omitempty"`
-	Port               int64  `json:"port,omitempty"`
+	Port               *int64 `json:"port,omitempty"`
 	Username           string `json:"username,omitempty"`
 }
 
 func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 	type Alias DeviceNutServer
 	aux := &struct {
-		Port types.Number `json:"port"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -332,9 +280,6 @@ func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Port.Int64(); err == nil {
-		dst.Port = val
 	}
 
 	return nil
@@ -342,7 +287,7 @@ func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 
 type DeviceOutletOverrides struct {
 	CycleEnabled bool   `json:"cycle_enabled,omitempty"`
-	Index        int64  `json:"index,omitempty"`
+	Index        *int64 `json:"index,omitempty"`
 	Name         string `json:"name,omitempty"` // .{0,128}
 	RelayState   bool   `json:"relay_state,omitempty"`
 }
@@ -350,8 +295,6 @@ type DeviceOutletOverrides struct {
 func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DeviceOutletOverrides
 	aux := &struct {
-		Index types.Number `json:"index"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -360,9 +303,6 @@ func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Index.Int64(); err == nil {
-		dst.Index = val
 	}
 
 	return nil
@@ -372,8 +312,8 @@ type DevicePortOverrides struct {
 	AggregateMembers             []int64           `json:"aggregate_members,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
 	Autoneg                      bool              `json:"autoneg,omitempty"`
 	Dot1XCtrl                    string            `json:"dot1x_ctrl,omitempty"`             // auto|force_authorized|force_unauthorized|mac_based|multi_host
-	Dot1XIDleTimeout             int64             `json:"dot1x_idle_timeout,omitempty"`     // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
-	EgressRateLimitKbps          int64             `json:"egress_rate_limit_kbps,omitempty"` // 6[4-9]|[7-9][0-9]|[1-9][0-9]{2,6}
+	Dot1XIDleTimeout             *int64            `json:"dot1x_idle_timeout,omitempty"`     // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
+	EgressRateLimitKbps          *int64            `json:"egress_rate_limit_kbps,omitempty"` // 6[4-9]|[7-9][0-9]|[1-9][0-9]{2,6}
 	EgressRateLimitKbpsEnabled   bool              `json:"egress_rate_limit_kbps_enabled,omitempty"`
 	ExcludedNetworkIDs           []string          `json:"excluded_networkconf_ids,omitempty"`
 	FecMode                      string            `json:"fec_mode,omitempty"` // rs-fec|fc-fec|default|disabled
@@ -383,34 +323,34 @@ type DevicePortOverrides struct {
 	Isolation                    bool              `json:"isolation,omitempty"`
 	LldpmedEnabled               bool              `json:"lldpmed_enabled,omitempty"`
 	LldpmedNotifyEnabled         bool              `json:"lldpmed_notify_enabled,omitempty"`
-	MirrorPortIDX                int64             `json:"mirror_port_idx,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
+	MirrorPortIDX                *int64            `json:"mirror_port_idx,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
 	MulticastRouterNetworkIDs    []string          `json:"multicast_router_networkconf_ids,omitempty"`
 	NATiveNetworkID              string            `json:"native_networkconf_id,omitempty"`
 	Name                         string            `json:"name,omitempty"`     // .{0,128}
 	OpMode                       string            `json:"op_mode,omitempty"`  // switch|mirror|aggregate
 	PoeMode                      string            `json:"poe_mode,omitempty"` // auto|pasv24|passthrough|off
-	PortIDX                      int64             `json:"port_idx,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
+	PortIDX                      *int64            `json:"port_idx,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
 	PortKeepaliveEnabled         bool              `json:"port_keepalive_enabled,omitempty"`
 	PortProfileID                string            `json:"portconf_id,omitempty"` // [\d\w]+
 	PortSecurityEnabled          bool              `json:"port_security_enabled,omitempty"`
 	PortSecurityMACAddress       []string          `json:"port_security_mac_address,omitempty"` // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
-	PriorityQueue1Level          int64             `json:"priority_queue1_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue2Level          int64             `json:"priority_queue2_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue3Level          int64             `json:"priority_queue3_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue4Level          int64             `json:"priority_queue4_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue1Level          *int64            `json:"priority_queue1_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue2Level          *int64            `json:"priority_queue2_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue3Level          *int64            `json:"priority_queue3_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue4Level          *int64            `json:"priority_queue4_level,omitempty"`     // [0-9]|[1-9][0-9]|100
 	QOSProfile                   *DeviceQOSProfile `json:"qos_profile,omitempty"`
 	SettingPreference            string            `json:"setting_preference,omitempty"` // auto|manual
-	Speed                        int64             `json:"speed,omitempty"`              // 10|100|1000|2500|5000|10000|20000|25000|40000|50000|100000
+	Speed                        *int64            `json:"speed,omitempty"`              // 10|100|1000|2500|5000|10000|20000|25000|40000|50000|100000
 	StormctrlBroadcastastEnabled bool              `json:"stormctrl_bcast_enabled,omitempty"`
-	StormctrlBroadcastastLevel   int64             `json:"stormctrl_bcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
-	StormctrlBroadcastastRate    int64             `json:"stormctrl_bcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StormctrlBroadcastastLevel   *int64            `json:"stormctrl_bcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	StormctrlBroadcastastRate    *int64            `json:"stormctrl_bcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StormctrlMcastEnabled        bool              `json:"stormctrl_mcast_enabled,omitempty"`
-	StormctrlMcastLevel          int64             `json:"stormctrl_mcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
-	StormctrlMcastRate           int64             `json:"stormctrl_mcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StormctrlMcastLevel          *int64            `json:"stormctrl_mcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	StormctrlMcastRate           *int64            `json:"stormctrl_mcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StormctrlType                string            `json:"stormctrl_type,omitempty"`        // level|rate
 	StormctrlUcastEnabled        bool              `json:"stormctrl_ucast_enabled,omitempty"`
-	StormctrlUcastLevel          int64             `json:"stormctrl_ucast_level,omitempty"` // [0-9]|[1-9][0-9]|100
-	StormctrlUcastRate           int64             `json:"stormctrl_ucast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StormctrlUcastLevel          *int64            `json:"stormctrl_ucast_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	StormctrlUcastRate           *int64            `json:"stormctrl_ucast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StpPortMode                  bool              `json:"stp_port_mode,omitempty"`
 	TaggedVLANMgmt               string            `json:"tagged_vlan_mgmt,omitempty"` // auto|block_all|custom
 	VoiceNetworkID               string            `json:"voice_networkconf_id,omitempty"`
@@ -419,23 +359,6 @@ type DevicePortOverrides struct {
 func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DevicePortOverrides
 	aux := &struct {
-		AggregateMembers           []types.Number `json:"aggregate_members"`
-		Dot1XIDleTimeout           types.Number   `json:"dot1x_idle_timeout"`
-		EgressRateLimitKbps        types.Number   `json:"egress_rate_limit_kbps"`
-		MirrorPortIDX              types.Number   `json:"mirror_port_idx"`
-		PortIDX                    types.Number   `json:"port_idx"`
-		PriorityQueue1Level        types.Number   `json:"priority_queue1_level"`
-		PriorityQueue2Level        types.Number   `json:"priority_queue2_level"`
-		PriorityQueue3Level        types.Number   `json:"priority_queue3_level"`
-		PriorityQueue4Level        types.Number   `json:"priority_queue4_level"`
-		Speed                      types.Number   `json:"speed"`
-		StormctrlBroadcastastLevel types.Number   `json:"stormctrl_bcast_level"`
-		StormctrlBroadcastastRate  types.Number   `json:"stormctrl_bcast_rate"`
-		StormctrlMcastLevel        types.Number   `json:"stormctrl_mcast_level"`
-		StormctrlMcastRate         types.Number   `json:"stormctrl_mcast_rate"`
-		StormctrlUcastLevel        types.Number   `json:"stormctrl_ucast_level"`
-		StormctrlUcastRate         types.Number   `json:"stormctrl_ucast_rate"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -444,77 +367,21 @@ func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	dst.AggregateMembers = make([]int64, len(aux.AggregateMembers))
-	for i, v := range aux.AggregateMembers {
-		if val, err := v.Int64(); err == nil {
-			dst.AggregateMembers[i] = val
-		}
-	}
-	if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
-		dst.Dot1XIDleTimeout = val
-	}
-	if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
-		dst.EgressRateLimitKbps = val
-	}
-	if val, err := aux.MirrorPortIDX.Int64(); err == nil {
-		dst.MirrorPortIDX = val
-	}
-	if val, err := aux.PortIDX.Int64(); err == nil {
-		dst.PortIDX = val
-	}
-	if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
-		dst.PriorityQueue1Level = val
-	}
-	if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
-		dst.PriorityQueue2Level = val
-	}
-	if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
-		dst.PriorityQueue3Level = val
-	}
-	if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
-		dst.PriorityQueue4Level = val
-	}
-	if val, err := aux.Speed.Int64(); err == nil {
-		dst.Speed = val
-	}
-	if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
-		dst.StormctrlBroadcastastLevel = val
-	}
-	if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
-		dst.StormctrlBroadcastastRate = val
-	}
-	if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
-		dst.StormctrlMcastLevel = val
-	}
-	if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
-		dst.StormctrlMcastRate = val
-	}
-	if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
-		dst.StormctrlUcastLevel = val
-	}
-	if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
-		dst.StormctrlUcastRate = val
 	}
 
 	return nil
 }
 
 type DeviceQOSMarking struct {
-	CosCode          int64 `json:"cos_code,omitempty"`           // [0-7]
-	DscpCode         int64 `json:"dscp_code,omitempty"`          // 0|8|16|24|32|40|48|56|10|12|14|18|20|22|26|28|30|34|36|38|44|46
-	IPPrecedenceCode int64 `json:"ip_precedence_code,omitempty"` // [0-7]
-	Queue            int64 `json:"queue,omitempty"`              // [0-7]
+	CosCode          *int64 `json:"cos_code,omitempty"`           // [0-7]
+	DscpCode         *int64 `json:"dscp_code,omitempty"`          // 0|8|16|24|32|40|48|56|10|12|14|18|20|22|26|28|30|34|36|38|44|46
+	IPPrecedenceCode *int64 `json:"ip_precedence_code,omitempty"` // [0-7]
+	Queue            *int64 `json:"queue,omitempty"`              // [0-7]
 }
 
 func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 	type Alias DeviceQOSMarking
 	aux := &struct {
-		CosCode          types.Number `json:"cos_code"`
-		DscpCode         types.Number `json:"dscp_code"`
-		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
-		Queue            types.Number `json:"queue"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -523,41 +390,23 @@ func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = val
-	}
-	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = val
-	}
-	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = val
-	}
-	if val, err := aux.Queue.Int64(); err == nil {
-		dst.Queue = val
 	}
 
 	return nil
 }
 
 type DeviceQOSMatching struct {
-	CosCode          int64  `json:"cos_code,omitempty"`           // [0-7]
-	DscpCode         int64  `json:"dscp_code,omitempty"`          // [0-9]|[1-5][0-9]|6[0-3]
-	DstPort          int64  `json:"dst_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
-	IPPrecedenceCode int64  `json:"ip_precedence_code,omitempty"` // [0-7]
+	CosCode          *int64 `json:"cos_code,omitempty"`           // [0-7]
+	DscpCode         *int64 `json:"dscp_code,omitempty"`          // [0-9]|[1-5][0-9]|6[0-3]
+	DstPort          *int64 `json:"dst_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
+	IPPrecedenceCode *int64 `json:"ip_precedence_code,omitempty"` // [0-7]
 	Protocol         string `json:"protocol,omitempty"`           // ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|ah|ax.25|dccp|ddp|egp|eigrp|encap|esp|etherip|fc|ggp|gre|hip|hmp|icmp|idpr-cmtp|idrp|igmp|igp|ip|ipcomp|ipencap|ipip|ipv6|ipv6-frag|ipv6-icmp|ipv6-nonxt|ipv6-opts|ipv6-route|isis|iso-tp4|l2tp|manet|mobility-header|mpls-in-ip|ospf|pim|pup|rdp|rohc|rspf|rsvp|sctp|shim6|skip|st|tcp|udp|udplite|vmtp|vrrp|wesp|xns-idp|xtp
-	SrcPort          int64  `json:"src_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
+	SrcPort          *int64 `json:"src_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
 }
 
 func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 	type Alias DeviceQOSMatching
 	aux := &struct {
-		CosCode          types.Number `json:"cos_code"`
-		DscpCode         types.Number `json:"dscp_code"`
-		DstPort          types.Number `json:"dst_port"`
-		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
-		SrcPort          types.Number `json:"src_port"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -566,21 +415,6 @@ func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = val
-	}
-	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = val
-	}
-	if val, err := aux.DstPort.Int64(); err == nil {
-		dst.DstPort = val
-	}
-	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = val
-	}
-	if val, err := aux.SrcPort.Int64(); err == nil {
-		dst.SrcPort = val
 	}
 
 	return nil
@@ -650,22 +484,22 @@ func (dst *DeviceRadioIDentifiers) UnmarshalJSON(b []byte) error {
 }
 
 type DeviceRadioTable struct {
-	AntennaGain            int64                    `json:"antenna_gain,omitempty"` // ^-?([0-9]|[1-9][0-9])
-	AntennaID              int64                    `json:"antenna_id,omitempty"`   // -1|[0-9]
+	AntennaGain            *int64                   `json:"antenna_gain,omitempty"` // ^-?([0-9]|[1-9][0-9])
+	AntennaID              *int64                   `json:"antenna_id,omitempty"`   // -1|[0-9]
 	AssistedRoamingEnabled bool                     `json:"assisted_roaming_enabled,omitempty"`
-	AssistedRoamingRssi    int64                    `json:"assisted_roaming_rssi,omitempty"` // ^-([6-7][0-9]|80)$
+	AssistedRoamingRssi    *int64                   `json:"assisted_roaming_rssi,omitempty"` // ^-([6-7][0-9]|80)$
 	Channel                string                   `json:"channel,omitempty"`               // [0-9]|[1][0-4]|1.5|2.5|3.5|4.5|5.5|6.5|5|16|17|21|25|29|33|34|36|37|38|40|41|42|44|45|46|48|49|52|53|56|57|60|61|64|65|69|73|77|81|85|89|93|97|100|101|104|105|108|109|112|113|117|116|120|121|124|125|128|129|132|133|136|137|140|141|144|145|149|153|157|161|165|169|173|177|181|183|184|185|187|188|189|192|193|196|197|201|205|209|213|217|221|225|229|233|auto
 	Dfs                    bool                     `json:"dfs,omitempty"`
 	HardNoiseFloorEnabled  bool                     `json:"hard_noise_floor_enabled,omitempty"`
-	Ht                     int64                    `json:"ht,omitempty"` // 20|40|80|160|240|320|1080|2160|4320
+	Ht                     *int64                   `json:"ht,omitempty"` // 20|40|80|160|240|320|1080|2160|4320
 	LoadbalanceEnabled     bool                     `json:"loadbalance_enabled,omitempty"`
-	Maxsta                 int64                    `json:"maxsta,omitempty"`   // [1-9]|[1-9][0-9]|1[0-9]{2}|200|^$
-	MinRssi                int64                    `json:"min_rssi,omitempty"` // ^-(6[7-9]|[7-8][0-9]|90)$
+	Maxsta                 *int64                   `json:"maxsta,omitempty"`   // [1-9]|[1-9][0-9]|1[0-9]{2}|200|^$
+	MinRssi                *int64                   `json:"min_rssi,omitempty"` // ^-(6[7-9]|[7-8][0-9]|90)$
 	MinRssiEnabled         bool                     `json:"min_rssi_enabled,omitempty"`
 	Name                   string                   `json:"name,omitempty"`
 	Radio                  string                   `json:"radio,omitempty"` // ng|na|ad|6e
 	RadioIDentifiers       []DeviceRadioIDentifiers `json:"radio_identifiers,omitempty"`
-	SensLevel              int64                    `json:"sens_level,omitempty"` // ^-([5-8][0-9]|90)$
+	SensLevel              *int64                   `json:"sens_level,omitempty"` // ^-([5-8][0-9]|90)$
 	SensLevelEnabled       bool                     `json:"sens_level_enabled,omitempty"`
 	TxPower                string                   `json:"tx_power,omitempty"`      // [\d]+|auto
 	TxPowerMode            string                   `json:"tx_power_mode,omitempty"` // auto|medium|high|low|custom|disabled
@@ -675,14 +509,6 @@ type DeviceRadioTable struct {
 func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRadioTable
 	aux := &struct {
-		AntennaGain         types.Number `json:"antenna_gain"`
-		AntennaID           types.Number `json:"antenna_id"`
-		AssistedRoamingRssi types.Number `json:"assisted_roaming_rssi"`
-		Ht                  types.Number `json:"ht"`
-		Maxsta              types.Number `json:"maxsta"`
-		MinRssi             types.Number `json:"min_rssi"`
-		SensLevel           types.Number `json:"sens_level"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -691,27 +517,6 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.AntennaGain.Int64(); err == nil {
-		dst.AntennaGain = val
-	}
-	if val, err := aux.AntennaID.Int64(); err == nil {
-		dst.AntennaID = val
-	}
-	if val, err := aux.AssistedRoamingRssi.Int64(); err == nil {
-		dst.AssistedRoamingRssi = val
-	}
-	if val, err := aux.Ht.Int64(); err == nil {
-		dst.Ht = val
-	}
-	if val, err := aux.Maxsta.Int64(); err == nil {
-		dst.Maxsta = val
-	}
-	if val, err := aux.MinRssi.Int64(); err == nil {
-		dst.MinRssi = val
-	}
-	if val, err := aux.SensLevel.Int64(); err == nil {
-		dst.SensLevel = val
 	}
 
 	return nil
@@ -740,15 +545,13 @@ func (dst *DeviceRpsOverride) UnmarshalJSON(b []byte) error {
 
 type DeviceRpsPortTable struct {
 	Name     string `json:"name,omitempty"`      // .{0,32}
-	PortIDX  int64  `json:"port_idx,omitempty"`  // [1-8]
+	PortIDX  *int64 `json:"port_idx,omitempty"`  // [1-8]
 	PortMode string `json:"port_mode,omitempty"` // auto|force_active|manual|disabled
 }
 
 func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRpsPortTable
 	aux := &struct {
-		PortIDX types.Number `json:"port_idx"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -757,9 +560,6 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.PortIDX.Int64(); err == nil {
-		dst.PortIDX = val
 	}
 
 	return nil
@@ -767,26 +567,20 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 
 type DeviceSim struct {
 	CurrentApn               DeviceCurrentApn `json:"current_apn,omitempty"`
-	DataHardLimitBytes       int64            `json:"data_hard_limit_bytes,omitempty"`
+	DataHardLimitBytes       *int64           `json:"data_hard_limit_bytes,omitempty"`
 	DataLimitEnabled         bool             `json:"data_limit_enabled,omitempty"`
-	DataSoftLimitBytes       int64            `json:"data_soft_limit_bytes,omitempty"`
+	DataSoftLimitBytes       *int64           `json:"data_soft_limit_bytes,omitempty"`
 	DataSoftLimitDisplayUnit string           `json:"data_soft_limit_display_unit,omitempty"` // MB|GB
-	DataWarningThreshold     int64            `json:"data_warning_threshold,omitempty"`       // [0-9]|[1-9][0-9]|100
-	ResetDate                int64            `json:"reset_date,omitempty"`                   // [0-9]|[1-2][0-9]|3[0-1]
+	DataWarningThreshold     *int64           `json:"data_warning_threshold,omitempty"`       // [0-9]|[1-9][0-9]|100
+	ResetDate                *int64           `json:"reset_date,omitempty"`                   // [0-9]|[1-2][0-9]|3[0-1]
 	ResetPolicy              string           `json:"reset_policy,omitempty"`                 // day|week|month
-	Slot                     int64            `json:"slot,omitempty"`                         // 1|2
+	Slot                     *int64           `json:"slot,omitempty"`                         // 1|2
 	UseCustomApn             bool             `json:"use_custom_apn,omitempty"`
 }
 
 func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	type Alias DeviceSim
 	aux := &struct {
-		DataHardLimitBytes   types.Number `json:"data_hard_limit_bytes"`
-		DataSoftLimitBytes   types.Number `json:"data_soft_limit_bytes"`
-		DataWarningThreshold types.Number `json:"data_warning_threshold"`
-		ResetDate            types.Number `json:"reset_date"`
-		Slot                 types.Number `json:"slot"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -795,21 +589,6 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.DataHardLimitBytes.Int64(); err == nil {
-		dst.DataHardLimitBytes = val
-	}
-	if val, err := aux.DataSoftLimitBytes.Int64(); err == nil {
-		dst.DataSoftLimitBytes = val
-	}
-	if val, err := aux.DataWarningThreshold.Int64(); err == nil {
-		dst.DataWarningThreshold = val
-	}
-	if val, err := aux.ResetDate.Int64(); err == nil {
-		dst.ResetDate = val
-	}
-	if val, err := aux.Slot.Int64(); err == nil {
-		dst.Slot = val
 	}
 
 	return nil

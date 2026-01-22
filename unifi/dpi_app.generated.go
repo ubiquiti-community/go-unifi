@@ -36,18 +36,13 @@ type DpiApp struct {
 	Enabled        bool    `json:"enabled"`
 	Log            bool    `json:"log"`
 	Name           string  `json:"name,omitempty"`              // .{1,128}
-	QOSRateMaxDown int64   `json:"qos_rate_max_down,omitempty"` // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
-	QOSRateMaxUp   int64   `json:"qos_rate_max_up,omitempty"`   // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
+	QOSRateMaxDown *int64  `json:"qos_rate_max_down,omitempty"` // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
+	QOSRateMaxUp   *int64  `json:"qos_rate_max_up,omitempty"`   // -1|[2-9]|[1-9][0-9]{1,4}|100000|10[0-1][0-9]{3}|102[0-3][0-9]{2}|102400
 }
 
 func (dst *DpiApp) UnmarshalJSON(b []byte) error {
 	type Alias DpiApp
 	aux := &struct {
-		Apps           []types.Number `json:"apps"`
-		Cats           []types.Number `json:"cats"`
-		QOSRateMaxDown types.Number   `json:"qos_rate_max_down"`
-		QOSRateMaxUp   types.Number   `json:"qos_rate_max_up"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -56,24 +51,6 @@ func (dst *DpiApp) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	dst.Apps = make([]int64, len(aux.Apps))
-	for i, v := range aux.Apps {
-		if val, err := v.Int64(); err == nil {
-			dst.Apps[i] = val
-		}
-	}
-	dst.Cats = make([]int64, len(aux.Cats))
-	for i, v := range aux.Cats {
-		if val, err := v.Int64(); err == nil {
-			dst.Cats[i] = val
-		}
-	}
-	if val, err := aux.QOSRateMaxDown.Int64(); err == nil {
-		dst.QOSRateMaxDown = val
-	}
-	if val, err := aux.QOSRateMaxUp.Int64(); err == nil {
-		dst.QOSRateMaxUp = val
 	}
 
 	return nil

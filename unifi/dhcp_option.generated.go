@@ -34,14 +34,12 @@ type DHCPOption struct {
 	Name   string `json:"name,omitempty"` // ^[A-Za-z0-9-_]{1,25}$
 	Signed bool   `json:"signed"`
 	Type   string `json:"type,omitempty"`  // ^(boolean|hexarray|integer|ipaddress|macaddress|text)$
-	Width  int64  `json:"width,omitempty"` // ^(8|16|32)$
+	Width  *int64 `json:"width,omitempty"` // ^(8|16|32)$
 }
 
 func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	type Alias DHCPOption
 	aux := &struct {
-		Width types.Number `json:"width"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -50,9 +48,6 @@ func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Width.Int64(); err == nil {
-		dst.Width = val
 	}
 
 	return nil

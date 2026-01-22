@@ -32,8 +32,8 @@ type PortProfile struct {
 
 	Autoneg                      bool                  `json:"autoneg"`
 	Dot1XCtrl                    string                `json:"dot1x_ctrl,omitempty"`             // auto|force_authorized|force_unauthorized|mac_based|multi_host
-	Dot1XIDleTimeout             int64                 `json:"dot1x_idle_timeout,omitempty"`     // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
-	EgressRateLimitKbps          int64                 `json:"egress_rate_limit_kbps,omitempty"` // 6[4-9]|[7-9][0-9]|[1-9][0-9]{2,6}
+	Dot1XIDleTimeout             *int64                `json:"dot1x_idle_timeout,omitempty"`     // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
+	EgressRateLimitKbps          *int64                `json:"egress_rate_limit_kbps,omitempty"` // 6[4-9]|[7-9][0-9]|[1-9][0-9]{2,6}
 	EgressRateLimitKbpsEnabled   bool                  `json:"egress_rate_limit_kbps_enabled"`
 	ExcludedNetworkIDs           []string              `json:"excluded_networkconf_ids,omitempty"`
 	FecMode                      string                `json:"fec_mode,omitempty"` // rs-fec|fc-fec|default|disabled
@@ -50,23 +50,23 @@ type PortProfile struct {
 	PortKeepaliveEnabled         bool                  `json:"port_keepalive_enabled"`
 	PortSecurityEnabled          bool                  `json:"port_security_enabled"`
 	PortSecurityMACAddress       []string              `json:"port_security_mac_address,omitempty"` // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
-	PriorityQueue1Level          int64                 `json:"priority_queue1_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue2Level          int64                 `json:"priority_queue2_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue3Level          int64                 `json:"priority_queue3_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue4Level          int64                 `json:"priority_queue4_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue1Level          *int64                `json:"priority_queue1_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue2Level          *int64                `json:"priority_queue2_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue3Level          *int64                `json:"priority_queue3_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PriorityQueue4Level          *int64                `json:"priority_queue4_level,omitempty"`     // [0-9]|[1-9][0-9]|100
 	QOSProfile                   PortProfileQOSProfile `json:"qos_profile,omitempty"`
 	SettingPreference            string                `json:"setting_preference,omitempty"` // auto|manual
-	Speed                        int64                 `json:"speed,omitempty"`              // 10|100|1000|2500|5000|10000|20000|25000|40000|50000|100000
+	Speed                        *int64                `json:"speed,omitempty"`              // 10|100|1000|2500|5000|10000|20000|25000|40000|50000|100000
 	StormctrlBroadcastastEnabled bool                  `json:"stormctrl_bcast_enabled"`
-	StormctrlBroadcastastLevel   int64                 `json:"stormctrl_bcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
-	StormctrlBroadcastastRate    int64                 `json:"stormctrl_bcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StormctrlBroadcastastLevel   *int64                `json:"stormctrl_bcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	StormctrlBroadcastastRate    *int64                `json:"stormctrl_bcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StormctrlMcastEnabled        bool                  `json:"stormctrl_mcast_enabled"`
-	StormctrlMcastLevel          int64                 `json:"stormctrl_mcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
-	StormctrlMcastRate           int64                 `json:"stormctrl_mcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StormctrlMcastLevel          *int64                `json:"stormctrl_mcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	StormctrlMcastRate           *int64                `json:"stormctrl_mcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StormctrlType                string                `json:"stormctrl_type,omitempty"`        // level|rate
 	StormctrlUcastEnabled        bool                  `json:"stormctrl_ucast_enabled"`
-	StormctrlUcastLevel          int64                 `json:"stormctrl_ucast_level,omitempty"` // [0-9]|[1-9][0-9]|100
-	StormctrlUcastRate           int64                 `json:"stormctrl_ucast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StormctrlUcastLevel          *int64                `json:"stormctrl_ucast_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	StormctrlUcastRate           *int64                `json:"stormctrl_ucast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StpPortMode                  bool                  `json:"stp_port_mode"`
 	TaggedVLANMgmt               string                `json:"tagged_vlan_mgmt,omitempty"` // auto|block_all|custom
 	VoiceNetworkID               string                `json:"voice_networkconf_id,omitempty"`
@@ -75,20 +75,6 @@ type PortProfile struct {
 func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	type Alias PortProfile
 	aux := &struct {
-		Dot1XIDleTimeout           types.Number `json:"dot1x_idle_timeout"`
-		EgressRateLimitKbps        types.Number `json:"egress_rate_limit_kbps"`
-		PriorityQueue1Level        types.Number `json:"priority_queue1_level"`
-		PriorityQueue2Level        types.Number `json:"priority_queue2_level"`
-		PriorityQueue3Level        types.Number `json:"priority_queue3_level"`
-		PriorityQueue4Level        types.Number `json:"priority_queue4_level"`
-		Speed                      types.Number `json:"speed"`
-		StormctrlBroadcastastLevel types.Number `json:"stormctrl_bcast_level"`
-		StormctrlBroadcastastRate  types.Number `json:"stormctrl_bcast_rate"`
-		StormctrlMcastLevel        types.Number `json:"stormctrl_mcast_level"`
-		StormctrlMcastRate         types.Number `json:"stormctrl_mcast_rate"`
-		StormctrlUcastLevel        types.Number `json:"stormctrl_ucast_level"`
-		StormctrlUcastRate         types.Number `json:"stormctrl_ucast_rate"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -97,65 +83,21 @@ func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
-		dst.Dot1XIDleTimeout = val
-	}
-	if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
-		dst.EgressRateLimitKbps = val
-	}
-	if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
-		dst.PriorityQueue1Level = val
-	}
-	if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
-		dst.PriorityQueue2Level = val
-	}
-	if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
-		dst.PriorityQueue3Level = val
-	}
-	if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
-		dst.PriorityQueue4Level = val
-	}
-	if val, err := aux.Speed.Int64(); err == nil {
-		dst.Speed = val
-	}
-	if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
-		dst.StormctrlBroadcastastLevel = val
-	}
-	if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
-		dst.StormctrlBroadcastastRate = val
-	}
-	if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
-		dst.StormctrlMcastLevel = val
-	}
-	if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
-		dst.StormctrlMcastRate = val
-	}
-	if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
-		dst.StormctrlUcastLevel = val
-	}
-	if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
-		dst.StormctrlUcastRate = val
 	}
 
 	return nil
 }
 
 type PortProfileQOSMarking struct {
-	CosCode          int64 `json:"cos_code,omitempty"`           // [0-7]
-	DscpCode         int64 `json:"dscp_code,omitempty"`          // 0|8|16|24|32|40|48|56|10|12|14|18|20|22|26|28|30|34|36|38|44|46
-	IPPrecedenceCode int64 `json:"ip_precedence_code,omitempty"` // [0-7]
-	Queue            int64 `json:"queue,omitempty"`              // [0-7]
+	CosCode          *int64 `json:"cos_code,omitempty"`           // [0-7]
+	DscpCode         *int64 `json:"dscp_code,omitempty"`          // 0|8|16|24|32|40|48|56|10|12|14|18|20|22|26|28|30|34|36|38|44|46
+	IPPrecedenceCode *int64 `json:"ip_precedence_code,omitempty"` // [0-7]
+	Queue            *int64 `json:"queue,omitempty"`              // [0-7]
 }
 
 func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 	type Alias PortProfileQOSMarking
 	aux := &struct {
-		CosCode          types.Number `json:"cos_code"`
-		DscpCode         types.Number `json:"dscp_code"`
-		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
-		Queue            types.Number `json:"queue"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -164,41 +106,23 @@ func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = val
-	}
-	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = val
-	}
-	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = val
-	}
-	if val, err := aux.Queue.Int64(); err == nil {
-		dst.Queue = val
 	}
 
 	return nil
 }
 
 type PortProfileQOSMatching struct {
-	CosCode          int64  `json:"cos_code,omitempty"`           // [0-7]
-	DscpCode         int64  `json:"dscp_code,omitempty"`          // [0-9]|[1-5][0-9]|6[0-3]
-	DstPort          int64  `json:"dst_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
-	IPPrecedenceCode int64  `json:"ip_precedence_code,omitempty"` // [0-7]
+	CosCode          *int64 `json:"cos_code,omitempty"`           // [0-7]
+	DscpCode         *int64 `json:"dscp_code,omitempty"`          // [0-9]|[1-5][0-9]|6[0-3]
+	DstPort          *int64 `json:"dst_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
+	IPPrecedenceCode *int64 `json:"ip_precedence_code,omitempty"` // [0-7]
 	Protocol         string `json:"protocol,omitempty"`           // ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|ah|ax.25|dccp|ddp|egp|eigrp|encap|esp|etherip|fc|ggp|gre|hip|hmp|icmp|idpr-cmtp|idrp|igmp|igp|ip|ipcomp|ipencap|ipip|ipv6|ipv6-frag|ipv6-icmp|ipv6-nonxt|ipv6-opts|ipv6-route|isis|iso-tp4|l2tp|manet|mobility-header|mpls-in-ip|ospf|pim|pup|rdp|rohc|rspf|rsvp|sctp|shim6|skip|st|tcp|udp|udplite|vmtp|vrrp|wesp|xns-idp|xtp
-	SrcPort          int64  `json:"src_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
+	SrcPort          *int64 `json:"src_port,omitempty"`           // [0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-4]|65535
 }
 
 func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 	type Alias PortProfileQOSMatching
 	aux := &struct {
-		CosCode          types.Number `json:"cos_code"`
-		DscpCode         types.Number `json:"dscp_code"`
-		DstPort          types.Number `json:"dst_port"`
-		IPPrecedenceCode types.Number `json:"ip_precedence_code"`
-		SrcPort          types.Number `json:"src_port"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -207,21 +131,6 @@ func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.CosCode.Int64(); err == nil {
-		dst.CosCode = val
-	}
-	if val, err := aux.DscpCode.Int64(); err == nil {
-		dst.DscpCode = val
-	}
-	if val, err := aux.DstPort.Int64(); err == nil {
-		dst.DstPort = val
-	}
-	if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
-		dst.IPPrecedenceCode = val
-	}
-	if val, err := aux.SrcPort.Int64(); err == nil {
-		dst.SrcPort = val
 	}
 
 	return nil

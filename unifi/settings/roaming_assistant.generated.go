@@ -24,15 +24,13 @@ var (
 type RoamingAssistant struct {
 	BaseSetting
 
-	Enabled bool  `json:"enabled"`
-	Rssi    int64 `json:"rssi,omitempty"` // ^-([6-7][0-9]|80)$
+	Enabled bool   `json:"enabled"`
+	Rssi    *int64 `json:"rssi,omitempty"` // ^-([6-7][0-9]|80)$
 }
 
 func (dst *RoamingAssistant) UnmarshalJSON(b []byte) error {
 	type Alias RoamingAssistant
 	aux := &struct {
-		Rssi types.Number `json:"rssi"`
-
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -46,9 +44,6 @@ func (dst *RoamingAssistant) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
-	}
-	if val, err := aux.Rssi.Int64(); err == nil {
-		dst.Rssi = val
 	}
 
 	return nil

@@ -56,7 +56,7 @@ type ChannelPlanRadioTable struct {
 	Name        string `json:"name,omitempty"`          // [a-z]*[0-9]*
 	TxPower     string `json:"tx_power,omitempty"`      // [\d]+|auto
 	TxPowerMode string `json:"tx_power_mode,omitempty"` // auto|medium|high|low|custom
-	Width       int64  `json:"width,omitempty"`         // 20|40|80|160
+	Width       *int64 `json:"width,omitempty"`         // 20|40|80|160
 }
 
 func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
@@ -64,7 +64,6 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	aux := &struct {
 		Channel types.Number `json:"channel"`
 		TxPower types.Number `json:"tx_power"`
-		Width   types.Number `json:"width"`
 
 		*Alias
 	}{
@@ -80,9 +79,6 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 	}
 	if val, err := aux.TxPower.Int64(); err == nil {
 		dst.TxPower = strconv.FormatInt(val, 10)
-	}
-	if val, err := aux.Width.Int64(); err == nil {
-		dst.Width = val
 	}
 
 	return nil
