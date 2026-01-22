@@ -4,14 +4,16 @@ import (
 	"context"
 	"fmt"
 	"maps"
-	"strings"
 )
 
 // GetClientByMAC returns slightly different information than GetClient, as they
 // use separate endpoints for their lookups. Specifically IP is only returned
 // by this method.
 func (c *ApiClient) GetClientByMAC(ctx context.Context, site, mac string) (*Client, error) {
-	resp, err := c.ListClient(ctx, site, map[string]string{"mac": mac})
+	resp, err := c.ListClient(ctx, site, struct {
+		key string
+		val string
+	}{"mac", mac})
 	if err != nil {
 		return nil, err
 	}
@@ -140,36 +142,15 @@ func (c *ApiClient) OverrideClientFingerprint(
 // ListClient returns all clients, optionally filtered by query parameters.
 // The query parameter can contain any field from the Client struct to filter results.
 // For example: map[string]string{"network_id": "abc123", "blocked": "true"}.
-func (c *ApiClient) ListClient(ctx context.Context, site string, query ...map[string]string) ([]Client, error) {
-	var respBody struct {
-		Meta meta     `json:"meta"`
-		Data []Client `json:"data"`
-	}
-
-	// Build URL with query parameters
-	apiURL := fmt.Sprintf("api/s/%s/rest/user", site)
-	if len(query) > 0 {
-		// Build query string manually to avoid URL-encoding colons in MAC addresses
-		var parts []string
-		for _, q := range query {
-			for k, v := range q {
-				parts = append(parts, k+"="+v)
-			}
-		}
-		apiURL = fmt.Sprintf("%s?%s", apiURL, strings.Join(parts, "&"))
-	}
-
-	err := c.do(
-		ctx,
-		"GET",
-		apiURL,
-		nil,
-		&respBody,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return respBody.Data, nil
+func (c *ApiClient) ListClient(
+	ctx context.Context,
+	site string,
+	params ...struct {
+		key string
+		val string
+	},
+) ([]Client, error) {
+	return c.listClient(ctx, site, params...)
 }
 
 func (c *ApiClient) CreateClient(ctx context.Context, site string, d *Client) (*Client, error) {

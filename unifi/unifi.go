@@ -439,11 +439,12 @@ func (c *ApiClient) do(
 			apiErr = errBody.Meta.error()
 		}
 		return fmt.Errorf(
-			"%w (%s) for %s %s",
+			"%w (%s) for %s %s\npayload: %s",
 			apiErr,
 			strings.TrimSpace(resp.Status),
 			method,
 			url.String(),
+			string(reqBytes),
 		)
 	}
 

@@ -227,7 +227,7 @@ func (c *ApiClient) UpdateDevice(ctx context.Context, site string, d *Device) (*
 	}
 
 	// Get the existing device to compare
-	existing, err := c.GetDevice(ctx, site, d.ID)
+	existing, err := c.getDevice(ctx, site, d.MAC)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get existing device: %w", err)
 	}
@@ -258,28 +258,35 @@ func (c *ApiClient) UpdateDevice(ctx context.Context, site string, d *Device) (*
 	return &res, nil
 }
 
-// getDeviceDiff compares two Device objects and returns a map containing only changed fields.
-func getDeviceDiff(original, target *Device) (map[string]any, error) {
+// getDiff compares two values of the same type and returns a map containing only changed fields.
+// It skips read-only fields specified in skipFields.
+func getDiff[T any](original, target *T, skipFields ...string) (map[string]any, error) {
 	// Marshal both to JSON then unmarshal to maps for comparison
 	origJSON, err := json.Marshal(original)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal original device: %w", err)
+		return nil, fmt.Errorf("failed to marshal original: %w", err)
 	}
 
 	targetJSON, err := json.Marshal(target)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal target device: %w", err)
+		return nil, fmt.Errorf("failed to marshal target: %w", err)
 	}
 
 	var origMap map[string]any
 	var targetMap map[string]any
 
 	if err := json.Unmarshal(origJSON, &origMap); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal original device: %w", err)
+		return nil, fmt.Errorf("failed to unmarshal original: %w", err)
 	}
 
 	if err := json.Unmarshal(targetJSON, &targetMap); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal target device: %w", err)
+		return nil, fmt.Errorf("failed to unmarshal target: %w", err)
+	}
+
+	// Create skip set for O(1) lookup
+	skipSet := make(map[string]bool, len(skipFields))
+	for _, field := range skipFields {
+		skipSet[field] = true
 	}
 
 	// Build patch with only changed fields
@@ -287,7 +294,7 @@ func getDeviceDiff(original, target *Device) (map[string]any, error) {
 
 	for key, targetValue := range targetMap {
 		// Skip read-only fields
-		if key == "_id" || key == "site_id" {
+		if skipSet[key] {
 			continue
 		}
 
@@ -300,6 +307,11 @@ func getDeviceDiff(original, target *Device) (map[string]any, error) {
 	}
 
 	return patch, nil
+}
+
+// getDeviceDiff compares two Device objects and returns a map containing only changed fields.
+func getDeviceDiff(original, target *Device) (map[string]any, error) {
+	return getDiff(original, target, "_id", "site_id")
 }
 
 // deepEqualJSON compares two values for deep equality by comparing their JSON representations.

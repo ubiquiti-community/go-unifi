@@ -18,7 +18,11 @@ func (c *ApiClient) DeleteNetwork(ctx context.Context, site, id, name string) er
 	return nil
 }
 
-func (c *ApiClient) ListNetwork(ctx context.Context, site string) ([]Network, error) {
+func (c *ApiClient) ListNetwork(ctx context.Context, site string, params ...[]struct {
+	key string
+	val string
+},
+) ([]Network, error) {
 	return c.listNetwork(ctx, site)
 }
 
@@ -32,7 +36,10 @@ func (c *ApiClient) GetNetworkByName(ctx context.Context, site, name string) (*N
 		return nil, err
 	}
 	i := slices.IndexFunc(networks, func(n Network) bool {
-		return n.Name == name
+		if n.Name == nil {
+			return false
+		}
+		return *n.Name == name
 	})
 	if i < 0 {
 		return nil, fmt.Errorf("network with name %s not found", name)

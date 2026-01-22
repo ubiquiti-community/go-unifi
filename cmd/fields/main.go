@@ -87,6 +87,7 @@ var fieldReps = []replacement{
 	{"Wep", "WEP"},
 	{"Wlan", "WLAN"},
 	{"Wpa", "WPA"},
+	{"WireguardPrivateKey", "WireguardPrivateKey"},
 }
 
 var fileReps = []replacement{
@@ -174,9 +175,11 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 	case resource.StructName == "Network":
 		baseType.Fields["WANEgressQOSEnabled"] = NewFieldInfo("WANEgressQOSEnabled", "wan_egress_qos_enabled", fields.Bool, "", true, false, true, "")
 		baseType.Fields["UPnPEnabled"] = NewFieldInfo("UPnPEnabled", "upnp_enabled", fields.Bool, "", true, false, true, "")
-		baseType.Fields["UPnPWANInterface"] = NewFieldInfo("UPnPWANInterface", "upnp_wan_interface", fields.String, "", false, false, false, "")
+		baseType.Fields["UPnPWANInterface"] = NewFieldInfo("UPnPWANInterface", "upnp_wan_interface", fields.String, "", true, false, true, "")
 		baseType.Fields["UPnPNatPMPEnabled"] = NewFieldInfo("UPnPNatPMPEnabled", "upnp_nat_pmp_enabled", fields.Bool, "", true, false, true, "")
 		baseType.Fields["UPnPSecureMode"] = NewFieldInfo("UPnPSecureMode", "upnp_secure_mode", fields.Bool, "", true, false, true, "")
+		baseType.Fields["IPAliases"] = NewFieldInfo("IPAliases", "ip_aliases", fields.String, "", true, true, false, "")
+		baseType.Fields["DHCPRelayServers"] = NewFieldInfo("DHCPRelayServers", "dhcp_relay_servers", fields.String, "", true, true, false, "")
 	case resource.StructName == "Device":
 		baseType.Fields["PortTable"] = NewFieldInfo("PortTable", "port_table", "[]DevicePortTable", "", true, false, false, "")
 		baseType.Fields[" MAC"] = NewFieldInfo("MAC", "mac", fields.String, "", true, false, false, "")
@@ -446,6 +449,19 @@ func main() {
 				case "IPSecEspLifetime", "IPSecIkeLifetime":
 					f.FieldType = fields.Int
 					f.IsPointer = true
+				case "WANDNS1", "WANDNS2", "WANIPV6DNS1", "WANIPV6DNS2", "DHCPDStart", "DHCPDStop", "DHCPDUnifiController",
+					"DHCPDTFTPServer", "DHCPDWins1", "DHCPDWins2", "DHCPDWPAdUrl", "DomainName", "DHCPDGateway", "DHCPDNtp1", "DHCPDNtp2":
+					f.OmitEmpty = true
+					f.IsPointer = true
+				case "Purpose":
+					f.OmitEmpty = false
+					f.IsPointer = false
+				}
+				if f.OmitEmpty && !f.IsArray {
+					switch f.FieldType {
+					case fields.Bool, fields.String:
+						f.IsPointer = true
+					}
 				}
 				return nil
 			}

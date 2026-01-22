@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -19,6 +20,7 @@ var (
 	_ json.Marshaler
 	_ types.Number
 	_ strconv.NumError
+	_ strings.Builder
 )
 
 type PortProfile struct {
@@ -178,16 +180,34 @@ func (dst *PortProfileQOSProfile) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (c *ApiClient) listPortProfile(ctx context.Context, site string) ([]PortProfile, error) {
+func (c *ApiClient) listPortProfile(
+	ctx context.Context,
+	site string,
+	params ...struct {
+		key string
+		val string
+	},
+) ([]PortProfile, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
 		Data []PortProfile `json:"data"`
 	}
 
+	// Build URL with query parameters
+	url := fmt.Sprintf("api/s/%s/rest/portconf", site)
+	if len(params) > 0 {
+		// Build query string manually to avoid URL-encoding colons in MAC addresses
+		var parts []string
+		for _, p := range params {
+			parts = append(parts, p.key+"="+p.val)
+		}
+		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
+	}
+
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("api/s/%s/rest/portconf", site),
+		url,
 		nil,
 		&respBody,
 	)

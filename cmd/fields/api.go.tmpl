@@ -54,6 +54,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
+	"strings"
+	{{- end }}
 	
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
@@ -65,6 +68,9 @@ var (
 	_ json.Marshaler
 	_ types.Number
 	_ strconv.NumError
+	{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
+	_ strings.Builder
+	{{- end }}
 )
 
 {{ range $k, $v := .Types }}
@@ -134,7 +140,14 @@ func (dst *{{ $k }}) UnmarshalJSON(b []byte) error {
 
 {{- if not .IsSetting }}
 {{- if ne .StructName "BGPConfig" }}
-func (c *ApiClient) list{{ .StructName }}(ctx context.Context, site string) ([]{{ .StructName }}, error) {
+func (c *ApiClient) list{{ .StructName }}(
+	ctx context.Context,
+	site string,
+	params ...struct {
+		key string
+		val string
+	},
+) ([]{{ .StructName }}, error) {
 {{- if .IsV2 }}
 	var respBody []{{ .StructName }}
 {{- else }}
@@ -144,10 +157,21 @@ func (c *ApiClient) list{{ .StructName }}(ctx context.Context, site string) ([]{
 	}
 {{- end }}
 
+	// Build URL with query parameters
+	url := fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}", site)
+	if len(params) > 0 {
+		// Build query string manually to avoid URL-encoding colons in MAC addresses
+		var parts []string
+		for _, p := range params {
+			parts = append(parts, p.key+"="+p.val)
+		}
+		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
+	}
+
 	err := c.do(
 		ctx,
 		"GET",
-		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}", site),
+		url,
 		nil,
 		&respBody,
 	)
