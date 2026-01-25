@@ -52,7 +52,7 @@ type WLAN struct {
 	FastRoamingEnabled          bool                       `json:"fast_roaming_enabled"`
 	GroupRekey                  *int64                     `json:"group_rekey,omitempty"` // ^(0|[6-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9][0-9]|86400)$
 	HideSSID                    bool                       `json:"hide_ssid"`
-	Hotspot2                    WLANHotspot2               `json:"hotspot2,omitempty"`
+	Hotspot2                    *WLANHotspot2              `json:"hotspot2,omitempty"`
 	Hotspot2ConfEnabled         bool                       `json:"hotspot2conf_enabled"`
 	IappEnabled                 bool                       `json:"iapp_enabled"`
 	IsGuest                     bool                       `json:"is_guest"`

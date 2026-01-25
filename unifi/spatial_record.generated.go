@@ -53,8 +53,8 @@ func (dst *SpatialRecord) UnmarshalJSON(b []byte) error {
 }
 
 type SpatialRecordDevices struct {
-	MAC      string                `json:"mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
-	Position SpatialRecordPosition `json:"position,omitempty"`
+	MAC      string                 `json:"mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
+	Position *SpatialRecordPosition `json:"position,omitempty"`
 }
 
 func (dst *SpatialRecordDevices) UnmarshalJSON(b []byte) error {

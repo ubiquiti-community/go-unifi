@@ -703,7 +703,7 @@ func (r *ResourceInfo) fieldInfoFromValidation(name string, validation any) (*Fi
 	case map[string]any:
 		typeName := r.StructName + fieldName
 
-		result := NewFieldInfo(fieldName, name, typeName, "", true, false, false, "")
+		result := NewFieldInfo(fieldName, name, typeName, "", true, false, true, "")
 		result.Fields = make(map[string]*FieldInfo)
 
 		for name, fv := range validation {

@@ -24,16 +24,16 @@ var (
 type Ips struct {
 	BaseSetting
 
-	AdvancedFilteringPreference         string                `json:"advanced_filtering_preference,omitempty"` // |manual|disabled
-	ContentFilteringBlockingPageEnabled bool                  `json:"content_filtering_blocking_page_enabled"`
-	EnabledCategories                   []string              `json:"enabled_categories,omitempty"` // emerging-activex|emerging-attackresponse|botcc|emerging-chat|ciarmy|compromised|emerging-dns|emerging-dos|dshield|emerging-exploit|emerging-ftp|emerging-games|emerging-icmp|emerging-icmpinfo|emerging-imap|emerging-inappropriate|emerging-info|emerging-malware|emerging-misc|emerging-mobile|emerging-netbios|emerging-p2p|emerging-policy|emerging-pop3|emerging-rpc|emerging-scada|emerging-scan|emerging-shellcode|emerging-smtp|emerging-snmp|emerging-sql|emerging-telnet|emerging-tftp|tor|emerging-useragent|emerging-voip|emerging-webapps|emerging-webclient|emerging-webserver|emerging-worm|exploit-kit|adware-pup|botcc-portgrouped|phishing|threatview-cs-c2|3coresec|chat|coinminer|current-events|drop|hunting|icmp-info|inappropriate|info|ja3|policy|scada|dark-web-blocker-list|malicious-hosts
-	EnabledNetworks                     []string              `json:"enabled_networks,omitempty"`
-	Honeypot                            []SettingIpsHoneypot  `json:"honeypot,omitempty"`
-	HoneypotEnabled                     bool                  `json:"honeypot_enabled"`
-	IPsMode                             string                `json:"ips_mode,omitempty"` // ids|ips|ipsInline|disabled
-	MemoryOptimized                     bool                  `json:"memory_optimized"`
-	RestrictTorrents                    bool                  `json:"restrict_torrents"`
-	Suppression                         SettingIpsSuppression `json:"suppression,omitempty"`
+	AdvancedFilteringPreference         string                 `json:"advanced_filtering_preference,omitempty"` // |manual|disabled
+	ContentFilteringBlockingPageEnabled bool                   `json:"content_filtering_blocking_page_enabled"`
+	EnabledCategories                   []string               `json:"enabled_categories,omitempty"` // emerging-activex|emerging-attackresponse|botcc|emerging-chat|ciarmy|compromised|emerging-dns|emerging-dos|dshield|emerging-exploit|emerging-ftp|emerging-games|emerging-icmp|emerging-icmpinfo|emerging-imap|emerging-inappropriate|emerging-info|emerging-malware|emerging-misc|emerging-mobile|emerging-netbios|emerging-p2p|emerging-policy|emerging-pop3|emerging-rpc|emerging-scada|emerging-scan|emerging-shellcode|emerging-smtp|emerging-snmp|emerging-sql|emerging-telnet|emerging-tftp|tor|emerging-useragent|emerging-voip|emerging-webapps|emerging-webclient|emerging-webserver|emerging-worm|exploit-kit|adware-pup|botcc-portgrouped|phishing|threatview-cs-c2|3coresec|chat|coinminer|current-events|drop|hunting|icmp-info|inappropriate|info|ja3|policy|scada|dark-web-blocker-list|malicious-hosts
+	EnabledNetworks                     []string               `json:"enabled_networks,omitempty"`
+	Honeypot                            []SettingIpsHoneypot   `json:"honeypot,omitempty"`
+	HoneypotEnabled                     bool                   `json:"honeypot_enabled"`
+	IPsMode                             string                 `json:"ips_mode,omitempty"` // ids|ips|ipsInline|disabled
+	MemoryOptimized                     bool                   `json:"memory_optimized"`
+	RestrictTorrents                    bool                   `json:"restrict_torrents"`
+	Suppression                         *SettingIpsSuppression `json:"suppression,omitempty"`
 }
 
 func (dst *Ips) UnmarshalJSON(b []byte) error {

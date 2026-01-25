@@ -32,25 +32,25 @@ type FirewallPolicy struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	Action                string                    `json:"action,omitempty"`                // ALLOW|BLOCK|REJECT
-	ConnectionStateType   string                    `json:"connection_state_type,omitempty"` // ALL|RESPOND_ONLY
-	ConnectionStates      []string                  `json:"connection_states"`
-	CreateAllowRespond    bool                      `json:"create_allow_respond"`
-	Description           string                    `json:"description,omitempty"`
-	Destination           FirewallPolicyDestination `json:"destination,omitempty"`
-	Enabled               bool                      `json:"enabled"`
-	ICMPTypename          string                    `json:"icmp_typename,omitempty"`    // ANY|SPECIFIC|LIST|OBJECT
-	ICMPV6Typename        string                    `json:"icmp_v6_typename,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
-	IPVersion             string                    `json:"ip_version,omitempty"`       // BOTH|IPV4|IPV6
-	Index                 *int64                    `json:"index,omitempty"`            // [1-9][0-9]+
-	Logging               bool                      `json:"logging"`
-	MatchIPSec            bool                      `json:"match_ip_sec"`
-	MatchOppositeProtocol bool                      `json:"match_opposite_protocol"`
-	Name                  string                    `json:"name,omitempty"`
-	Predefined            bool                      `json:"predefined"`
-	Protocol              string                    `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
-	Schedule              FirewallPolicySchedule    `json:"schedule,omitempty"`
-	Source                FirewallPolicySource      `json:"source,omitempty"`
+	Action                string                     `json:"action,omitempty"`                // ALLOW|BLOCK|REJECT
+	ConnectionStateType   string                     `json:"connection_state_type,omitempty"` // ALL|RESPOND_ONLY
+	ConnectionStates      []string                   `json:"connection_states"`
+	CreateAllowRespond    bool                       `json:"create_allow_respond"`
+	Description           string                     `json:"description,omitempty"`
+	Destination           *FirewallPolicyDestination `json:"destination,omitempty"`
+	Enabled               bool                       `json:"enabled"`
+	ICMPTypename          string                     `json:"icmp_typename,omitempty"`    // ANY|SPECIFIC|LIST|OBJECT
+	ICMPV6Typename        string                     `json:"icmp_v6_typename,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
+	IPVersion             string                     `json:"ip_version,omitempty"`       // BOTH|IPV4|IPV6
+	Index                 *int64                     `json:"index,omitempty"`            // [1-9][0-9]+
+	Logging               bool                       `json:"logging"`
+	MatchIPSec            bool                       `json:"match_ip_sec"`
+	MatchOppositeProtocol bool                       `json:"match_opposite_protocol"`
+	Name                  string                     `json:"name,omitempty"`
+	Predefined            bool                       `json:"predefined"`
+	Protocol              string                     `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
+	Schedule              *FirewallPolicySchedule    `json:"schedule,omitempty"`
+	Source                *FirewallPolicySource      `json:"source,omitempty"`
 }
 
 func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {

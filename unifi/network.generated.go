@@ -244,7 +244,7 @@ type Network struct {
 	WANPppoePasswordEnabled                       bool                            `json:"wan_pppoe_password_enabled"`
 	WANPppoeUsernameEnabled                       bool                            `json:"wan_pppoe_username_enabled"`
 	WANPrefixlen                                  *int64                          `json:"wan_prefixlen,omitempty"` // ^([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|12[0-8])$|^$
-	WANProviderCapabilities                       NetworkWANProviderCapabilities  `json:"wan_provider_capabilities,omitempty"`
+	WANProviderCapabilities                       *NetworkWANProviderCapabilities `json:"wan_provider_capabilities,omitempty"`
 	WANSla                                        *string                         `json:"wan_sla,omitempty"`
 	WANSmartQDownRate                             *int64                          `json:"wan_smartq_down_rate,omitempty"` // [0-9]{1,6}|1000000
 	WANSmartQEnabled                              bool                            `json:"wan_smartq_enabled"`

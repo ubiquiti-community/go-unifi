@@ -423,8 +423,8 @@ func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 }
 
 type DeviceQOSPolicies struct {
-	QOSMarking  DeviceQOSMarking  `json:"qos_marking,omitempty"`
-	QOSMatching DeviceQOSMatching `json:"qos_matching,omitempty"`
+	QOSMarking  *DeviceQOSMarking  `json:"qos_marking,omitempty"`
+	QOSMatching *DeviceQOSMatching `json:"qos_matching,omitempty"`
 }
 
 func (dst *DeviceQOSPolicies) UnmarshalJSON(b []byte) error {
@@ -568,16 +568,16 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 }
 
 type DeviceSim struct {
-	CurrentApn               DeviceCurrentApn `json:"current_apn,omitempty"`
-	DataHardLimitBytes       *int64           `json:"data_hard_limit_bytes,omitempty"`
-	DataLimitEnabled         bool             `json:"data_limit_enabled,omitempty"`
-	DataSoftLimitBytes       *int64           `json:"data_soft_limit_bytes,omitempty"`
-	DataSoftLimitDisplayUnit string           `json:"data_soft_limit_display_unit,omitempty"` // MB|GB
-	DataWarningThreshold     *int64           `json:"data_warning_threshold,omitempty"`       // [0-9]|[1-9][0-9]|100
-	ResetDate                *int64           `json:"reset_date,omitempty"`                   // [0-9]|[1-2][0-9]|3[0-1]
-	ResetPolicy              string           `json:"reset_policy,omitempty"`                 // day|week|month
-	Slot                     *int64           `json:"slot,omitempty"`                         // 1|2
-	UseCustomApn             bool             `json:"use_custom_apn,omitempty"`
+	CurrentApn               *DeviceCurrentApn `json:"current_apn,omitempty"`
+	DataHardLimitBytes       *int64            `json:"data_hard_limit_bytes,omitempty"`
+	DataLimitEnabled         bool              `json:"data_limit_enabled,omitempty"`
+	DataSoftLimitBytes       *int64            `json:"data_soft_limit_bytes,omitempty"`
+	DataSoftLimitDisplayUnit string            `json:"data_soft_limit_display_unit,omitempty"` // MB|GB
+	DataWarningThreshold     *int64            `json:"data_warning_threshold,omitempty"`       // [0-9]|[1-9][0-9]|100
+	ResetDate                *int64            `json:"reset_date,omitempty"`                   // [0-9]|[1-2][0-9]|3[0-1]
+	ResetPolicy              string            `json:"reset_policy,omitempty"`                 // day|week|month
+	Slot                     *int64            `json:"slot,omitempty"`                         // 1|2
+	UseCustomApn             bool              `json:"use_custom_apn,omitempty"`
 }
 
 func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
