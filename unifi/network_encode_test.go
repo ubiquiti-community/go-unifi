@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// Helper function to parse JSON and check for expected/unexpected fields
+// Helper function to parse JSON and check for expected/unexpected fields.
 func checkJSONFields(t *testing.T, data []byte, expectedFields []string, unexpectedFields []string) {
 	t.Helper()
 
@@ -254,7 +254,7 @@ func TestMarshalNetworkUnknownPurpose(t *testing.T) {
 	}
 }
 
-// Helper function to create string pointers
+// Helper function to create string pointers.
 func strPtr(s string) *string {
 	return &s
 }

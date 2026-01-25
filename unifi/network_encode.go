@@ -304,7 +304,7 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 		WireguardClientPresharedKey          *string `json:"wireguard_client_preshared_key,omitempty"`
 		WireguardInterface                   *string `json:"wireguard_interface,omitempty"`
 		WireguardPrivateKey                  *string `json:"x_wireguard_private_key,omitempty"`
-		
+
 		// DNS servers for WireGuard interface
 		DHCPDDNS1 string `json:"dhcpd_dns_1,omitempty"`
 		DHCPDDNS2 string `json:"dhcpd_dns_2,omitempty"`
@@ -339,7 +339,7 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 		WireguardClientPresharedKey:          n.WireguardClientPresharedKey,
 		WireguardInterface:                   n.WireguardInterface,
 		WireguardPrivateKey:                  n.WireguardPrivateKey,
-		
+
 		// DNS servers
 		DHCPDDNS1: n.DHCPDDNS1,
 		DHCPDDNS2: n.DHCPDDNS2,
