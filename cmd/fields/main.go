@@ -428,6 +428,10 @@ func main() {
 					f.CustomUnmarshalType = fields.Number
 				case "ConfigNetwork", "EtherLighting", "MbbOverrides", "NutServer", "RpsOverride", "QOSProfile":
 					f.IsPointer = true
+				case "Ht":
+					// Field within DeviceRadioTable nested type
+					f.CustomUnmarshalType = "types.Number"
+					f.CustomUnmarshalFunc = "types.ToInt64Pointer"
 				}
 
 				f.OmitEmpty = true

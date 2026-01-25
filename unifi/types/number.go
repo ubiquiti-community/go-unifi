@@ -55,3 +55,7 @@ func (n Number) Int64Pointer() *int64 {
 	}
 	return &val
 }
+
+func ToInt64Pointer(aux Number) *int64 {
+	return aux.Int64Pointer()
+}

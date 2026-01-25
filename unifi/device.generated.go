@@ -511,6 +511,8 @@ type DeviceRadioTable struct {
 func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRadioTable
 	aux := &struct {
+		Ht types.Number `json:"ht"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -520,6 +522,7 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	dst.Ht = types.ToInt64Pointer(aux.Ht)
 
 	return nil
 }
