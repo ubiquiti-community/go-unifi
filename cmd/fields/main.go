@@ -499,6 +499,16 @@ func main() {
 				}
 				return nil
 			}
+		case "Nat":
+			resource.FieldProcessor = func(name string, f *FieldInfo) error {
+				switch name {
+				case "SourceFilter":
+					f.IsPointer = true
+				case "DestinationFilter":
+					f.IsPointer = true
+				}
+				return nil
+			}
 		case "Client":
 			resource.FieldProcessor = func(name string, f *FieldInfo) error {
 				switch name {

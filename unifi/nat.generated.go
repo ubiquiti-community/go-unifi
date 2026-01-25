@@ -32,23 +32,23 @@ type Nat struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	Description           string               `json:"description,omitempty"`
-	DestinationFilter     NatDestinationFilter `json:"destination_filter,omitempty"`
-	Enabled               bool                 `json:"enabled"`
-	Exclude               bool                 `json:"exclude"`
-	IPAddress             string               `json:"ip_address,omitempty"`
-	IPVersion             string               `json:"ip_version,omitempty"` // IPV4|IPV6
-	InInterface           string               `json:"in_interface,omitempty"`
-	IsPredefined          bool                 `json:"is_predefined"`
-	Logging               bool                 `json:"logging"`
-	OutInterface          string               `json:"out_interface,omitempty"`
-	Port                  *int64               `json:"port,omitempty"` // [1-9][0-9]{0,4}
-	PppoeUseBaseInterface bool                 `json:"pppoe_use_base_interface"`
-	Protocol              string               `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
-	RuleIndex             *int64               `json:"rule_index,omitempty"`
-	SettingPreference     string               `json:"setting_preference,omitempty"` // auto|manual
-	SourceFilter          NatSourceFilter      `json:"source_filter,omitempty"`
-	Type                  string               `json:"type,omitempty"` // DNAT|SNAT|MASQUERADE
+	Description           string                `json:"description,omitempty"`
+	DestinationFilter     *NatDestinationFilter `json:"destination_filter,omitempty"`
+	Enabled               bool                  `json:"enabled"`
+	Exclude               bool                  `json:"exclude"`
+	IPAddress             string                `json:"ip_address,omitempty"`
+	IPVersion             string                `json:"ip_version,omitempty"` // IPV4|IPV6
+	InInterface           string                `json:"in_interface,omitempty"`
+	IsPredefined          bool                  `json:"is_predefined"`
+	Logging               bool                  `json:"logging"`
+	OutInterface          string                `json:"out_interface,omitempty"`
+	Port                  *int64                `json:"port,omitempty"` // [1-9][0-9]{0,4}
+	PppoeUseBaseInterface bool                  `json:"pppoe_use_base_interface"`
+	Protocol              string                `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
+	RuleIndex             *int64                `json:"rule_index,omitempty"`
+	SettingPreference     string                `json:"setting_preference,omitempty"` // auto|manual
+	SourceFilter          *NatSourceFilter      `json:"source_filter,omitempty"`
+	Type                  string                `json:"type,omitempty"` // DNAT|SNAT|MASQUERADE
 }
 
 func (dst *Nat) UnmarshalJSON(b []byte) error {
