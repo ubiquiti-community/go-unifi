@@ -87,7 +87,7 @@ var fieldReps = []replacement{
 	{"Wep", "WEP"},
 	{"Wlan", "WLAN"},
 	{"Wpa", "WPA"},
-	{"WireguardPrivateKey", "WireguardPrivateKey"},
+	{"XWireguardPrivateKey", "WireguardPrivateKey"},
 }
 
 var fileReps = []replacement{
@@ -635,6 +635,7 @@ func (r *ResourceInfo) IsV2() bool {
 		"DNSRecord",
 		"FirewallPolicy",
 		"FirewallZone",
+		"Nat",
 		"OSPFRouter",
 		"TrafficRoute",
 	}, r.StructName)

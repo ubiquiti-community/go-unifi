@@ -12,22 +12,7 @@ func (c *ApiClient) ListDNSRecord(ctx context.Context, site string) ([]DNSRecord
 }
 
 func (c *ApiClient) GetDNSRecord(ctx context.Context, site, id string) (*DNSRecord, error) {
-	respBody, err := c.listDNSRecord(ctx, site)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(respBody) == 0 {
-		return nil, &NotFoundError{}
-	}
-
-	for _, val := range respBody {
-		if val.ID == id {
-			return &val, nil
-		}
-	}
-
-	return nil, &NotFoundError{}
+	return c.getDNSRecord(ctx, site, id)
 }
 
 func (c *ApiClient) DeleteDNSRecord(ctx context.Context, site, id string) error {
