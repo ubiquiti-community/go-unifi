@@ -218,6 +218,12 @@ func (c *ApiClient) updateChannelPlan(
 		return nil, err
 	}
 
+	// UDM SE API returns empty data array on successful PUT.
+	// In that case, fetch the updated resource via GET.
+	if len(respBody.Data) == 0 {
+		return c.getChannelPlan(ctx, site, d.ID)
+	}
+
 	if len(respBody.Data) != 1 {
 		return nil, &NotFoundError{}
 	}
