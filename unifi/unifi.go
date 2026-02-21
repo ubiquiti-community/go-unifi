@@ -106,7 +106,7 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	}
 
 	if cfg.Username != "" && cfg.Password != "" && client.apiKey == "" {
-		if err := client.login(ctx, cfg.Username, cfg.Password); err != nil {
+		if err := client.login(ctx); err != nil {
 			return nil, fmt.Errorf("unable to login: %w", err)
 		}
 	}
@@ -119,8 +119,7 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 }
 
 type ApiClient struct {
-	// single thread client calls for CSRF, etc.
-	sync.Mutex
+	loginMu sync.RWMutex // serializes non-apiKey requests for CSRF token propagation
 
 	c       *retryablehttp.Client
 	baseURL *url.URL
@@ -133,7 +132,7 @@ type ApiClient struct {
 
 	csrf        string
 	tokenExpiry time.Time
-	loggingIn   bool
+	loginErr    error // cached login error to prevent retry storms
 
 	version string
 
@@ -325,10 +324,7 @@ func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
 	return errors.New("failed to get api url style")
 }
 
-func (c *ApiClient) login(ctx context.Context, user, pass string) (err error) {
-	c.loggingIn = true
-	defer func() { c.loggingIn = false }()
-
+func (c *ApiClient) login(ctx context.Context) error {
 	// Clear stale TOKEN cookie before login; sending it causes a 403.
 	if c.baseURL != nil {
 		c.c.HTTPClient.Jar.SetCookies(c.baseURL, []*http.Cookie{{
@@ -337,18 +333,42 @@ func (c *ApiClient) login(ctx context.Context, user, pass string) (err error) {
 		}})
 	}
 
-	err = c.do(ctx, http.MethodPost, c.loginPath, &struct {
+	// Call doRequest directly to avoid login-check recursion and deadlock on loginMu.
+	err := c.doRequest(ctx, http.MethodPost, c.loginPath, &struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}{
-		Username: user,
-		Password: pass,
+		Username: c.username,
+		Password: c.password,
 	}, nil)
 	if err != nil {
+		c.loginErr = err
 		return err
 	}
 
+	c.loginErr = nil
 	return nil
+}
+
+// ensureLoggedIn acquires an exclusive lock and performs login if needed.
+// Only one goroutine will attempt login; others wait and reuse the result.
+func (c *ApiClient) ensureLoggedIn(ctx context.Context) error {
+	c.loginMu.Lock()
+	defer c.loginMu.Unlock()
+
+	// Double-check: another goroutine may have already logged in while we waited.
+	if c.csrf != "" && (c.tokenExpiry.IsZero() || time.Now().Before(c.tokenExpiry)) {
+		return nil
+	}
+
+	// If CSRF is empty and a previous login already failed, don't retry.
+	if c.csrf == "" && c.loginErr != nil {
+		return c.loginErr
+	}
+
+	// Clear any stale loginErr before attempting (e.g. token-expiry refresh).
+	c.loginErr = nil
+	return c.login(ctx)
 }
 
 func (c *ApiClient) setServerVersion(ctx context.Context) (err error) {
@@ -391,17 +411,43 @@ func (c *ApiClient) do(
 	reqBody any,
 	respBody any,
 ) error {
-	// Re-login if the CSRF token has expired (but not if we're already logging in).
-	if c.apiKey == "" && !c.loggingIn && !c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry) && c.username != "" {
-		_ = c.login(ctx, c.username, c.password)
+	// For username/password auth, ensure we are logged in before making requests.
+	if c.apiKey == "" && c.username != "" && c.password != "" {
+		// Wait for any in-progress login to complete, then check if we need to login.
+		c.loginMu.RLock()
+		needsLogin := c.csrf == "" || (!c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry))
+		c.loginMu.RUnlock()
+
+		if needsLogin {
+			if err := c.ensureLoggedIn(ctx); err != nil {
+				return err
+			}
+		}
+
+		// Acquire read lock for the duration of the request (blocks while login is in progress).
+		c.loginMu.RLock()
+		defer c.loginMu.RUnlock()
+
+		// Verify authentication after awaiting the login semaphore.
+		if c.csrf == "" {
+			if c.loginErr != nil {
+				return fmt.Errorf("login failed: %w", c.loginErr)
+			}
+			return &LoginRequiredError{}
+		}
 	}
 
-	// single threading requests, this is mostly to assist in CSRF token propagation
-	if c.apiKey == "" {
-		c.Lock()
-		defer c.Unlock()
-	}
+	return c.doRequest(ctx, method, relativeURL, reqBody, respBody)
+}
 
+// doRequest performs the actual HTTP request. It is separated from do so that
+// login can call it directly without triggering login-check recursion.
+func (c *ApiClient) doRequest(
+	ctx context.Context,
+	method, relativeURL string,
+	reqBody any,
+	respBody any,
+) error {
 	var (
 		reqReader io.Reader
 		err       error
@@ -468,8 +514,8 @@ func (c *ApiClient) do(
 			c.csrf = csrf
 		}
 		if exp := resp.Header.Get("X-Token-Expire-Time"); exp != "" {
-			if secs, err := strconv.ParseInt(exp, 10, 64); err == nil {
-				c.tokenExpiry = time.Unix(secs, 0)
+			if ms, err := strconv.ParseInt(exp, 10, 64); err == nil {
+				c.tokenExpiry = time.UnixMilli(ms)
 			}
 		}
 	}
