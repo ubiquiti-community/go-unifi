@@ -88,6 +88,9 @@ var fieldReps = []replacement{
 	{"Wlan", "WLAN"},
 	{"Wpa", "WPA"},
 	{"XWireguardPrivateKey", "WireguardPrivateKey"},
+	{"XSsh", "SSH"},
+	{"XMgmt", "Mgmt"},
+	{"UnifiIDp", "UniFiIdentityProvider"},
 }
 
 var fileReps = []replacement{
@@ -478,7 +481,7 @@ func main() {
 				return nil
 			}
 		case "SettingMgmt":
-			sshKeyField := NewFieldInfo(resource.StructName+"XSshKeys", "x_ssh_keys", "struct", "", false, false, false, "")
+			sshKeyField := NewFieldInfo(resource.StructName+"SSHKeys", "x_ssh_keys", "struct", "", false, false, false, "")
 			sshKeyField.Fields = map[string]*FieldInfo{
 				"name":        NewFieldInfo("Name", "name", fields.String, "", false, false, false, ""),
 				"keyType":     NewFieldInfo("KeyType", "type", fields.String, "", false, false, false, ""),
@@ -490,7 +493,7 @@ func main() {
 			resource.Types[sshKeyField.FieldName] = sshKeyField
 
 			resource.FieldProcessor = func(name string, f *FieldInfo) error {
-				if name == "XSshKeys" {
+				if name == "SSHKeys" {
 					f.FieldType = sshKeyField.FieldName
 				}
 				return nil

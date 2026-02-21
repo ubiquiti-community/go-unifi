@@ -64,10 +64,10 @@ type SuperMgmt struct {
 	MultipleSitesEnabled                     bool     `json:"multiple_sites_enabled"`
 	OverrideInformHost                       bool     `json:"override_inform_host"`
 	OverrideInformHostLocation               string   `json:"override_inform_host_location,omitempty"`
+	SSHPassword                              string   `json:"x_ssh_password,omitempty"`
+	SSHUsername                              string   `json:"x_ssh_username,omitempty"`
 	StoreEnabled                             string   `json:"store_enabled,omitempty"` // disabled|super-only|everyone
 	TimeSeriesPerClientStatsEnabled          bool     `json:"time_series_per_client_stats_enabled"`
-	XSshPassword                             string   `json:"x_ssh_password,omitempty"`
-	XSshUsername                             string   `json:"x_ssh_username,omitempty"`
 }
 
 func (dst *SuperMgmt) UnmarshalJSON(b []byte) error {
