@@ -38,6 +38,7 @@ type Config struct {
 	CloudConnector bool
 	HardwareID     string
 	Logger         any
+	TimeoutSeconds *int
 }
 
 // New creates a fully initialized ApiClient from the provided configuration.
@@ -45,7 +46,11 @@ type Config struct {
 // For direct connection, provide BaseURL and either APIKey or Username/Password.
 func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	c := retryablehttp.NewClient()
-	c.HTTPClient.Timeout = 30 * time.Second
+	timeoutSeconds := 30
+	if cfg.TimeoutSeconds != nil {
+		timeoutSeconds = *cfg.TimeoutSeconds
+	}
+	c.HTTPClient.Timeout = time.Duration(timeoutSeconds) * time.Second
 
 	if cfg.Logger != nil {
 		c.Logger = cfg.Logger
@@ -58,7 +63,7 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
 			DialContext: (&net.Dialer{
 				Timeout:   10 * time.Second,
-				KeepAlive: 30 * time.Second,
+				KeepAlive: time.Duration(timeoutSeconds) * time.Second,
 			}).DialContext,
 		}
 		c.HTTPClient.Transport = transport
@@ -67,10 +72,9 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	jar, _ := cookiejar.New(nil)
 	c.HTTPClient.Jar = jar
 
-	client := &ApiClient{c: c}
-
-	if cfg.APIKey != "" {
-		client.apiKey = cfg.APIKey
+	client := &ApiClient{
+		c:      c,
+		apiKey: cfg.APIKey,
 	}
 
 	if cfg.CloudConnector {
@@ -123,10 +127,6 @@ func (c *ApiClient) Version() string {
 	return c.version
 }
 
-func (c *ApiClient) setAPIKey(apiKey string) {
-	c.apiKey = apiKey
-}
-
 func (c *ApiClient) setBaseURL(base string) error {
 	var err error
 	c.baseURL, err = url.Parse(base)
@@ -139,11 +139,6 @@ func (c *ApiClient) setBaseURL(base string) error {
 		return fmt.Errorf("expected a base URL without the `/api`, got: %q", c.baseURL)
 	}
 
-	return nil
-}
-
-func (c *ApiClient) setHTTPClient(hc *retryablehttp.Client) error {
-	c.c = hc
 	return nil
 }
 
@@ -219,12 +214,6 @@ func (c *ApiClient) enableCloudConnector(ctx context.Context, hostIndex int) (st
 	return selectedHost.ID, nil
 }
 
-// enableCloudConnectorByID configures the client to use the Cloud Connector API
-// with a specific console ID without fetching the hosts list.
-func (c *ApiClient) enableCloudConnectorByID(consoleID string) {
-	c.setCloudConsoleID(consoleID)
-}
-
 // enableCloudConnectorByHardwareID fetches available hosts and configures the client
 // to use the Cloud Connector API with the host matching the specified hardware ID.
 // Returns the selected console ID and any error encountered.
@@ -273,30 +262,25 @@ func FindOwnerHost(hostList *UnifiHostList) *UnifiHost {
 	return nil
 }
 
-// disableCloudConnector disables Cloud Connector mode and returns to direct API access.
-// Note: You will need to reconfigure the base URL for direct access.
-func (c *ApiClient) disableCloudConnector() {
-	c.cloudConsoleID = ""
-}
-
 func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
 	// check if new style API
 	// this is modified from the unifi-poller (https://github.com/unifi-poller/unifi) implementation.
 	// see https://github.com/unifi-poller/unifi/blob/4dc44f11f61a2e08bf7ec5b20c71d5bced837b5d/unifi.go#L101-L104
 	// and https://github.com/unifi-poller/unifi/commit/43a6b225031a28f2b358f52d03a7217c7b524143
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL.String(), nil)
+	req, err := retryablehttp.NewRequestWithContext(ctx, http.MethodGet, c.baseURL.String(), nil)
 	if err != nil {
 		return err
 	}
 
 	// We can't share these cookies with other requests, so make a new client.
 	// Checking the return code on the first request so don't follow a redirect.
-	client := &http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			return http.ErrUseLastResponse
-		},
-		Transport: c.c.HTTPClient.Transport,
+	client := retryablehttp.NewClient()
+
+	client.HTTPClient.Timeout = c.c.HTTPClient.Timeout
+	client.HTTPClient.Transport = c.c.HTTPClient.Transport
+	client.HTTPClient.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
 	}
 
 	resp, err := client.Do(req)

@@ -126,7 +126,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		NoEdit:   n.NoEdit,
 
 		Name:                    n.Name,
-		Purpose:                 string(n.Purpose),
+		Purpose:                 n.Purpose,
 		Enabled:                 n.Enabled,
 		NetworkGroup:            valueOrDefault(n.NetworkGroup, "LAN"),
 		IPSubnet:                valueOrDefault(n.IPSubnet, ""),
@@ -226,7 +226,7 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		NoEdit:   n.NoEdit,
 
 		Name:    n.Name,
-		Purpose: string(n.Purpose),
+		Purpose: n.Purpose,
 		Enabled: n.Enabled,
 
 		// WAN fields
@@ -266,7 +266,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		NoEdit:   n.NoEdit,
 
 		Name:    n.Name,
-		Purpose: string(n.Purpose),
+		Purpose: n.Purpose,
 		Enabled: n.Enabled,
 	})
 }
@@ -317,7 +317,7 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 		NoEdit:   n.NoEdit,
 
 		Name:     n.Name,
-		Purpose:  string(n.Purpose),
+		Purpose:  n.Purpose,
 		Enabled:  n.Enabled,
 		IPSubnet: n.IPSubnet,
 
@@ -368,7 +368,7 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		NoEdit:   n.NoEdit,
 
 		Name:    n.Name,
-		Purpose: string(n.Purpose),
+		Purpose: n.Purpose,
 		Enabled: n.Enabled,
 	})
 }

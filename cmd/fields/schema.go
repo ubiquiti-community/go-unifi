@@ -675,8 +675,8 @@ func (g *SpecificationGenerator) tryLengthValidator(pattern string) *schema.Stri
 	matches := lengthPattern.FindStringSubmatch(pattern)
 
 	if len(matches) > 0 {
-		min := matches[1]
-		max := matches[2] // Will be empty if no comma or if .{min,}
+		min := matches[1] //nolint:predeclared
+		max := matches[2] //nolint:predeclared
 		hasComma := strings.Contains(pattern, ",")
 
 		var schemaDefinition string
@@ -796,7 +796,7 @@ func (g *SpecificationGenerator) buildInt64Validators(validation string) []schem
 }
 
 // buildFloat64Validators creates float64 validators from validation string.
-func (g *SpecificationGenerator) buildFloat64Validators(_ string) []schema.Float64Validator {
+func (g *SpecificationGenerator) buildFloat64Validators(_ string) []schema.Float64Validator { //nolint:unused
 	// For now, float64 validators are less common, return nil
 	return nil
 }
