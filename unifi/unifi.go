@@ -14,6 +14,7 @@ import (
 	"net/url"
 	"path"
 	"reflect"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -39,6 +40,7 @@ type Config struct {
 	HardwareID     string
 	Logger         any
 	TimeoutSeconds *int
+	RetryMax       *int
 }
 
 // New creates a fully initialized ApiClient from the provided configuration.
@@ -58,6 +60,10 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 		c.Logger = nil
 	}
 
+	if cfg.RetryMax != nil {
+		c.RetryMax = *cfg.RetryMax
+	}
+
 	if cfg.AllowInsecure {
 		transport := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
@@ -73,8 +79,10 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	c.HTTPClient.Jar = jar
 
 	client := &ApiClient{
-		c:      c,
-		apiKey: cfg.APIKey,
+		c:        c,
+		apiKey:   cfg.APIKey,
+		username: cfg.Username,
+		password: cfg.Password,
 	}
 
 	if cfg.CloudConnector {
@@ -91,10 +99,20 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 		if err := client.setBaseURL(cfg.BaseURL); err != nil {
 			return nil, fmt.Errorf("invalid base URL: %w", err)
 		}
+	}
 
+	if err := client.setAPIUrlStyle(ctx); err != nil {
+		return nil, fmt.Errorf("unable to determine API URL style: %w", err)
+	}
+
+	if cfg.Username != "" && cfg.Password != "" && client.apiKey == "" {
 		if err := client.login(ctx, cfg.Username, cfg.Password); err != nil {
 			return nil, fmt.Errorf("unable to login: %w", err)
 		}
+	}
+
+	if err := client.setServerVersion(ctx); err != nil {
+		return nil, fmt.Errorf("unable to determine server version: %w", err)
 	}
 
 	return client, nil
@@ -108,19 +126,19 @@ type ApiClient struct {
 	baseURL *url.URL
 
 	apiKey    string
+	username  string
+	password  string
 	loginPath string
 	apiPath   string // path to API, e.g. "proxy/network" for new style API, "/api" for old style API
 
-	csrf string
+	csrf        string
+	tokenExpiry time.Time
+	loggingIn   bool
 
 	version string
 
 	// Cloud Connector support
 	cloudConsoleID string // Console ID for Cloud Connector API proxy
-}
-
-func (c *ApiClient) CSRFToken() string {
-	return c.csrf
 }
 
 func (c *ApiClient) Version() string {
@@ -142,9 +160,9 @@ func (c *ApiClient) setBaseURL(base string) error {
 	return nil
 }
 
-// GetHosts retrieves the list of UniFi hosts from the Site Manager API.
+// getHosts retrieves the list of UniFi hosts from the Site Manager API.
 // This requires an API key and is typically the first step in using the Cloud Connector API.
-func (c *ApiClient) GetHosts(ctx context.Context) (*UnifiHostList, error) {
+func (c *ApiClient) getHosts(ctx context.Context) (*UnifiHostList, error) {
 	if c.apiKey == "" {
 		return nil, errors.New("API key required to fetch hosts from Site Manager API")
 	}
@@ -182,7 +200,7 @@ func (c *ApiClient) GetCloudConsoleID() string {
 // 3. Falls back to the first host if no owner found
 // Returns the selected console ID and any error encountered.
 func (c *ApiClient) enableCloudConnector(ctx context.Context, hostIndex int) (string, error) {
-	hosts, err := c.GetHosts(ctx)
+	hosts, err := c.getHosts(ctx)
 	if err != nil {
 		return "", err
 	}
@@ -218,7 +236,7 @@ func (c *ApiClient) enableCloudConnector(ctx context.Context, hostIndex int) (st
 // to use the Cloud Connector API with the host matching the specified hardware ID.
 // Returns the selected console ID and any error encountered.
 func (c *ApiClient) enableCloudConnectorByHardwareID(ctx context.Context, hardwareID string) (string, error) {
-	hosts, err := c.GetHosts(ctx)
+	hosts, err := c.getHosts(ctx)
 	if err != nil {
 		return "", err
 	}
@@ -307,19 +325,33 @@ func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
 	return errors.New("failed to get api url style")
 }
 
-func (c *ApiClient) login(ctx context.Context, user, pass string) error {
-	if c.c == nil {
-		c.c = retryablehttp.NewClient()
+func (c *ApiClient) login(ctx context.Context, user, pass string) (err error) {
+	c.loggingIn = true
+	defer func() { c.loggingIn = false }()
 
-		jar, _ := cookiejar.New(nil)
-		c.c.HTTPClient.Jar = jar
+	// Clear stale TOKEN cookie before login; sending it causes a 403.
+	if c.baseURL != nil {
+		c.c.HTTPClient.Jar.SetCookies(c.baseURL, []*http.Cookie{{
+			Name:   "TOKEN",
+			MaxAge: -1,
+		}})
 	}
 
-	err := c.setAPIUrlStyle(ctx)
+	err = c.do(ctx, http.MethodPost, c.loginPath, &struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}{
+		Username: user,
+		Password: pass,
+	}, nil)
 	if err != nil {
-		return fmt.Errorf("unable to determine API URL style: %w", err)
+		return err
 	}
 
+	return nil
+}
+
+func (c *ApiClient) setServerVersion(ctx context.Context) (err error) {
 	var status struct {
 		Meta struct {
 			ServerVersion string `json:"server_version"`
@@ -327,20 +359,7 @@ func (c *ApiClient) login(ctx context.Context, user, pass string) error {
 		} `json:"meta"`
 	}
 
-	if c.apiKey == "" {
-		err = c.do(ctx, "POST", c.loginPath, &struct {
-			Username string `json:"username"`
-			Password string `json:"password"`
-		}{
-			Username: user,
-			Password: pass,
-		}, nil)
-		if err != nil {
-			return err
-		}
-	}
-
-	err = c.do(ctx, "GET", "status", nil, &status)
+	err = c.do(ctx, http.MethodGet, "status", nil, &status)
 	if err != nil {
 		return err
 	}
@@ -372,6 +391,11 @@ func (c *ApiClient) do(
 	reqBody any,
 	respBody any,
 ) error {
+	// Re-login if the CSRF token has expired (but not if we're already logging in).
+	if c.apiKey == "" && !c.loggingIn && !c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry) && c.username != "" {
+		_ = c.login(ctx, c.username, c.password)
+	}
+
 	// single threading requests, this is mostly to assist in CSRF token propagation
 	if c.apiKey == "" {
 		c.Lock()
@@ -419,7 +443,7 @@ func (c *ApiClient) do(
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
 	if c.apiKey != "" {
-		req.Header.Set("X-API-Key", c.apiKey)
+		req.Header.Set("X-Api-Key", c.apiKey)
 	} else if c.csrf != "" {
 		req.Header.Set("X-Csrf-Token", c.csrf)
 	}
@@ -438,8 +462,15 @@ func (c *ApiClient) do(
 	}
 
 	if c.apiKey == "" {
-		if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
-			c.csrf = resp.Header.Get("X-Csrf-Token")
+		if csrf := resp.Header.Get("X-Updated-Csrf-Token"); csrf != "" {
+			c.csrf = csrf
+		} else if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
+			c.csrf = csrf
+		}
+		if exp := resp.Header.Get("X-Token-Expire-Time"); exp != "" {
+			if secs, err := strconv.ParseInt(exp, 10, 64); err == nil {
+				c.tokenExpiry = time.Unix(secs, 0)
+			}
 		}
 	}
 

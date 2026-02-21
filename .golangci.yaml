@@ -4,9 +4,10 @@ issues:
 linters:
   enable:
     - durationcheck
-    # - errcheck
     - copyloopvar
-    # - forcetypeassert
+    - canonicalheader
+    - errorlint
+    - fatcontext
     - godot
     - ineffassign
     - makezero
@@ -15,7 +16,6 @@ linters:
     - predeclared
     - staticcheck
     - unconvert
-    # - unparam
     - unused
     - govet
   disable:

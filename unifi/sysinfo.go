@@ -66,13 +66,13 @@ type sysInfo struct {
 	*/
 }
 
-func (c *ApiClient) sysinfo(ctx context.Context, id string) (*sysInfo, error) {
+func (c *ApiClient) sysinfo(ctx context.Context, site string) (*sysInfo, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
 		Data []sysInfo `json:"data"`
 	}
 
-	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/stat/sysinfo", id), nil, &respBody)
+	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/stat/sysinfo", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
