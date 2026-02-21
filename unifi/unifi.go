@@ -3,10 +3,12 @@ package unifi //
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -14,6 +16,7 @@ import (
 	"reflect"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
 )
@@ -25,33 +28,72 @@ const (
 	loginPathNew = "/api/auth/login"
 )
 
-type LoginRequiredError struct{}
-
-func (err *LoginRequiredError) Error() string {
-	return "login required"
+// Config holds all configuration for creating a new ApiClient.
+type Config struct {
+	BaseURL        string
+	APIKey         string
+	Username       string
+	Password       string
+	AllowInsecure  bool
+	CloudConnector bool
+	HardwareID     string
+	Logger         any
 }
 
-type NotFoundError struct {
-	Type  string
-	Attr  string
-	Value string
-}
+// New creates a fully initialized ApiClient from the provided configuration.
+// For cloud connector mode, set CloudConnector=true and optionally HardwareID.
+// For direct connection, provide BaseURL and either APIKey or Username/Password.
+func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
+	c := retryablehttp.NewClient()
+	c.HTTPClient.Timeout = 30 * time.Second
 
-func (err *NotFoundError) Error() string {
-	if err.Attr != "" && err.Value != "" {
-		return fmt.Sprintf("not found: type=%s, attr=%s, value=%s", err.Type, err.Attr, err.Value)
+	if cfg.Logger != nil {
+		c.Logger = cfg.Logger
 	} else {
-		return fmt.Sprintf("not found: type=%s", err.Type)
+		c.Logger = nil
 	}
-}
 
-type APIError struct {
-	RC      string
-	Message string
-}
+	if cfg.AllowInsecure {
+		transport := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
+			DialContext: (&net.Dialer{
+				Timeout:   10 * time.Second,
+				KeepAlive: 30 * time.Second,
+			}).DialContext,
+		}
+		c.HTTPClient.Transport = transport
+	}
 
-func (err *APIError) Error() string {
-	return err.Message
+	jar, _ := cookiejar.New(nil)
+	c.HTTPClient.Jar = jar
+
+	client := &ApiClient{c: c}
+
+	if cfg.APIKey != "" {
+		client.apiKey = cfg.APIKey
+	}
+
+	if cfg.CloudConnector {
+		var err error
+		if cfg.HardwareID != "" {
+			_, err = client.enableCloudConnectorByHardwareID(ctx, cfg.HardwareID)
+		} else {
+			_, err = client.enableCloudConnector(ctx, -1)
+		}
+		if err != nil {
+			return nil, fmt.Errorf("unable to enable cloud connector: %w", err)
+		}
+	} else {
+		if err := client.setBaseURL(cfg.BaseURL); err != nil {
+			return nil, fmt.Errorf("invalid base URL: %w", err)
+		}
+
+		if err := client.login(ctx, cfg.Username, cfg.Password); err != nil {
+			return nil, fmt.Errorf("unable to login: %w", err)
+		}
+	}
+
+	return client, nil
 }
 
 type ApiClient struct {
@@ -81,11 +123,11 @@ func (c *ApiClient) Version() string {
 	return c.version
 }
 
-func (c *ApiClient) SetAPIKey(apiKey string) {
+func (c *ApiClient) setAPIKey(apiKey string) {
 	c.apiKey = apiKey
 }
 
-func (c *ApiClient) SetBaseURL(base string) error {
+func (c *ApiClient) setBaseURL(base string) error {
 	var err error
 	c.baseURL, err = url.Parse(base)
 	if err != nil {
@@ -100,7 +142,7 @@ func (c *ApiClient) SetBaseURL(base string) error {
 	return nil
 }
 
-func (c *ApiClient) SetHTTPClient(hc *retryablehttp.Client) error {
+func (c *ApiClient) setHTTPClient(hc *retryablehttp.Client) error {
 	c.c = hc
 	return nil
 }
@@ -121,10 +163,10 @@ func (c *ApiClient) GetHosts(ctx context.Context) (*UnifiHostList, error) {
 	return &hostList, nil
 }
 
-// SetCloudConsoleID configures the client to use the Cloud Connector API for all requests.
+// setCloudConsoleID configures the client to use the Cloud Connector API for all requests.
 // When set, all API calls will be proxied through https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/...
 // This requires an API key and console firmware >= 5.0.3.
-func (c *ApiClient) SetCloudConsoleID(consoleID string) {
+func (c *ApiClient) setCloudConsoleID(consoleID string) {
 	c.cloudConsoleID = consoleID
 	if consoleID != "" {
 		// When using cloud connector, force the base URL to api.ui.com
@@ -138,13 +180,13 @@ func (c *ApiClient) GetCloudConsoleID() string {
 	return c.cloudConsoleID
 }
 
-// EnableCloudConnector fetches available hosts and configures the client to use
+// enableCloudConnector fetches available hosts and configures the client to use
 // the Cloud Connector API. Selection priority:
 // 1. If hostIndex >= 0: uses the host at that index
 // 2. If hostIndex < 0: defaults to the first host where owner=true
 // 3. Falls back to the first host if no owner found
 // Returns the selected console ID and any error encountered.
-func (c *ApiClient) EnableCloudConnector(ctx context.Context, hostIndex int) (string, error) {
+func (c *ApiClient) enableCloudConnector(ctx context.Context, hostIndex int) (string, error) {
 	hosts, err := c.GetHosts(ctx)
 	if err != nil {
 		return "", err
@@ -173,20 +215,20 @@ func (c *ApiClient) EnableCloudConnector(ctx context.Context, hostIndex int) (st
 		}
 	}
 
-	c.SetCloudConsoleID(selectedHost.ID)
+	c.setCloudConsoleID(selectedHost.ID)
 	return selectedHost.ID, nil
 }
 
-// EnableCloudConnectorByID configures the client to use the Cloud Connector API
+// enableCloudConnectorByID configures the client to use the Cloud Connector API
 // with a specific console ID without fetching the hosts list.
-func (c *ApiClient) EnableCloudConnectorByID(consoleID string) {
-	c.SetCloudConsoleID(consoleID)
+func (c *ApiClient) enableCloudConnectorByID(consoleID string) {
+	c.setCloudConsoleID(consoleID)
 }
 
-// EnableCloudConnectorByHardwareID fetches available hosts and configures the client
+// enableCloudConnectorByHardwareID fetches available hosts and configures the client
 // to use the Cloud Connector API with the host matching the specified hardware ID.
 // Returns the selected console ID and any error encountered.
-func (c *ApiClient) EnableCloudConnectorByHardwareID(ctx context.Context, hardwareID string) (string, error) {
+func (c *ApiClient) enableCloudConnectorByHardwareID(ctx context.Context, hardwareID string) (string, error) {
 	hosts, err := c.GetHosts(ctx)
 	if err != nil {
 		return "", err
@@ -197,7 +239,7 @@ func (c *ApiClient) EnableCloudConnectorByHardwareID(ctx context.Context, hardwa
 		return "", fmt.Errorf("no host found with hardware ID: %s", hardwareID)
 	}
 
-	c.SetCloudConsoleID(host.ID)
+	c.setCloudConsoleID(host.ID)
 	return host.ID, nil
 }
 
@@ -231,9 +273,9 @@ func FindOwnerHost(hostList *UnifiHostList) *UnifiHost {
 	return nil
 }
 
-// DisableCloudConnector disables Cloud Connector mode and returns to direct API access.
+// disableCloudConnector disables Cloud Connector mode and returns to direct API access.
 // Note: You will need to reconfigure the base URL for direct access.
-func (c *ApiClient) DisableCloudConnector() {
+func (c *ApiClient) disableCloudConnector() {
 	c.cloudConsoleID = ""
 }
 
@@ -281,7 +323,7 @@ func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
 	return errors.New("failed to get api url style")
 }
 
-func (c *ApiClient) Login(ctx context.Context, user, pass string) error {
+func (c *ApiClient) login(ctx context.Context, user, pass string) error {
 	if c.c == nil {
 		c.c = retryablehttp.NewClient()
 
