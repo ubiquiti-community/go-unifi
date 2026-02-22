@@ -14,6 +14,7 @@ import (
 	"net/url"
 	"path"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -142,6 +143,33 @@ type ApiClient struct {
 
 func (c *ApiClient) Version() string {
 	return c.version
+}
+
+// isNewStyle returns true if the client is configured for UniFi OS authentication
+// (TOKEN cookie + X-CSRF-Token via /api/auth/login). Returns false for standalone
+// Network Application authentication (unifises cookie via /api/login).
+func (c *ApiClient) isNewStyle() bool {
+	return c.loginPath == loginPathNew
+}
+
+// isLoggedIn checks whether the client has a valid authentication session.
+// For UniFi OS (new-style): checks for a non-empty CSRF token.
+// For standalone (old-style): checks the cookiejar for a unifises session cookie.
+func (c *ApiClient) isLoggedIn() bool {
+	if c.isNewStyle() {
+		return c.csrf != ""
+	}
+	return c.hasCookie("unifises")
+}
+
+// hasCookie checks if the cookiejar contains a cookie with the given name.
+func (c *ApiClient) hasCookie(name string) bool {
+	if c.baseURL == nil {
+		return false
+	}
+	return slices.ContainsFunc(c.c.HTTPClient.Jar.Cookies(c.baseURL), func(cookie *http.Cookie) bool {
+		return cookie.Name == name
+	})
 }
 
 func (c *ApiClient) setBaseURL(base string) error {
@@ -325,13 +353,14 @@ func (c *ApiClient) setAPIUrlStyle(ctx context.Context) error {
 }
 
 func (c *ApiClient) login(ctx context.Context) error {
-	// Clear stale TOKEN cookie before login; sending it causes a 403.
+	// Clear stale session cookies before login; sending them causes errors.
 	if c.baseURL != nil {
-		c.c.HTTPClient.Jar.SetCookies(c.baseURL, []*http.Cookie{{
-			Name:   "TOKEN",
-			MaxAge: -1,
-		}})
+		c.c.HTTPClient.Jar.SetCookies(c.baseURL, []*http.Cookie{
+			{Name: "TOKEN", MaxAge: -1},
+			{Name: "unifises", MaxAge: -1},
+		})
 	}
+	c.csrf = ""
 
 	// Call doRequest directly to avoid login-check recursion and deadlock on loginMu.
 	err := c.doRequest(ctx, http.MethodPost, c.loginPath, &struct {
@@ -357,12 +386,12 @@ func (c *ApiClient) ensureLoggedIn(ctx context.Context) error {
 	defer c.loginMu.Unlock()
 
 	// Double-check: another goroutine may have already logged in while we waited.
-	if c.csrf != "" && (c.tokenExpiry.IsZero() || time.Now().Before(c.tokenExpiry)) {
+	if c.isLoggedIn() && (c.tokenExpiry.IsZero() || time.Now().Before(c.tokenExpiry)) {
 		return nil
 	}
 
-	// If CSRF is empty and a previous login already failed, don't retry.
-	if c.csrf == "" && c.loginErr != nil {
+	// If not logged in and a previous login already failed, don't retry.
+	if !c.isLoggedIn() && c.loginErr != nil {
 		return c.loginErr
 	}
 
@@ -415,7 +444,7 @@ func (c *ApiClient) do(
 	if c.apiKey == "" && c.username != "" && c.password != "" {
 		// Wait for any in-progress login to complete, then check if we need to login.
 		c.loginMu.RLock()
-		needsLogin := c.csrf == "" || (!c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry))
+		needsLogin := !c.isLoggedIn() || (!c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry))
 		c.loginMu.RUnlock()
 
 		if needsLogin {
@@ -429,7 +458,7 @@ func (c *ApiClient) do(
 		defer c.loginMu.RUnlock()
 
 		// Verify authentication after awaiting the login semaphore.
-		if c.csrf == "" {
+		if !c.isLoggedIn() {
 			if c.loginErr != nil {
 				return fmt.Errorf("login failed: %w", c.loginErr)
 			}
@@ -501,9 +530,12 @@ func (c *ApiClient) doRequest(
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusNotFound {
-		t := reflect.TypeOf(respBody)
+		var typeName string
+		if t := reflect.TypeOf(respBody); t != nil {
+			typeName = t.String()
+		}
 		return &NotFoundError{
-			Type: t.String(),
+			Type: typeName,
 		}
 	}
 
