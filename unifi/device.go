@@ -87,7 +87,7 @@ type DevicePortTable struct {
 	StormctrlUcastRate  int64                `json:"stormctrl_ucast_rate,omitempty"`
 	TaggedVlanMgmt      string               `json:"tagged_vlan_mgmt,omitempty"`
 	Masked              bool                 `json:"masked,omitempty"`
-	AggregatedBy        bool                 `json:"aggregated_by,omitempty"`
+	AggregatedBy        types.NumberOrFalse  `json:"aggregated_by,omitempty"`
 }
 
 func (dst *DevicePortTable) UnmarshalJSON(b []byte) error {
