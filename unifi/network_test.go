@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/ubiquiti-community/go-unifi/unifi"
-	"github.com/ubiquiti-community/terraform-provider-unifi/unifi/util"
 )
 
 func TestNetworkUnmarshalJSON(t *testing.T) {
@@ -15,54 +14,54 @@ func TestNetworkUnmarshalJSON(t *testing.T) {
 		json     string
 	}{
 		"int64 vlan": {
-			expected: func(n *unifi.Network) { n.VLAN = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.VLAN = unifi.Ptr[int64](1) },
 			json:     `{ "vlan": 1 }`,
 		},
 		"string vlan": {
-			expected: func(n *unifi.Network) { n.VLAN = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.VLAN = unifi.Ptr[int64](1) },
 			json:     `{ "vlan": "1" }`,
 		},
 		"empty string vlan": {
-			expected: func(n *unifi.Network) { n.VLAN = util.Ptr[int64](0) },
+			expected: func(n *unifi.Network) { n.VLAN = unifi.Ptr[int64](0) },
 			json:     `{ "vlan": "" }`,
 		},
 
 		"int64 dhcpd_leasetime": {
-			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = unifi.Ptr[int64](1) },
 			json:     `{ "dhcpd_leasetime": 1 }`,
 		},
 		"string dhcpd_leasetime": {
-			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = unifi.Ptr[int64](1) },
 			json:     `{ "dhcpd_leasetime": "1" }`,
 		},
 		"empty string dhcpd_leasetime": {
-			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = util.Ptr[int64](0) },
+			expected: func(n *unifi.Network) { n.DHCPDLeaseTime = unifi.Ptr[int64](0) },
 			json:     `{ "dhcpd_leasetime": "" }`,
 		},
 
 		"int64 wan_egress_qos": {
-			expected: func(n *unifi.Network) { n.WANEgressQOS = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.WANEgressQOS = unifi.Ptr[int64](1) },
 			json:     `{ "wan_egress_qos": 1 }`,
 		},
 		"string wan_egress_qos": {
-			expected: func(n *unifi.Network) { n.WANEgressQOS = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.WANEgressQOS = unifi.Ptr[int64](1) },
 			json:     `{ "wan_egress_qos": "1" }`,
 		},
 		"empty string wan_egress_qos": {
-			expected: func(n *unifi.Network) { n.WANEgressQOS = util.Ptr[int64](0) },
+			expected: func(n *unifi.Network) { n.WANEgressQOS = unifi.Ptr[int64](0) },
 			json:     `{ "wan_egress_qos": "" }`,
 		},
 
 		"int64 wan_vlan": {
-			expected: func(n *unifi.Network) { n.WANVLAN = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.WANVLAN = unifi.Ptr[int64](1) },
 			json:     `{ "wan_vlan": 1 }`,
 		},
 		"string wan_vlan": {
-			expected: func(n *unifi.Network) { n.WANVLAN = util.Ptr[int64](1) },
+			expected: func(n *unifi.Network) { n.WANVLAN = unifi.Ptr[int64](1) },
 			json:     `{ "wan_vlan": "1" }`,
 		},
 		"empty wan_vlan vlan": {
-			expected: func(n *unifi.Network) { n.WANVLAN = util.Ptr[int64](0) },
+			expected: func(n *unifi.Network) { n.WANVLAN = unifi.Ptr[int64](0) },
 			json:     `{ "wan_vlan": "" }`,
 		},
 	} {

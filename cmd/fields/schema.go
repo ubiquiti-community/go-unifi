@@ -567,7 +567,7 @@ func (g *SpecificationGenerator) determineComputedOptionalRequired(field *FieldI
 }
 
 // buildValidators creates validators from a FieldValidation string.
-func (g *SpecificationGenerator) buildValidators(fieldType string, fieldValidation string) any { //nolint:golint,unused
+func (g *SpecificationGenerator) buildValidators(fieldType string, fieldValidation string) any { //nolint:unused
 	if fieldValidation == "" {
 		return nil
 	}

@@ -636,3 +636,7 @@ func (m *meta) error() error {
 
 	return nil
 }
+
+func Ptr[T any](in T) *T {
+	return &in
+}

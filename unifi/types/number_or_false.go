@@ -34,7 +34,7 @@ func (n *NumberOrFalse) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &num); err != nil {
 		// If it fails, default to 0
 		*n = 0
-		return nil
+		return nil //nolint:nilerr
 	}
 
 	*n = NumberOrFalse(num)

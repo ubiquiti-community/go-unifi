@@ -1,6 +1,6 @@
 module github.com/ubiquiti-community/go-unifi
 
-go 1.24.0
+go 1.24.9
 
 require (
 	github.com/hashicorp/go-retryablehttp v0.7.8
@@ -20,8 +20,9 @@ require (
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/color v1.18.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/hashicorp/cli v1.1.6 // indirect
+	github.com/hashicorp/cli v1.1.7 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
