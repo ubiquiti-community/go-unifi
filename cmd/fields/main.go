@@ -712,7 +712,7 @@ func (r *ResourceInfo) fieldInfoFromValidation(name string, validation any) (*Fi
 	case map[string]any:
 		typeName := r.StructName + fieldName
 
-		result := NewFieldInfo(fieldName, name, typeName, "", true, false, true, "")
+		result := NewFieldInfo(fieldName, name, typeName, "", true, false, false, "")
 		result.Fields = make(map[string]*FieldInfo)
 
 		for name, fv := range validation {
@@ -755,8 +755,7 @@ func (r *ResourceInfo) fieldInfoFromValidation(name string, validation any) (*Fi
 				}
 
 				omitEmpty = true
-				fieldInfo = NewFieldInfo(fieldName, name, fields.Int, fieldValidation, omitEmpty, false, true, "")
-				// fieldInfo.CustomUnmarshalType = fields.Number
+				fieldInfo = NewFieldInfo(fieldName, name, fields.Int, fieldValidation, omitEmpty, false, false, fields.Number)
 				return fieldInfo, r.FieldProcessor(fieldName, fieldInfo)
 			}
 		}
