@@ -10,12 +10,9 @@ import (
 func (c *ApiClient) ListNat(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Nat, error) {
-	return c.listNat(ctx, site, params...)
+	return c.listNat(ctx, site, query...)
 }
 
 func (c *ApiClient) GetNat(

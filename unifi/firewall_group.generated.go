@@ -57,10 +57,7 @@ func (dst *FirewallGroup) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listFirewallGroup(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]FirewallGroup, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
@@ -73,7 +70,7 @@ func (c *ApiClient) listFirewallGroup(
 		fmt.Sprintf("api/s/%s/rest/firewallgroup", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

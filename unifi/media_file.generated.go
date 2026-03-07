@@ -55,10 +55,7 @@ func (dst *MediaFile) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listMediaFile(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]MediaFile, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
@@ -71,7 +68,7 @@ func (c *ApiClient) listMediaFile(
 		fmt.Sprintf("api/s/%s/rest/mediafile", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

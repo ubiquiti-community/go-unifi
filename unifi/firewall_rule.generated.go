@@ -84,10 +84,7 @@ func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listFirewallRule(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]FirewallRule, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
@@ -100,7 +97,7 @@ func (c *ApiClient) listFirewallRule(
 		fmt.Sprintf("api/s/%s/rest/firewallrule", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

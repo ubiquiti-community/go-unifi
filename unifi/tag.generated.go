@@ -56,10 +56,7 @@ func (dst *Tag) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listTag(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Tag, error) {
 	var respBody struct {
 		Meta meta  `json:"meta"`
@@ -72,7 +69,7 @@ func (c *ApiClient) listTag(
 		fmt.Sprintf("api/s/%s/rest/tag", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

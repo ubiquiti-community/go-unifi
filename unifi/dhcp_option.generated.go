@@ -59,10 +59,7 @@ func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listDHCPOption(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]DHCPOption, error) {
 	var respBody struct {
 		Meta meta         `json:"meta"`
@@ -75,7 +72,7 @@ func (c *ApiClient) listDHCPOption(
 		fmt.Sprintf("api/s/%s/rest/dhcpoption", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

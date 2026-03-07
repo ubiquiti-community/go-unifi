@@ -75,10 +75,7 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listDNSRecord(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]DNSRecord, error) {
 	var respBody []DNSRecord
 
@@ -88,7 +85,7 @@ func (c *ApiClient) listDNSRecord(
 		fmt.Sprintf("v2/api/site/%s/static-dns", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

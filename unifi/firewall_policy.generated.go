@@ -156,10 +156,7 @@ func (dst *FirewallPolicySource) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listFirewallPolicy(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]FirewallPolicy, error) {
 	var respBody []FirewallPolicy
 
@@ -169,7 +166,7 @@ func (c *ApiClient) listFirewallPolicy(
 		fmt.Sprintf("v2/api/site/%s/firewall-policies", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

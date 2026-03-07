@@ -375,10 +375,7 @@ func (dst *Hotspot2ConfVenueName) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listHotspot2Conf(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Hotspot2Conf, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
@@ -391,7 +388,7 @@ func (c *ApiClient) listHotspot2Conf(
 		fmt.Sprintf("api/s/%s/rest/hotspot2conf", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

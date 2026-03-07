@@ -57,10 +57,7 @@ func (dst *HotspotOp) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listHotspotOp(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]HotspotOp, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
@@ -73,7 +70,7 @@ func (c *ApiClient) listHotspotOp(
 		fmt.Sprintf("api/s/%s/rest/hotspotop", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

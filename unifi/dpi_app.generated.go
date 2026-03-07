@@ -62,10 +62,7 @@ func (dst *DpiApp) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listDpiApp(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]DpiApp, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
@@ -78,7 +75,7 @@ func (c *ApiClient) listDpiApp(
 		fmt.Sprintf("api/s/%s/rest/dpiapp", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

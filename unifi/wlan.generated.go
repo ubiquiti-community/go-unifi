@@ -463,10 +463,7 @@ func (dst *WLANVenueName) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listWLAN(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]WLAN, error) {
 	var respBody struct {
 		Meta meta   `json:"meta"`
@@ -479,7 +476,7 @@ func (c *ApiClient) listWLAN(
 		fmt.Sprintf("api/s/%s/rest/wlanconf", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

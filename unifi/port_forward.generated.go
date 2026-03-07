@@ -89,10 +89,7 @@ func (dst *PortForwardDestinationIPs) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listPortForward(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]PortForward, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
@@ -105,7 +102,7 @@ func (c *ApiClient) listPortForward(
 		fmt.Sprintf("api/s/%s/rest/portforward", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

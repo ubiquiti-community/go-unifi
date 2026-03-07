@@ -146,10 +146,7 @@ func (dst *{{ $k }}) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) list{{ .StructName }}(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]{{ .StructName }}, error) {
 {{- if .IsV2 }}
 	var respBody []{{ .StructName }}
@@ -166,7 +163,7 @@ func (c *ApiClient) list{{ .StructName }}(
 		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

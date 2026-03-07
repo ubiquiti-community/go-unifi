@@ -79,10 +79,7 @@ func (dst *ScheduleTaskUpgradeTargets) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listScheduleTask(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]ScheduleTask, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
@@ -95,7 +92,7 @@ func (c *ApiClient) listScheduleTask(
 		fmt.Sprintf("api/s/%s/rest/scheduletask", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

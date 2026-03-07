@@ -90,10 +90,7 @@ func (dst *ChannelPlanRadioTable) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listChannelPlan(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]ChannelPlan, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
@@ -106,7 +103,7 @@ func (c *ApiClient) listChannelPlan(
 		fmt.Sprintf("api/s/%s/rest/channelplan", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

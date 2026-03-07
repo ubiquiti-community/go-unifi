@@ -411,10 +411,7 @@ func (dst *NetworkWANProviderCapabilities) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listNetwork(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Network, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
@@ -427,7 +424,7 @@ func (c *ApiClient) listNetwork(
 		fmt.Sprintf("api/s/%s/rest/networkconf", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

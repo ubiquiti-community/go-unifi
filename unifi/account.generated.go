@@ -64,10 +64,7 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listAccount(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Account, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
@@ -80,7 +77,7 @@ func (c *ApiClient) listAccount(
 		fmt.Sprintf("api/s/%s/rest/account", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

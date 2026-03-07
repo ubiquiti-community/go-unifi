@@ -99,10 +99,7 @@ func (dst *SpatialRecordPosition) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listSpatialRecord(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]SpatialRecord, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
@@ -115,7 +112,7 @@ func (c *ApiClient) listSpatialRecord(
 		fmt.Sprintf("api/s/%s/rest/spatialrecord", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

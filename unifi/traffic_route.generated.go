@@ -131,10 +131,7 @@ func (dst *TrafficRouteTargetDevices) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listTrafficRoute(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]TrafficRoute, error) {
 	var respBody []TrafficRoute
 
@@ -144,7 +141,7 @@ func (c *ApiClient) listTrafficRoute(
 		fmt.Sprintf("v2/api/site/%s/trafficroutes", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

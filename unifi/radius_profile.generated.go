@@ -136,10 +136,7 @@ func (dst *RADIUSProfileXCaCrts) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listRADIUSProfile(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]RADIUSProfile, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
@@ -152,7 +149,7 @@ func (c *ApiClient) listRADIUSProfile(
 		fmt.Sprintf("api/s/%s/rest/radiusprofile", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

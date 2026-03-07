@@ -184,10 +184,7 @@ func (dst *PortProfileQOSProfile) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listPortProfile(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]PortProfile, error) {
 	var respBody struct {
 		Meta meta          `json:"meta"`
@@ -200,7 +197,7 @@ func (c *ApiClient) listPortProfile(
 		fmt.Sprintf("api/s/%s/rest/portconf", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

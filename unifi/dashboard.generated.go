@@ -82,10 +82,7 @@ func (dst *DashboardModules) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listDashboard(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Dashboard, error) {
 	var respBody struct {
 		Meta meta        `json:"meta"`
@@ -98,7 +95,7 @@ func (c *ApiClient) listDashboard(
 		fmt.Sprintf("api/s/%s/rest/dashboard", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

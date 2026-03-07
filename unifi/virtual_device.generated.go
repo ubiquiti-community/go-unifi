@@ -60,10 +60,7 @@ func (dst *VirtualDevice) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listVirtualDevice(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]VirtualDevice, error) {
 	var respBody struct {
 		Meta meta            `json:"meta"`
@@ -76,7 +73,7 @@ func (c *ApiClient) listVirtualDevice(
 		fmt.Sprintf("api/s/%s/rest/virtualdevice", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

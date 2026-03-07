@@ -112,10 +112,7 @@ func (dst *OSPFRouterInterfaces) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listOSPFRouter(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]OSPFRouter, error) {
 	var respBody []OSPFRouter
 
@@ -125,7 +122,7 @@ func (c *ApiClient) listOSPFRouter(
 		fmt.Sprintf("v2/api/site/%s/ospf/router", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

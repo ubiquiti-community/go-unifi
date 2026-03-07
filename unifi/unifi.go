@@ -452,10 +452,7 @@ func (c *ApiClient) do(
 	method, relativeURL string,
 	reqBody any,
 	respBody any,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) error {
 	// For username/password auth (no API key), ensure we are logged in before making requests.
 	if c.apiKey == "" && c.username != "" && c.password != "" {
@@ -483,7 +480,7 @@ func (c *ApiClient) do(
 		}
 	}
 
-	return c.doRequest(ctx, method, relativeURL, reqBody, respBody, params...)
+	return c.doRequest(ctx, method, relativeURL, reqBody, respBody, query...)
 }
 
 // doRequest performs the actual HTTP request. It is separated from do so that
@@ -493,10 +490,7 @@ func (c *ApiClient) doRequest(
 	method, relativeURL string,
 	reqBody any,
 	respBody any,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) error {
 	var (
 		reqReader io.Reader
@@ -516,12 +510,14 @@ func (c *ApiClient) doRequest(
 		return fmt.Errorf("unable to parse URL: %s %s %w", method, relativeURL, err)
 	}
 
-	if len(params) > 0 {
-		query := reqURL.Query()
-		for _, p := range params {
-			query.Set(p.key, p.val)
+	if len(query) > 0 {
+		queryValues := reqURL.Query()
+		for _, q := range query {
+			for key, value := range q {
+				queryValues.Set(key, value)
+			}
 		}
-		reqURL.RawQuery = query.Encode()
+		reqURL.RawQuery = queryValues.Encode()
 	}
 
 	// Handle Cloud Connector API routing

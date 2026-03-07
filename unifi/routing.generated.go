@@ -64,10 +64,7 @@ func (dst *Routing) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listRouting(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Routing, error) {
 	var respBody struct {
 		Meta meta      `json:"meta"`
@@ -80,7 +77,7 @@ func (c *ApiClient) listRouting(
 		fmt.Sprintf("api/s/%s/rest/routing", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

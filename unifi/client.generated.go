@@ -73,10 +73,7 @@ func (dst *Client) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listClient(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Client, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
@@ -89,7 +86,7 @@ func (c *ApiClient) listClient(
 		fmt.Sprintf("api/s/%s/rest/user", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

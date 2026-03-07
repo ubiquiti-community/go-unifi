@@ -134,12 +134,8 @@ func (c *ApiClient) ListClientInfo(ctx context.Context, site string) (ClientList
 		fmt.Sprintf("v2/api/site/%s/clients/active", site),
 		nil,
 		&respBody,
-		struct {
-			key string
-			val string
-		}{
-			key: "includeUnifiDevices",
-			val: "true",
+		map[string]string{
+			"includeUnifiDevices": "true",
 		},
 	)
 	if err != nil {
@@ -158,12 +154,8 @@ func (c *ApiClient) GetClientInfo(ctx context.Context, site string, mac string) 
 		fmt.Sprintf("v2/api/site/%s/clients/local/%s", site, mac),
 		nil,
 		&respBody,
-		struct {
-			key string
-			val string
-		}{
-			key: "includeUnifiDevices",
-			val: "true",
+		map[string]string{
+			"includeUnifiDevices": "true",
 		},
 	)
 	if err != nil {
@@ -184,23 +176,11 @@ func (c *ApiClient) ListClientHistory(ctx context.Context, site string, withinHo
 		fmt.Sprintf("v2/api/site/%s/clients/history", site),
 		nil,
 		&respBody,
-		[]struct {
-			key string
-			val string
-		}{
-			{
-				key: "includeUnifiDevices",
-				val: "true",
-			},
-			{
-				key: "onlyNonBlocked",
-				val: "false",
-			},
-			{
-				key: "withinHours",
-				val: fmt.Sprintf("%d", withinHours),
-			},
-		}...,
+		map[string]string{
+			"includeUnifiDevices": "true",
+			"onlyNonBlocked":      "false",
+			"withinHours":         fmt.Sprintf("%d", withinHours),
+		},
 	)
 	if err != nil {
 		return nil, err

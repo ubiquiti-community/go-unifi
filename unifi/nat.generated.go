@@ -123,10 +123,7 @@ func (dst *NatSourceFilter) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listNat(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Nat, error) {
 	var respBody []Nat
 
@@ -136,7 +133,7 @@ func (c *ApiClient) listNat(
 		fmt.Sprintf("v2/api/site/%s/nat", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

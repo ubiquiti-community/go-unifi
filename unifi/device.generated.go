@@ -605,10 +605,7 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listDevice(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]Device, error) {
 	var respBody struct {
 		Meta meta     `json:"meta"`
@@ -621,7 +618,7 @@ func (c *ApiClient) listDevice(
 		fmt.Sprintf("api/s/%s/stat/device", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

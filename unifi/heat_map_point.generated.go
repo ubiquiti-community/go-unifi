@@ -59,10 +59,7 @@ func (dst *HeatMapPoint) UnmarshalJSON(b []byte) error {
 func (c *ApiClient) listHeatMapPoint(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	query ...map[string]string,
 ) ([]HeatMapPoint, error) {
 	var respBody struct {
 		Meta meta           `json:"meta"`
@@ -75,7 +72,7 @@ func (c *ApiClient) listHeatMapPoint(
 		fmt.Sprintf("api/s/%s/rest/heatmappoint", site),
 		nil,
 		&respBody,
-		params...,
+		query...,
 	)
 	if err != nil {
 		return nil, err

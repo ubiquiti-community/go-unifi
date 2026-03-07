@@ -10,10 +10,7 @@ import (
 // use separate endpoints for their lookups. Specifically IP is only returned
 // by this method.
 func (c *ApiClient) GetClientByMAC(ctx context.Context, site, mac string) (*Client, error) {
-	resp, err := c.ListClient(ctx, site, struct {
-		key string
-		val string
-	}{"mac", mac})
+	resp, err := c.ListClient(ctx, site, map[string]string{"mac": mac})
 	if err != nil {
 		return nil, err
 	}
@@ -145,12 +142,16 @@ func (c *ApiClient) OverrideClientFingerprint(
 func (c *ApiClient) ListClient(
 	ctx context.Context,
 	site string,
-	params ...struct {
-		key string
-		val string
-	},
+	params ...map[string]string,
 ) ([]Client, error) {
 	return c.listClient(ctx, site, params...)
+}
+
+// ListClientFiltered returns clients filtered by the provided key-value parameters.
+// This is the map-based variant of ListClient for use outside the unifi package,
+// where the anonymous struct parameter type cannot be spread as variadic args.
+func (c *ApiClient) ListClientFiltered(ctx context.Context, site string, filters map[string]string) ([]Client, error) {
+	return c.listClient(ctx, site, filters)
 }
 
 func (c *ApiClient) CreateClient(ctx context.Context, site string, d *Client) (*Client, error) {
