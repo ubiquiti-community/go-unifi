@@ -3,6 +3,7 @@ package unifi
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 // just to fix compile issues with the import.
@@ -129,10 +130,17 @@ func (c *ApiClient) ListClientInfo(ctx context.Context, site string) (ClientList
 
 	err := c.do(
 		ctx,
-		"GET",
-		fmt.Sprintf("v2/api/site/%s/clients/active?includeUnifiDevices=true", site),
+		http.MethodGet,
+		fmt.Sprintf("v2/api/site/%s/clients/active", site),
 		nil,
 		&respBody,
+		struct {
+			key string
+			val string
+		}{
+			key: "includeUnifiDevices",
+			val: "true",
+		},
 	)
 	if err != nil {
 		return nil, err
@@ -146,10 +154,17 @@ func (c *ApiClient) GetClientInfo(ctx context.Context, site string, mac string) 
 
 	err := c.do(
 		ctx,
-		"GET",
-		fmt.Sprintf("v2/api/site/%s/clients/local/%s?includeUnifiDevices=true", site, mac),
+		http.MethodGet,
+		fmt.Sprintf("v2/api/site/%s/clients/local/%s", site, mac),
 		nil,
 		&respBody,
+		struct {
+			key string
+			val string
+		}{
+			key: "includeUnifiDevices",
+			val: "true",
+		},
 	)
 	if err != nil {
 		return nil, err
@@ -165,10 +180,27 @@ func (c *ApiClient) ListClientHistory(ctx context.Context, site string, withinHo
 
 	err := c.do(
 		ctx,
-		"GET",
-		fmt.Sprintf("v2/api/site/%s/clients/history?onlyNonBlocked=false&includeUnifiDevices=true&withinHours=%d", site, withinHours),
+		http.MethodGet,
+		fmt.Sprintf("v2/api/site/%s/clients/history", site),
 		nil,
 		&respBody,
+		[]struct {
+			key string
+			val string
+		}{
+			{
+				key: "includeUnifiDevices",
+				val: "true",
+			},
+			{
+				key: "onlyNonBlocked",
+				val: "false",
+			},
+			{
+				key: "withinHours",
+				val: fmt.Sprintf("%d", withinHours),
+			},
+		}...,
 	)
 	if err != nil {
 		return nil, err

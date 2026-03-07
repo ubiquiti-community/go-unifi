@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -614,23 +615,13 @@ func (c *ApiClient) listDevice(
 		Data []Device `json:"data"`
 	}
 
-	// Build URL with query parameters
-	url := fmt.Sprintf("api/s/%s/stat/device", site)
-	if len(params) > 0 {
-		// Build query string manually to avoid URL-encoding colons in MAC addresses
-		var parts []string
-		for _, p := range params {
-			parts = append(parts, p.key+"="+p.val)
-		}
-		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
-	}
-
 	err := c.do(
 		ctx,
-		"GET",
-		url,
+		http.MethodGet,
+		fmt.Sprintf("api/s/%s/stat/device", site),
 		nil,
 		&respBody,
+		params...,
 	)
 	if err != nil {
 		return nil, err
@@ -649,7 +640,7 @@ func (c *ApiClient) getDevice(
 	}
 	err := c.do(
 		ctx,
-		"GET",
+		http.MethodGet,
 		fmt.Sprintf("api/s/%s/stat/device/%s", site, id),
 		nil,
 		&respBody,
@@ -672,7 +663,7 @@ func (c *ApiClient) deleteDevice(
 ) error {
 	err := c.do(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("api/s/%s/stat/device/%s", site, id),
 		struct{}{},
 		nil,
@@ -695,7 +686,7 @@ func (c *ApiClient) createDevice(
 
 	err := c.do(
 		ctx,
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("api/s/%s/stat/device", site),
 		d,
 		&respBody,
@@ -724,7 +715,7 @@ func (c *ApiClient) updateDevice(
 	}
 	err := c.do(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("api/s/%s/rest/device/%s", site, d.ID),
 		d,
 		&respBody,

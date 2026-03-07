@@ -53,6 +53,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	{{- if not .IsSetting }}
+	"net/http"
+	{{- end }}
 	"strconv"
 	{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
 	"strings"
@@ -157,23 +160,13 @@ func (c *ApiClient) list{{ .StructName }}(
 	}
 {{- end }}
 
-	// Build URL with query parameters
-	url := fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}", site)
-	if len(params) > 0 {
-		// Build query string manually to avoid URL-encoding colons in MAC addresses
-		var parts []string
-		for _, p := range params {
-			parts = append(parts, p.key+"="+p.val)
-		}
-		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
-	}
-
 	err := c.do(
 		ctx,
-		"GET",
-		url,
+		http.MethodGet,
+		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}", site),
 		nil,
 		&respBody,
+		params...,
 	)
 	if err != nil {
 		return nil, err
@@ -222,7 +215,7 @@ func (c *ApiClient) get{{ .StructName }}(
 	{{- end }}
 	err := c.do(
 		ctx,
-		"GET",
+		http.MethodGet,
 		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}{{ if ne .StructName "BGPConfig" }}/%s{{ end }}", site{{ if ne .StructName "BGPConfig" }}, id{{ end }}),
 		nil,
 		&respBody,
@@ -257,7 +250,7 @@ func (c *ApiClient) delete{{ .StructName }}(
 ) error {
 	err := c.do(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("{{ if .IsV2 }}v2/{{ end }}api/s{{ if .IsV2 }}ite{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if not .IsV2 }}rest/{{ end }}{{ .ResourcePath }}{{ if ne .StructName "BGPConfig" }}/%s{{ end }}", site{{ if ne .StructName "BGPConfig" }}, id{{ end }}),
 		struct{}{},
 		nil,
@@ -284,7 +277,7 @@ func (c *ApiClient) create{{ .StructName }}(
 
 	err := c.do(
 		ctx,
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}", site),
 		d,
 		&respBody,
@@ -321,7 +314,7 @@ func (c *ApiClient) update{{ .StructName }}(
 {{- end }}
 	err := c.do(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}/%s", site, d.ID),
 		d,
 		&respBody,

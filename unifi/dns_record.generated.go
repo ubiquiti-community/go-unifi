@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -81,23 +82,13 @@ func (c *ApiClient) listDNSRecord(
 ) ([]DNSRecord, error) {
 	var respBody []DNSRecord
 
-	// Build URL with query parameters
-	url := fmt.Sprintf("v2/api/site/%s/static-dns", site)
-	if len(params) > 0 {
-		// Build query string manually to avoid URL-encoding colons in MAC addresses
-		var parts []string
-		for _, p := range params {
-			parts = append(parts, p.key+"="+p.val)
-		}
-		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
-	}
-
 	err := c.do(
 		ctx,
-		"GET",
-		url,
+		http.MethodGet,
+		fmt.Sprintf("v2/api/site/%s/static-dns", site),
 		nil,
 		&respBody,
+		params...,
 	)
 	if err != nil {
 		return nil, err
@@ -135,7 +126,7 @@ func (c *ApiClient) deleteDNSRecord(
 ) error {
 	err := c.do(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("v2/api/site/%s/static-dns/%s", site, id),
 		struct{}{},
 		nil,
@@ -155,7 +146,7 @@ func (c *ApiClient) createDNSRecord(
 
 	err := c.do(
 		ctx,
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("v2/api/site/%s/static-dns", site),
 		d,
 		&respBody,
@@ -175,7 +166,7 @@ func (c *ApiClient) updateDNSRecord(
 	var respBody DNSRecord
 	err := c.do(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("v2/api/site/%s/static-dns/%s", site, d.ID),
 		d,
 		&respBody,

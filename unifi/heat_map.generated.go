@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -67,23 +68,13 @@ func (c *ApiClient) listHeatMap(
 		Data []HeatMap `json:"data"`
 	}
 
-	// Build URL with query parameters
-	url := fmt.Sprintf("api/s/%s/rest/heatmap", site)
-	if len(params) > 0 {
-		// Build query string manually to avoid URL-encoding colons in MAC addresses
-		var parts []string
-		for _, p := range params {
-			parts = append(parts, p.key+"="+p.val)
-		}
-		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
-	}
-
 	err := c.do(
 		ctx,
-		"GET",
-		url,
+		http.MethodGet,
+		fmt.Sprintf("api/s/%s/rest/heatmap", site),
 		nil,
 		&respBody,
+		params...,
 	)
 	if err != nil {
 		return nil, err
@@ -102,7 +93,7 @@ func (c *ApiClient) getHeatMap(
 	}
 	err := c.do(
 		ctx,
-		"GET",
+		http.MethodGet,
 		fmt.Sprintf("api/s/%s/rest/heatmap/%s", site, id),
 		nil,
 		&respBody,
@@ -125,7 +116,7 @@ func (c *ApiClient) deleteHeatMap(
 ) error {
 	err := c.do(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("api/s/%s/rest/heatmap/%s", site, id),
 		struct{}{},
 		nil,
@@ -148,7 +139,7 @@ func (c *ApiClient) createHeatMap(
 
 	err := c.do(
 		ctx,
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("api/s/%s/rest/heatmap", site),
 		d,
 		&respBody,
@@ -177,7 +168,7 @@ func (c *ApiClient) updateHeatMap(
 	}
 	err := c.do(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("api/s/%s/rest/heatmap/%s", site, d.ID),
 		d,
 		&respBody,

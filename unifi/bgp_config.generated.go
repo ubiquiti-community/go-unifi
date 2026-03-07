@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/ubiquiti-community/go-unifi/unifi/types"
@@ -59,7 +60,7 @@ func (c *ApiClient) getBGPConfig(
 	var respBody []BGPConfig
 	err := c.do(
 		ctx,
-		"GET",
+		http.MethodGet,
 		fmt.Sprintf("v2/api/site/%s/bgp/config", site),
 		nil,
 		&respBody,
@@ -81,7 +82,7 @@ func (c *ApiClient) deleteBGPConfig(
 ) error {
 	err := c.do(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("v2/api/site/%s/bgp/config", site),
 		struct{}{},
 		nil,
@@ -101,7 +102,7 @@ func (c *ApiClient) createBGPConfig(
 
 	err := c.do(
 		ctx,
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("v2/api/site/%s/bgp/config", site),
 		d,
 		&respBody,

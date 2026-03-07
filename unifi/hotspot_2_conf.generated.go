@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -384,23 +385,13 @@ func (c *ApiClient) listHotspot2Conf(
 		Data []Hotspot2Conf `json:"data"`
 	}
 
-	// Build URL with query parameters
-	url := fmt.Sprintf("api/s/%s/rest/hotspot2conf", site)
-	if len(params) > 0 {
-		// Build query string manually to avoid URL-encoding colons in MAC addresses
-		var parts []string
-		for _, p := range params {
-			parts = append(parts, p.key+"="+p.val)
-		}
-		url = fmt.Sprintf("%s?%s", url, strings.Join(parts, "&"))
-	}
-
 	err := c.do(
 		ctx,
-		"GET",
-		url,
+		http.MethodGet,
+		fmt.Sprintf("api/s/%s/rest/hotspot2conf", site),
 		nil,
 		&respBody,
+		params...,
 	)
 	if err != nil {
 		return nil, err
@@ -419,7 +410,7 @@ func (c *ApiClient) getHotspot2Conf(
 	}
 	err := c.do(
 		ctx,
-		"GET",
+		http.MethodGet,
 		fmt.Sprintf("api/s/%s/rest/hotspot2conf/%s", site, id),
 		nil,
 		&respBody,
@@ -442,7 +433,7 @@ func (c *ApiClient) deleteHotspot2Conf(
 ) error {
 	err := c.do(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("api/s/%s/rest/hotspot2conf/%s", site, id),
 		struct{}{},
 		nil,
@@ -465,7 +456,7 @@ func (c *ApiClient) createHotspot2Conf(
 
 	err := c.do(
 		ctx,
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("api/s/%s/rest/hotspot2conf", site),
 		d,
 		&respBody,
@@ -494,7 +485,7 @@ func (c *ApiClient) updateHotspot2Conf(
 	}
 	err := c.do(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("api/s/%s/rest/hotspot2conf/%s", site, d.ID),
 		d,
 		&respBody,
