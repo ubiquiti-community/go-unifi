@@ -199,10 +199,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 
 // marshalVLANOnly marshals a VLAN-only network (Layer 2 only, no routing).
 func (n *Network) marshalVLANOnly() ([]byte, error) {
-	enabled := n.Enabled
-	if !enabled {
-		enabled = true
-	}
+	enabled := true
 
 	vlanEnabled := n.VLANEnabled
 	if !vlanEnabled && n.VLAN != nil && *n.VLAN > 0 {
@@ -380,7 +377,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 
 		// DHCP Relay
 		DHCPRelayEnabled: n.DHCPRelayEnabled,
-		DHCPRelayServers: orEmptySlice(n.RemoteVPNSubnets),
+		DHCPRelayServers: orEmptySlice(n.DHCPRelayServers),
 
 		// IPv6
 		IPV6InterfaceType:     valueOrDefault(n.IPV6InterfaceType, "none"),
