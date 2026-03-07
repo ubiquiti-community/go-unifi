@@ -285,7 +285,11 @@ type Network struct {
 func (dst *Network) UnmarshalJSON(b []byte) error {
 	type Alias Network
 	aux := &struct {
-		InternetAccessEnabled *bool `json:"internet_access_enabled"`
+		InternetAccessEnabled *bool         `json:"internet_access_enabled"`
+		DHCPDLeaseTime        *types.Number `json:"dhcpd_leasetime"`
+		VLAN                  *types.Number `json:"vlan"`
+		WANEgressQOS          *types.Number `json:"wan_egress_qos"`
+		WANVLAN               *types.Number `json:"wan_vlan"`
 
 		*Alias
 	}{
@@ -297,6 +301,10 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	dst.InternetAccessEnabled = emptyBoolToTrue(aux.InternetAccessEnabled)
+	dst.DHCPDLeaseTime = numberToInt64Ptr(aux.DHCPDLeaseTime)
+	dst.VLAN = numberToInt64Ptr(aux.VLAN)
+	dst.WANEgressQOS = numberToInt64Ptr(aux.WANEgressQOS)
+	dst.WANVLAN = numberToInt64Ptr(aux.WANVLAN)
 
 	return nil
 }
