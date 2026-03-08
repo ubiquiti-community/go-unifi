@@ -49,7 +49,7 @@ func GetSetting[T settings.Setting](c *ApiClient, ctx context.Context, site stri
 			break
 		}
 	}
-	if setting == nil {
+	if len(raw) == 0 {
 		return nil, zeroValue, &NotFoundError{}
 	}
 
