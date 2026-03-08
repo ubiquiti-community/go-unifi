@@ -214,12 +214,18 @@ func (n *Network) marshalVLANOnly() ([]byte, error) {
 		NoDelete bool   `json:"attr_no_delete,omitempty"`
 		NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-		Name         *string `json:"name,omitempty"`
-		Purpose      string  `json:"purpose"`
-		Enabled      bool    `json:"enabled"`
-		NetworkGroup *string `json:"networkgroup,omitempty"`
-		VLAN         *int64  `json:"vlan,omitempty"`
-		VLANEnabled  bool    `json:"vlan_enabled"`
+		Name                    *string `json:"name,omitempty"`
+		Purpose                 string  `json:"purpose"`
+		Enabled                 bool    `json:"enabled"`
+		NetworkGroup            *string `json:"networkgroup,omitempty"`
+		VLAN                    *int64  `json:"vlan,omitempty"`
+		VLANEnabled             bool    `json:"vlan_enabled"`
+		IGMPSnooping            bool    `json:"igmp_snooping"`
+		NetworkIsolationEnabled bool    `json:"network_isolation_enabled"`
+		DHCPguardEnabled        bool    `json:"dhcpguard_enabled"`
+		DHCPDIP1                string  `json:"dhcpd_ip_1"`
+		DHCPDIP2                string  `json:"dhcpd_ip_2"`
+		DHCPDIP3                string  `json:"dhcpd_ip_3"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -228,12 +234,18 @@ func (n *Network) marshalVLANOnly() ([]byte, error) {
 		NoDelete: n.NoDelete,
 		NoEdit:   n.NoEdit,
 
-		Name:         n.Name,
-		Purpose:      n.Purpose,
-		Enabled:      enabled,
-		NetworkGroup: valueOrDefault(n.NetworkGroup, "LAN"),
-		VLAN:         n.VLAN,
-		VLANEnabled:  vlanEnabled,
+		Name:                    n.Name,
+		Purpose:                 n.Purpose,
+		Enabled:                 enabled,
+		NetworkGroup:            valueOrDefault(n.NetworkGroup, "LAN"),
+		VLAN:                    n.VLAN,
+		VLANEnabled:             vlanEnabled,
+		IGMPSnooping:            n.IGMPSnooping,
+		NetworkIsolationEnabled: n.NetworkIsolationEnabled,
+		DHCPguardEnabled:        n.DHCPguardEnabled,
+		DHCPDIP1:                n.DHCPDIP1,
+		DHCPDIP2:                n.DHCPDIP2,
+		DHCPDIP3:                n.DHCPDIP3,
 	})
 }
 
