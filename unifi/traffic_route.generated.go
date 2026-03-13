@@ -34,12 +34,12 @@ type TrafficRoute struct {
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
 	Description       string                      `json:"description,omitempty"` // .{0,128}
-	Domains           []string                    `json:"domains"`
+	Domains           []TrafficRouteDomains       `json:"domains,omitempty"`
 	Enabled           bool                        `json:"enabled"`
 	IPAddresses       []TrafficRouteIPAddresses   `json:"ip_addresses,omitempty"`
 	IPRanges          []TrafficRouteIPRanges      `json:"ip_ranges,omitempty"`
 	KillSwitchEnabled bool                        `json:"kill_switch_enabled"`
-	MatchingTarget    string                      `json:"matching_target,omitempty"`
+	MatchingTarget    string                      `json:"matching_target,omitempty"` // DOMAIN|IP|INTERNET
 	NetworkID         string                      `json:"network_id,omitempty"`
 	NextHop           string                      `json:"next_hop,omitempty"`
 	Regions           []string                    `json:"regions,omitempty"`
@@ -62,11 +62,41 @@ func (dst *TrafficRoute) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+type TrafficRouteDomains struct {
+	Domain     string                   `json:"domain,omitempty"` // .{1,256}
+	PortRanges []TrafficRoutePortRanges `json:"port_ranges,omitempty"`
+	Ports      []int64                  `json:"ports,omitempty"` // [1-9][0-9]{0,4}
+}
+
+func (dst *TrafficRouteDomains) UnmarshalJSON(b []byte) error {
+	type Alias TrafficRouteDomains
+	aux := &struct {
+		Ports []types.Number `json:"ports"`
+
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
+	}
+
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	dst.Ports = make([]int64, len(aux.Ports))
+	for i, v := range aux.Ports {
+		if val, err := v.Int64(); err == nil {
+			dst.Ports[i] = val
+		}
+	}
+
+	return nil
+}
+
 type TrafficRouteIPAddresses struct {
-	IPOrSubnet string   `json:"ip_or_subnet,omitempty"`
-	IPVersion  string   `json:"ip_version,omitempty"` // BOTH|IPV4|IPV6
-	PortRanges []string `json:"port_ranges,omitempty"`
-	Ports      []int64  `json:"ports,omitempty"` // [1-9][0-9]{0,4}
+	IPOrSubnet string                   `json:"ip_or_subnet,omitempty"`
+	IPVersion  string                   `json:"ip_version,omitempty"` // v4|v6
+	PortRanges []TrafficRoutePortRanges `json:"port_ranges,omitempty"`
+	Ports      []int64                  `json:"ports,omitempty"` // [1-9][0-9]{0,4}
 }
 
 func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
@@ -96,7 +126,7 @@ func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
 type TrafficRouteIPRanges struct {
 	IPStart   string `json:"ip_start,omitempty"`
 	IPStop    string `json:"ip_stop,omitempty"`
-	IPVersion string `json:"ip_version,omitempty"` // BOTH|IPV4|IPV6
+	IPVersion string `json:"ip_version,omitempty"` // v4|v6
 }
 
 func (dst *TrafficRouteIPRanges) UnmarshalJSON(b []byte) error {
@@ -115,9 +145,50 @@ func (dst *TrafficRouteIPRanges) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+type TrafficRoutePortRanges struct {
+	PortStart *int64 `json:"port_start,omitempty"` // [1-9][0-9]{0,4}
+	PortStop  *int64 `json:"port_stop,omitempty"`  // [1-9][0-9]{0,4}
+}
+
+func (dst *TrafficRoutePortRanges) UnmarshalJSON(b []byte) error {
+	type Alias TrafficRoutePortRanges
+	aux := &struct {
+		PortStart *types.Number `json:"port_start"`
+		PortStop  *types.Number `json:"port_stop"`
+
+		*Alias
+	}{
+		Alias: (*Alias)(dst),
+	}
+
+	err := json.Unmarshal(b, &aux)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.PortStart != nil {
+		if val, err := aux.PortStart.Int64(); err == nil {
+			dst.PortStart = &val
+		} else if string(*aux.PortStart) == "" {
+			var zero int64
+			dst.PortStart = &zero
+		}
+	}
+	if aux.PortStop != nil {
+		if val, err := aux.PortStop.Int64(); err == nil {
+			dst.PortStop = &val
+		} else if string(*aux.PortStop) == "" {
+			var zero int64
+			dst.PortStop = &zero
+		}
+	}
+
+	return nil
+}
+
 type TrafficRouteTargetDevices struct {
 	ClientMAC string `json:"client_mac,omitempty"`
-	Type      string `json:"type,omitempty"`
+	NetworkID string `json:"network_id,omitempty"`
+	Type      string `json:"type,omitempty"` // ALL_CLIENTS|CLIENT|NETWORK
 }
 
 func (dst *TrafficRouteTargetDevices) UnmarshalJSON(b []byte) error {

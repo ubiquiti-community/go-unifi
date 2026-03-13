@@ -7,6 +7,11 @@ import (
 	"context"
 )
 
+const (
+	TrafficRouteIPVersionV4 = "v4"
+	TrafficRouteIPVersionV6 = "v6"
+)
+
 func (c *ApiClient) ListTrafficRoute(ctx context.Context, site string) ([]TrafficRoute, error) {
 	return c.listTrafficRoute(ctx, site)
 }

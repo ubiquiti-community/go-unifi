@@ -12,22 +12,7 @@ func (c *ApiClient) ListFirewallZone(ctx context.Context, site string) ([]Firewa
 }
 
 func (c *ApiClient) GetFirewallZone(ctx context.Context, site, id string) (*FirewallZone, error) {
-	respBody, err := c.listFirewallZone(ctx, site)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(respBody) == 0 {
-		return nil, &NotFoundError{}
-	}
-
-	for _, val := range respBody {
-		if val.ID == id {
-			return &val, nil
-		}
-	}
-
-	return nil, &NotFoundError{}
+	return c.getFirewallZone(ctx, site, id)
 }
 
 func (c *ApiClient) DeleteFirewallZone(ctx context.Context, site, id string) error {

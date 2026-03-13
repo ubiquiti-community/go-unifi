@@ -1,31 +1,54 @@
 {
     "description": ".{0,128}",
-    "domains": [],
+    "domains": [
+        {
+            "domain": ".{1,256}",
+            "port_ranges": [
+                {
+                    "port_start": "[1-9][0-9]{0,4}",
+                    "port_stop": "[1-9][0-9]{0,4}"
+                }
+            ],
+            "ports": [
+                "[1-9][0-9]{0,4}"
+            ]
+        }
+    ],
     "enabled": "true|false",
     "ip_addresses": [
         {
             "ip_or_subnet": "",
-            "ip_version": "BOTH|IPV4|IPV6",
-            "port_ranges": [""],
-            "ports": ["[1-9][0-9]{0,4}"]
+            "ip_version": "v4|v6",
+            "port_ranges": [
+                {
+                    "port_start": "[1-9][0-9]{0,4}",
+                    "port_stop": "[1-9][0-9]{0,4}"
+                }
+            ],
+            "ports": [
+                "[1-9][0-9]{0,4}"
+            ]
         }
     ],
     "ip_ranges": [
         {
             "ip_start": "",
             "ip_stop": "",
-            "ip_version": "BOTH|IPV4|IPV6"
+            "ip_version": "v4|v6"
         }
     ],
     "kill_switch_enabled": "true|false",
-    "matching_target": "",
+    "matching_target": "DOMAIN|IP|INTERNET",
     "network_id": "",
     "next_hop": "",
-    "regions": [""],
+    "regions": [
+        ""
+    ],
     "target_devices": [
         {
             "client_mac": "",
-            "type": ""
+            "type": "ALL_CLIENTS|CLIENT|NETWORK",
+            "network_id": ""
         }
     ]
 }
