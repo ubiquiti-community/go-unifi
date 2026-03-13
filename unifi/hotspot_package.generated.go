@@ -67,6 +67,13 @@ type HotspotPackage struct {
 func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 	type Alias HotspotPackage
 	aux := &struct {
+		Hours                *types.Number `json:"hours"`
+		Index                *types.Number `json:"index"`
+		LimitDown            *types.Number `json:"limit_down"`
+		LimitQuota           *types.Number `json:"limit_quota"`
+		LimitUp              *types.Number `json:"limit_up"`
+		TrialDurationMinutes *types.Number `json:"trial_duration_minutes"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -75,6 +82,54 @@ func (dst *HotspotPackage) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Hours != nil {
+		if val, err := aux.Hours.Int64(); err == nil {
+			dst.Hours = &val
+		} else if string(*aux.Hours) == "" {
+			var zero int64
+			dst.Hours = &zero
+		}
+	}
+	if aux.Index != nil {
+		if val, err := aux.Index.Int64(); err == nil {
+			dst.Index = &val
+		} else if string(*aux.Index) == "" {
+			var zero int64
+			dst.Index = &zero
+		}
+	}
+	if aux.LimitDown != nil {
+		if val, err := aux.LimitDown.Int64(); err == nil {
+			dst.LimitDown = &val
+		} else if string(*aux.LimitDown) == "" {
+			var zero int64
+			dst.LimitDown = &zero
+		}
+	}
+	if aux.LimitQuota != nil {
+		if val, err := aux.LimitQuota.Int64(); err == nil {
+			dst.LimitQuota = &val
+		} else if string(*aux.LimitQuota) == "" {
+			var zero int64
+			dst.LimitQuota = &zero
+		}
+	}
+	if aux.LimitUp != nil {
+		if val, err := aux.LimitUp.Int64(); err == nil {
+			dst.LimitUp = &val
+		} else if string(*aux.LimitUp) == "" {
+			var zero int64
+			dst.LimitUp = &zero
+		}
+	}
+	if aux.TrialDurationMinutes != nil {
+		if val, err := aux.TrialDurationMinutes.Int64(); err == nil {
+			dst.TrialDurationMinutes = &val
+		} else if string(*aux.TrialDurationMinutes) == "" {
+			var zero int64
+			dst.TrialDurationMinutes = &zero
+		}
 	}
 
 	return nil

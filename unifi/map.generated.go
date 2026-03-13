@@ -51,6 +51,9 @@ type Map struct {
 func (dst *Map) UnmarshalJSON(b []byte) error {
 	type Alias Map
 	aux := &struct {
+		Tilt *types.Number `json:"tilt"`
+		Zoom *types.Number `json:"zoom"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -59,6 +62,22 @@ func (dst *Map) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Tilt != nil {
+		if val, err := aux.Tilt.Int64(); err == nil {
+			dst.Tilt = &val
+		} else if string(*aux.Tilt) == "" {
+			var zero int64
+			dst.Tilt = &zero
+		}
+	}
+	if aux.Zoom != nil {
+		if val, err := aux.Zoom.Int64(); err == nil {
+			dst.Zoom = &val
+		} else if string(*aux.Zoom) == "" {
+			var zero int64
+			dst.Zoom = &zero
+		}
 	}
 
 	return nil

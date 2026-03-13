@@ -78,6 +78,20 @@ type PortProfile struct {
 func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	type Alias PortProfile
 	aux := &struct {
+		Dot1XIDleTimeout           *types.Number `json:"dot1x_idle_timeout"`
+		EgressRateLimitKbps        *types.Number `json:"egress_rate_limit_kbps"`
+		PriorityQueue1Level        *types.Number `json:"priority_queue1_level"`
+		PriorityQueue2Level        *types.Number `json:"priority_queue2_level"`
+		PriorityQueue3Level        *types.Number `json:"priority_queue3_level"`
+		PriorityQueue4Level        *types.Number `json:"priority_queue4_level"`
+		Speed                      *types.Number `json:"speed"`
+		StormctrlBroadcastastLevel *types.Number `json:"stormctrl_bcast_level"`
+		StormctrlBroadcastastRate  *types.Number `json:"stormctrl_bcast_rate"`
+		StormctrlMcastLevel        *types.Number `json:"stormctrl_mcast_level"`
+		StormctrlMcastRate         *types.Number `json:"stormctrl_mcast_rate"`
+		StormctrlUcastLevel        *types.Number `json:"stormctrl_ucast_level"`
+		StormctrlUcastRate         *types.Number `json:"stormctrl_ucast_rate"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -86,6 +100,110 @@ func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Dot1XIDleTimeout != nil {
+		if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
+			dst.Dot1XIDleTimeout = &val
+		} else if string(*aux.Dot1XIDleTimeout) == "" {
+			var zero int64
+			dst.Dot1XIDleTimeout = &zero
+		}
+	}
+	if aux.EgressRateLimitKbps != nil {
+		if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
+			dst.EgressRateLimitKbps = &val
+		} else if string(*aux.EgressRateLimitKbps) == "" {
+			var zero int64
+			dst.EgressRateLimitKbps = &zero
+		}
+	}
+	if aux.PriorityQueue1Level != nil {
+		if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
+			dst.PriorityQueue1Level = &val
+		} else if string(*aux.PriorityQueue1Level) == "" {
+			var zero int64
+			dst.PriorityQueue1Level = &zero
+		}
+	}
+	if aux.PriorityQueue2Level != nil {
+		if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
+			dst.PriorityQueue2Level = &val
+		} else if string(*aux.PriorityQueue2Level) == "" {
+			var zero int64
+			dst.PriorityQueue2Level = &zero
+		}
+	}
+	if aux.PriorityQueue3Level != nil {
+		if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
+			dst.PriorityQueue3Level = &val
+		} else if string(*aux.PriorityQueue3Level) == "" {
+			var zero int64
+			dst.PriorityQueue3Level = &zero
+		}
+	}
+	if aux.PriorityQueue4Level != nil {
+		if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
+			dst.PriorityQueue4Level = &val
+		} else if string(*aux.PriorityQueue4Level) == "" {
+			var zero int64
+			dst.PriorityQueue4Level = &zero
+		}
+	}
+	if aux.Speed != nil {
+		if val, err := aux.Speed.Int64(); err == nil {
+			dst.Speed = &val
+		} else if string(*aux.Speed) == "" {
+			var zero int64
+			dst.Speed = &zero
+		}
+	}
+	if aux.StormctrlBroadcastastLevel != nil {
+		if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
+			dst.StormctrlBroadcastastLevel = &val
+		} else if string(*aux.StormctrlBroadcastastLevel) == "" {
+			var zero int64
+			dst.StormctrlBroadcastastLevel = &zero
+		}
+	}
+	if aux.StormctrlBroadcastastRate != nil {
+		if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
+			dst.StormctrlBroadcastastRate = &val
+		} else if string(*aux.StormctrlBroadcastastRate) == "" {
+			var zero int64
+			dst.StormctrlBroadcastastRate = &zero
+		}
+	}
+	if aux.StormctrlMcastLevel != nil {
+		if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
+			dst.StormctrlMcastLevel = &val
+		} else if string(*aux.StormctrlMcastLevel) == "" {
+			var zero int64
+			dst.StormctrlMcastLevel = &zero
+		}
+	}
+	if aux.StormctrlMcastRate != nil {
+		if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
+			dst.StormctrlMcastRate = &val
+		} else if string(*aux.StormctrlMcastRate) == "" {
+			var zero int64
+			dst.StormctrlMcastRate = &zero
+		}
+	}
+	if aux.StormctrlUcastLevel != nil {
+		if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
+			dst.StormctrlUcastLevel = &val
+		} else if string(*aux.StormctrlUcastLevel) == "" {
+			var zero int64
+			dst.StormctrlUcastLevel = &zero
+		}
+	}
+	if aux.StormctrlUcastRate != nil {
+		if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
+			dst.StormctrlUcastRate = &val
+		} else if string(*aux.StormctrlUcastRate) == "" {
+			var zero int64
+			dst.StormctrlUcastRate = &zero
+		}
 	}
 
 	return nil
@@ -101,6 +219,11 @@ type PortProfileQOSMarking struct {
 func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 	type Alias PortProfileQOSMarking
 	aux := &struct {
+		CosCode          *types.Number `json:"cos_code"`
+		DscpCode         *types.Number `json:"dscp_code"`
+		IPPrecedenceCode *types.Number `json:"ip_precedence_code"`
+		Queue            *types.Number `json:"queue"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -109,6 +232,38 @@ func (dst *PortProfileQOSMarking) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.CosCode != nil {
+		if val, err := aux.CosCode.Int64(); err == nil {
+			dst.CosCode = &val
+		} else if string(*aux.CosCode) == "" {
+			var zero int64
+			dst.CosCode = &zero
+		}
+	}
+	if aux.DscpCode != nil {
+		if val, err := aux.DscpCode.Int64(); err == nil {
+			dst.DscpCode = &val
+		} else if string(*aux.DscpCode) == "" {
+			var zero int64
+			dst.DscpCode = &zero
+		}
+	}
+	if aux.IPPrecedenceCode != nil {
+		if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+			dst.IPPrecedenceCode = &val
+		} else if string(*aux.IPPrecedenceCode) == "" {
+			var zero int64
+			dst.IPPrecedenceCode = &zero
+		}
+	}
+	if aux.Queue != nil {
+		if val, err := aux.Queue.Int64(); err == nil {
+			dst.Queue = &val
+		} else if string(*aux.Queue) == "" {
+			var zero int64
+			dst.Queue = &zero
+		}
 	}
 
 	return nil
@@ -126,6 +281,12 @@ type PortProfileQOSMatching struct {
 func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 	type Alias PortProfileQOSMatching
 	aux := &struct {
+		CosCode          *types.Number `json:"cos_code"`
+		DscpCode         *types.Number `json:"dscp_code"`
+		DstPort          *types.Number `json:"dst_port"`
+		IPPrecedenceCode *types.Number `json:"ip_precedence_code"`
+		SrcPort          *types.Number `json:"src_port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -134,6 +295,46 @@ func (dst *PortProfileQOSMatching) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.CosCode != nil {
+		if val, err := aux.CosCode.Int64(); err == nil {
+			dst.CosCode = &val
+		} else if string(*aux.CosCode) == "" {
+			var zero int64
+			dst.CosCode = &zero
+		}
+	}
+	if aux.DscpCode != nil {
+		if val, err := aux.DscpCode.Int64(); err == nil {
+			dst.DscpCode = &val
+		} else if string(*aux.DscpCode) == "" {
+			var zero int64
+			dst.DscpCode = &zero
+		}
+	}
+	if aux.DstPort != nil {
+		if val, err := aux.DstPort.Int64(); err == nil {
+			dst.DstPort = &val
+		} else if string(*aux.DstPort) == "" {
+			var zero int64
+			dst.DstPort = &zero
+		}
+	}
+	if aux.IPPrecedenceCode != nil {
+		if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+			dst.IPPrecedenceCode = &val
+		} else if string(*aux.IPPrecedenceCode) == "" {
+			var zero int64
+			dst.IPPrecedenceCode = &zero
+		}
+	}
+	if aux.SrcPort != nil {
+		if val, err := aux.SrcPort.Int64(); err == nil {
+			dst.SrcPort = &val
+		} else if string(*aux.SrcPort) == "" {
+			var zero int64
+			dst.SrcPort = &zero
+		}
 	}
 
 	return nil

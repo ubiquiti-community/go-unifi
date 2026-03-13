@@ -84,18 +84,23 @@ type Usg struct {
 func (dst *Usg) UnmarshalJSON(b []byte) error {
 	type Alias Usg
 	aux := &struct {
-		ICMPTimeout           types.Number `json:"icmp_timeout"`
-		OtherTimeout          types.Number `json:"other_timeout"`
-		TCPCloseTimeout       types.Number `json:"tcp_close_timeout"`
-		TCPCloseWaitTimeout   types.Number `json:"tcp_close_wait_timeout"`
-		TCPEstablishedTimeout types.Number `json:"tcp_established_timeout"`
-		TCPFinWaitTimeout     types.Number `json:"tcp_fin_wait_timeout"`
-		TCPLastAckTimeout     types.Number `json:"tcp_last_ack_timeout"`
-		TCPSynRecvTimeout     types.Number `json:"tcp_syn_recv_timeout"`
-		TCPSynSentTimeout     types.Number `json:"tcp_syn_sent_timeout"`
-		TCPTimeWaitTimeout    types.Number `json:"tcp_time_wait_timeout"`
-		UDPOtherTimeout       types.Number `json:"udp_other_timeout"`
-		UDPStreamTimeout      types.Number `json:"udp_stream_timeout"`
+		ArpCacheBaseReachable *types.Number `json:"arp_cache_base_reachable"`
+		DHCPRelayHopCount     *types.Number `json:"dhcp_relay_hop_count"`
+		DHCPRelayMaxSize      *types.Number `json:"dhcp_relay_max_size"`
+		DHCPRelayPort         *types.Number `json:"dhcp_relay_port"`
+		ICMPTimeout           types.Number  `json:"icmp_timeout"`
+		MssClampMss           *types.Number `json:"mss_clamp_mss"`
+		OtherTimeout          types.Number  `json:"other_timeout"`
+		TCPCloseTimeout       types.Number  `json:"tcp_close_timeout"`
+		TCPCloseWaitTimeout   types.Number  `json:"tcp_close_wait_timeout"`
+		TCPEstablishedTimeout types.Number  `json:"tcp_established_timeout"`
+		TCPFinWaitTimeout     types.Number  `json:"tcp_fin_wait_timeout"`
+		TCPLastAckTimeout     types.Number  `json:"tcp_last_ack_timeout"`
+		TCPSynRecvTimeout     types.Number  `json:"tcp_syn_recv_timeout"`
+		TCPSynSentTimeout     types.Number  `json:"tcp_syn_sent_timeout"`
+		TCPTimeWaitTimeout    types.Number  `json:"tcp_time_wait_timeout"`
+		UDPOtherTimeout       types.Number  `json:"udp_other_timeout"`
+		UDPStreamTimeout      types.Number  `json:"udp_stream_timeout"`
 
 		*Alias
 	}{
@@ -111,8 +116,48 @@ func (dst *Usg) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	if aux.ArpCacheBaseReachable != nil {
+		if val, err := aux.ArpCacheBaseReachable.Int64(); err == nil {
+			dst.ArpCacheBaseReachable = &val
+		} else if string(*aux.ArpCacheBaseReachable) == "" {
+			var zero int64
+			dst.ArpCacheBaseReachable = &zero
+		}
+	}
+	if aux.DHCPRelayHopCount != nil {
+		if val, err := aux.DHCPRelayHopCount.Int64(); err == nil {
+			dst.DHCPRelayHopCount = &val
+		} else if string(*aux.DHCPRelayHopCount) == "" {
+			var zero int64
+			dst.DHCPRelayHopCount = &zero
+		}
+	}
+	if aux.DHCPRelayMaxSize != nil {
+		if val, err := aux.DHCPRelayMaxSize.Int64(); err == nil {
+			dst.DHCPRelayMaxSize = &val
+		} else if string(*aux.DHCPRelayMaxSize) == "" {
+			var zero int64
+			dst.DHCPRelayMaxSize = &zero
+		}
+	}
+	if aux.DHCPRelayPort != nil {
+		if val, err := aux.DHCPRelayPort.Int64(); err == nil {
+			dst.DHCPRelayPort = &val
+		} else if string(*aux.DHCPRelayPort) == "" {
+			var zero int64
+			dst.DHCPRelayPort = &zero
+		}
+	}
 	if val, err := aux.ICMPTimeout.Int64(); err == nil {
 		dst.ICMPTimeout = val
+	}
+	if aux.MssClampMss != nil {
+		if val, err := aux.MssClampMss.Int64(); err == nil {
+			dst.MssClampMss = &val
+		} else if string(*aux.MssClampMss) == "" {
+			var zero int64
+			dst.MssClampMss = &zero
+		}
 	}
 	if val, err := aux.OtherTimeout.Int64(); err == nil {
 		dst.OtherTimeout = val

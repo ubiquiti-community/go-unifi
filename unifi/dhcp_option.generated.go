@@ -43,6 +43,8 @@ type DHCPOption struct {
 func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	type Alias DHCPOption
 	aux := &struct {
+		Width *types.Number `json:"width"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -51,6 +53,14 @@ func (dst *DHCPOption) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Width != nil {
+		if val, err := aux.Width.Int64(); err == nil {
+			dst.Width = &val
+		} else if string(*aux.Width) == "" {
+			var zero int64
+			dst.Width = &zero
+		}
 	}
 
 	return nil

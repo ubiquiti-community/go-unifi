@@ -88,6 +88,23 @@ type Hotspot2Conf struct {
 func (dst *Hotspot2Conf) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2Conf
 	aux := &struct {
+		AnqpDomainID         *types.Number `json:"anqp_domain_id"`
+		DeauthReqTimeout     *types.Number `json:"deauth_req_timeout"`
+		GasComebackDelay     *types.Number `json:"gas_comeback_delay"`
+		GasFragLimit         *types.Number `json:"gas_frag_limit"`
+		IPaddrTypeAvailV4    *types.Number `json:"ipaddr_type_avail_v4"`
+		IPaddrTypeAvailV6    *types.Number `json:"ipaddr_type_avail_v6"`
+		MetricsDownlinkLoad  *types.Number `json:"metrics_downlink_load"`
+		MetricsDownlinkSpeed *types.Number `json:"metrics_downlink_speed"`
+		MetricsMeasurement   *types.Number `json:"metrics_measurement"`
+		MetricsUplinkLoad    *types.Number `json:"metrics_uplink_load"`
+		MetricsUplinkSpeed   *types.Number `json:"metrics_uplink_speed"`
+		NetworkAuthType      *types.Number `json:"network_auth_type"`
+		NetworkType          *types.Number `json:"network_type"`
+		TCTimestamp          *types.Number `json:"t_c_timestamp"`
+		VenueGroup           *types.Number `json:"venue_group"`
+		VenueType            *types.Number `json:"venue_type"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -96,6 +113,134 @@ func (dst *Hotspot2Conf) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.AnqpDomainID != nil {
+		if val, err := aux.AnqpDomainID.Int64(); err == nil {
+			dst.AnqpDomainID = &val
+		} else if string(*aux.AnqpDomainID) == "" {
+			var zero int64
+			dst.AnqpDomainID = &zero
+		}
+	}
+	if aux.DeauthReqTimeout != nil {
+		if val, err := aux.DeauthReqTimeout.Int64(); err == nil {
+			dst.DeauthReqTimeout = &val
+		} else if string(*aux.DeauthReqTimeout) == "" {
+			var zero int64
+			dst.DeauthReqTimeout = &zero
+		}
+	}
+	if aux.GasComebackDelay != nil {
+		if val, err := aux.GasComebackDelay.Int64(); err == nil {
+			dst.GasComebackDelay = &val
+		} else if string(*aux.GasComebackDelay) == "" {
+			var zero int64
+			dst.GasComebackDelay = &zero
+		}
+	}
+	if aux.GasFragLimit != nil {
+		if val, err := aux.GasFragLimit.Int64(); err == nil {
+			dst.GasFragLimit = &val
+		} else if string(*aux.GasFragLimit) == "" {
+			var zero int64
+			dst.GasFragLimit = &zero
+		}
+	}
+	if aux.IPaddrTypeAvailV4 != nil {
+		if val, err := aux.IPaddrTypeAvailV4.Int64(); err == nil {
+			dst.IPaddrTypeAvailV4 = &val
+		} else if string(*aux.IPaddrTypeAvailV4) == "" {
+			var zero int64
+			dst.IPaddrTypeAvailV4 = &zero
+		}
+	}
+	if aux.IPaddrTypeAvailV6 != nil {
+		if val, err := aux.IPaddrTypeAvailV6.Int64(); err == nil {
+			dst.IPaddrTypeAvailV6 = &val
+		} else if string(*aux.IPaddrTypeAvailV6) == "" {
+			var zero int64
+			dst.IPaddrTypeAvailV6 = &zero
+		}
+	}
+	if aux.MetricsDownlinkLoad != nil {
+		if val, err := aux.MetricsDownlinkLoad.Int64(); err == nil {
+			dst.MetricsDownlinkLoad = &val
+		} else if string(*aux.MetricsDownlinkLoad) == "" {
+			var zero int64
+			dst.MetricsDownlinkLoad = &zero
+		}
+	}
+	if aux.MetricsDownlinkSpeed != nil {
+		if val, err := aux.MetricsDownlinkSpeed.Int64(); err == nil {
+			dst.MetricsDownlinkSpeed = &val
+		} else if string(*aux.MetricsDownlinkSpeed) == "" {
+			var zero int64
+			dst.MetricsDownlinkSpeed = &zero
+		}
+	}
+	if aux.MetricsMeasurement != nil {
+		if val, err := aux.MetricsMeasurement.Int64(); err == nil {
+			dst.MetricsMeasurement = &val
+		} else if string(*aux.MetricsMeasurement) == "" {
+			var zero int64
+			dst.MetricsMeasurement = &zero
+		}
+	}
+	if aux.MetricsUplinkLoad != nil {
+		if val, err := aux.MetricsUplinkLoad.Int64(); err == nil {
+			dst.MetricsUplinkLoad = &val
+		} else if string(*aux.MetricsUplinkLoad) == "" {
+			var zero int64
+			dst.MetricsUplinkLoad = &zero
+		}
+	}
+	if aux.MetricsUplinkSpeed != nil {
+		if val, err := aux.MetricsUplinkSpeed.Int64(); err == nil {
+			dst.MetricsUplinkSpeed = &val
+		} else if string(*aux.MetricsUplinkSpeed) == "" {
+			var zero int64
+			dst.MetricsUplinkSpeed = &zero
+		}
+	}
+	if aux.NetworkAuthType != nil {
+		if val, err := aux.NetworkAuthType.Int64(); err == nil {
+			dst.NetworkAuthType = &val
+		} else if string(*aux.NetworkAuthType) == "" {
+			var zero int64
+			dst.NetworkAuthType = &zero
+		}
+	}
+	if aux.NetworkType != nil {
+		if val, err := aux.NetworkType.Int64(); err == nil {
+			dst.NetworkType = &val
+		} else if string(*aux.NetworkType) == "" {
+			var zero int64
+			dst.NetworkType = &zero
+		}
+	}
+	if aux.TCTimestamp != nil {
+		if val, err := aux.TCTimestamp.Int64(); err == nil {
+			dst.TCTimestamp = &val
+		} else if string(*aux.TCTimestamp) == "" {
+			var zero int64
+			dst.TCTimestamp = &zero
+		}
+	}
+	if aux.VenueGroup != nil {
+		if val, err := aux.VenueGroup.Int64(); err == nil {
+			dst.VenueGroup = &val
+		} else if string(*aux.VenueGroup) == "" {
+			var zero int64
+			dst.VenueGroup = &zero
+		}
+	}
+	if aux.VenueType != nil {
+		if val, err := aux.VenueType.Int64(); err == nil {
+			dst.VenueType = &val
+		} else if string(*aux.VenueType) == "" {
+			var zero int64
+			dst.VenueType = &zero
+		}
 	}
 
 	return nil
@@ -110,6 +255,8 @@ type Hotspot2ConfCapab struct {
 func (dst *Hotspot2ConfCapab) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2ConfCapab
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -118,6 +265,14 @@ func (dst *Hotspot2ConfCapab) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil
@@ -132,6 +287,9 @@ type Hotspot2ConfCellularNetworkList struct {
 func (dst *Hotspot2ConfCellularNetworkList) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2ConfCellularNetworkList
 	aux := &struct {
+		Mcc *types.Number `json:"mcc"`
+		Mnc *types.Number `json:"mnc"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -140,6 +298,22 @@ func (dst *Hotspot2ConfCellularNetworkList) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Mcc != nil {
+		if val, err := aux.Mcc.Int64(); err == nil {
+			dst.Mcc = &val
+		} else if string(*aux.Mcc) == "" {
+			var zero int64
+			dst.Mcc = &zero
+		}
+	}
+	if aux.Mnc != nil {
+		if val, err := aux.Mnc.Int64(); err == nil {
+			dst.Mnc = &val
+		} else if string(*aux.Mnc) == "" {
+			var zero int64
+			dst.Mnc = &zero
+		}
 	}
 
 	return nil
@@ -221,6 +395,10 @@ type Hotspot2ConfIcons struct {
 func (dst *Hotspot2ConfIcons) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2ConfIcons
 	aux := &struct {
+		Height *types.Number `json:"height"`
+		Size   *types.Number `json:"size"`
+		Width  *types.Number `json:"width"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -229,6 +407,30 @@ func (dst *Hotspot2ConfIcons) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Height != nil {
+		if val, err := aux.Height.Int64(); err == nil {
+			dst.Height = &val
+		} else if string(*aux.Height) == "" {
+			var zero int64
+			dst.Height = &zero
+		}
+	}
+	if aux.Size != nil {
+		if val, err := aux.Size.Int64(); err == nil {
+			dst.Size = &val
+		} else if string(*aux.Size) == "" {
+			var zero int64
+			dst.Size = &zero
+		}
+	}
+	if aux.Width != nil {
+		if val, err := aux.Width.Int64(); err == nil {
+			dst.Width = &val
+		} else if string(*aux.Width) == "" {
+			var zero int64
+			dst.Width = &zero
+		}
 	}
 
 	return nil
@@ -246,6 +448,9 @@ type Hotspot2ConfNaiRealmList struct {
 func (dst *Hotspot2ConfNaiRealmList) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2ConfNaiRealmList
 	aux := &struct {
+		EapMethod *types.Number `json:"eap_method"`
+		Encoding  *types.Number `json:"encoding"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -254,6 +459,22 @@ func (dst *Hotspot2ConfNaiRealmList) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.EapMethod != nil {
+		if val, err := aux.EapMethod.Int64(); err == nil {
+			dst.EapMethod = &val
+		} else if string(*aux.EapMethod) == "" {
+			var zero int64
+			dst.EapMethod = &zero
+		}
+	}
+	if aux.Encoding != nil {
+		if val, err := aux.Encoding.Int64(); err == nil {
+			dst.Encoding = &val
+		} else if string(*aux.Encoding) == "" {
+			var zero int64
+			dst.Encoding = &zero
+		}
 	}
 
 	return nil
@@ -295,6 +516,9 @@ type Hotspot2ConfQOSMapDcsp struct {
 func (dst *Hotspot2ConfQOSMapDcsp) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2ConfQOSMapDcsp
 	aux := &struct {
+		High *types.Number `json:"high"`
+		Low  *types.Number `json:"low"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -303,6 +527,22 @@ func (dst *Hotspot2ConfQOSMapDcsp) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.High != nil {
+		if val, err := aux.High.Int64(); err == nil {
+			dst.High = &val
+		} else if string(*aux.High) == "" {
+			var zero int64
+			dst.High = &zero
+		}
+	}
+	if aux.Low != nil {
+		if val, err := aux.Low.Int64(); err == nil {
+			dst.Low = &val
+		} else if string(*aux.Low) == "" {
+			var zero int64
+			dst.Low = &zero
+		}
 	}
 
 	return nil
@@ -316,6 +556,9 @@ type Hotspot2ConfQOSMapExceptions struct {
 func (dst *Hotspot2ConfQOSMapExceptions) UnmarshalJSON(b []byte) error {
 	type Alias Hotspot2ConfQOSMapExceptions
 	aux := &struct {
+		Dcsp *types.Number `json:"dcsp"`
+		Up   *types.Number `json:"up"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -324,6 +567,22 @@ func (dst *Hotspot2ConfQOSMapExceptions) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Dcsp != nil {
+		if val, err := aux.Dcsp.Int64(); err == nil {
+			dst.Dcsp = &val
+		} else if string(*aux.Dcsp) == "" {
+			var zero int64
+			dst.Dcsp = &zero
+		}
+	}
+	if aux.Up != nil {
+		if val, err := aux.Up.Int64(); err == nil {
+			dst.Up = &val
+		} else if string(*aux.Up) == "" {
+			var zero int64
+			dst.Up = &zero
+		}
 	}
 
 	return nil

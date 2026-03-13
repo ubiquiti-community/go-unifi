@@ -68,6 +68,8 @@ type FirewallRule struct {
 func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 	type Alias FirewallRule
 	aux := &struct {
+		RuleIndex *types.Number `json:"rule_index"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -76,6 +78,14 @@ func (dst *FirewallRule) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.RuleIndex != nil {
+		if val, err := aux.RuleIndex.Int64(); err == nil {
+			dst.RuleIndex = &val
+		} else if string(*aux.RuleIndex) == "" {
+			var zero int64
+			dst.RuleIndex = &zero
+		}
 	}
 
 	return nil

@@ -13,8 +13,8 @@ func TestAccountMarshalJSON(t *testing.T) {
 		expectedJSON string
 		acc          unifi.Account
 	}{
-		"empty strings": {
-			`{"vlan":"","tunnel_type":"","tunnel_medium_type":""}`,
+		"empty (nil pointers omitted)": {
+			`{}`,
 			unifi.Account{},
 		},
 		"response": {

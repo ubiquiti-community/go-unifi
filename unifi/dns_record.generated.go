@@ -46,9 +46,10 @@ type DNSRecord struct {
 func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 	type Alias DNSRecord
 	aux := &struct {
-		Priority types.Number `json:"priority"`
-		Ttl      types.Number `json:"ttl"`
-		Weight   types.Number `json:"weight"`
+		Port     *types.Number `json:"port"`
+		Priority types.Number  `json:"priority"`
+		Ttl      types.Number  `json:"ttl"`
+		Weight   types.Number  `json:"weight"`
 
 		*Alias
 	}{
@@ -58,6 +59,14 @@ func (dst *DNSRecord) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 	if val, err := aux.Priority.Int64(); err == nil {
 		dst.Priority = val

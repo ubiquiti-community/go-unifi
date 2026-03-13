@@ -75,7 +75,7 @@ func TestResourceTypes(t *testing.T) {
 		"Note":    NewFieldInfo("Note", "note", "string", ".{0,1024}", true, false, false, ""),
 		"Date":    NewFieldInfo("Date", "date", "string", "^$|^(20[0-9]{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])Z?$", false, false, false, ""),
 		"MAC":     NewFieldInfo("MAC", "mac", "string", "^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$", true, false, false, ""),
-		"Number":  NewFieldInfo("Number", "number", "int64", "", true, false, false, "types.Number"),
+		"Number":  NewFieldInfo("Number", "number", "int64", "", true, false, true, "types.Number"),
 		"Boolean": NewFieldInfo("Boolean", "boolean", "bool", "", false, false, false, ""),
 		"NestedType": {
 			FieldName:       "NestedType",
@@ -83,6 +83,7 @@ func TestResourceTypes(t *testing.T) {
 			FieldType:       "StructNestedType",
 			FieldValidation: "",
 			OmitEmpty:       true,
+			IsPointer:       true,
 			IsArray:         false,
 			Fields: map[string]*FieldInfo{
 				"NestedFieldModified": NewFieldInfo("NestedFieldModified", "nested_field", "string", "^$", false, false, false, ""),
@@ -94,6 +95,7 @@ func TestResourceTypes(t *testing.T) {
 			FieldType:       "StructNestedTypeArray",
 			FieldValidation: "",
 			OmitEmpty:       true,
+			IsPointer:       false,
 			IsArray:         true,
 			Fields: map[string]*FieldInfo{
 				"NestedFieldModified": NewFieldInfo("NestedFieldModified", "nested_field", "string", "^$", false, false, false, ""),

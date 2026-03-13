@@ -55,6 +55,9 @@ type Nat struct {
 func (dst *Nat) UnmarshalJSON(b []byte) error {
 	type Alias Nat
 	aux := &struct {
+		Port      *types.Number `json:"port"`
+		RuleIndex *types.Number `json:"rule_index"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -63,6 +66,22 @@ func (dst *Nat) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
+	}
+	if aux.RuleIndex != nil {
+		if val, err := aux.RuleIndex.Int64(); err == nil {
+			dst.RuleIndex = &val
+		} else if string(*aux.RuleIndex) == "" {
+			var zero int64
+			dst.RuleIndex = &zero
+		}
 	}
 
 	return nil
@@ -81,6 +100,8 @@ type NatDestinationFilter struct {
 func (dst *NatDestinationFilter) UnmarshalJSON(b []byte) error {
 	type Alias NatDestinationFilter
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -89,6 +110,14 @@ func (dst *NatDestinationFilter) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil
@@ -107,6 +136,8 @@ type NatSourceFilter struct {
 func (dst *NatSourceFilter) UnmarshalJSON(b []byte) error {
 	type Alias NatSourceFilter
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -115,6 +146,14 @@ func (dst *NatSourceFilter) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil

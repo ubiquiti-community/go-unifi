@@ -72,6 +72,8 @@ type TrafficRouteIPAddresses struct {
 func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
 	type Alias TrafficRouteIPAddresses
 	aux := &struct {
+		Ports []types.Number `json:"ports"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -80,6 +82,12 @@ func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	dst.Ports = make([]int64, len(aux.Ports))
+	for i, v := range aux.Ports {
+		if val, err := v.Int64(); err == nil {
+			dst.Ports[i] = val
+		}
 	}
 
 	return nil

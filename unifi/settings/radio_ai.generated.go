@@ -47,6 +47,12 @@ type RadioAi struct {
 func (dst *RadioAi) UnmarshalJSON(b []byte) error {
 	type Alias RadioAi
 	aux := &struct {
+		Channels6E []types.Number `json:"channels_6e"`
+		ChannelsNa []types.Number `json:"channels_na"`
+		ChannelsNg []types.Number `json:"channels_ng"`
+		HtModesNa  []types.Number `json:"ht_modes_na"`
+		HtModesNg  []types.Number `json:"ht_modes_ng"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -61,6 +67,36 @@ func (dst *RadioAi) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	dst.Channels6E = make([]int64, len(aux.Channels6E))
+	for i, v := range aux.Channels6E {
+		if val, err := v.Int64(); err == nil {
+			dst.Channels6E[i] = val
+		}
+	}
+	dst.ChannelsNa = make([]int64, len(aux.ChannelsNa))
+	for i, v := range aux.ChannelsNa {
+		if val, err := v.Int64(); err == nil {
+			dst.ChannelsNa[i] = val
+		}
+	}
+	dst.ChannelsNg = make([]int64, len(aux.ChannelsNg))
+	for i, v := range aux.ChannelsNg {
+		if val, err := v.Int64(); err == nil {
+			dst.ChannelsNg[i] = val
+		}
+	}
+	dst.HtModesNa = make([]int64, len(aux.HtModesNa))
+	for i, v := range aux.HtModesNa {
+		if val, err := v.Int64(); err == nil {
+			dst.HtModesNa[i] = val
+		}
+	}
+	dst.HtModesNg = make([]int64, len(aux.HtModesNg))
+	for i, v := range aux.HtModesNg {
+		if val, err := v.Int64(); err == nil {
+			dst.HtModesNg[i] = val
+		}
+	}
 
 	return nil
 }
@@ -74,6 +110,9 @@ type SettingRadioAiChannelsBlacklist struct {
 func (dst *SettingRadioAiChannelsBlacklist) UnmarshalJSON(b []byte) error {
 	type Alias SettingRadioAiChannelsBlacklist
 	aux := &struct {
+		Channel      *types.Number `json:"channel"`
+		ChannelWidth *types.Number `json:"channel_width"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -82,6 +121,22 @@ func (dst *SettingRadioAiChannelsBlacklist) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Channel != nil {
+		if val, err := aux.Channel.Int64(); err == nil {
+			dst.Channel = &val
+		} else if string(*aux.Channel) == "" {
+			var zero int64
+			dst.Channel = &zero
+		}
+	}
+	if aux.ChannelWidth != nil {
+		if val, err := aux.ChannelWidth.Int64(); err == nil {
+			dst.ChannelWidth = &val
+		} else if string(*aux.ChannelWidth) == "" {
+			var zero int64
+			dst.ChannelWidth = &zero
+		}
 	}
 
 	return nil
@@ -96,6 +151,8 @@ type SettingRadioAiRadiosConfiguration struct {
 func (dst *SettingRadioAiRadiosConfiguration) UnmarshalJSON(b []byte) error {
 	type Alias SettingRadioAiRadiosConfiguration
 	aux := &struct {
+		ChannelWidth *types.Number `json:"channel_width"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -104,6 +161,14 @@ func (dst *SettingRadioAiRadiosConfiguration) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.ChannelWidth != nil {
+		if val, err := aux.ChannelWidth.Int64(); err == nil {
+			dst.ChannelWidth = &val
+		} else if string(*aux.ChannelWidth) == "" {
+			var zero int64
+			dst.ChannelWidth = &zero
+		}
 	}
 
 	return nil

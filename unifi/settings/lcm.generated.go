@@ -34,6 +34,9 @@ type Lcm struct {
 func (dst *Lcm) UnmarshalJSON(b []byte) error {
 	type Alias Lcm
 	aux := &struct {
+		Brightness  *types.Number `json:"brightness"`
+		IDleTimeout *types.Number `json:"idle_timeout"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -47,6 +50,22 @@ func (dst *Lcm) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Brightness != nil {
+		if val, err := aux.Brightness.Int64(); err == nil {
+			dst.Brightness = &val
+		} else if string(*aux.Brightness) == "" {
+			var zero int64
+			dst.Brightness = &zero
+		}
+	}
+	if aux.IDleTimeout != nil {
+		if val, err := aux.IDleTimeout.Int64(); err == nil {
+			dst.IDleTimeout = &val
+		} else if string(*aux.IDleTimeout) == "" {
+			var zero int64
+			dst.IDleTimeout = &zero
+		}
 	}
 
 	return nil

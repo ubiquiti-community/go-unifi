@@ -40,6 +40,9 @@ type Rsyslogd struct {
 func (dst *Rsyslogd) UnmarshalJSON(b []byte) error {
 	type Alias Rsyslogd
 	aux := &struct {
+		NetconsolePort *types.Number `json:"netconsole_port"`
+		Port           *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -53,6 +56,22 @@ func (dst *Rsyslogd) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.NetconsolePort != nil {
+		if val, err := aux.NetconsolePort.Int64(); err == nil {
+			dst.NetconsolePort = &val
+		} else if string(*aux.NetconsolePort) == "" {
+			var zero int64
+			dst.NetconsolePort = &zero
+		}
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil

@@ -73,6 +73,16 @@ type SuperMgmt struct {
 func (dst *SuperMgmt) UnmarshalJSON(b []byte) error {
 	type Alias SuperMgmt
 	aux := &struct {
+		AutobackupDays                           *types.Number `json:"autobackup_days"`
+		AutobackupMaxFiles                       *types.Number `json:"autobackup_max_files"`
+		DataRetentionTimeInHoursFor5MinutesScale *types.Number `json:"data_retention_time_in_hours_for_5minutes_scale"`
+		DataRetentionTimeInHoursForDailyScale    *types.Number `json:"data_retention_time_in_hours_for_daily_scale"`
+		DataRetentionTimeInHoursForHourlyScale   *types.Number `json:"data_retention_time_in_hours_for_hourly_scale"`
+		DataRetentionTimeInHoursForMonthlyScale  *types.Number `json:"data_retention_time_in_hours_for_monthly_scale"`
+		DataRetentionTimeInHoursForOthers        *types.Number `json:"data_retention_time_in_hours_for_others"`
+		MinimumUsableHdSpace                     *types.Number `json:"minimum_usable_hd_space"`
+		MinimumUsableSdSpace                     *types.Number `json:"minimum_usable_sd_space"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -86,6 +96,78 @@ func (dst *SuperMgmt) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.AutobackupDays != nil {
+		if val, err := aux.AutobackupDays.Int64(); err == nil {
+			dst.AutobackupDays = &val
+		} else if string(*aux.AutobackupDays) == "" {
+			var zero int64
+			dst.AutobackupDays = &zero
+		}
+	}
+	if aux.AutobackupMaxFiles != nil {
+		if val, err := aux.AutobackupMaxFiles.Int64(); err == nil {
+			dst.AutobackupMaxFiles = &val
+		} else if string(*aux.AutobackupMaxFiles) == "" {
+			var zero int64
+			dst.AutobackupMaxFiles = &zero
+		}
+	}
+	if aux.DataRetentionTimeInHoursFor5MinutesScale != nil {
+		if val, err := aux.DataRetentionTimeInHoursFor5MinutesScale.Int64(); err == nil {
+			dst.DataRetentionTimeInHoursFor5MinutesScale = &val
+		} else if string(*aux.DataRetentionTimeInHoursFor5MinutesScale) == "" {
+			var zero int64
+			dst.DataRetentionTimeInHoursFor5MinutesScale = &zero
+		}
+	}
+	if aux.DataRetentionTimeInHoursForDailyScale != nil {
+		if val, err := aux.DataRetentionTimeInHoursForDailyScale.Int64(); err == nil {
+			dst.DataRetentionTimeInHoursForDailyScale = &val
+		} else if string(*aux.DataRetentionTimeInHoursForDailyScale) == "" {
+			var zero int64
+			dst.DataRetentionTimeInHoursForDailyScale = &zero
+		}
+	}
+	if aux.DataRetentionTimeInHoursForHourlyScale != nil {
+		if val, err := aux.DataRetentionTimeInHoursForHourlyScale.Int64(); err == nil {
+			dst.DataRetentionTimeInHoursForHourlyScale = &val
+		} else if string(*aux.DataRetentionTimeInHoursForHourlyScale) == "" {
+			var zero int64
+			dst.DataRetentionTimeInHoursForHourlyScale = &zero
+		}
+	}
+	if aux.DataRetentionTimeInHoursForMonthlyScale != nil {
+		if val, err := aux.DataRetentionTimeInHoursForMonthlyScale.Int64(); err == nil {
+			dst.DataRetentionTimeInHoursForMonthlyScale = &val
+		} else if string(*aux.DataRetentionTimeInHoursForMonthlyScale) == "" {
+			var zero int64
+			dst.DataRetentionTimeInHoursForMonthlyScale = &zero
+		}
+	}
+	if aux.DataRetentionTimeInHoursForOthers != nil {
+		if val, err := aux.DataRetentionTimeInHoursForOthers.Int64(); err == nil {
+			dst.DataRetentionTimeInHoursForOthers = &val
+		} else if string(*aux.DataRetentionTimeInHoursForOthers) == "" {
+			var zero int64
+			dst.DataRetentionTimeInHoursForOthers = &zero
+		}
+	}
+	if aux.MinimumUsableHdSpace != nil {
+		if val, err := aux.MinimumUsableHdSpace.Int64(); err == nil {
+			dst.MinimumUsableHdSpace = &val
+		} else if string(*aux.MinimumUsableHdSpace) == "" {
+			var zero int64
+			dst.MinimumUsableHdSpace = &zero
+		}
+	}
+	if aux.MinimumUsableSdSpace != nil {
+		if val, err := aux.MinimumUsableSdSpace.Int64(); err == nil {
+			dst.MinimumUsableSdSpace = &val
+		} else if string(*aux.MinimumUsableSdSpace) == "" {
+			var zero int64
+			dst.MinimumUsableSdSpace = &zero
+		}
 	}
 
 	return nil

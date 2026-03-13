@@ -31,6 +31,8 @@ type RoamingAssistant struct {
 func (dst *RoamingAssistant) UnmarshalJSON(b []byte) error {
 	type Alias RoamingAssistant
 	aux := &struct {
+		Rssi *types.Number `json:"rssi"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -44,6 +46,14 @@ func (dst *RoamingAssistant) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Rssi != nil {
+		if val, err := aux.Rssi.Int64(); err == nil {
+			dst.Rssi = &val
+		} else if string(*aux.Rssi) == "" {
+			var zero int64
+			dst.Rssi = &zero
+		}
 	}
 
 	return nil

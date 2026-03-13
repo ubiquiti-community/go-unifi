@@ -40,6 +40,13 @@ type Netflow struct {
 func (dst *Netflow) UnmarshalJSON(b []byte) error {
 	type Alias Netflow
 	aux := &struct {
+		EngineID        *types.Number `json:"engine_id"`
+		ExportFrequency *types.Number `json:"export_frequency"`
+		Port            *types.Number `json:"port"`
+		RefreshRate     *types.Number `json:"refresh_rate"`
+		SamplingRate    *types.Number `json:"sampling_rate"`
+		Version         *types.Number `json:"version"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -53,6 +60,54 @@ func (dst *Netflow) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.EngineID != nil {
+		if val, err := aux.EngineID.Int64(); err == nil {
+			dst.EngineID = &val
+		} else if string(*aux.EngineID) == "" {
+			var zero int64
+			dst.EngineID = &zero
+		}
+	}
+	if aux.ExportFrequency != nil {
+		if val, err := aux.ExportFrequency.Int64(); err == nil {
+			dst.ExportFrequency = &val
+		} else if string(*aux.ExportFrequency) == "" {
+			var zero int64
+			dst.ExportFrequency = &zero
+		}
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
+	}
+	if aux.RefreshRate != nil {
+		if val, err := aux.RefreshRate.Int64(); err == nil {
+			dst.RefreshRate = &val
+		} else if string(*aux.RefreshRate) == "" {
+			var zero int64
+			dst.RefreshRate = &zero
+		}
+	}
+	if aux.SamplingRate != nil {
+		if val, err := aux.SamplingRate.Int64(); err == nil {
+			dst.SamplingRate = &val
+		} else if string(*aux.SamplingRate) == "" {
+			var zero int64
+			dst.SamplingRate = &zero
+		}
+	}
+	if aux.Version != nil {
+		if val, err := aux.Version.Int64(); err == nil {
+			dst.Version = &val
+		} else if string(*aux.Version) == "" {
+			var zero int64
+			dst.Version = &zero
+		}
 	}
 
 	return nil

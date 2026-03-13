@@ -39,6 +39,13 @@ type GlobalAp struct {
 func (dst *GlobalAp) UnmarshalJSON(b []byte) error {
 	type Alias GlobalAp
 	aux := &struct {
+		NaChannelSize   *types.Number `json:"na_channel_size"`
+		NaTxPower       *types.Number `json:"na_tx_power"`
+		NgChannelSize   *types.Number `json:"ng_channel_size"`
+		NgTxPower       *types.Number `json:"ng_tx_power"`
+		SixEChannelSize *types.Number `json:"6e_channel_size"`
+		SixETxPower     *types.Number `json:"6e_tx_power"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -52,6 +59,54 @@ func (dst *GlobalAp) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.NaChannelSize != nil {
+		if val, err := aux.NaChannelSize.Int64(); err == nil {
+			dst.NaChannelSize = &val
+		} else if string(*aux.NaChannelSize) == "" {
+			var zero int64
+			dst.NaChannelSize = &zero
+		}
+	}
+	if aux.NaTxPower != nil {
+		if val, err := aux.NaTxPower.Int64(); err == nil {
+			dst.NaTxPower = &val
+		} else if string(*aux.NaTxPower) == "" {
+			var zero int64
+			dst.NaTxPower = &zero
+		}
+	}
+	if aux.NgChannelSize != nil {
+		if val, err := aux.NgChannelSize.Int64(); err == nil {
+			dst.NgChannelSize = &val
+		} else if string(*aux.NgChannelSize) == "" {
+			var zero int64
+			dst.NgChannelSize = &zero
+		}
+	}
+	if aux.NgTxPower != nil {
+		if val, err := aux.NgTxPower.Int64(); err == nil {
+			dst.NgTxPower = &val
+		} else if string(*aux.NgTxPower) == "" {
+			var zero int64
+			dst.NgTxPower = &zero
+		}
+	}
+	if aux.SixEChannelSize != nil {
+		if val, err := aux.SixEChannelSize.Int64(); err == nil {
+			dst.SixEChannelSize = &val
+		} else if string(*aux.SixEChannelSize) == "" {
+			var zero int64
+			dst.SixEChannelSize = &zero
+		}
+	}
+	if aux.SixETxPower != nil {
+		if val, err := aux.SixETxPower.Int64(); err == nil {
+			dst.SixETxPower = &val
+		} else if string(*aux.SixETxPower) == "" {
+			var zero int64
+			dst.SixETxPower = &zero
+		}
 	}
 
 	return nil

@@ -38,6 +38,8 @@ type SuperSmtp struct {
 func (dst *SuperSmtp) UnmarshalJSON(b []byte) error {
 	type Alias SuperSmtp
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -51,6 +53,14 @@ func (dst *SuperSmtp) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil

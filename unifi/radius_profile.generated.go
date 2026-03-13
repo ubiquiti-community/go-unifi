@@ -55,6 +55,8 @@ type RADIUSProfile struct {
 func (dst *RADIUSProfile) UnmarshalJSON(b []byte) error {
 	type Alias RADIUSProfile
 	aux := &struct {
+		InterimUpdateInterval *types.Number `json:"interim_update_interval"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -63,6 +65,14 @@ func (dst *RADIUSProfile) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.InterimUpdateInterval != nil {
+		if val, err := aux.InterimUpdateInterval.Int64(); err == nil {
+			dst.InterimUpdateInterval = &val
+		} else if string(*aux.InterimUpdateInterval) == "" {
+			var zero int64
+			dst.InterimUpdateInterval = &zero
+		}
 	}
 
 	return nil
@@ -77,6 +87,8 @@ type RADIUSProfileAcctServers struct {
 func (dst *RADIUSProfileAcctServers) UnmarshalJSON(b []byte) error {
 	type Alias RADIUSProfileAcctServers
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -85,6 +97,14 @@ func (dst *RADIUSProfileAcctServers) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil
@@ -99,6 +119,8 @@ type RADIUSProfileAuthServers struct {
 func (dst *RADIUSProfileAuthServers) UnmarshalJSON(b []byte) error {
 	type Alias RADIUSProfileAuthServers
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -107,6 +129,14 @@ func (dst *RADIUSProfileAuthServers) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil

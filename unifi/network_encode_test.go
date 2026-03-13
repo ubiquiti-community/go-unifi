@@ -304,7 +304,6 @@ func TestMarshalNetworkVLANOnly(t *testing.T) {
 		"dhcpd_enabled",
 		"wan_type",
 		"wireguard_interface",
-		"igmp_snooping",
 	}
 
 	checkJSONFields(t, data, expectedFields, unexpectedFields)

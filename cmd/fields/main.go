@@ -770,8 +770,7 @@ func (r *ResourceInfo) fieldInfoFromValidation(name string, validation any) (*Fi
 				}
 
 				omitEmpty = true
-				fieldInfo = NewFieldInfo(fieldName, name, fields.Int, fieldValidation, omitEmpty, false, true, "")
-				// fieldInfo.CustomUnmarshalType = fields.Number
+				fieldInfo = NewFieldInfo(fieldName, name, fields.Int, fieldValidation, omitEmpty, false, true, fields.Number)
 				return fieldInfo, r.FieldProcessor(fieldName, fieldInfo)
 			}
 		}

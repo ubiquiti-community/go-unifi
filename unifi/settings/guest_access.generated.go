@@ -126,6 +126,13 @@ type GuestAccess struct {
 func (dst *GuestAccess) UnmarshalJSON(b []byte) error {
 	type Alias GuestAccess
 	aux := &struct {
+		ExpireNumber               *types.Number `json:"expire_number"`
+		ExpireUnit                 *types.Number `json:"expire_unit"`
+		PortalCustomizedBoxOpacity *types.Number `json:"portal_customized_box_opacity"`
+		PortalCustomizedBoxRADIUS  *types.Number `json:"portal_customized_box_radius"`
+		PortalCustomizedLogoSize   *types.Number `json:"portal_customized_logo_size"`
+		RADIUSDisconnectPort       *types.Number `json:"radius_disconnect_port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -139,6 +146,54 @@ func (dst *GuestAccess) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.ExpireNumber != nil {
+		if val, err := aux.ExpireNumber.Int64(); err == nil {
+			dst.ExpireNumber = &val
+		} else if string(*aux.ExpireNumber) == "" {
+			var zero int64
+			dst.ExpireNumber = &zero
+		}
+	}
+	if aux.ExpireUnit != nil {
+		if val, err := aux.ExpireUnit.Int64(); err == nil {
+			dst.ExpireUnit = &val
+		} else if string(*aux.ExpireUnit) == "" {
+			var zero int64
+			dst.ExpireUnit = &zero
+		}
+	}
+	if aux.PortalCustomizedBoxOpacity != nil {
+		if val, err := aux.PortalCustomizedBoxOpacity.Int64(); err == nil {
+			dst.PortalCustomizedBoxOpacity = &val
+		} else if string(*aux.PortalCustomizedBoxOpacity) == "" {
+			var zero int64
+			dst.PortalCustomizedBoxOpacity = &zero
+		}
+	}
+	if aux.PortalCustomizedBoxRADIUS != nil {
+		if val, err := aux.PortalCustomizedBoxRADIUS.Int64(); err == nil {
+			dst.PortalCustomizedBoxRADIUS = &val
+		} else if string(*aux.PortalCustomizedBoxRADIUS) == "" {
+			var zero int64
+			dst.PortalCustomizedBoxRADIUS = &zero
+		}
+	}
+	if aux.PortalCustomizedLogoSize != nil {
+		if val, err := aux.PortalCustomizedLogoSize.Int64(); err == nil {
+			dst.PortalCustomizedLogoSize = &val
+		} else if string(*aux.PortalCustomizedLogoSize) == "" {
+			var zero int64
+			dst.PortalCustomizedLogoSize = &zero
+		}
+	}
+	if aux.RADIUSDisconnectPort != nil {
+		if val, err := aux.RADIUSDisconnectPort.Int64(); err == nil {
+			dst.RADIUSDisconnectPort = &val
+		} else if string(*aux.RADIUSDisconnectPort) == "" {
+			var zero int64
+			dst.RADIUSDisconnectPort = &zero
+		}
 	}
 
 	return nil

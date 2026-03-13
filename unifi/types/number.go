@@ -56,6 +56,9 @@ func (n Number) Int64Pointer() *int64 {
 	return &val
 }
 
-func ToInt64Pointer(aux Number) *int64 {
+func ToInt64Pointer(aux *Number) *int64 {
+	if aux == nil {
+		return nil
+	}
 	return aux.Int64Pointer()
 }

@@ -48,6 +48,10 @@ type Account struct {
 func (dst *Account) UnmarshalJSON(b []byte) error {
 	type Alias Account
 	aux := &struct {
+		TunnelMediumType *types.Number `json:"tunnel_medium_type"`
+		TunnelType       *types.Number `json:"tunnel_type"`
+		VLAN             *types.Number `json:"vlan"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -56,6 +60,30 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.TunnelMediumType != nil {
+		if val, err := aux.TunnelMediumType.Int64(); err == nil {
+			dst.TunnelMediumType = &val
+		} else if string(*aux.TunnelMediumType) == "" {
+			var zero int64
+			dst.TunnelMediumType = &zero
+		}
+	}
+	if aux.TunnelType != nil {
+		if val, err := aux.TunnelType.Int64(); err == nil {
+			dst.TunnelType = &val
+		} else if string(*aux.TunnelType) == "" {
+			var zero int64
+			dst.TunnelType = &zero
+		}
+	}
+	if aux.VLAN != nil {
+		if val, err := aux.VLAN.Int64(); err == nil {
+			dst.VLAN = &val
+		} else if string(*aux.VLAN) == "" {
+			var zero int64
+			dst.VLAN = &zero
+		}
 	}
 
 	return nil

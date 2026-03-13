@@ -48,6 +48,8 @@ type Routing struct {
 func (dst *Routing) UnmarshalJSON(b []byte) error {
 	type Alias Routing
 	aux := &struct {
+		StaticRouteDistance *types.Number `json:"static-route_distance"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -56,6 +58,14 @@ func (dst *Routing) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.StaticRouteDistance != nil {
+		if val, err := aux.StaticRouteDistance.Int64(); err == nil {
+			dst.StaticRouteDistance = &val
+		} else if string(*aux.StaticRouteDistance) == "" {
+			var zero int64
+			dst.StaticRouteDistance = &zero
+		}
 	}
 
 	return nil

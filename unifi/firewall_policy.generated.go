@@ -57,6 +57,8 @@ type FirewallPolicy struct {
 func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 	type Alias FirewallPolicy
 	aux := &struct {
+		Index *types.Number `json:"index"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -65,6 +67,14 @@ func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Index != nil {
+		if val, err := aux.Index.Int64(); err == nil {
+			dst.Index = &val
+		} else if string(*aux.Index) == "" {
+			var zero int64
+			dst.Index = &zero
+		}
 	}
 
 	return nil
@@ -86,6 +96,8 @@ type FirewallPolicyDestination struct {
 func (dst *FirewallPolicyDestination) UnmarshalJSON(b []byte) error {
 	type Alias FirewallPolicyDestination
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -94,6 +106,14 @@ func (dst *FirewallPolicyDestination) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil
@@ -140,6 +160,8 @@ type FirewallPolicySource struct {
 func (dst *FirewallPolicySource) UnmarshalJSON(b []byte) error {
 	type Alias FirewallPolicySource
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -148,6 +170,14 @@ func (dst *FirewallPolicySource) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil

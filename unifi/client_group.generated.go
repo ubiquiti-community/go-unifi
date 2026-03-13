@@ -41,6 +41,9 @@ type ClientGroup struct {
 func (dst *ClientGroup) UnmarshalJSON(b []byte) error {
 	type Alias ClientGroup
 	aux := &struct {
+		QOSRateMaxDown *types.Number `json:"qos_rate_max_down"`
+		QOSRateMaxUp   *types.Number `json:"qos_rate_max_up"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -49,6 +52,22 @@ func (dst *ClientGroup) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.QOSRateMaxDown != nil {
+		if val, err := aux.QOSRateMaxDown.Int64(); err == nil {
+			dst.QOSRateMaxDown = &val
+		} else if string(*aux.QOSRateMaxDown) == "" {
+			var zero int64
+			dst.QOSRateMaxDown = &zero
+		}
+	}
+	if aux.QOSRateMaxUp != nil {
+		if val, err := aux.QOSRateMaxUp.Int64(); err == nil {
+			dst.QOSRateMaxUp = &val
+		} else if string(*aux.QOSRateMaxUp) == "" {
+			var zero int64
+			dst.QOSRateMaxUp = &zero
+		}
 	}
 
 	return nil

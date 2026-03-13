@@ -129,7 +129,17 @@ type Device struct {
 func (dst *Device) UnmarshalJSON(b []byte) error {
 	type Alias Device
 	aux := &struct {
-		StpPriority types.Number `json:"stp_priority"`
+		GatewayVrrpPriority        *types.Number `json:"gateway_vrrp_priority"`
+		LcmBrightness              *types.Number `json:"lcm_brightness"`
+		LcmIDleTimeout             *types.Number `json:"lcm_idle_timeout"`
+		LcmOrientationOverride     *types.Number `json:"lcm_orientation_override"`
+		LedOverrideColorBrightness *types.Number `json:"led_override_color_brightness"`
+		LteHardLimit               *types.Number `json:"lte_hard_limit"`
+		LteSimPin                  *types.Number `json:"lte_sim_pin"`
+		LteSoftLimit               *types.Number `json:"lte_soft_limit"`
+		PowerSourceCtrlBudget      *types.Number `json:"power_source_ctrl_budget"`
+		StpPriority                *types.Number `json:"stp_priority"`
+		Volume                     *types.Number `json:"volume"`
 
 		*Alias
 	}{
@@ -140,8 +150,93 @@ func (dst *Device) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if val, err := aux.StpPriority.Int64(); err == nil {
-		dst.StpPriority = &val
+	if aux.GatewayVrrpPriority != nil {
+		if val, err := aux.GatewayVrrpPriority.Int64(); err == nil {
+			dst.GatewayVrrpPriority = &val
+		} else if string(*aux.GatewayVrrpPriority) == "" {
+			var zero int64
+			dst.GatewayVrrpPriority = &zero
+		}
+	}
+	if aux.LcmBrightness != nil {
+		if val, err := aux.LcmBrightness.Int64(); err == nil {
+			dst.LcmBrightness = &val
+		} else if string(*aux.LcmBrightness) == "" {
+			var zero int64
+			dst.LcmBrightness = &zero
+		}
+	}
+	if aux.LcmIDleTimeout != nil {
+		if val, err := aux.LcmIDleTimeout.Int64(); err == nil {
+			dst.LcmIDleTimeout = &val
+		} else if string(*aux.LcmIDleTimeout) == "" {
+			var zero int64
+			dst.LcmIDleTimeout = &zero
+		}
+	}
+	if aux.LcmOrientationOverride != nil {
+		if val, err := aux.LcmOrientationOverride.Int64(); err == nil {
+			dst.LcmOrientationOverride = &val
+		} else if string(*aux.LcmOrientationOverride) == "" {
+			var zero int64
+			dst.LcmOrientationOverride = &zero
+		}
+	}
+	if aux.LedOverrideColorBrightness != nil {
+		if val, err := aux.LedOverrideColorBrightness.Int64(); err == nil {
+			dst.LedOverrideColorBrightness = &val
+		} else if string(*aux.LedOverrideColorBrightness) == "" {
+			var zero int64
+			dst.LedOverrideColorBrightness = &zero
+		}
+	}
+	if aux.LteHardLimit != nil {
+		if val, err := aux.LteHardLimit.Int64(); err == nil {
+			dst.LteHardLimit = &val
+		} else if string(*aux.LteHardLimit) == "" {
+			var zero int64
+			dst.LteHardLimit = &zero
+		}
+	}
+	if aux.LteSimPin != nil {
+		if val, err := aux.LteSimPin.Int64(); err == nil {
+			dst.LteSimPin = &val
+		} else if string(*aux.LteSimPin) == "" {
+			var zero int64
+			dst.LteSimPin = &zero
+		}
+	}
+	if aux.LteSoftLimit != nil {
+		if val, err := aux.LteSoftLimit.Int64(); err == nil {
+			dst.LteSoftLimit = &val
+		} else if string(*aux.LteSoftLimit) == "" {
+			var zero int64
+			dst.LteSoftLimit = &zero
+		}
+	}
+	if aux.PowerSourceCtrlBudget != nil {
+		if val, err := aux.PowerSourceCtrlBudget.Int64(); err == nil {
+			dst.PowerSourceCtrlBudget = &val
+		} else if string(*aux.PowerSourceCtrlBudget) == "" {
+			var zero int64
+			dst.PowerSourceCtrlBudget = &zero
+		}
+	}
+	if aux.StpPriority != nil {
+		if val, err := aux.StpPriority.Int64(); err == nil {
+			dst.StpPriority = &val
+		} else if string(*aux.StpPriority) == "" {
+			var zero int64
+			dst.StpPriority = &zero
+		}
+	}
+	if aux.Volume != nil {
+		if val, err := aux.Volume.Int64(); err == nil {
+			dst.Volume = &val
+		} else if string(*aux.Volume) == "" {
+			var zero int64
+			dst.Volume = &zero
+		}
 	}
 
 	return nil
@@ -209,6 +304,8 @@ type DeviceEtherLighting struct {
 func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 	type Alias DeviceEtherLighting
 	aux := &struct {
+		Brightness *types.Number `json:"brightness"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -217,6 +314,14 @@ func (dst *DeviceEtherLighting) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Brightness != nil {
+		if val, err := aux.Brightness.Int64(); err == nil {
+			dst.Brightness = &val
+		} else if string(*aux.Brightness) == "" {
+			var zero int64
+			dst.Brightness = &zero
+		}
 	}
 
 	return nil
@@ -252,6 +357,8 @@ type DeviceMbbOverrides struct {
 func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DeviceMbbOverrides
 	aux := &struct {
+		PrimarySlot *types.Number `json:"primary_slot"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -260,6 +367,14 @@ func (dst *DeviceMbbOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.PrimarySlot != nil {
+		if val, err := aux.PrimarySlot.Int64(); err == nil {
+			dst.PrimarySlot = &val
+		} else if string(*aux.PrimarySlot) == "" {
+			var zero int64
+			dst.PrimarySlot = &zero
+		}
 	}
 
 	return nil
@@ -277,6 +392,8 @@ type DeviceNutServer struct {
 func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 	type Alias DeviceNutServer
 	aux := &struct {
+		Port *types.Number `json:"port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -285,6 +402,14 @@ func (dst *DeviceNutServer) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Port != nil {
+		if val, err := aux.Port.Int64(); err == nil {
+			dst.Port = &val
+		} else if string(*aux.Port) == "" {
+			var zero int64
+			dst.Port = &zero
+		}
 	}
 
 	return nil
@@ -300,6 +425,8 @@ type DeviceOutletOverrides struct {
 func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DeviceOutletOverrides
 	aux := &struct {
+		Index *types.Number `json:"index"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -308,6 +435,14 @@ func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Index != nil {
+		if val, err := aux.Index.Int64(); err == nil {
+			dst.Index = &val
+		} else if string(*aux.Index) == "" {
+			var zero int64
+			dst.Index = &zero
+		}
 	}
 
 	return nil
@@ -364,6 +499,23 @@ type DevicePortOverrides struct {
 func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	type Alias DevicePortOverrides
 	aux := &struct {
+		AggregateMembers           []types.Number `json:"aggregate_members"`
+		Dot1XIDleTimeout           *types.Number  `json:"dot1x_idle_timeout"`
+		EgressRateLimitKbps        *types.Number  `json:"egress_rate_limit_kbps"`
+		MirrorPortIDX              *types.Number  `json:"mirror_port_idx"`
+		PortIDX                    *types.Number  `json:"port_idx"`
+		PriorityQueue1Level        *types.Number  `json:"priority_queue1_level"`
+		PriorityQueue2Level        *types.Number  `json:"priority_queue2_level"`
+		PriorityQueue3Level        *types.Number  `json:"priority_queue3_level"`
+		PriorityQueue4Level        *types.Number  `json:"priority_queue4_level"`
+		Speed                      *types.Number  `json:"speed"`
+		StormctrlBroadcastastLevel *types.Number  `json:"stormctrl_bcast_level"`
+		StormctrlBroadcastastRate  *types.Number  `json:"stormctrl_bcast_rate"`
+		StormctrlMcastLevel        *types.Number  `json:"stormctrl_mcast_level"`
+		StormctrlMcastRate         *types.Number  `json:"stormctrl_mcast_rate"`
+		StormctrlUcastLevel        *types.Number  `json:"stormctrl_ucast_level"`
+		StormctrlUcastRate         *types.Number  `json:"stormctrl_ucast_rate"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -372,6 +524,132 @@ func (dst *DevicePortOverrides) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	dst.AggregateMembers = make([]int64, len(aux.AggregateMembers))
+	for i, v := range aux.AggregateMembers {
+		if val, err := v.Int64(); err == nil {
+			dst.AggregateMembers[i] = val
+		}
+	}
+	if aux.Dot1XIDleTimeout != nil {
+		if val, err := aux.Dot1XIDleTimeout.Int64(); err == nil {
+			dst.Dot1XIDleTimeout = &val
+		} else if string(*aux.Dot1XIDleTimeout) == "" {
+			var zero int64
+			dst.Dot1XIDleTimeout = &zero
+		}
+	}
+	if aux.EgressRateLimitKbps != nil {
+		if val, err := aux.EgressRateLimitKbps.Int64(); err == nil {
+			dst.EgressRateLimitKbps = &val
+		} else if string(*aux.EgressRateLimitKbps) == "" {
+			var zero int64
+			dst.EgressRateLimitKbps = &zero
+		}
+	}
+	if aux.MirrorPortIDX != nil {
+		if val, err := aux.MirrorPortIDX.Int64(); err == nil {
+			dst.MirrorPortIDX = &val
+		} else if string(*aux.MirrorPortIDX) == "" {
+			var zero int64
+			dst.MirrorPortIDX = &zero
+		}
+	}
+	if aux.PortIDX != nil {
+		if val, err := aux.PortIDX.Int64(); err == nil {
+			dst.PortIDX = &val
+		} else if string(*aux.PortIDX) == "" {
+			var zero int64
+			dst.PortIDX = &zero
+		}
+	}
+	if aux.PriorityQueue1Level != nil {
+		if val, err := aux.PriorityQueue1Level.Int64(); err == nil {
+			dst.PriorityQueue1Level = &val
+		} else if string(*aux.PriorityQueue1Level) == "" {
+			var zero int64
+			dst.PriorityQueue1Level = &zero
+		}
+	}
+	if aux.PriorityQueue2Level != nil {
+		if val, err := aux.PriorityQueue2Level.Int64(); err == nil {
+			dst.PriorityQueue2Level = &val
+		} else if string(*aux.PriorityQueue2Level) == "" {
+			var zero int64
+			dst.PriorityQueue2Level = &zero
+		}
+	}
+	if aux.PriorityQueue3Level != nil {
+		if val, err := aux.PriorityQueue3Level.Int64(); err == nil {
+			dst.PriorityQueue3Level = &val
+		} else if string(*aux.PriorityQueue3Level) == "" {
+			var zero int64
+			dst.PriorityQueue3Level = &zero
+		}
+	}
+	if aux.PriorityQueue4Level != nil {
+		if val, err := aux.PriorityQueue4Level.Int64(); err == nil {
+			dst.PriorityQueue4Level = &val
+		} else if string(*aux.PriorityQueue4Level) == "" {
+			var zero int64
+			dst.PriorityQueue4Level = &zero
+		}
+	}
+	if aux.Speed != nil {
+		if val, err := aux.Speed.Int64(); err == nil {
+			dst.Speed = &val
+		} else if string(*aux.Speed) == "" {
+			var zero int64
+			dst.Speed = &zero
+		}
+	}
+	if aux.StormctrlBroadcastastLevel != nil {
+		if val, err := aux.StormctrlBroadcastastLevel.Int64(); err == nil {
+			dst.StormctrlBroadcastastLevel = &val
+		} else if string(*aux.StormctrlBroadcastastLevel) == "" {
+			var zero int64
+			dst.StormctrlBroadcastastLevel = &zero
+		}
+	}
+	if aux.StormctrlBroadcastastRate != nil {
+		if val, err := aux.StormctrlBroadcastastRate.Int64(); err == nil {
+			dst.StormctrlBroadcastastRate = &val
+		} else if string(*aux.StormctrlBroadcastastRate) == "" {
+			var zero int64
+			dst.StormctrlBroadcastastRate = &zero
+		}
+	}
+	if aux.StormctrlMcastLevel != nil {
+		if val, err := aux.StormctrlMcastLevel.Int64(); err == nil {
+			dst.StormctrlMcastLevel = &val
+		} else if string(*aux.StormctrlMcastLevel) == "" {
+			var zero int64
+			dst.StormctrlMcastLevel = &zero
+		}
+	}
+	if aux.StormctrlMcastRate != nil {
+		if val, err := aux.StormctrlMcastRate.Int64(); err == nil {
+			dst.StormctrlMcastRate = &val
+		} else if string(*aux.StormctrlMcastRate) == "" {
+			var zero int64
+			dst.StormctrlMcastRate = &zero
+		}
+	}
+	if aux.StormctrlUcastLevel != nil {
+		if val, err := aux.StormctrlUcastLevel.Int64(); err == nil {
+			dst.StormctrlUcastLevel = &val
+		} else if string(*aux.StormctrlUcastLevel) == "" {
+			var zero int64
+			dst.StormctrlUcastLevel = &zero
+		}
+	}
+	if aux.StormctrlUcastRate != nil {
+		if val, err := aux.StormctrlUcastRate.Int64(); err == nil {
+			dst.StormctrlUcastRate = &val
+		} else if string(*aux.StormctrlUcastRate) == "" {
+			var zero int64
+			dst.StormctrlUcastRate = &zero
+		}
 	}
 
 	return nil
@@ -387,6 +665,11 @@ type DeviceQOSMarking struct {
 func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 	type Alias DeviceQOSMarking
 	aux := &struct {
+		CosCode          *types.Number `json:"cos_code"`
+		DscpCode         *types.Number `json:"dscp_code"`
+		IPPrecedenceCode *types.Number `json:"ip_precedence_code"`
+		Queue            *types.Number `json:"queue"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -395,6 +678,38 @@ func (dst *DeviceQOSMarking) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.CosCode != nil {
+		if val, err := aux.CosCode.Int64(); err == nil {
+			dst.CosCode = &val
+		} else if string(*aux.CosCode) == "" {
+			var zero int64
+			dst.CosCode = &zero
+		}
+	}
+	if aux.DscpCode != nil {
+		if val, err := aux.DscpCode.Int64(); err == nil {
+			dst.DscpCode = &val
+		} else if string(*aux.DscpCode) == "" {
+			var zero int64
+			dst.DscpCode = &zero
+		}
+	}
+	if aux.IPPrecedenceCode != nil {
+		if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+			dst.IPPrecedenceCode = &val
+		} else if string(*aux.IPPrecedenceCode) == "" {
+			var zero int64
+			dst.IPPrecedenceCode = &zero
+		}
+	}
+	if aux.Queue != nil {
+		if val, err := aux.Queue.Int64(); err == nil {
+			dst.Queue = &val
+		} else if string(*aux.Queue) == "" {
+			var zero int64
+			dst.Queue = &zero
+		}
 	}
 
 	return nil
@@ -412,6 +727,12 @@ type DeviceQOSMatching struct {
 func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 	type Alias DeviceQOSMatching
 	aux := &struct {
+		CosCode          *types.Number `json:"cos_code"`
+		DscpCode         *types.Number `json:"dscp_code"`
+		DstPort          *types.Number `json:"dst_port"`
+		IPPrecedenceCode *types.Number `json:"ip_precedence_code"`
+		SrcPort          *types.Number `json:"src_port"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -420,6 +741,46 @@ func (dst *DeviceQOSMatching) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.CosCode != nil {
+		if val, err := aux.CosCode.Int64(); err == nil {
+			dst.CosCode = &val
+		} else if string(*aux.CosCode) == "" {
+			var zero int64
+			dst.CosCode = &zero
+		}
+	}
+	if aux.DscpCode != nil {
+		if val, err := aux.DscpCode.Int64(); err == nil {
+			dst.DscpCode = &val
+		} else if string(*aux.DscpCode) == "" {
+			var zero int64
+			dst.DscpCode = &zero
+		}
+	}
+	if aux.DstPort != nil {
+		if val, err := aux.DstPort.Int64(); err == nil {
+			dst.DstPort = &val
+		} else if string(*aux.DstPort) == "" {
+			var zero int64
+			dst.DstPort = &zero
+		}
+	}
+	if aux.IPPrecedenceCode != nil {
+		if val, err := aux.IPPrecedenceCode.Int64(); err == nil {
+			dst.IPPrecedenceCode = &val
+		} else if string(*aux.IPPrecedenceCode) == "" {
+			var zero int64
+			dst.IPPrecedenceCode = &zero
+		}
+	}
+	if aux.SrcPort != nil {
+		if val, err := aux.SrcPort.Int64(); err == nil {
+			dst.SrcPort = &val
+		} else if string(*aux.SrcPort) == "" {
+			var zero int64
+			dst.SrcPort = &zero
+		}
 	}
 
 	return nil
@@ -514,7 +875,13 @@ type DeviceRadioTable struct {
 func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRadioTable
 	aux := &struct {
-		Ht types.Number `json:"ht"`
+		AntennaGain         *types.Number `json:"antenna_gain"`
+		AntennaID           *types.Number `json:"antenna_id"`
+		AssistedRoamingRssi *types.Number `json:"assisted_roaming_rssi"`
+		Ht                  *types.Number `json:"ht"`
+		Maxsta              *types.Number `json:"maxsta"`
+		MinRssi             *types.Number `json:"min_rssi"`
+		SensLevel           *types.Number `json:"sens_level"`
 
 		*Alias
 	}{
@@ -525,7 +892,55 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	if aux.AntennaGain != nil {
+		if val, err := aux.AntennaGain.Int64(); err == nil {
+			dst.AntennaGain = &val
+		} else if string(*aux.AntennaGain) == "" {
+			var zero int64
+			dst.AntennaGain = &zero
+		}
+	}
+	if aux.AntennaID != nil {
+		if val, err := aux.AntennaID.Int64(); err == nil {
+			dst.AntennaID = &val
+		} else if string(*aux.AntennaID) == "" {
+			var zero int64
+			dst.AntennaID = &zero
+		}
+	}
+	if aux.AssistedRoamingRssi != nil {
+		if val, err := aux.AssistedRoamingRssi.Int64(); err == nil {
+			dst.AssistedRoamingRssi = &val
+		} else if string(*aux.AssistedRoamingRssi) == "" {
+			var zero int64
+			dst.AssistedRoamingRssi = &zero
+		}
+	}
 	dst.Ht = types.ToInt64Pointer(aux.Ht)
+	if aux.Maxsta != nil {
+		if val, err := aux.Maxsta.Int64(); err == nil {
+			dst.Maxsta = &val
+		} else if string(*aux.Maxsta) == "" {
+			var zero int64
+			dst.Maxsta = &zero
+		}
+	}
+	if aux.MinRssi != nil {
+		if val, err := aux.MinRssi.Int64(); err == nil {
+			dst.MinRssi = &val
+		} else if string(*aux.MinRssi) == "" {
+			var zero int64
+			dst.MinRssi = &zero
+		}
+	}
+	if aux.SensLevel != nil {
+		if val, err := aux.SensLevel.Int64(); err == nil {
+			dst.SensLevel = &val
+		} else if string(*aux.SensLevel) == "" {
+			var zero int64
+			dst.SensLevel = &zero
+		}
+	}
 
 	return nil
 }
@@ -560,6 +975,8 @@ type DeviceRpsPortTable struct {
 func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 	type Alias DeviceRpsPortTable
 	aux := &struct {
+		PortIDX *types.Number `json:"port_idx"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -568,6 +985,14 @@ func (dst *DeviceRpsPortTable) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.PortIDX != nil {
+		if val, err := aux.PortIDX.Int64(); err == nil {
+			dst.PortIDX = &val
+		} else if string(*aux.PortIDX) == "" {
+			var zero int64
+			dst.PortIDX = &zero
+		}
 	}
 
 	return nil
@@ -589,6 +1014,12 @@ type DeviceSim struct {
 func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	type Alias DeviceSim
 	aux := &struct {
+		DataHardLimitBytes   *types.Number `json:"data_hard_limit_bytes"`
+		DataSoftLimitBytes   *types.Number `json:"data_soft_limit_bytes"`
+		DataWarningThreshold *types.Number `json:"data_warning_threshold"`
+		ResetDate            *types.Number `json:"reset_date"`
+		Slot                 *types.Number `json:"slot"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -597,6 +1028,46 @@ func (dst *DeviceSim) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.DataHardLimitBytes != nil {
+		if val, err := aux.DataHardLimitBytes.Int64(); err == nil {
+			dst.DataHardLimitBytes = &val
+		} else if string(*aux.DataHardLimitBytes) == "" {
+			var zero int64
+			dst.DataHardLimitBytes = &zero
+		}
+	}
+	if aux.DataSoftLimitBytes != nil {
+		if val, err := aux.DataSoftLimitBytes.Int64(); err == nil {
+			dst.DataSoftLimitBytes = &val
+		} else if string(*aux.DataSoftLimitBytes) == "" {
+			var zero int64
+			dst.DataSoftLimitBytes = &zero
+		}
+	}
+	if aux.DataWarningThreshold != nil {
+		if val, err := aux.DataWarningThreshold.Int64(); err == nil {
+			dst.DataWarningThreshold = &val
+		} else if string(*aux.DataWarningThreshold) == "" {
+			var zero int64
+			dst.DataWarningThreshold = &zero
+		}
+	}
+	if aux.ResetDate != nil {
+		if val, err := aux.ResetDate.Int64(); err == nil {
+			dst.ResetDate = &val
+		} else if string(*aux.ResetDate) == "" {
+			var zero int64
+			dst.ResetDate = &zero
+		}
+	}
+	if aux.Slot != nil {
+		if val, err := aux.Slot.Int64(); err == nil {
+			dst.Slot = &val
+		} else if string(*aux.Slot) == "" {
+			var zero int64
+			dst.Slot = &zero
+		}
 	}
 
 	return nil
