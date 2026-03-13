@@ -33,7 +33,10 @@ type Network struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
+	AuthKey                                       *string                         `json:"x_auth_key,omitempty"`
 	AutoScaleEnabled                              bool                            `json:"auto_scale_enabled"`
+	CaCrt                                         *string                         `json:"x_ca_crt,omitempty"`
+	CaKey                                         *string                         `json:"x_ca_key,omitempty"`
 	DHCPDBootEnabled                              bool                            `json:"dhcpd_boot_enabled"`
 	DHCPDBootFilename                             *string                         `json:"dhcpd_boot_filename,omitempty"` // .{1,256}
 	DHCPDBootServer                               string                          `json:"dhcpd_boot_server"`             // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$|(?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|[a-zA-Z0-9-]{1,63}|^$
@@ -80,7 +83,8 @@ type Network struct {
 	DHCPRelayServers                              []string                        `json:"dhcp_relay_servers,omitempty"`
 	DHCPguardEnabled                              bool                            `json:"dhcpguard_enabled"`
 	DPIEnabled                                    bool                            `json:"dpi_enabled"`
-	DPIgroupID                                    string                          `json:"dpigroup_id"`           // [\d\w]+|^$
+	DPIgroupID                                    string                          `json:"dpigroup_id"` // [\d\w]+|^$
+	DhKey                                         *string                         `json:"x_dh_key,omitempty"`
 	DomainName                                    *string                         `json:"domain_name,omitempty"` // (?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|^$|[a-zA-Z0-9-]{1,63}
 	Enabled                                       bool                            `json:"enabled"`
 	ExposedToSiteVPN                              bool                            `json:"exposed_to_site_vpn"`
@@ -118,7 +122,8 @@ type Network struct {
 	IPSecLocalIP                                  *string                         `json:"ipsec_local_ip,omitempty"` // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 	IPSecPeerIP                                   *string                         `json:"ipsec_peer_ip,omitempty"`
 	IPSecPfs                                      bool                            `json:"ipsec_pfs"`
-	IPSecProfile                                  *string                         `json:"ipsec_profile,omitempty"` // customized|azure_dynamic|azure_static
+	IPSecPreSharedKey                             *string                         `json:"x_ipsec_pre_shared_key,omitempty"` // [^\"\' ]+
+	IPSecProfile                                  *string                         `json:"ipsec_profile,omitempty"`          // customized|azure_dynamic|azure_static
 	IPSecRemoteIDentifier                         *string                         `json:"ipsec_remote_identifier,omitempty"`
 	IPSecRemoteIDentifierEnabled                  bool                            `json:"ipsec_remote_identifier_enabled"`
 	IPSecSeparateIkev2Networks                    bool                            `json:"ipsec_separate_ikev2_networks"`
@@ -164,10 +169,13 @@ type Network struct {
 	OpenVPNLocalPort                              *int64                          `json:"openvpn_local_port,omitempty"`        // ^([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])$
 	OpenVPNLocalWANIP                             *string                         `json:"openvpn_local_wan_ip,omitempty"`      // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 	OpenVPNMode                                   *string                         `json:"openvpn_mode,omitempty"`              // site-to-site|client|server
-	OpenVPNRemoteAddress                          *string                         `json:"openvpn_remote_address,omitempty"`    // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-	OpenVPNRemoteHost                             *string                         `json:"openvpn_remote_host,omitempty"`       // [^\"\' ]+|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-	OpenVPNRemotePort                             *int64                          `json:"openvpn_remote_port,omitempty"`       // ^([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])$
+	OpenVPNPassword                               *string                         `json:"x_openvpn_password,omitempty"`
+	OpenVPNRemoteAddress                          *string                         `json:"openvpn_remote_address,omitempty"`      // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+	OpenVPNRemoteHost                             *string                         `json:"openvpn_remote_host,omitempty"`         // [^\"\' ]+|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+	OpenVPNRemotePort                             *int64                          `json:"openvpn_remote_port,omitempty"`         // ^([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])$
+	OpenVPNSharedSecretKey                        *string                         `json:"x_openvpn_shared_secret_key,omitempty"` // [0-9A-Fa-f]{512}
 	OpenVPNUsername                               *string                         `json:"openvpn_username,omitempty"`
+	PptpcPassword                                 *string                         `json:"x_pptpc_password,omitempty"` // [^\"\' ]+
 	PptpcRequireMppe                              bool                            `json:"pptpc_require_mppe"`
 	PptpcRouteDistance                            *int64                          `json:"pptpc_route_distance,omitempty"` // ^[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]$|^$
 	PptpcServerIP                                 *string                         `json:"pptpc_server_ip,omitempty"`      // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|(?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|^[a-zA-Z0-9-]{1,63}$
@@ -183,7 +191,11 @@ type Network struct {
 	RequireMschapv2                               bool                            `json:"require_mschapv2"`
 	RouteDistance                                 *int64                          `json:"route_distance,omitempty"` // ^[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]$|^$
 	SdwanRemoteSiteID                             *string                         `json:"sdwan_remote_site_id,omitempty"`
+	ServerCrt                                     *string                         `json:"x_server_crt,omitempty"`
+	ServerKey                                     *string                         `json:"x_server_key,omitempty"`
 	SettingPreference                             *string                         `json:"setting_preference,omitempty"` // auto|manual
+	SharedClientCrt                               *string                         `json:"x_shared_client_crt,omitempty"`
+	SharedClientKey                               *string                         `json:"x_shared_client_key,omitempty"`
 	SingleNetworkLan                              *string                         `json:"single_network_lan,omitempty"`
 	UPnPEnabled                                   *bool                           `json:"upnp_enabled,omitempty"`
 	UPnPLanEnabled                                bool                            `json:"upnp_lan_enabled"`
@@ -242,6 +254,7 @@ type Network struct {
 	WANLoadBalanceWeight                          *int64                          `json:"wan_load_balance_weight,omitempty"` // ^$|[1-9]|[1-9][0-9]
 	WANNetmask                                    *string                         `json:"wan_netmask,omitempty"`             // ^((128|192|224|240|248|252|254)\.0\.0\.0)|(255\.(((0|128|192|224|240|248|252|254)\.0\.0)|(255\.(((0|128|192|224|240|248|252|254)\.0)|255\.(0|128|192|224|240|248|252|254)))))$
 	WANNetworkGroup                               *string                         `json:"wan_networkgroup,omitempty"`        // WAN[2-9]?|WAN_LTE_FAILOVER
+	WANPassword                                   string                          `json:"x_wan_password"`                    // [^"' ]+|^$
 	WANPppoePasswordEnabled                       bool                            `json:"wan_pppoe_password_enabled"`
 	WANPppoeUsernameEnabled                       bool                            `json:"wan_pppoe_username_enabled"`
 	WANPrefixlen                                  *int64                          `json:"wan_prefixlen,omitempty"` // ^([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|12[0-8])$|^$
@@ -263,23 +276,11 @@ type Network struct {
 	WireguardClientPeerPublicKey                  *string                         `json:"wireguard_client_peer_public_key,omitempty"`
 	WireguardClientPresharedKey                   *string                         `json:"wireguard_client_preshared_key,omitempty"`
 	WireguardClientPresharedKeyEnabled            bool                            `json:"wireguard_client_preshared_key_enabled"`
-	WireguardInterface                            *string                         `json:"wireguard_interface,omitempty"`    // wan[2-9]?
-	WireguardLocalWANIP                           *string                         `json:"wireguard_local_wan_ip,omitempty"` // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+	WireguardInterface                            *string                         `json:"wireguard_interface,omitempty"`                         // wan[2-9]?
+	WireguardInterfaceBindingModeIPVersion        *string                         `json:"wireguard_interface_binding_mode_ip_version,omitempty"` // v4|v6
+	WireguardLocalWANIP                           *string                         `json:"wireguard_local_wan_ip,omitempty"`                      // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 	WireguardPrivateKey                           *string                         `json:"x_wireguard_private_key,omitempty"`
 	WireguardPublicKey                            *string                         `json:"wireguard_public_key,omitempty"`
-	XAuthKey                                      *string                         `json:"x_auth_key,omitempty"`
-	XCaCrt                                        *string                         `json:"x_ca_crt,omitempty"`
-	XCaKey                                        *string                         `json:"x_ca_key,omitempty"`
-	XDhKey                                        *string                         `json:"x_dh_key,omitempty"`
-	XIPSecPreSharedKey                            *string                         `json:"x_ipsec_pre_shared_key,omitempty"` // [^\"\' ]+
-	XOpenVPNPassword                              *string                         `json:"x_openvpn_password,omitempty"`
-	XOpenVPNSharedSecretKey                       *string                         `json:"x_openvpn_shared_secret_key,omitempty"` // [0-9A-Fa-f]{512}
-	XPptpcPassword                                *string                         `json:"x_pptpc_password,omitempty"`            // [^\"\' ]+
-	XServerCrt                                    *string                         `json:"x_server_crt,omitempty"`
-	XServerKey                                    *string                         `json:"x_server_key,omitempty"`
-	XSharedClientCrt                              *string                         `json:"x_shared_client_crt,omitempty"`
-	XSharedClientKey                              *string                         `json:"x_shared_client_key,omitempty"`
-	XWANPassword                                  string                          `json:"x_wan_password"` // [^"' ]+|^$
 }
 
 func (dst *Network) UnmarshalJSON(b []byte) error {

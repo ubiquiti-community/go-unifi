@@ -27,8 +27,8 @@ type Snmp struct {
 	Community string `json:"community,omitempty"` // .{1,256}
 	Enabled   bool   `json:"enabled"`
 	EnabledV3 bool   `json:"enabledV3"`
+	Password  string `json:"x_password,omitempty"` // [^'"]{8,32}
 	Username  string `json:"username,omitempty"`   // [a-zA-Z0-9_-]{1,30}
-	XPassword string `json:"x_password,omitempty"` // [^'"]{8,32}
 }
 
 func (dst *Snmp) UnmarshalJSON(b []byte) error {

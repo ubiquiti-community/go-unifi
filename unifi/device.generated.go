@@ -41,7 +41,8 @@ type Device struct {
 	BandsteeringMode            string                    `json:"bandsteering_mode,omitempty"` // off|equal|prefer_5g
 	BaresipAuthUser             string                    `json:"baresip_auth_user,omitempty"` // ^\+?[a-zA-Z0-9_.\-!~*'()]*
 	BaresipEnabled              bool                      `json:"baresip_enabled,omitempty"`
-	BaresipExtension            string                    `json:"baresip_extension,omitempty"` // ^\+?[a-zA-Z0-9_.\-!~*'()]*
+	BaresipExtension            string                    `json:"baresip_extension,omitempty"`  // ^\+?[a-zA-Z0-9_.\-!~*'()]*
+	BaresipPassword             string                    `json:"x_baresip_password,omitempty"` // ^[a-zA-Z0-9_.\-!~*'()]*
 	ConfigNetwork               *DeviceConfigNetwork      `json:"config_network,omitempty"`
 	DPIEnabled                  bool                      `json:"dpi_enabled,omitempty"`
 	Disabled                    bool                      `json:"disabled,omitempty"`
@@ -122,7 +123,6 @@ type Device struct {
 	UbbPairName                 string                    `json:"ubb_pair_name,omitempty"` // .{1,128}
 	Volume                      *int64                    `json:"volume,omitempty"`        // [0-9]|[1-9][0-9]|100
 	X                           float64                   `json:"x,omitempty"`
-	XBaresipPassword            string                    `json:"x_baresip_password,omitempty"` // ^[a-zA-Z0-9_.\-!~*'()]*
 	Y                           float64                   `json:"y,omitempty"`
 }
 

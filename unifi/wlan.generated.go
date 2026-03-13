@@ -56,6 +56,7 @@ type WLAN struct {
 	Hotspot2                    *WLANHotspot2              `json:"hotspot2,omitempty"`
 	Hotspot2ConfEnabled         bool                       `json:"hotspot2conf_enabled"`
 	IappEnabled                 bool                       `json:"iapp_enabled"`
+	IappKey                     string                     `json:"x_iapp_key,omitempty"` // [0-9A-Fa-f]{32}
 	IsGuest                     bool                       `json:"is_guest"`
 	L2Isolation                 bool                       `json:"l2_isolation"`
 	LogLevel                    string                     `json:"log_level,omitempty"`
@@ -83,9 +84,10 @@ type WLAN struct {
 	OptimizeIotWifiConnectivity bool                       `json:"optimize_iot_wifi_connectivity"`
 	P2P                         bool                       `json:"p2p"`
 	P2PCrossConnect             bool                       `json:"p2p_cross_connect"`
-	PMFCipher                   string                     `json:"pmf_cipher,omitempty"` // auto|aes-128-cmac|bip-gmac-256
-	PMFMode                     string                     `json:"pmf_mode,omitempty"`   // disabled|optional|required
-	Priority                    string                     `json:"priority,omitempty"`   // medium|high|low
+	PMFCipher                   string                     `json:"pmf_cipher,omitempty"`   // auto|aes-128-cmac|bip-gmac-256
+	PMFMode                     string                     `json:"pmf_mode,omitempty"`     // disabled|optional|required
+	Passphrase                  string                     `json:"x_passphrase,omitempty"` // [\x20-\x7E]{8,255}|[0-9a-fA-F]{64}
+	Priority                    string                     `json:"priority,omitempty"`     // medium|high|low
 	PrivatePresharedKeys        []WLANPrivatePresharedKeys `json:"private_preshared_keys,omitempty"`
 	PrivatePresharedKeysEnabled bool                       `json:"private_preshared_keys_enabled"`
 	ProxyArp                    bool                       `json:"proxy_arp"`
@@ -113,6 +115,7 @@ type WLAN struct {
 	UserGroupID                 string                     `json:"usergroup_id,omitempty"`
 	VLAN                        *int64                     `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-5]|^$
 	VLANEnabled                 bool                       `json:"vlan_enabled"`
+	WEP                         string                     `json:"x_wep,omitempty"`
 	WEPIDX                      *int64                     `json:"wep_idx,omitempty"`    // [1-4]
 	WLANBand                    string                     `json:"wlan_band,omitempty"`  // 2g|5g|both
 	WLANBands                   []string                   `json:"wlan_bands,omitempty"` // 2g|5g|6g
@@ -124,9 +127,6 @@ type WLAN struct {
 	WPAEnc                      string                     `json:"wpa_enc,omitempty"`        // auto|ccmp|gcmp|ccmp-256|gcmp-256
 	WPAMode                     string                     `json:"wpa_mode,omitempty"`       // auto|wpa1|wpa2
 	WPAPskRADIUS                string                     `json:"wpa_psk_radius,omitempty"` // disabled|optional|required
-	XIappKey                    string                     `json:"x_iapp_key,omitempty"`     // [0-9A-Fa-f]{32}
-	XPassphrase                 string                     `json:"x_passphrase,omitempty"`   // [\x20-\x7E]{8,255}|[0-9a-fA-F]{64}
-	XWEP                        string                     `json:"x_wep,omitempty"`
 }
 
 func (dst *WLAN) UnmarshalJSON(b []byte) error {

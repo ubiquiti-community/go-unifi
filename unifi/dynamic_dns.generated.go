@@ -38,9 +38,9 @@ type DynamicDNS struct {
 	Interface     string   `json:"interface,omitempty"`      // wan[2-9]?
 	Login         string   `json:"login,omitempty"`          // ^[^"' ]+$
 	Options       []string `json:"options,omitempty"`        // ^[^"' ]+$
+	Password      string   `json:"x_password,omitempty"`     // ^[^"' ]+$
 	Server        string   `json:"server"`                   // ^[^"' ]+$|^$
 	Service       string   `json:"service,omitempty"`        // afraid|changeip|cloudflare|cloudxns|ddnss|dhis|dnsexit|dnsomatic|dnspark|dnspod|dslreports|dtdns|duckdns|duiadns|dyn|dyndns|dynv6|easydns|freemyip|googledomains|loopia|namecheap|noip|nsupdate|ovh|sitelutions|spdyn|strato|tunnelbroker|zoneedit|cloudflare|custom
-	XPassword     string   `json:"x_password,omitempty"`     // ^[^"' ]+$
 }
 
 func (dst *DynamicDNS) UnmarshalJSON(b []byte) error {

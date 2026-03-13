@@ -24,9 +24,9 @@ var (
 type ElementAdopt struct {
 	BaseSetting
 
-	Enabled       bool   `json:"enabled"`
-	XElementEssid string `json:"x_element_essid,omitempty"`
-	XElementPsk   string `json:"x_element_psk,omitempty"`
+	ElementEssid string `json:"x_element_essid,omitempty"`
+	ElementPsk   string `json:"x_element_psk,omitempty"`
+	Enabled      bool   `json:"enabled"`
 }
 
 func (dst *ElementAdopt) UnmarshalJSON(b []byte) error {

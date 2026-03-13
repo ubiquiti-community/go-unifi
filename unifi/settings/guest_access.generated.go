@@ -27,6 +27,8 @@ type GuestAccess struct {
 	AllowedSubnet                          string   `json:"allowed_subnet_,omitempty"`
 	Auth                                   string   `json:"auth,omitempty"` // none|hotspot|facebook_wifi|custom
 	AuthUrl                                string   `json:"auth_url,omitempty"`
+	AuthorizeLoginid                       string   `json:"x_authorize_loginid,omitempty"`
+	AuthorizeTransactionkey                string   `json:"x_authorize_transactionkey,omitempty"`
 	AuthorizeUseSandbox                    bool     `json:"authorize_use_sandbox"`
 	CustomIP                               string   `json:"custom_ip"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	EcEnabled                              bool     `json:"ec_enabled"`
@@ -34,21 +36,32 @@ type GuestAccess struct {
 	ExpireNumber                           *int64   `json:"expire_number,omitempty"` // ^[1-9][0-9]{0,5}|1000000$
 	ExpireUnit                             *int64   `json:"expire_unit,omitempty"`   // 1|60|1440
 	FacebookAppID                          string   `json:"facebook_app_id,omitempty"`
+	FacebookAppSecret                      string   `json:"x_facebook_app_secret,omitempty"`
 	FacebookEnabled                        bool     `json:"facebook_enabled"`
 	FacebookScopeEmail                     bool     `json:"facebook_scope_email"`
 	FacebookWifiBlockHttps                 bool     `json:"facebook_wifi_block_https"`
 	FacebookWifiGwID                       string   `json:"facebook_wifi_gw_id,omitempty"`
 	FacebookWifiGwName                     string   `json:"facebook_wifi_gw_name,omitempty"`
+	FacebookWifiGwSecret                   string   `json:"x_facebook_wifi_gw_secret,omitempty"`
 	Gateway                                string   `json:"gateway,omitempty"` // paypal|stripe|authorize|quickpay|merchantwarrior|ippay
 	GoogleClientID                         string   `json:"google_client_id,omitempty"`
+	GoogleClientSecret                     string   `json:"x_google_client_secret,omitempty"`
 	GoogleDomain                           string   `json:"google_domain,omitempty"`
 	GoogleEnabled                          bool     `json:"google_enabled"`
 	GoogleScopeEmail                       bool     `json:"google_scope_email"`
+	IPpayTerminalid                        string   `json:"x_ippay_terminalid,omitempty"`
 	IPpayUseSandbox                        bool     `json:"ippay_use_sandbox"`
+	MerchantwarriorApikey                  string   `json:"x_merchantwarrior_apikey,omitempty"`
+	MerchantwarriorApipassphrase           string   `json:"x_merchantwarrior_apipassphrase,omitempty"`
+	MerchantwarriorMerchantuuid            string   `json:"x_merchantwarrior_merchantuuid,omitempty"`
 	MerchantwarriorUseSandbox              bool     `json:"merchantwarrior_use_sandbox"`
+	Password                               string   `json:"x_password,omitempty"`
 	PasswordEnabled                        bool     `json:"password_enabled"`
 	PaymentEnabled                         bool     `json:"payment_enabled"`
+	PaypalPassword                         string   `json:"x_paypal_password,omitempty"`
+	PaypalSignature                        string   `json:"x_paypal_signature,omitempty"`
 	PaypalUseSandbox                       bool     `json:"paypal_use_sandbox"`
+	PaypalUsername                         string   `json:"x_paypal_username,omitempty"`
 	PortalCustomized                       bool     `json:"portal_customized"`
 	PortalCustomizedAuthenticationText     string   `json:"portal_customized_authentication_text,omitempty"`
 	PortalCustomizedBgColor                string   `json:"portal_customized_bg_color"` // ^#[a-zA-Z0-9]{6}$|^#[a-zA-Z0-9]{3}$|^$
@@ -83,6 +96,9 @@ type GuestAccess struct {
 	PortalEnabled                          bool     `json:"portal_enabled"`
 	PortalHostname                         string   `json:"portal_hostname"` // ^[a-zA-Z0-9.-]+$|^$
 	PortalUseHostname                      bool     `json:"portal_use_hostname"`
+	QuickpayAgreementid                    string   `json:"x_quickpay_agreementid,omitempty"`
+	QuickpayApikey                         string   `json:"x_quickpay_apikey,omitempty"`
+	QuickpayMerchantid                     string   `json:"x_quickpay_merchantid,omitempty"`
 	QuickpayTestmode                       bool     `json:"quickpay_testmode"`
 	RADIUSAuthType                         string   `json:"radius_auth_type,omitempty"` // chap|mschapv2
 	RADIUSDisconnectEnabled                bool     `json:"radius_disconnect_enabled"`
@@ -96,31 +112,15 @@ type GuestAccess struct {
 	RestrictedDNSEnabled                   bool     `json:"restricted_dns_enabled"`
 	RestrictedDNSServers                   []string `json:"restricted_dns_servers,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	RestrictedSubnet                       string   `json:"restricted_subnet_,omitempty"`
+	StripeApiKey                           string   `json:"x_stripe_api_key,omitempty"`
 	TemplateEngine                         string   `json:"template_engine,omitempty"` // jsp|angular
 	VoucherCustomized                      bool     `json:"voucher_customized"`
 	VoucherEnabled                         bool     `json:"voucher_enabled"`
 	WechatAppID                            string   `json:"wechat_app_id,omitempty"`
+	WechatAppSecret                        string   `json:"x_wechat_app_secret,omitempty"`
 	WechatEnabled                          bool     `json:"wechat_enabled"`
+	WechatSecretKey                        string   `json:"x_wechat_secret_key,omitempty"`
 	WechatShopID                           string   `json:"wechat_shop_id,omitempty"`
-	XAuthorizeLoginid                      string   `json:"x_authorize_loginid,omitempty"`
-	XAuthorizeTransactionkey               string   `json:"x_authorize_transactionkey,omitempty"`
-	XFacebookAppSecret                     string   `json:"x_facebook_app_secret,omitempty"`
-	XFacebookWifiGwSecret                  string   `json:"x_facebook_wifi_gw_secret,omitempty"`
-	XGoogleClientSecret                    string   `json:"x_google_client_secret,omitempty"`
-	XIPpayTerminalid                       string   `json:"x_ippay_terminalid,omitempty"`
-	XMerchantwarriorApikey                 string   `json:"x_merchantwarrior_apikey,omitempty"`
-	XMerchantwarriorApipassphrase          string   `json:"x_merchantwarrior_apipassphrase,omitempty"`
-	XMerchantwarriorMerchantuuid           string   `json:"x_merchantwarrior_merchantuuid,omitempty"`
-	XPassword                              string   `json:"x_password,omitempty"`
-	XPaypalPassword                        string   `json:"x_paypal_password,omitempty"`
-	XPaypalSignature                       string   `json:"x_paypal_signature,omitempty"`
-	XPaypalUsername                        string   `json:"x_paypal_username,omitempty"`
-	XQuickpayAgreementid                   string   `json:"x_quickpay_agreementid,omitempty"`
-	XQuickpayApikey                        string   `json:"x_quickpay_apikey,omitempty"`
-	XQuickpayMerchantid                    string   `json:"x_quickpay_merchantid,omitempty"`
-	XStripeApiKey                          string   `json:"x_stripe_api_key,omitempty"`
-	XWechatAppSecret                       string   `json:"x_wechat_app_secret,omitempty"`
-	XWechatSecretKey                       string   `json:"x_wechat_secret_key,omitempty"`
 }
 
 func (dst *GuestAccess) UnmarshalJSON(b []byte) error {

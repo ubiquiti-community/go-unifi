@@ -24,13 +24,13 @@ var (
 type SuperCloudaccess struct {
 	BaseSetting
 
-	DeviceAuth      string `json:"device_auth,omitempty"`
-	DeviceID        string `json:"device_id,omitempty"`
-	Enabled         bool   `json:"enabled"`
-	UbicUuid        string `json:"ubic_uuid,omitempty"`
-	XCertificateArn string `json:"x_certificate_arn,omitempty"`
-	XCertificatePem string `json:"x_certificate_pem,omitempty"`
-	XPrivateKey     string `json:"x_private_key,omitempty"`
+	CertificateArn string `json:"x_certificate_arn,omitempty"`
+	CertificatePem string `json:"x_certificate_pem,omitempty"`
+	DeviceAuth     string `json:"device_auth,omitempty"`
+	DeviceID       string `json:"device_id,omitempty"`
+	Enabled        bool   `json:"enabled"`
+	PrivateKey     string `json:"x_private_key,omitempty"`
+	UbicUuid       string `json:"ubic_uuid,omitempty"`
 }
 
 func (dst *SuperCloudaccess) UnmarshalJSON(b []byte) error {

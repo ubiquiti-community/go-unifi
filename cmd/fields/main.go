@@ -19,6 +19,7 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"unicode"
 
 	"github.com/hashicorp/go-version"
 	"github.com/iancoleman/strcase"
@@ -183,6 +184,16 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		baseType.Fields["UPnPSecureMode"] = NewFieldInfo("UPnPSecureMode", "upnp_secure_mode", fields.Bool, "", true, false, true, "")
 		baseType.Fields["IPAliases"] = NewFieldInfo("IPAliases", "ip_aliases", fields.String, "", true, true, false, "")
 		baseType.Fields["DHCPRelayServers"] = NewFieldInfo("DHCPRelayServers", "dhcp_relay_servers", fields.String, "", true, true, false, "")
+		baseType.Fields["WireguardInterfaceBindingModeIPVersion"] = NewFieldInfo(
+			"WireguardInterfaceBindingModeIPVersion",
+			"wireguard_interface_binding_mode_ip_version",
+			fields.String,
+			"v4|v6",
+			true,
+			false,
+			true,
+			"",
+		)
 	case resource.StructName == "Device":
 		baseType.Fields["PortTable"] = NewFieldInfo("PortTable", "port_table", "[]DevicePortTable", "", true, false, false, "")
 		baseType.Fields[" MAC"] = NewFieldInfo("MAC", "mac", fields.String, "", true, false, false, "")
@@ -229,6 +240,10 @@ func NewFieldInfo(
 func cleanName(name string, reps []replacement) string {
 	for _, rep := range reps {
 		name = strings.ReplaceAll(name, rep.Old, rep.New)
+	}
+
+	if strings.HasPrefix(name, "X") && len(name) > 1 && unicode.IsUpper(rune(name[1])) {
+		name = name[1:]
 	}
 
 	return name

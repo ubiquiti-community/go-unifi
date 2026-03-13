@@ -26,10 +26,10 @@ type Connectivity struct {
 
 	EnableIsolatedWLAN bool   `json:"enable_isolated_wlan"`
 	Enabled            bool   `json:"enabled"`
+	MeshEssid          string `json:"x_mesh_essid,omitempty"`
+	MeshPsk            string `json:"x_mesh_psk,omitempty"`
 	UplinkHost         string `json:"uplink_host,omitempty"`
 	UplinkType         string `json:"uplink_type,omitempty"`
-	XMeshEssid         string `json:"x_mesh_essid,omitempty"`
-	XMeshPsk           string `json:"x_mesh_psk,omitempty"`
 }
 
 func (dst *Connectivity) UnmarshalJSON(b []byte) error {

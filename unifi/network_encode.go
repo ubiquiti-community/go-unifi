@@ -660,9 +660,56 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		NoDelete bool   `json:"attr_no_delete,omitempty"`
 		NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-		Name    *string `json:"name,omitempty"`
-		Purpose string  `json:"purpose"`
-		Enabled bool    `json:"enabled"`
+		Name              *string `json:"name,omitempty"`
+		Purpose           string  `json:"purpose"`
+		Enabled           bool    `json:"enabled"`
+		SettingPreference *string `json:"setting_preference,omitempty"`
+		IPSubnet          *string `json:"ip_subnet,omitempty"`
+
+		// VPN Type
+		VPNType *string `json:"vpn_type,omitempty"`
+
+		// DNS
+		DHCPDDNS1       string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2       string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNSEnabled bool   `json:"dhcpd_dns_enabled"`
+
+		// DHCP Range
+		DHCPDStart *string `json:"dhcpd_start,omitempty"`
+		DHCPDStop  *string `json:"dhcpd_stop,omitempty"`
+
+		// RADIUS
+		RADIUSProfileID *string `json:"radiusprofile_id,omitempty"`
+
+		// WireGuard Server Configuration
+		WireguardInterface                     *string `json:"wireguard_interface,omitempty"`
+		WireguardPrivateKey                    *string `json:"x_wireguard_private_key,omitempty"`
+		WireguardLocalWANIP                    *string `json:"wireguard_local_wan_ip,omitempty"`
+		LocalPort                              *int64  `json:"local_port,omitempty"`
+		WireguardInterfaceBindingModeIPVersion *string `json:"wireguard_interface_binding_mode_ip_version,omitempty"`
+		VPNClientConfigurationRemoteIPOverride *string `json:"vpn_client_configuration_remote_ip_override,omitempty"`
+
+		// L2TP Server Configuration
+		L2TpInterface        *string `json:"l2tp_interface,omitempty"`
+		L2TpLocalWANIP       *string `json:"l2tp_local_wan_ip,omitempty"`
+		L2TpAllowWeakCiphers bool    `json:"l2tp_allow_weak_ciphers"`
+		IPSecPreSharedKey    *string `json:"x_ipsec_pre_shared_key,omitempty"`
+
+		// OpenVPN Server Configuration
+		OpenVPNInterface        *string `json:"openvpn_interface,omitempty"`
+		OpenVPNLocalWANIP       *string `json:"openvpn_local_wan_ip,omitempty"`
+		OpenVPNMode             *string `json:"openvpn_mode,omitempty"`
+		OpenVPNEncryptionCipher *string `json:"openvpn_encryption_cipher,omitempty"`
+
+		// OpenVPN Certificates and Keys
+		ServerCrt       *string `json:"x_server_crt,omitempty"`
+		ServerKey       *string `json:"x_server_key,omitempty"`
+		DhKey           *string `json:"x_dh_key,omitempty"`
+		SharedClientKey *string `json:"x_shared_client_key,omitempty"`
+		SharedClientCrt *string `json:"x_shared_client_crt,omitempty"`
+		AuthKey         *string `json:"x_auth_key,omitempty"`
+		CaCrt           *string `json:"x_ca_crt,omitempty"`
+		CaKey           *string `json:"x_ca_key,omitempty"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -671,9 +718,56 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		NoDelete: n.NoDelete,
 		NoEdit:   n.NoEdit,
 
-		Name:    n.Name,
-		Purpose: n.Purpose,
-		Enabled: n.Enabled,
+		Name:              n.Name,
+		Purpose:           n.Purpose,
+		Enabled:           n.Enabled,
+		SettingPreference: n.SettingPreference,
+		IPSubnet:          n.IPSubnet,
+
+		// VPN Type
+		VPNType: n.VPNType,
+
+		// DNS
+		DHCPDDNS1:       n.DHCPDDNS1,
+		DHCPDDNS2:       n.DHCPDDNS2,
+		DHCPDDNSEnabled: n.DHCPDDNSEnabled,
+
+		// DHCP Range
+		DHCPDStart: n.DHCPDStart,
+		DHCPDStop:  n.DHCPDStop,
+
+		// RADIUS
+		RADIUSProfileID: n.RADIUSProfileID,
+
+		// WireGuard Server Configuration
+		WireguardInterface:                     n.WireguardInterface,
+		WireguardPrivateKey:                    n.WireguardPrivateKey,
+		WireguardLocalWANIP:                    n.WireguardLocalWANIP,
+		LocalPort:                              n.LocalPort,
+		WireguardInterfaceBindingModeIPVersion: n.WireguardInterfaceBindingModeIPVersion,
+		VPNClientConfigurationRemoteIPOverride: n.VPNClientConfigurationRemoteIPOverride,
+
+		// L2TP Server Configuration
+		L2TpInterface:        n.L2TpInterface,
+		L2TpLocalWANIP:       n.L2TpLocalWANIP,
+		L2TpAllowWeakCiphers: n.L2TpAllowWeakCiphers,
+		IPSecPreSharedKey:    n.IPSecPreSharedKey,
+
+		// OpenVPN Server Configuration
+		OpenVPNInterface:        n.OpenVPNInterface,
+		OpenVPNLocalWANIP:       n.OpenVPNLocalWANIP,
+		OpenVPNMode:             n.OpenVPNMode,
+		OpenVPNEncryptionCipher: n.OpenVPNEncryptionCipher,
+
+		// OpenVPN Certificates and Keys
+		ServerCrt:       n.ServerCrt,
+		ServerKey:       n.ServerKey,
+		DhKey:           n.DhKey,
+		SharedClientKey: n.SharedClientKey,
+		SharedClientCrt: n.SharedClientCrt,
+		AuthKey:         n.AuthKey,
+		CaCrt:           n.CaCrt,
+		CaKey:           n.CaKey,
 	})
 }
 
