@@ -93,10 +93,10 @@ func (dst *TrafficRouteDomains) UnmarshalJSON(b []byte) error {
 }
 
 type TrafficRouteIPAddresses struct {
-	IPOrSubnet string                   `json:"ip_or_subnet,omitempty"`
-	IPVersion  string                   `json:"ip_version,omitempty"` // v4|v6
+	Address    string                   `json:"ip_or_subnet,omitempty"`
 	PortRanges []TrafficRoutePortRanges `json:"port_ranges,omitempty"`
-	Ports      []int64                  `json:"ports,omitempty"` // [1-9][0-9]{0,4}
+	Ports      []int64                  `json:"ports,omitempty"`      // [1-9][0-9]{0,4}
+	Version    string                   `json:"ip_version,omitempty"` // v4|v6
 }
 
 func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
@@ -124,9 +124,9 @@ func (dst *TrafficRouteIPAddresses) UnmarshalJSON(b []byte) error {
 }
 
 type TrafficRouteIPRanges struct {
-	IPStart   string `json:"ip_start,omitempty"`
-	IPStop    string `json:"ip_stop,omitempty"`
-	IPVersion string `json:"ip_version,omitempty"` // v4|v6
+	Start   string `json:"ip_start,omitempty"`
+	Stop    string `json:"ip_stop,omitempty"`
+	Version string `json:"ip_version,omitempty"` // v4|v6
 }
 
 func (dst *TrafficRouteIPRanges) UnmarshalJSON(b []byte) error {
@@ -146,15 +146,15 @@ func (dst *TrafficRouteIPRanges) UnmarshalJSON(b []byte) error {
 }
 
 type TrafficRoutePortRanges struct {
-	PortStart *int64 `json:"port_start,omitempty"` // [1-9][0-9]{0,4}
-	PortStop  *int64 `json:"port_stop,omitempty"`  // [1-9][0-9]{0,4}
+	Start *int64 `json:"port_start,omitempty"` // [1-9][0-9]{0,4}
+	Stop  *int64 `json:"port_stop,omitempty"`  // [1-9][0-9]{0,4}
 }
 
 func (dst *TrafficRoutePortRanges) UnmarshalJSON(b []byte) error {
 	type Alias TrafficRoutePortRanges
 	aux := &struct {
-		PortStart *types.Number `json:"port_start"`
-		PortStop  *types.Number `json:"port_stop"`
+		Start *types.Number `json:"port_start"`
+		Stop  *types.Number `json:"port_stop"`
 
 		*Alias
 	}{
@@ -165,20 +165,20 @@ func (dst *TrafficRoutePortRanges) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if aux.PortStart != nil {
-		if val, err := aux.PortStart.Int64(); err == nil {
-			dst.PortStart = &val
-		} else if string(*aux.PortStart) == "" {
+	if aux.Start != nil {
+		if val, err := aux.Start.Int64(); err == nil {
+			dst.Start = &val
+		} else if string(*aux.Start) == "" {
 			var zero int64
-			dst.PortStart = &zero
+			dst.Start = &zero
 		}
 	}
-	if aux.PortStop != nil {
-		if val, err := aux.PortStop.Int64(); err == nil {
-			dst.PortStop = &val
-		} else if string(*aux.PortStop) == "" {
+	if aux.Stop != nil {
+		if val, err := aux.Stop.Int64(); err == nil {
+			dst.Stop = &val
+		} else if string(*aux.Stop) == "" {
 			var zero int64
-			dst.PortStop = &zero
+			dst.Stop = &zero
 		}
 	}
 

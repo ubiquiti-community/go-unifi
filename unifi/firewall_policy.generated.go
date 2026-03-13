@@ -42,7 +42,6 @@ type FirewallPolicy struct {
 	Enabled               bool                       `json:"enabled"`
 	ICMPTypename          string                     `json:"icmp_typename,omitempty"`    // ANY|SPECIFIC|LIST|OBJECT
 	ICMPV6Typename        string                     `json:"icmp_v6_typename,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
-	IPVersion             string                     `json:"ip_version,omitempty"`       // BOTH|IPV4|IPV6
 	Index                 *int64                     `json:"index,omitempty"`            // [1-9][0-9]+
 	Logging               bool                       `json:"logging"`
 	MatchIPSec            bool                       `json:"match_ip_sec"`
@@ -52,6 +51,7 @@ type FirewallPolicy struct {
 	Protocol              string                     `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
 	Schedule              *FirewallPolicySchedule    `json:"schedule,omitempty"`
 	Source                *FirewallPolicySource      `json:"source,omitempty"`
+	Version               string                     `json:"ip_version,omitempty"` // BOTH|IPV4|IPV6
 }
 
 func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {

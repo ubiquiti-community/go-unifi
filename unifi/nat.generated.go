@@ -38,7 +38,6 @@ type Nat struct {
 	Enabled               bool                  `json:"enabled"`
 	Exclude               bool                  `json:"exclude"`
 	IPAddress             string                `json:"ip_address,omitempty"`
-	IPVersion             string                `json:"ip_version,omitempty"` // IPV4|IPV6
 	InInterface           string                `json:"in_interface,omitempty"`
 	IsPredefined          bool                  `json:"is_predefined"`
 	Logging               bool                  `json:"logging"`
@@ -49,7 +48,8 @@ type Nat struct {
 	RuleIndex             *int64                `json:"rule_index,omitempty"`
 	SettingPreference     string                `json:"setting_preference,omitempty"` // auto|manual
 	SourceFilter          *NatSourceFilter      `json:"source_filter,omitempty"`
-	Type                  string                `json:"type,omitempty"` // DNAT|SNAT|MASQUERADE
+	Type                  string                `json:"type,omitempty"`       // DNAT|SNAT|MASQUERADE
+	Version               string                `json:"ip_version,omitempty"` // IPV4|IPV6
 }
 
 func (dst *Nat) UnmarshalJSON(b []byte) error {

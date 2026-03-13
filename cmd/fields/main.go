@@ -92,6 +92,12 @@ var fieldReps = []replacement{
 	{"XSsh", "SSH"},
 	{"XMgmt", "Mgmt"},
 	{"UnifiIDp", "UniFiIdentityProvider"},
+	{"PortStop", "Stop"},
+	{"PortStart", "Start"},
+	{"IPStart", "Start"},
+	{"IPStop", "Stop"},
+	{"IPVersion", "Version"},
+	{"IPOrSubnet", "Address"},
 }
 
 var fileReps = []replacement{
