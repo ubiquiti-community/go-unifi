@@ -576,7 +576,8 @@ func (c *ApiClient) doRequest(
 		}
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	successCodes := []int{http.StatusOK, http.StatusCreated, http.StatusAccepted, http.StatusNoContent}
+	if !slices.Contains(successCodes, resp.StatusCode) {
 		if resp.StatusCode == http.StatusUnauthorized {
 			return &LoginRequiredError{APIKey: c.apiKey != ""}
 		}

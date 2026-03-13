@@ -3,6 +3,7 @@ package unifi
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 // just to fix compile issues with the import.
@@ -22,7 +23,7 @@ type Cmd struct {
 func (c *ApiClient) ExecuteCmd(ctx context.Context, site string, mgr string, cmd Cmd) (any, error) {
 	var respBody struct{}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/cmd/%s", site, mgr), &cmd, &respBody)
+	err := c.do(ctx, http.MethodPost, fmt.Sprintf("api/s/%s/cmd/%s", site, mgr), &cmd, &respBody)
 	if err != nil {
 		return nil, err
 	}

@@ -3,6 +3,7 @@ package unifi
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 // just to fix compile issues with the import.
@@ -45,7 +46,7 @@ func (c *ApiClient) AssignDeviceTag(ctx context.Context, site string, mac string
 		Removals:  removals,
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/device-tags/device-tag-assignment/%s", site, mac), body, &respBody)
+	err := c.do(ctx, http.MethodPost, fmt.Sprintf("v2/api/site/%s/device-tags/device-tag-assignment/%s", site, mac), body, &respBody)
 	if err != nil {
 		return nil, err
 	}

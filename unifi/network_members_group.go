@@ -3,6 +3,7 @@ package unifi
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 // This is a v2 API object, manually coded.
@@ -38,8 +39,9 @@ func (c *ApiClient) GetNetworkMembersGroup(ctx context.Context, site string, id 
 
 func (c *ApiClient) CreateNetworkMembersGroup(ctx context.Context, site string, d *NetworkMembersGroup) (*NetworkMembersGroup, error) {
 	var respBody NetworkMembersGroup
+	d.ID = ""
 
-	err := c.do(ctx, "POST", fmt.Sprintf("v2/api/site/%s/network-members-groups", site), d, &respBody)
+	err := c.do(ctx, http.MethodPost, fmt.Sprintf("v2/api/site/%s/network-members-group", site), d, &respBody)
 	if err != nil {
 		return nil, err
 	}

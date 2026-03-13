@@ -4,22 +4,27 @@ import (
 	"context"
 	"fmt"
 	"maps"
+	"net/http"
+	"slices"
 )
 
 // GetClientByMAC returns slightly different information than GetClient, as they
 // use separate endpoints for their lookups. Specifically IP is only returned
 // by this method.
 func (c *ApiClient) GetClientByMAC(ctx context.Context, site, mac string) (*Client, error) {
-	resp, err := c.ListClient(ctx, site, map[string]string{"mac": mac})
+	resp, err := c.ListClient(ctx, site)
 	if err != nil {
 		return nil, err
 	}
-	if len(resp) != 1 {
+	if len(resp) == 0 {
 		return nil, &NotFoundError{}
 	}
-	d := resp[0]
-
-	return &d, nil
+	if i := slices.IndexFunc(resp, func(d Client) bool { return d.MAC == mac }); i >= 0 {
+		d := resp[i]
+		return &d, nil
+	} else {
+		return nil, &NotFoundError{}
+	}
 }
 
 func (c *ApiClient) stamgr(
@@ -38,7 +43,7 @@ func (c *ApiClient) stamgr(
 		Data []Client `json:"data"`
 	}
 
-	err := c.do(ctx, "POST", fmt.Sprintf("api/s/%s/cmd/stamgr", site), reqBody, &respBody)
+	err := c.do(ctx, http.MethodPost, fmt.Sprintf("api/s/%s/cmd/stamgr", site), reqBody, &respBody)
 	if err != nil {
 		return nil, err
 	}
