@@ -113,13 +113,27 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPRelayServers []string `json:"dhcp_relay_servers"`
 
 		// IPv6
-		IPV6InterfaceType     *string `json:"ipv6_interface_type,omitempty"`
-		IPV6SettingPreference *string `json:"ipv6_setting_preference,omitempty"`
-		IPV6RaPriority        *string `json:"ipv6_ra_priority,omitempty"`
+		IPV6InterfaceType         *string `json:"ipv6_interface_type,omitempty"`
+		IPV6SettingPreference     *string `json:"ipv6_setting_preference,omitempty"`
+		IPV6Subnet                *string `json:"ipv6_subnet,omitempty"`
+		IPV6RaEnabled             bool    `json:"ipv6_ra_enabled"`
+		IPV6RaPriority            *string `json:"ipv6_ra_priority,omitempty"`
+		IPV6RaPreferredLifetime   *int64  `json:"ipv6_ra_preferred_lifetime,omitempty"`
+		IPV6RaValidLifetime       *int64  `json:"ipv6_ra_valid_lifetime,omitempty"`
+		IPV6PDInterface           *string `json:"ipv6_pd_interface,omitempty"`
+		IPV6PDPrefixid            string  `json:"ipv6_pd_prefixid"`
+		IPV6PDStart               *string `json:"ipv6_pd_start,omitempty"`
+		IPV6PDStop                *string `json:"ipv6_pd_stop,omitempty"`
+		IPV6PDAutoPrefixidEnabled bool    `json:"ipv6_pd_auto_prefixid_enabled"`
 
 		// DHCPv6
-		DHCPDV6DNSAuto    bool    `json:"dhcpdv6_dns_auto,omitempty"`
+		DHCPDV6Enabled    bool    `json:"dhcpdv6_enabled"`
+		DHCPDV6DNSAuto    bool    `json:"dhcpdv6_dns_auto"`
 		DHCPDV6AllowSlaac bool    `json:"dhcpdv6_allow_slaac,omitempty"`
+		DHCPDV6DNS1       *string `json:"dhcpdv6_dns_1,omitempty"`
+		DHCPDV6DNS2       *string `json:"dhcpdv6_dns_2,omitempty"`
+		DHCPDV6DNS3       *string `json:"dhcpdv6_dns_3,omitempty"`
+		DHCPDV6DNS4       *string `json:"dhcpdv6_dns_4,omitempty"`
 		DHCPDV6Start      *string `json:"dhcpdv6_start,omitempty"`
 		DHCPDV6Stop       *string `json:"dhcpdv6_stop,omitempty"`
 		DHCPDV6LeaseTime  *int64  `json:"dhcpdv6_leasetime,omitempty"`
@@ -184,13 +198,27 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPRelayServers: orEmptySlice(n.RemoteVPNSubnets),
 
 		// IPv6
-		IPV6InterfaceType:     valueOrDefault(n.IPV6InterfaceType, "none"),
-		IPV6SettingPreference: n.IPV6SettingPreference,
-		IPV6RaPriority:        n.IPV6RaPriority,
+		IPV6InterfaceType:         valueOrDefault(n.IPV6InterfaceType, "none"),
+		IPV6SettingPreference:     n.IPV6SettingPreference,
+		IPV6Subnet:                n.IPV6Subnet,
+		IPV6RaEnabled:             n.IPV6RaEnabled,
+		IPV6RaPriority:            n.IPV6RaPriority,
+		IPV6RaPreferredLifetime:   n.IPV6RaPreferredLifetime,
+		IPV6RaValidLifetime:       n.IPV6RaValidLifetime,
+		IPV6PDInterface:           n.IPV6PDInterface,
+		IPV6PDPrefixid:            n.IPV6PDPrefixid,
+		IPV6PDStart:               n.IPV6PDStart,
+		IPV6PDStop:                n.IPV6PDStop,
+		IPV6PDAutoPrefixidEnabled: n.IPV6PDAutoPrefixidEnabled,
 
 		// DHCPv6
+		DHCPDV6Enabled:    n.DHCPDV6Enabled,
 		DHCPDV6DNSAuto:    n.DHCPDV6DNSAuto,
 		DHCPDV6AllowSlaac: n.DHCPDV6AllowSlaac,
+		DHCPDV6DNS1:       n.DHCPDV6DNS1,
+		DHCPDV6DNS2:       n.DHCPDV6DNS2,
+		DHCPDV6DNS3:       n.DHCPDV6DNS3,
+		DHCPDV6DNS4:       n.DHCPDV6DNS4,
 		DHCPDV6Start:      n.DHCPDV6Start,
 		DHCPDV6Stop:       n.DHCPDV6Stop,
 		DHCPDV6LeaseTime:  n.DHCPDV6LeaseTime,
@@ -321,13 +349,27 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPRelayServers []string `json:"dhcp_relay_servers"`
 
 		// IPv6
-		IPV6InterfaceType     *string `json:"ipv6_interface_type,omitempty"`
-		IPV6SettingPreference *string `json:"ipv6_setting_preference,omitempty"`
-		IPV6RaPriority        *string `json:"ipv6_ra_priority,omitempty"`
+		IPV6InterfaceType         *string `json:"ipv6_interface_type,omitempty"`
+		IPV6SettingPreference     *string `json:"ipv6_setting_preference,omitempty"`
+		IPV6Subnet                *string `json:"ipv6_subnet,omitempty"`
+		IPV6RaEnabled             bool    `json:"ipv6_ra_enabled"`
+		IPV6RaPriority            *string `json:"ipv6_ra_priority,omitempty"`
+		IPV6RaPreferredLifetime   *int64  `json:"ipv6_ra_preferred_lifetime,omitempty"`
+		IPV6RaValidLifetime       *int64  `json:"ipv6_ra_valid_lifetime,omitempty"`
+		IPV6PDInterface           *string `json:"ipv6_pd_interface,omitempty"`
+		IPV6PDPrefixid            string  `json:"ipv6_pd_prefixid"`
+		IPV6PDStart               *string `json:"ipv6_pd_start,omitempty"`
+		IPV6PDStop                *string `json:"ipv6_pd_stop,omitempty"`
+		IPV6PDAutoPrefixidEnabled bool    `json:"ipv6_pd_auto_prefixid_enabled"`
 
 		// DHCPv6
-		DHCPDV6DNSAuto    bool    `json:"dhcpdv6_dns_auto,omitempty"`
+		DHCPDV6Enabled    bool    `json:"dhcpdv6_enabled"`
+		DHCPDV6DNSAuto    bool    `json:"dhcpdv6_dns_auto"`
 		DHCPDV6AllowSlaac bool    `json:"dhcpdv6_allow_slaac,omitempty"`
+		DHCPDV6DNS1       *string `json:"dhcpdv6_dns_1,omitempty"`
+		DHCPDV6DNS2       *string `json:"dhcpdv6_dns_2,omitempty"`
+		DHCPDV6DNS3       *string `json:"dhcpdv6_dns_3,omitempty"`
+		DHCPDV6DNS4       *string `json:"dhcpdv6_dns_4,omitempty"`
 		DHCPDV6Start      *string `json:"dhcpdv6_start,omitempty"`
 		DHCPDV6Stop       *string `json:"dhcpdv6_stop,omitempty"`
 		DHCPDV6LeaseTime  *int64  `json:"dhcpdv6_leasetime,omitempty"`
@@ -392,13 +434,27 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPRelayServers: orEmptySlice(n.DHCPRelayServers),
 
 		// IPv6
-		IPV6InterfaceType:     valueOrDefault(n.IPV6InterfaceType, "none"),
-		IPV6SettingPreference: n.IPV6SettingPreference,
-		IPV6RaPriority:        n.IPV6RaPriority,
+		IPV6InterfaceType:         valueOrDefault(n.IPV6InterfaceType, "none"),
+		IPV6SettingPreference:     n.IPV6SettingPreference,
+		IPV6Subnet:                n.IPV6Subnet,
+		IPV6RaEnabled:             n.IPV6RaEnabled,
+		IPV6RaPriority:            n.IPV6RaPriority,
+		IPV6RaPreferredLifetime:   n.IPV6RaPreferredLifetime,
+		IPV6RaValidLifetime:       n.IPV6RaValidLifetime,
+		IPV6PDInterface:           n.IPV6PDInterface,
+		IPV6PDPrefixid:            n.IPV6PDPrefixid,
+		IPV6PDStart:               n.IPV6PDStart,
+		IPV6PDStop:                n.IPV6PDStop,
+		IPV6PDAutoPrefixidEnabled: n.IPV6PDAutoPrefixidEnabled,
 
 		// DHCPv6
+		DHCPDV6Enabled:    n.DHCPDV6Enabled,
 		DHCPDV6DNSAuto:    n.DHCPDV6DNSAuto,
 		DHCPDV6AllowSlaac: n.DHCPDV6AllowSlaac,
+		DHCPDV6DNS1:       n.DHCPDV6DNS1,
+		DHCPDV6DNS2:       n.DHCPDV6DNS2,
+		DHCPDV6DNS3:       n.DHCPDV6DNS3,
+		DHCPDV6DNS4:       n.DHCPDV6DNS4,
 		DHCPDV6Start:      n.DHCPDV6Start,
 		DHCPDV6Stop:       n.DHCPDV6Stop,
 		DHCPDV6LeaseTime:  n.DHCPDV6LeaseTime,
