@@ -29,40 +29,13 @@ type APGroup struct {
 func (c *ApiClient) ListAPGroup(ctx context.Context, site string) ([]APGroup, error) {
 	var respBody []APGroup
 
-	err := c.do(ctx, "GET", fmt.Sprintf("v2/api/site/%s/apgroups", site), nil, &respBody)
+	err := c.do(ctx, http.MethodGet, fmt.Sprintf("v2/api/site/%s/apgroups", site), nil, &respBody)
 	if err != nil {
 		return nil, err
 	}
 
 	return respBody, nil
 }
-
-// func (c *Client) getWLANGroup(ctx context.Context, site, id string) (*WLANGroup, error) {
-// 	var respBody struct {
-// 		Meta meta        `json:"meta"`
-// 		Data []WLANGroup `json:"data"`
-// 	}
-
-// 	err := c.do(ctx, "GET", fmt.Sprintf("api/s/%s/rest/wlangroup/%s", site, id), nil, &respBody)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	if len(respBody.Data) != 1 {
-// 		return nil, &NotFoundError{}
-// 	}
-
-// 	d := respBody.Data[0]
-// 	return &d, nil
-// }
-
-// func (c *Client) deleteWLANGroup(ctx context.Context, site, id string) error {
-// 	err := c.do(ctx, "DELETE", fmt.Sprintf("api/s/%s/rest/wlangroup/%s", site, id), struct{}{}, nil)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
 
 func (c *ApiClient) CreateAPGroup(ctx context.Context, site string, d *APGroup) (*APGroup, error) {
 	var respBody APGroup
@@ -71,26 +44,27 @@ func (c *ApiClient) CreateAPGroup(ctx context.Context, site string, d *APGroup) 
 	if err != nil {
 		return nil, err
 	}
-
 	return &respBody, nil
 }
 
-// func (c *Client) updateWLANGroup(ctx context.Context, site string, d *WLANGroup) (*WLANGroup, error) {
-// 	var respBody struct {
-// 		Meta meta        `json:"meta"`
-// 		Data []WLANGroup `json:"data"`
-// 	}
+func (c *ApiClient) GetAPGroup(ctx context.Context, site, id string) (*APGroup, error) {
+	var respBody APGroup
+	err := c.do(ctx, http.MethodGet, fmt.Sprintf("v2/api/site/%s/apgroups/%s", site, id), nil, &respBody)
+	if err != nil {
+		return nil, err
+	}
+	return &respBody, nil
+}
 
-// 	err := c.do(ctx, "PUT", fmt.Sprintf("api/s/%s/rest/wlangroup/%s", site, d.Id), d, &respBody)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func (c *ApiClient) UpdateAPGroup(ctx context.Context, site string, d *APGroup) (*APGroup, error) {
+	var respBody APGroup
+	err := c.do(ctx, http.MethodPut, fmt.Sprintf("v2/api/site/%s/apgroups/%s", site, d.ID), d, &respBody)
+	if err != nil {
+		return nil, err
+	}
+	return &respBody, nil
+}
 
-// 	if len(respBody.Data) != 1 {
-// 		return nil, &NotFoundError{}
-// 	}
-
-// 	new := respBody.Data[0]
-
-// 	return &new, nil
-// }
+func (c *ApiClient) DeleteAPGroup(ctx context.Context, site, id string) error {
+	return c.do(ctx, http.MethodDelete, fmt.Sprintf("v2/api/site/%s/apgroups/%s", site, id), struct{}{}, nil)
+}
