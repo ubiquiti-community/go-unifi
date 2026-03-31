@@ -35,3 +35,6 @@ func (p DevicePendingAdoptionPage) GetData() []DevicePendingAdoption { return p.
 
 func (p SiteOverviewPage) GetTotalCount() int64    { return p.TotalCount }
 func (p SiteOverviewPage) GetData() []SiteOverview { return p.Data }
+
+func (p IntegrationDeviceTagPageDto) GetTotalCount() int64 { return p.TotalCount }
+func (p IntegrationDeviceTagPageDto) GetData() []DeviceTag { return p.Data }
