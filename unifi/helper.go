@@ -6,14 +6,11 @@ func Ptr[T any](v T) *T {
 	return &v
 }
 
-// 1. Define an interface for the "Page" structure.
-// This ensures the generic function knows the Page has a TotalCount.
 type Paginatable[T any] interface {
 	GetTotalCount() int64
 	GetData() []T
 }
 
-// 2. The Universal Paginator
 func FetchAll[T any, P Paginatable[T]](
 	ctx context.Context,
 	fetcher func(offset int32) (P, error),

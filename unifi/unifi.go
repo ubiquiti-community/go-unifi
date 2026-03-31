@@ -20,7 +20,6 @@ import (
 //go:generate go tool oapi-codegen -generate models,client -o ../client/protect/client.gen.go -package protect ../client/protect/openapi.json
 //go:generate go tool oapi-codegen -generate models,client -o ../client/network/client.gen.go -package network ../client/network/openapi.json
 
-// Config holds all configuration for creating a new ApiClient.
 type Config struct {
 	BaseURL        string
 	APIKey         string
@@ -32,9 +31,6 @@ type Config struct {
 	RetryMax       *int
 }
 
-// New creates a fully initialized ApiClient from the provided configuration.
-// For cloud connector mode, set CloudConnector=true and optionally HardwareID.
-// For direct connection, provide BaseURL and either APIKey or Username/Password.
 func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	if cfg.APIKey == "" {
 		return nil, errors.New("API key is required")

@@ -24,10 +24,9 @@ type ListHostsResponse struct {
 func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) bool) (*Host, error) {
 	baseURL := "https://api.ui.com/v1/hosts"
 	nextToken := ""
-	pageSize := "50" // Adjust as needed
+	pageSize := "50"
 
 	for {
-		// Build the URL with query parameters
 		reqURL, err := url.Parse(baseURL)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse base URL: %w", err)
@@ -40,7 +39,6 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 		}
 		reqURL.RawQuery = q.Encode()
 
-		// Setup the request
 		req, err := retryablehttp.NewRequest("GET", reqURL.String(), nil)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create request: %w", err)
@@ -49,7 +47,6 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 		req.Header.Set("Accept", "application/json")
 		req.Header.Set("X-API-KEY", apiKey)
 
-		// Execute the request
 		resp, err := client.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("request failed: %w", err)
@@ -61,7 +58,6 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 			return nil, fmt.Errorf("unexpected status %d: %s", resp.StatusCode, string(bodyBytes))
 		}
 
-		// Decode the JSON response
 		var apiResponse ListHostsResponse
 		if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
 			resp.Body.Close()
@@ -69,14 +65,12 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 		}
 		resp.Body.Close()
 
-		// Evaluate each host against our custom matchFunc
 		for _, host := range apiResponse.Data {
 			if matchFunc(host) {
-				return &host, nil // Match found! Return the host immediately.
+				return &host, nil
 			}
 		}
 
-		// Pagination check
 		if apiResponse.NextToken == "" {
 			break
 		}
@@ -88,7 +82,7 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 
 func GetFirstOwnedHostID(client *retryablehttp.Client, apiKey string) (string, error) {
 	host, err := FindHost(client, apiKey, func(h Host) bool {
-		return h.Owner // Return true if the user is the owner
+		return h.Owner
 	})
 	if err != nil {
 		return "", err
@@ -96,10 +90,9 @@ func GetFirstOwnedHostID(client *retryablehttp.Client, apiKey string) (string, e
 	return host.ID, nil
 }
 
-// 4. Implementation B: Get Host by Hardware ID
 func GetHostIDByHardwareID(client *retryablehttp.Client, apiKey, targetHardwareID string) (string, error) {
 	host, err := FindHost(client, apiKey, func(h Host) bool {
-		return h.HardwareID == targetHardwareID // Return true if the IDs match
+		return h.HardwareID == targetHardwareID
 	})
 	if err != nil {
 		return "", err

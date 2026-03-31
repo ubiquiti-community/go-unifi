@@ -8,8 +8,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// Firewall Policies
-
 func (c *ApiClient) ListFirewallPolicies(ctx context.Context, site uuid.UUID) ([]network.FirewallPolicy, error) {
 	return FetchAll(ctx, func(offset int32) (*network.FirewallPolicyPage, error) {
 		resp, err := c.network.client.GetFirewallPoliciesWithResponse(ctx, site, &network.GetFirewallPoliciesParams{
