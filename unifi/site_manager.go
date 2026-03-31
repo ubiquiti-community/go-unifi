@@ -10,18 +10,18 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 )
 
-type Host struct {
+type host struct {
 	ID         string `json:"id"`
 	HardwareID string `json:"hardwareId"`
 	Owner      bool   `json:"owner"`
 }
 
-type ListHostsResponse struct {
-	Data      []Host `json:"data"`
+type listHostsResponse struct {
+	Data      []host `json:"data"`
 	NextToken string `json:"nextToken"`
 }
 
-func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) bool) (*Host, error) {
+func findHost(client *retryablehttp.Client, apiKey string, matchFunc func(host) bool) (*host, error) {
 	baseURL := "https://api.ui.com/v1/hosts"
 	nextToken := ""
 	pageSize := "50"
@@ -58,7 +58,7 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 			return nil, fmt.Errorf("unexpected status %d: %s", resp.StatusCode, string(bodyBytes))
 		}
 
-		var apiResponse ListHostsResponse
+		var apiResponse listHostsResponse
 		if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
 			resp.Body.Close()
 			return nil, fmt.Errorf("failed to decode json: %w", err)
@@ -80,8 +80,8 @@ func FindHost(client *retryablehttp.Client, apiKey string, matchFunc func(Host) 
 	return nil, fmt.Errorf("no host found matching criteria across all pages")
 }
 
-func GetFirstOwnedHostID(client *retryablehttp.Client, apiKey string) (string, error) {
-	host, err := FindHost(client, apiKey, func(h Host) bool {
+func getFirstOwnedHostID(client *retryablehttp.Client, apiKey string) (string, error) {
+	host, err := findHost(client, apiKey, func(h host) bool {
 		return h.Owner
 	})
 	if err != nil {
@@ -90,8 +90,8 @@ func GetFirstOwnedHostID(client *retryablehttp.Client, apiKey string) (string, e
 	return host.ID, nil
 }
 
-func GetHostIDByHardwareID(client *retryablehttp.Client, apiKey, targetHardwareID string) (string, error) {
-	host, err := FindHost(client, apiKey, func(h Host) bool {
+func getHostIDByHardwareID(client *retryablehttp.Client, apiKey, targetHardwareID string) (string, error) {
+	host, err := findHost(client, apiKey, func(h host) bool {
 		return h.HardwareID == targetHardwareID
 	})
 	if err != nil {

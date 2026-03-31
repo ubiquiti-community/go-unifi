@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	network "github.com/ubiquiti-community/go-unifi/client/network"
+	"github.com/ubiquiti-community/go-unifi/client/network"
 
 	"github.com/google/uuid"
 )

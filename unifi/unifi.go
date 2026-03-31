@@ -11,8 +11,8 @@ import (
 	"net/url"
 	"time"
 
-	network "github.com/ubiquiti-community/go-unifi/client/network"
-	protect "github.com/ubiquiti-community/go-unifi/client/protect"
+	"github.com/ubiquiti-community/go-unifi/client/network"
+	"github.com/ubiquiti-community/go-unifi/client/protect"
 
 	"github.com/hashicorp/go-retryablehttp"
 )
@@ -82,12 +82,12 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 		var hostID string
 		var err error
 		if cfg.HardwareID != "" {
-			hostID, err = GetHostIDByHardwareID(c, cfg.APIKey, cfg.HardwareID)
+			hostID, err = getHostIDByHardwareID(c, cfg.APIKey, cfg.HardwareID)
 			if err != nil {
 				return nil, fmt.Errorf("unable to find host with hardware ID %s: %w", cfg.HardwareID, err)
 			}
 		} else {
-			hostID, err = GetFirstOwnedHostID(c, cfg.APIKey)
+			hostID, err = getFirstOwnedHostID(c, cfg.APIKey)
 			if err != nil {
 				return nil, fmt.Errorf("unable to find first owned host: %w", err)
 			}
@@ -130,7 +130,7 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 
 	networkResponse, err := networkClient.GetInfoWithResponse(ctx)
 	if err != nil || networkResponse.StatusCode() == http.StatusOK {
-		client.network = &NetworkAPI{
+		client.network = &networkAPI{
 			client:  *networkClient,
 			version: networkResponse.JSON200.ApplicationVersion,
 		}
@@ -138,7 +138,7 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 
 	protectResponse, err := protectClient.GetV1MetaInfoWithResponse(ctx)
 	if err != nil || protectResponse.StatusCode() == http.StatusOK {
-		client.protect = &ProtectAPI{
+		client.protect = &protectAPI{
 			client:  *protectClient,
 			version: protectResponse.JSON200.ApplicationVersion,
 		}
@@ -147,18 +147,18 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	return client, nil
 }
 
-type NetworkAPI struct {
+type networkAPI struct {
 	client  network.ClientWithResponses
 	version string
 }
 
-type ProtectAPI struct {
+type protectAPI struct {
 	client  protect.ClientWithResponses
 	version string
 }
 
 type ApiClient struct {
 	ctx     context.Context
-	network *NetworkAPI
-	protect *ProtectAPI
+	network *networkAPI
+	protect *protectAPI
 }
