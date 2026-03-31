@@ -14,10 +14,10 @@ func (c *ApiClient) ListWANs(ctx context.Context, site uuid.UUID) ([]network.WAN
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.WANOverviewPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.WANOverviewPage, error) {
 		resp, err := c.network.client.GetWansOverviewPageWithResponse(ctx, site, &network.GetWansOverviewPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -31,10 +31,10 @@ func (c *ApiClient) ListSiteToSiteVPNTunnels(ctx context.Context, site uuid.UUID
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.IntegrationSiteToSiteVpnTunnelOverviewPageDto, error) {
+	return fetchAll(ctx, func(offset int32) (*network.IntegrationSiteToSiteVpnTunnelOverviewPageDto, error) {
 		resp, err := c.network.client.GetSiteToSiteVpnTunnelPageWithResponse(ctx, site, &network.GetSiteToSiteVpnTunnelPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -48,10 +48,10 @@ func (c *ApiClient) ListVPNServers(ctx context.Context, site uuid.UUID) ([]netwo
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.IntegrationVpnServerOverviewPageDto, error) {
+	return fetchAll(ctx, func(offset int32) (*network.IntegrationVpnServerOverviewPageDto, error) {
 		resp, err := c.network.client.GetVpnServerPageWithResponse(ctx, site, &network.GetVpnServerPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -65,10 +65,10 @@ func (c *ApiClient) ListRADIUSProfiles(ctx context.Context, site uuid.UUID) ([]n
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.RadiusProfileOverviewPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.RadiusProfileOverviewPage, error) {
 		resp, err := c.network.client.GetRadiusProfileOverviewPageWithResponse(ctx, site, &network.GetRadiusProfileOverviewPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -82,10 +82,10 @@ func (c *ApiClient) ListDPIApplicationCategories(ctx context.Context) ([]network
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.DPICategoryPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.DPICategoryPage, error) {
 		resp, err := c.network.client.GetDpiApplicationCategoriesWithResponse(ctx, &network.GetDpiApplicationCategoriesParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -99,10 +99,10 @@ func (c *ApiClient) ListDPIApplications(ctx context.Context) ([]network.DPIAppli
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.DPIApplicationPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.DPIApplicationPage, error) {
 		resp, err := c.network.client.GetDpiApplicationsWithResponse(ctx, &network.GetDpiApplicationsParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -116,10 +116,10 @@ func (c *ApiClient) ListCountries(ctx context.Context) ([]network.CountryDefinit
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.CountryDefinitionPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.CountryDefinitionPage, error) {
 		resp, err := c.network.client.GetCountriesWithResponse(ctx, &network.GetCountriesParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

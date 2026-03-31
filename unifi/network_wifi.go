@@ -14,10 +14,10 @@ func (c *ApiClient) ListWifiBroadcasts(ctx context.Context, site uuid.UUID) ([]n
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.IntegrationWifiBroadcastPageDto, error) {
+	return fetchAll(ctx, func(offset int32) (*network.IntegrationWifiBroadcastPageDto, error) {
 		resp, err := c.network.client.GetWifiBroadcastPageWithResponse(ctx, site, &network.GetWifiBroadcastPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

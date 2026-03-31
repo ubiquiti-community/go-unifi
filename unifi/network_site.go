@@ -12,10 +12,10 @@ func (c *ApiClient) ListSites(ctx context.Context) ([]network.SiteOverview, erro
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.SiteOverviewPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.SiteOverviewPage, error) {
 		resp, err := c.network.client.GetSiteOverviewPageWithResponse(ctx, &network.GetSiteOverviewPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

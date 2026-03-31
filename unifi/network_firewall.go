@@ -14,10 +14,10 @@ func (c *ApiClient) ListFirewallPolicies(ctx context.Context, site uuid.UUID) ([
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.FirewallPolicyPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.FirewallPolicyPage, error) {
 		resp, err := c.network.client.GetFirewallPoliciesWithResponse(ctx, site, &network.GetFirewallPoliciesParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -76,10 +76,10 @@ func (c *ApiClient) ListFirewallZones(ctx context.Context, site uuid.UUID) ([]ne
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.FirewallZonesPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.FirewallZonesPage, error) {
 		resp, err := c.network.client.GetFirewallZonesWithResponse(ctx, site, &network.GetFirewallZonesParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

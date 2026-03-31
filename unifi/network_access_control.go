@@ -14,10 +14,10 @@ func (c *ApiClient) ListACLRules(ctx context.Context, site uuid.UUID) ([]network
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.IntegrationAclRulePageDto, error) {
+	return fetchAll(ctx, func(offset int32) (*network.IntegrationAclRulePageDto, error) {
 		resp, err := c.network.client.GetAclRulePageWithResponse(ctx, site, &network.GetAclRulePageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

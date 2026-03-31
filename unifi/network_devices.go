@@ -14,10 +14,10 @@ func (c *ApiClient) ListDevices(ctx context.Context, site uuid.UUID) ([]network.
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.AdoptedDeviceOverviewPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.AdoptedDeviceOverviewPage, error) {
 		resp, err := c.network.client.GetAdoptedDeviceOverviewPageWithResponse(ctx, site, &network.GetAdoptedDeviceOverviewPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -85,10 +85,10 @@ func (c *ApiClient) ListPendingDevices(ctx context.Context) ([]network.DevicePen
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.DevicePendingAdoptionPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.DevicePendingAdoptionPage, error) {
 		resp, err := c.network.client.GetPendingDevicePageWithResponse(ctx, &network.GetPendingDevicePageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err
@@ -102,10 +102,10 @@ func (c *ApiClient) ListDeviceTags(ctx context.Context, site uuid.UUID) ([]netwo
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.IntegrationDeviceTagPageDto, error) {
+	return fetchAll(ctx, func(offset int32) (*network.IntegrationDeviceTagPageDto, error) {
 		resp, err := c.network.client.GetDeviceTagPageWithResponse(ctx, site, &network.GetDeviceTagPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

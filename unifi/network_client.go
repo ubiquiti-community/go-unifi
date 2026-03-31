@@ -14,10 +14,10 @@ func (c *ApiClient) ListClients(ctx context.Context, site uuid.UUID) ([]network.
 		return nil, fmt.Errorf("Network API is unavailable")
 	}
 
-	return FetchAll(ctx, func(offset int32) (*network.ClientOverviewPage, error) {
+	return fetchAll(ctx, func(offset int32) (*network.ClientOverviewPage, error) {
 		resp, err := c.network.client.GetConnectedClientOverviewPageWithResponse(ctx, site, &network.GetConnectedClientOverviewPageParams{
-			Offset: Ptr(offset),
-			Limit:  Ptr[int32](50),
+			Offset: ptr(offset),
+			Limit:  ptr[int32](50),
 		})
 		if err != nil {
 			return nil, err

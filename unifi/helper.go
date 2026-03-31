@@ -2,16 +2,16 @@ package unifi
 
 import "context"
 
-func Ptr[T any](v T) *T {
+func ptr[T any](v T) *T {
 	return &v
 }
 
-type Paginatable[T any] interface {
+type paginatable[T any] interface {
 	GetTotalCount() int64
 	GetData() []T
 }
 
-func FetchAll[T any, P Paginatable[T]](
+func fetchAll[T any, P paginatable[T]](
 	ctx context.Context,
 	fetcher func(offset int32) (P, error),
 ) ([]T, error) {
