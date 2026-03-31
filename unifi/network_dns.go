@@ -2,6 +2,7 @@ package unifi
 
 import (
 	"context"
+	"fmt"
 
 	network "github.com/ubiquiti-community/go-unifi/client/network"
 
@@ -9,6 +10,10 @@ import (
 )
 
 func (c *ApiClient) ListDNSPolicies(ctx context.Context, site uuid.UUID) ([]network.DNSPolicy, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.IntegrationDnsPolicyPageDto, error) {
 		resp, err := c.network.client.GetDnsPolicyPageWithResponse(ctx, site, &network.GetDnsPolicyPageParams{
 			Offset: Ptr(offset),
@@ -22,6 +27,10 @@ func (c *ApiClient) ListDNSPolicies(ctx context.Context, site uuid.UUID) ([]netw
 }
 
 func (c *ApiClient) GetDNSPolicy(ctx context.Context, site, id uuid.UUID) (*network.DNSPolicy, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.GetDnsPolicyWithResponse(ctx, site, id)
 	if err != nil {
 		return nil, err
@@ -30,11 +39,19 @@ func (c *ApiClient) GetDNSPolicy(ctx context.Context, site, id uuid.UUID) (*netw
 }
 
 func (c *ApiClient) DeleteDNSPolicy(ctx context.Context, site, id uuid.UUID) error {
+	if c.network == nil {
+		return fmt.Errorf("Network API is unavailable")
+	}
+
 	_, err := c.network.client.DeleteDnsPolicy(ctx, site, id)
 	return err
 }
 
 func (c *ApiClient) CreateDNSPolicy(ctx context.Context, site uuid.UUID, data network.CreateDnsPolicyJSONRequestBody) (*network.DNSPolicy, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.CreateDnsPolicyWithResponse(ctx, site, data)
 	if err != nil {
 		return nil, err
@@ -43,6 +60,10 @@ func (c *ApiClient) CreateDNSPolicy(ctx context.Context, site uuid.UUID, data ne
 }
 
 func (c *ApiClient) UpdateDNSPolicy(ctx context.Context, site, id uuid.UUID, data network.UpdateDnsPolicyJSONRequestBody) (*network.DNSPolicy, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.UpdateDnsPolicyWithResponse(ctx, site, id, data)
 	if err != nil {
 		return nil, err

@@ -2,6 +2,7 @@ package unifi
 
 import (
 	"context"
+	"fmt"
 
 	network "github.com/ubiquiti-community/go-unifi/client/network"
 
@@ -9,6 +10,10 @@ import (
 )
 
 func (c *ApiClient) ListNetworks(ctx context.Context, site uuid.UUID) ([]network.NetworkOverview, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.NetworkOverviewPage, error) {
 		resp, err := c.network.client.GetNetworksOverviewPageWithResponse(ctx, site, &network.GetNetworksOverviewPageParams{
 			Offset: Ptr(offset),
@@ -22,6 +27,10 @@ func (c *ApiClient) ListNetworks(ctx context.Context, site uuid.UUID) ([]network
 }
 
 func (c *ApiClient) GetNetwork(ctx context.Context, site, id uuid.UUID) (*network.NetworkDetails, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.GetNetworkDetailsWithResponse(ctx, site, id)
 	if err != nil {
 		return nil, err
@@ -30,11 +39,19 @@ func (c *ApiClient) GetNetwork(ctx context.Context, site, id uuid.UUID) (*networ
 }
 
 func (c *ApiClient) DeleteNetwork(ctx context.Context, site, id uuid.UUID) error {
+	if c.network == nil {
+		return fmt.Errorf("Network API is unavailable")
+	}
+
 	_, err := c.network.client.DeleteNetwork(ctx, site, id, &network.DeleteNetworkParams{})
 	return err
 }
 
 func (c *ApiClient) CreateNetwork(ctx context.Context, site uuid.UUID, data network.CreateNetworkJSONRequestBody) (*network.NetworkDetails, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.CreateNetworkWithResponse(ctx, site, data)
 	if err != nil {
 		return nil, err
@@ -43,6 +60,10 @@ func (c *ApiClient) CreateNetwork(ctx context.Context, site uuid.UUID, data netw
 }
 
 func (c *ApiClient) UpdateNetwork(ctx context.Context, site, id uuid.UUID, data network.UpdateNetworkJSONRequestBody) (*network.NetworkDetails, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.UpdateNetworkWithResponse(ctx, site, id, data)
 	if err != nil {
 		return nil, err
@@ -51,6 +72,10 @@ func (c *ApiClient) UpdateNetwork(ctx context.Context, site, id uuid.UUID, data 
 }
 
 func (c *ApiClient) GetNetworkReferences(ctx context.Context, site, id uuid.UUID) (*network.NetworkReferences, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	resp, err := c.network.client.GetNetworkReferencesWithResponse(ctx, site, id)
 	if err != nil {
 		return nil, err

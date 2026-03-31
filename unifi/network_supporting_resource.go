@@ -2,6 +2,7 @@ package unifi
 
 import (
 	"context"
+	"fmt"
 
 	network "github.com/ubiquiti-community/go-unifi/client/network"
 
@@ -9,6 +10,10 @@ import (
 )
 
 func (c *ApiClient) ListWANs(ctx context.Context, site uuid.UUID) ([]network.WANOverview, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.WANOverviewPage, error) {
 		resp, err := c.network.client.GetWansOverviewPageWithResponse(ctx, site, &network.GetWansOverviewPageParams{
 			Offset: Ptr(offset),
@@ -22,6 +27,10 @@ func (c *ApiClient) ListWANs(ctx context.Context, site uuid.UUID) ([]network.WAN
 }
 
 func (c *ApiClient) ListSiteToSiteVPNTunnels(ctx context.Context, site uuid.UUID) ([]network.SiteToSiteVPNTunnelOverview, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.IntegrationSiteToSiteVpnTunnelOverviewPageDto, error) {
 		resp, err := c.network.client.GetSiteToSiteVpnTunnelPageWithResponse(ctx, site, &network.GetSiteToSiteVpnTunnelPageParams{
 			Offset: Ptr(offset),
@@ -35,6 +44,10 @@ func (c *ApiClient) ListSiteToSiteVPNTunnels(ctx context.Context, site uuid.UUID
 }
 
 func (c *ApiClient) ListVPNServers(ctx context.Context, site uuid.UUID) ([]network.VPNServerOverview, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.IntegrationVpnServerOverviewPageDto, error) {
 		resp, err := c.network.client.GetVpnServerPageWithResponse(ctx, site, &network.GetVpnServerPageParams{
 			Offset: Ptr(offset),
@@ -48,6 +61,10 @@ func (c *ApiClient) ListVPNServers(ctx context.Context, site uuid.UUID) ([]netwo
 }
 
 func (c *ApiClient) ListRADIUSProfiles(ctx context.Context, site uuid.UUID) ([]network.RadiusProfileOverview, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.RadiusProfileOverviewPage, error) {
 		resp, err := c.network.client.GetRadiusProfileOverviewPageWithResponse(ctx, site, &network.GetRadiusProfileOverviewPageParams{
 			Offset: Ptr(offset),
@@ -61,6 +78,10 @@ func (c *ApiClient) ListRADIUSProfiles(ctx context.Context, site uuid.UUID) ([]n
 }
 
 func (c *ApiClient) ListDPIApplicationCategories(ctx context.Context) ([]network.DPICategory, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.DPICategoryPage, error) {
 		resp, err := c.network.client.GetDpiApplicationCategoriesWithResponse(ctx, &network.GetDpiApplicationCategoriesParams{
 			Offset: Ptr(offset),
@@ -74,6 +95,10 @@ func (c *ApiClient) ListDPIApplicationCategories(ctx context.Context) ([]network
 }
 
 func (c *ApiClient) ListDPIApplications(ctx context.Context) ([]network.DPIApplication, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.DPIApplicationPage, error) {
 		resp, err := c.network.client.GetDpiApplicationsWithResponse(ctx, &network.GetDpiApplicationsParams{
 			Offset: Ptr(offset),
@@ -87,6 +112,10 @@ func (c *ApiClient) ListDPIApplications(ctx context.Context) ([]network.DPIAppli
 }
 
 func (c *ApiClient) ListCountries(ctx context.Context) ([]network.CountryDefinition, error) {
+	if c.network == nil {
+		return nil, fmt.Errorf("Network API is unavailable")
+	}
+
 	return FetchAll(ctx, func(offset int32) (*network.CountryDefinitionPage, error) {
 		resp, err := c.network.client.GetCountriesWithResponse(ctx, &network.GetCountriesParams{
 			Offset: Ptr(offset),
