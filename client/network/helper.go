@@ -38,3 +38,24 @@ func (p SiteOverviewPage) GetData() []SiteOverview { return p.Data }
 
 func (p IntegrationDeviceTagPageDto) GetTotalCount() int64 { return p.TotalCount }
 func (p IntegrationDeviceTagPageDto) GetData() []DeviceTag { return p.Data }
+
+func (p WANOverviewPage) GetTotalCount() int64 { return p.TotalCount }
+func (p WANOverviewPage) GetData() []WANOverview { return p.Data }
+
+func (p IntegrationSiteToSiteVpnTunnelOverviewPageDto) GetTotalCount() int64 { return p.TotalCount }
+func (p IntegrationSiteToSiteVpnTunnelOverviewPageDto) GetData() []SiteToSiteVPNTunnelOverview { return p.Data }
+
+func (p IntegrationVpnServerOverviewPageDto) GetTotalCount() int64 { return p.TotalCount }
+func (p IntegrationVpnServerOverviewPageDto) GetData() []VPNServerOverview { return p.Data }
+
+func (p RadiusProfileOverviewPage) GetTotalCount() int64 { return p.TotalCount }
+func (p RadiusProfileOverviewPage) GetData() []RadiusProfileOverview { return p.Data }
+
+func (p DPICategoryPage) GetTotalCount() int64 { return p.TotalCount }
+func (p DPICategoryPage) GetData() []DPICategory { return p.Data }
+
+func (p DPIApplicationPage) GetTotalCount() int64 { return p.TotalCount }
+func (p DPIApplicationPage) GetData() []DPIApplication { return p.Data }
+
+func (p CountryDefinitionPage) GetTotalCount() int64 { return p.TotalCount }
+func (p CountryDefinitionPage) GetData() []CountryDefinition { return p.Data }
