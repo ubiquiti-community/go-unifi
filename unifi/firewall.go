@@ -91,3 +91,22 @@ func (c *ApiClient) UpdateFirewallZone(ctx context.Context, site, id uuid.UUID, 
 	}
 	return resp.JSON200, nil
 }
+
+func (c *ApiClient) GetFirewallPolicyOrdering(ctx context.Context, site uuid.UUID, sourceZone, destinationZone uuid.UUID) (*network.OrderedFirewallPolicyIDs, error) {
+	resp, err := c.network.client.GetFirewallPolicyOrderingWithResponse(ctx, site, &network.GetFirewallPolicyOrderingParams{
+		SourceFirewallZoneId:      sourceZone,
+		DestinationFirewallZoneId: destinationZone,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.JSON200.OrderedFirewallPolicyIds, nil
+}
+
+func (c *ApiClient) PatchFirewallPolicy(ctx context.Context, site, id uuid.UUID, data network.PatchFirewallPolicyJSONRequestBody) (*network.FirewallPolicy, error) {
+	resp, err := c.network.client.PatchFirewallPolicyWithResponse(ctx, site, id, data)
+	if err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
+}

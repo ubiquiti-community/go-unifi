@@ -49,3 +49,11 @@ func (c *ApiClient) UpdateNetwork(ctx context.Context, site, id uuid.UUID, data 
 	}
 	return resp.JSON200, nil
 }
+
+func (c *ApiClient) GetNetworkReferences(ctx context.Context, site, id uuid.UUID) (*network.NetworkReferences, error) {
+	resp, err := c.network.client.GetNetworkReferencesWithResponse(ctx, site, id)
+	if err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
+}
