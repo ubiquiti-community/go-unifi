@@ -33,7 +33,7 @@ type FirewallZone struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	DefaultZone bool     `json:"default_zone,omitempty"`
+	DefaultZone bool     `json:"default_zone"`
 	Name        string   `json:"name,omitempty"`
 	NetworkIDs  []string `json:"network_ids,omitempty"`
 	ZoneKey     string   `json:"zone_key,omitempty"`
