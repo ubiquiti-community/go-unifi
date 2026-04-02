@@ -108,7 +108,7 @@ func (c *ApiClient) deleteFirewallZone(
 		ctx,
 		http.MethodDelete,
 		fmt.Sprintf("v2/api/site/%s/firewall/zone/%s", site, id),
-		struct{}{},
+		nil,
 		nil,
 	)
 	if err != nil {
