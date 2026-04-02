@@ -35,8 +35,8 @@ type FirewallPolicy struct {
 
 	Action                string                     `json:"action,omitempty"`                // ALLOW|BLOCK|REJECT
 	ConnectionStateType   string                     `json:"connection_state_type,omitempty"` // ALL|RESPOND_ONLY
-	ConnectionStates      []string                   `json:"connection_states"`
-	CreateAllowRespond    bool                       `json:"create_allow_respond"`
+	ConnectionStates      []string                   `json:"connection_states,omitempty"`
+	CreateAllowRespond    bool                       `json:"create_allow_respond,omitempty"`
 	Description           string                     `json:"description,omitempty"`
 	Destination           *FirewallPolicyDestination `json:"destination,omitempty"`
 	Enabled               bool                       `json:"enabled"`
@@ -44,10 +44,10 @@ type FirewallPolicy struct {
 	ICMPV6Typename        string                     `json:"icmp_v6_typename,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	Index                 *int64                     `json:"index,omitempty"`            // [1-9][0-9]+
 	Logging               bool                       `json:"logging"`
-	MatchIPSec            bool                       `json:"match_ip_sec"`
-	MatchOppositeProtocol bool                       `json:"match_opposite_protocol"`
+	MatchIPSec            bool                       `json:"match_ip_sec,omitempty"`
+	MatchOppositeProtocol bool                       `json:"match_opposite_protocol,omitempty"`
 	Name                  string                     `json:"name,omitempty"`
-	Predefined            bool                       `json:"predefined"`
+	Predefined            bool                       `json:"predefined,omitempty"`
 	Protocol              string                     `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
 	Schedule              *FirewallPolicySchedule    `json:"schedule,omitempty"`
 	Source                *FirewallPolicySource      `json:"source,omitempty"`
@@ -83,8 +83,8 @@ func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 type FirewallPolicyDestination struct {
 	IPs                []string `json:"ips,omitempty"`
 	MatchMAC           bool     `json:"match_mac"`
-	MatchOppositeIPs   bool     `json:"match_opposite_ips"`
-	MatchOppositePorts bool     `json:"match_opposite_ports"`
+	MatchOppositeIPs   bool     `json:"match_opposite_ips,omitempty"`
+	MatchOppositePorts bool     `json:"match_opposite_ports,omitempty"`
 	MatchingTarget     string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|MAC
 	MatchingTargetType string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	Port               *int64   `json:"port,omitempty"`                 // [1-9][0-9]{0,4}
@@ -147,8 +147,8 @@ func (dst *FirewallPolicySchedule) UnmarshalJSON(b []byte) error {
 type FirewallPolicySource struct {
 	IPs                []string `json:"ips,omitempty"`
 	MatchMAC           bool     `json:"match_mac"`
-	MatchOppositeIPs   bool     `json:"match_opposite_ips"`
-	MatchOppositePorts bool     `json:"match_opposite_ports"`
+	MatchOppositeIPs   bool     `json:"match_opposite_ips,omitempty"`
+	MatchOppositePorts bool     `json:"match_opposite_ports,omitempty"`
 	MatchingTarget     string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|MAC
 	MatchingTargetType string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	Port               *int64   `json:"port,omitempty"`                 // [1-9][0-9]{0,4}
