@@ -81,6 +81,7 @@ func (dst *FirewallPolicy) UnmarshalJSON(b []byte) error {
 }
 
 type FirewallPolicyDestination struct {
+	IPGroupID          string   `json:"ip_group_id,omitempty"`
 	IPs                []string `json:"ips,omitempty"`
 	MatchMAC           bool     `json:"match_mac"`
 	MatchOppositeIPs   bool     `json:"match_opposite_ips,omitempty"`
@@ -145,6 +146,7 @@ func (dst *FirewallPolicySchedule) UnmarshalJSON(b []byte) error {
 }
 
 type FirewallPolicySource struct {
+	IPGroupID          string   `json:"ip_group_id,omitempty"`
 	IPs                []string `json:"ips,omitempty"`
 	MatchMAC           bool     `json:"match_mac"`
 	MatchOppositeIPs   bool     `json:"match_opposite_ips,omitempty"`
