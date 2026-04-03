@@ -80,6 +80,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		IPAliases               []string                        `json:"ip_aliases"`
 		NATOutboundIPAddresses  []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses"`
 		MACOverride             string                          `json:"mac_override,omitempty"`
+		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 
 		// DHCP Server
 		DHCPDEnabled           bool    `json:"dhcpd_enabled"`
@@ -151,6 +152,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		IPAliases:               orEmptySlice(n.IPAliases),
 		NATOutboundIPAddresses:  orEmptyNATSlice(n.NATOutboundIPAddresses),
 		MACOverride:             n.MACOverride,
+		FirewallZoneID:          n.FirewallZoneID,
 
 		// DHCP Server with defaults
 		DHCPDEnabled:           n.DHCPDEnabled,
@@ -226,6 +228,7 @@ func (n *Network) marshalVLANOnly() ([]byte, error) {
 		DHCPDIP1                string  `json:"dhcpd_ip_1"`
 		DHCPDIP2                string  `json:"dhcpd_ip_2"`
 		DHCPDIP3                string  `json:"dhcpd_ip_3"`
+		FirewallZoneID          *string `json:"firewall_zone_id,omitempty"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -246,6 +249,7 @@ func (n *Network) marshalVLANOnly() ([]byte, error) {
 		DHCPDIP1:                n.DHCPDIP1,
 		DHCPDIP2:                n.DHCPDIP2,
 		DHCPDIP3:                n.DHCPDIP3,
+		FirewallZoneID:          n.FirewallZoneID,
 	})
 }
 
@@ -288,6 +292,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		IPAliases               []string                        `json:"ip_aliases"`
 		NATOutboundIPAddresses  []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses"`
 		MACOverride             string                          `json:"mac_override,omitempty"`
+		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 
 		// DHCP Server
 		DHCPDEnabled           bool    `json:"dhcpd_enabled"`
@@ -359,6 +364,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		IPAliases:               orEmptySlice(n.IPAliases),
 		NATOutboundIPAddresses:  orEmptyNATSlice(n.NATOutboundIPAddresses),
 		MACOverride:             n.MACOverride,
+		FirewallZoneID:          n.FirewallZoneID,
 
 		// DHCP Server with defaults
 		DHCPDEnabled:           n.DHCPDEnabled,
