@@ -48,12 +48,16 @@ func (c *ApiClient) CreateAPGroup(ctx context.Context, site string, d *APGroup) 
 }
 
 func (c *ApiClient) GetAPGroup(ctx context.Context, site, id string) (*APGroup, error) {
-	var respBody APGroup
-	err := c.do(ctx, http.MethodGet, fmt.Sprintf("v2/api/site/%s/apgroups/%s", site, id), nil, &respBody)
+	groups, err := c.ListAPGroup(ctx, site)
 	if err != nil {
 		return nil, err
 	}
-	return &respBody, nil
+	for _, g := range groups {
+		if g.ID == id {
+			return &g, nil
+		}
+	}
+	return nil, &NotFoundError{}
 }
 
 func (c *ApiClient) UpdateAPGroup(ctx context.Context, site string, d *APGroup) (*APGroup, error) {
