@@ -8,10 +8,17 @@
     "ips": [
       ""
     ],
+    "client_macs": [
+      ""
+    ],
+    "network_ids": [
+      ""
+    ],
     "match_mac": "true|false",
     "match_opposite_ips": "true|false",
     "match_opposite_ports": "true|false",
-    "matching_target": "ANY|DEVICE|IP|NETWORK|MAC",
+    "match_opposite_networks": "true|false",
+    "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC",
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
     "port": "[1-9][0-9]{0,4}",
     "port_group_id": "",
@@ -43,10 +50,17 @@
     "ips": [
       ""
     ],
+    "client_macs": [
+      ""
+    ],
+    "network_ids": [
+      ""
+    ],
     "match_mac": "true|false",
     "match_opposite_ips": "true|false",
     "match_opposite_ports": "true|false",
-    "matching_target": "ANY|DEVICE|IP|NETWORK|MAC",
+    "match_opposite_networks": "true|false",
+    "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC",
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
     "port": "[1-9][0-9]{0,4}",
     "port_group_id": "",
