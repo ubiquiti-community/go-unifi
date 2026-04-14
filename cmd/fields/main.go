@@ -583,6 +583,13 @@ func main() {
 			continue
 		}
 
+		// Add fields not present in the JAR schema to nested types.
+		if resource.StructName == "Device" {
+			if portOverrides, ok := resource.Types["DevicePortOverrides"]; ok {
+				portOverrides.Fields["TaggedNetworkIDs"] = NewFieldInfo("TaggedNetworkIDs", "tagged_networkconf_ids", fields.String, "", true, true, false, "")
+			}
+		}
+
 		// Add resource to specification generator
 		specGen.AddResource(resource)
 
