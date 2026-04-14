@@ -250,7 +250,12 @@ func (c *ApiClient) UpdateDevice(ctx context.Context, site string, d *Device) (*
 		return nil, err
 	}
 
+	// Through the cloud connector proxy the PUT response may have an empty data
+	// array even on success. Re-read by MAC to get the updated device.
 	if len(respBody.Data) != 1 {
+		if d.MAC != "" {
+			return c.getDevice(ctx, site, d.MAC)
+		}
 		return nil, &NotFoundError{}
 	}
 
@@ -312,7 +317,12 @@ func getDiff[T any](original, target *T, skipFields ...string) (map[string]any, 
 
 // getDeviceDiff compares two Device objects and returns a map containing only changed fields.
 func getDeviceDiff(original, target *Device) (map[string]any, error) {
-	return getDiff(original, target, "_id", "site_id")
+	patch, err := getDiff(original, target, "_id", "site_id", "adopted", "state")
+	if err != nil {
+		return nil, err
+	}
+
+	return patch, nil
 }
 
 // deepEqualJSON compares two values for deep equality by comparing their JSON representations.
