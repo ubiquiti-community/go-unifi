@@ -30,6 +30,27 @@ const (
 	loginPathNew = "/api/auth/login"
 )
 
+// errLoginNotEstablished is returned by login when the controller answers with a
+// success status but no session was established (e.g. an empty body returned
+// under a login rate-limit). It is retryable by loginWithRetry.
+var errLoginNotEstablished = errors.New("login response did not establish a session")
+
+// Login retry tuning. These are vars (not consts) so tests can shorten the
+// backoff; production code never mutates them.
+var (
+	// loginRetryMax bounds how many times loginWithRetry will attempt a login
+	// before giving up. UniFi rate-limits POST /api/auth/login, so a normal
+	// Terraform workflow (several back-to-back operations) needs more than the
+	// transport-level retry budget to ride out the limit.
+	loginRetryMax = 8
+	// loginRetryBackoff is the wait between login attempts when the controller
+	// does not provide a Retry-After hint.
+	loginRetryBackoff = 1 * time.Second
+	// loginRetryMaxWait caps an honored Retry-After so a pathological hint
+	// (e.g. Retry-After: 3600) cannot stall the whole run.
+	loginRetryMaxWait = 2 * time.Minute
+)
+
 // Config holds all configuration for creating a new ApiClient.
 type Config struct {
 	BaseURL        string
@@ -63,6 +84,16 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 
 	if cfg.RetryMax != nil {
 		c.RetryMax = *cfg.RetryMax
+	}
+
+	// Don't let the transport silently retry HTTP 429: surface it as a
+	// RateLimitError (see doRequest) so loginWithRetry can honor Retry-After
+	// with a login-specific budget. Everything else keeps the default policy.
+	c.CheckRetry = func(ctx context.Context, resp *http.Response, err error) (bool, error) {
+		if resp != nil && resp.StatusCode == http.StatusTooManyRequests {
+			return false, nil
+		}
+		return retryablehttp.DefaultRetryPolicy(ctx, resp, err)
 	}
 
 	if cfg.AllowInsecure {
@@ -106,7 +137,7 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 	_ = client.setAPIUrlStyle(ctx)
 
 	if cfg.Username != "" && cfg.Password != "" && client.apiKey == "" {
-		if err := client.login(ctx); err != nil {
+		if err := client.loginWithRetry(ctx); err != nil {
 			return nil, fmt.Errorf("unable to login: %w", err)
 		}
 	}
@@ -388,8 +419,56 @@ func (c *ApiClient) login(ctx context.Context) error {
 		return err
 	}
 
+	// A 2xx with no session (empty body / missing CSRF cookie) happens when the
+	// controller throttles login without a clear error status. Treat it as a
+	// retryable failure instead of a silent "logged-in but broken" state.
+	if !c.isLoggedIn() {
+		c.loginErr = errLoginNotEstablished
+		return errLoginNotEstablished
+	}
+
 	c.loginErr = nil
 	return nil
+}
+
+// loginWithRetry performs login, retrying on controller rate-limiting (HTTP 429)
+// and on success-without-session responses. It honors the controller's
+// Retry-After hint (capped by loginRetryMaxWait) so a normal Terraform workflow
+// survives the login rate-limit instead of failing with a confusing error.
+func (c *ApiClient) loginWithRetry(ctx context.Context) error {
+	var lastErr error
+	for attempt := 0; attempt < loginRetryMax; attempt++ {
+		err := c.login(ctx)
+		if err == nil {
+			return nil
+		}
+		lastErr = err
+
+		var rle *RateLimitError
+		isRateLimit := errors.As(err, &rle)
+		if !isRateLimit && !errors.Is(err, errLoginNotEstablished) {
+			return err // not a transient rate-limit condition
+		}
+
+		if attempt == loginRetryMax-1 {
+			break // don't sleep after the final attempt
+		}
+
+		wait := loginRetryBackoff
+		if isRateLimit && rle.RetryAfter > 0 {
+			wait = rle.RetryAfter
+		}
+		if wait > loginRetryMaxWait {
+			wait = loginRetryMaxWait
+		}
+
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(wait):
+		}
+	}
+	return lastErr
 }
 
 // ensureLoggedIn acquires an exclusive lock and performs login if needed.
@@ -410,7 +489,7 @@ func (c *ApiClient) ensureLoggedIn(ctx context.Context) error {
 
 	// Clear any stale loginErr before attempting (e.g. token-expiry refresh).
 	c.loginErr = nil
-	return c.login(ctx)
+	return c.loginWithRetry(ctx)
 }
 
 func (c *ApiClient) setServerVersion(ctx context.Context) (err error) {
@@ -565,6 +644,13 @@ func (c *ApiClient) doRequest(
 		}
 	}
 
+	// Surface controller rate-limiting (HTTP 429) as a typed error so callers
+	// (notably login) can back off honoring Retry-After instead of failing with
+	// an opaque error. The transport is configured not to retry 429 itself.
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return &RateLimitError{RetryAfter: parseRetryAfter(resp)}
+	}
+
 	if csrf := resp.Header.Get("X-Updated-Csrf-Token"); csrf != "" {
 		c.csrf = csrf
 	} else if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
@@ -636,6 +722,31 @@ func (m *meta) error() error {
 	}
 
 	return nil
+}
+
+// parseRetryAfter reads the Retry-After header from a 429 response, supporting
+// both the delta-seconds form ("120") and the HTTP-date form. Returns 0 when the
+// header is absent or unparseable.
+func parseRetryAfter(resp *http.Response) time.Duration {
+	if resp == nil {
+		return 0
+	}
+	v := resp.Header.Get("Retry-After")
+	if v == "" {
+		return 0
+	}
+	if secs, err := strconv.Atoi(v); err == nil {
+		if secs <= 0 {
+			return 0
+		}
+		return time.Duration(secs) * time.Second
+	}
+	if t, err := http.ParseTime(v); err == nil {
+		if d := time.Until(t); d > 0 {
+			return d
+		}
+	}
+	return 0
 }
 
 func Ptr[T any](in T) *T {
