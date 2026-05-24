@@ -36,9 +36,10 @@ func shortLoginBackoff(t *testing.T) {
 }
 
 // TestLogin_RateLimitedThenSucceeds proves a normal workflow survives the
-// controller's login rate-limit: the controller returns several HTTP 429s before
-// accepting the login, and New() must retry until it succeeds rather than failing
-// with a confusing "unable to login" error.
+// controller's login rate-limit: the controller returns several HTTP 429s
+// (with no Retry-After, as a real UDM-Pro does) before accepting the login, and
+// New() must back off exponentially and retry until it succeeds rather than
+// failing with a confusing "unable to login" error.
 func TestLogin_RateLimitedThenSucceeds(t *testing.T) {
 	shortLoginBackoff(t)
 
@@ -52,7 +53,7 @@ func TestLogin_RateLimitedThenSucceeds(t *testing.T) {
 		if r.Method == http.MethodPost && r.URL.Path == loginPathNew {
 			n := atomic.AddInt32(&loginHits, 1)
 			if n <= rateLimitedAttempts {
-				w.Header().Set("Retry-After", "0")
+				// No Retry-After header — matches real UniFi behavior.
 				w.WriteHeader(http.StatusTooManyRequests)
 				return
 			}
@@ -129,7 +130,6 @@ func TestLogin_ExhaustionReturnsRateLimitError(t *testing.T) {
 			return
 		}
 		if r.Method == http.MethodPost && r.URL.Path == loginPathNew {
-			w.Header().Set("Retry-After", "0")
 			w.WriteHeader(http.StatusTooManyRequests)
 			return
 		}

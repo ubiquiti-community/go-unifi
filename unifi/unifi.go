@@ -43,9 +43,15 @@ var (
 	// Terraform workflow (several back-to-back operations) needs more than the
 	// transport-level retry budget to ride out the limit.
 	loginRetryMax = 8
-	// loginRetryBackoff is the wait between login attempts when the controller
-	// does not provide a Retry-After hint.
+	// loginRetryBackoff is the base wait between login attempts when the
+	// controller sends no usable Retry-After hint. UniFi's login 429 carries
+	// none, so the wait grows exponentially from this base (capped by
+	// loginRetryBackoffCap) — with the defaults the total budget is ~90s, enough
+	// to ride out a real login-throttle window (observed ~45s on a live UDM-Pro
+	// after several back-to-back runs).
 	loginRetryBackoff = 1 * time.Second
+	// loginRetryBackoffCap caps each exponential-fallback wait.
+	loginRetryBackoffCap = 30 * time.Second
 	// loginRetryMaxWait caps an honored Retry-After so a pathological hint
 	// (e.g. Retry-After: 3600) cannot stall the whole run.
 	loginRetryMaxWait = 2 * time.Minute
@@ -454,12 +460,20 @@ func (c *ApiClient) loginWithRetry(ctx context.Context) error {
 			break // don't sleep after the final attempt
 		}
 
-		wait := loginRetryBackoff
+		var wait time.Duration
 		if isRateLimit && rle.RetryAfter > 0 {
+			// Honor the controller's Retry-After hint, capped.
 			wait = rle.RetryAfter
-		}
-		if wait > loginRetryMaxWait {
-			wait = loginRetryMaxWait
+			if wait > loginRetryMaxWait {
+				wait = loginRetryMaxWait
+			}
+		} else {
+			// No usable Retry-After (UniFi's login 429 sends none): back off
+			// exponentially from the base so a single run rides out the window.
+			wait = loginRetryBackoff << attempt
+			if wait <= 0 || wait > loginRetryBackoffCap {
+				wait = loginRetryBackoffCap
+			}
 		}
 
 		select {
