@@ -458,6 +458,13 @@ func main() {
 					// Field within DeviceRadioTable nested type
 					f.CustomUnmarshalType = "types.Number"
 					f.CustomUnmarshalFunc = "types.ToInt64Pointer"
+				case "TxPower", "Channel":
+					// Field within DeviceRadioTable nested type — controller
+					// may send these as either a string ("auto") or a number
+					// (e.g. 18, 6); coerce numeric values back to string.
+					if f.FieldType == fields.String {
+						f.CustomUnmarshalType = fields.Number
+					}
 				}
 
 				f.OmitEmpty = true
