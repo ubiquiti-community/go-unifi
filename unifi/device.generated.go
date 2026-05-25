@@ -911,36 +911,29 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 		}
 	}
 	if aux.AssistedRoamingRssi != nil {
+		// Empty string means "unset"; leave nil so omitempty drops it on round-trip
+		// (controller rejects 0 — valid range is -60..-80).
 		if val, err := aux.AssistedRoamingRssi.Int64(); err == nil {
 			dst.AssistedRoamingRssi = &val
-		} else if string(*aux.AssistedRoamingRssi) == "" {
-			var zero int64
-			dst.AssistedRoamingRssi = &zero
 		}
 	}
 	dst.Ht = types.ToInt64Pointer(aux.Ht)
 	if aux.Maxsta != nil {
+		// Empty string means "unset"; controller rejects 0 (valid range 1..200).
 		if val, err := aux.Maxsta.Int64(); err == nil {
 			dst.Maxsta = &val
-		} else if string(*aux.Maxsta) == "" {
-			var zero int64
-			dst.Maxsta = &zero
 		}
 	}
 	if aux.MinRssi != nil {
+		// Empty string means "unset"; controller rejects 0 (valid range -67..-90).
 		if val, err := aux.MinRssi.Int64(); err == nil {
 			dst.MinRssi = &val
-		} else if string(*aux.MinRssi) == "" {
-			var zero int64
-			dst.MinRssi = &zero
 		}
 	}
 	if aux.SensLevel != nil {
+		// Empty string means "unset"; controller rejects 0 (valid range -50..-90).
 		if val, err := aux.SensLevel.Int64(); err == nil {
 			dst.SensLevel = &val
-		} else if string(*aux.SensLevel) == "" {
-			var zero int64
-			dst.SensLevel = &zero
 		}
 	}
 	if aux.Channel != nil {
