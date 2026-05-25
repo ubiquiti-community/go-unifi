@@ -255,8 +255,9 @@ func (c *ApiClient) UpdateDevice(ctx context.Context, site string, d *Device) (*
 		return nil, err
 	}
 
-	if len(respBody.Data) != 1 {
-		return nil, &NotFoundError{}
+	// Some devices (observed on UDM-Pro) return data:[] on a successful PUT; refetch in that case.
+	if len(respBody.Data) == 0 {
+		return c.getDevice(ctx, site, d.MAC)
 	}
 
 	res := respBody.Data[0]
