@@ -879,6 +879,7 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 		AntennaID           *types.Number `json:"antenna_id"`
 		AssistedRoamingRssi *types.Number `json:"assisted_roaming_rssi"`
 		Ht                  *types.Number `json:"ht"`
+		Channel             *types.Number `json:"channel"`
 		Maxsta              *types.Number `json:"maxsta"`
 		MinRssi             *types.Number `json:"min_rssi"`
 		SensLevel           *types.Number `json:"sens_level"`
@@ -891,6 +892,9 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &aux)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
+	}
+	if aux.Channel != nil {
+		dst.Channel = aux.Channel.String()
 	}
 	if aux.AntennaGain != nil {
 		if val, err := aux.AntennaGain.Int64(); err == nil {
