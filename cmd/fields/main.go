@@ -482,6 +482,15 @@ func main() {
 						f.CustomUnmarshalType = "*bool"
 						f.CustomUnmarshalFunc = "emptyBoolToTrue"
 					}
+				case "DHCPDEnabled":
+					// Some controllers (UniFi Network 10.x) return "true"/"false"
+					// as JSON strings for this flag, which breaks a plain bool.
+					// Decode through the tolerant types.Bool. See
+					// terraform-provider-unifi #65.
+					if f.FieldType == fields.Bool {
+						f.CustomUnmarshalType = "*types.Bool"
+						f.CustomUnmarshalFunc = "boolValue"
+					}
 				case "IPSecEspLifetime", "IPSecIkeLifetime":
 					f.FieldType = fields.Int
 					f.IsPointer = true
@@ -551,6 +560,11 @@ func main() {
 				case "Blocked":
 					f.FieldType = fields.Bool
 					f.IsPointer = true
+					// Some controllers return "true"/"false" as JSON strings
+					// for this flag, which breaks a plain *bool. Decode through
+					// the tolerant types.Bool. See terraform-provider-unifi #132.
+					f.CustomUnmarshalType = "*types.Bool"
+					f.CustomUnmarshalFunc = "boolPtrValue"
 				case "VirtualNetworkOverrideEnabled":
 					f.FieldType = fields.Bool
 					f.IsPointer = true
