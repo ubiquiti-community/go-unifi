@@ -458,6 +458,12 @@ func main() {
 					// Field within DeviceRadioTable nested type
 					f.CustomUnmarshalType = "types.Number"
 					f.CustomUnmarshalFunc = "types.ToInt64Pointer"
+				case "Channel", "TxPower":
+					// String fields in DeviceRadioTable that newer controllers
+					// (UniFi 10.x) return as numbers; accept either form.
+					if f.FieldType == fields.String {
+						f.CustomUnmarshalType = fields.Number
+					}
 				}
 
 				f.OmitEmpty = true

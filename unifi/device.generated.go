@@ -878,10 +878,12 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 		AntennaGain         *types.Number `json:"antenna_gain"`
 		AntennaID           *types.Number `json:"antenna_id"`
 		AssistedRoamingRssi *types.Number `json:"assisted_roaming_rssi"`
+		Channel             types.Number  `json:"channel"`
 		Ht                  *types.Number `json:"ht"`
 		Maxsta              *types.Number `json:"maxsta"`
 		MinRssi             *types.Number `json:"min_rssi"`
 		SensLevel           *types.Number `json:"sens_level"`
+		TxPower             types.Number  `json:"tx_power"`
 
 		*Alias
 	}{
@@ -916,6 +918,7 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 			dst.AssistedRoamingRssi = &zero
 		}
 	}
+	dst.Channel = aux.Channel.String()
 	dst.Ht = types.ToInt64Pointer(aux.Ht)
 	if aux.Maxsta != nil {
 		if val, err := aux.Maxsta.Int64(); err == nil {
@@ -941,6 +944,7 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 			dst.SensLevel = &zero
 		}
 	}
+	dst.TxPower = aux.TxPower.String()
 
 	return nil
 }

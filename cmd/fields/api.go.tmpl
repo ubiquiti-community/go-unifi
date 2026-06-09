@@ -32,13 +32,13 @@
 		}
 	}
 				{{- else }}
-	if val, err := aux.{{ .FieldName }}.Int64(); err == nil {
 		{{- if eq .FieldType "string" }}
-		dst.{{ .FieldName }} = strconv.FormatInt(val, 10)
+	dst.{{ .FieldName }} = aux.{{ .FieldName }}.String()
 		{{- else }}
+	if val, err := aux.{{ .FieldName }}.Int64(); err == nil {
 		dst.{{ .FieldName }} = val
-		{{- end }}
 	}
+		{{- end }}
 				{{- end }}
 			{{- end }}
 		{{- else }}
