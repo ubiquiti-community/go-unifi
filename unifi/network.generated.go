@@ -286,6 +286,7 @@ type Network struct {
 func (dst *Network) UnmarshalJSON(b []byte) error {
 	type Alias Network
 	aux := &struct {
+		DHCPDEnabled                   *types.Bool   `json:"dhcpd_enabled"`
 		DHCPDLeaseTime                 *types.Number `json:"dhcpd_leasetime"`
 		DHCPDTimeOffset                *types.Number `json:"dhcpd_time_offset"`
 		DHCPDV6LeaseTime               *types.Number `json:"dhcpdv6_leasetime"`
@@ -330,6 +331,7 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	dst.DHCPDEnabled = boolValue(aux.DHCPDEnabled)
 	if aux.DHCPDLeaseTime != nil {
 		if val, err := aux.DHCPDLeaseTime.Int64(); err == nil {
 			dst.DHCPDLeaseTime = &val

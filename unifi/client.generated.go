@@ -57,6 +57,8 @@ type Client struct {
 func (dst *Client) UnmarshalJSON(b []byte) error {
 	type Alias Client
 	aux := &struct {
+		Blocked *types.Bool `json:"blocked"`
+
 		*Alias
 	}{
 		Alias: (*Alias)(dst),
@@ -66,6 +68,7 @@ func (dst *Client) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
+	dst.Blocked = boolPtrValue(aux.Blocked)
 
 	return nil
 }
