@@ -114,6 +114,8 @@ func GetSettingKey(setting Setting) (string, error) {
 		return "global_switch", nil
 	case *GuestAccess:
 		return "guest_access", nil
+	case *IgmpSnooping:
+		return "igmp_snooping", nil
 	case *Ips:
 		return "ips", nil
 	case *Lcm:
