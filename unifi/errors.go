@@ -1,6 +1,29 @@
 package unifi
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
+
+// RateLimitError indicates the controller rejected a request with HTTP 429
+// (Too Many Requests). UniFi rate-limits POST /api/auth/login in particular, so
+// a workflow that re-authenticates on every operation (username/password) can
+// exhaust the limit. RetryAfter carries the controller's Retry-After hint when
+// provided. Using API-key auth (UNIFI_API_KEY) avoids the per-request login
+// entirely.
+type RateLimitError struct {
+	RetryAfter time.Duration
+}
+
+func (err *RateLimitError) Error() string {
+	if err.RetryAfter > 0 {
+		return fmt.Sprintf(
+			"rate limited by controller (retry after %s); consider API-key auth to avoid per-run login",
+			err.RetryAfter,
+		)
+	}
+	return "rate limited by controller; consider API-key auth to avoid per-run login"
+}
 
 type LoginRequiredError struct {
 	APIKey bool // true when the rejection is for an API-key request
