@@ -113,18 +113,19 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPRelayServers []string `json:"dhcp_relay_servers"`
 
 		// IPv6
-		IPV6InterfaceType         *string `json:"ipv6_interface_type,omitempty"`
-		IPV6SettingPreference     *string `json:"ipv6_setting_preference,omitempty"`
-		IPV6RaPriority            *string `json:"ipv6_ra_priority,omitempty"`
-		IPV6Subnet                *string `json:"ipv6_subnet,omitempty"`
-		IPV6RaEnabled             bool    `json:"ipv6_ra_enabled"`
-		IPV6RaPreferredLifetime   *int64  `json:"ipv6_ra_preferred_lifetime,omitempty"`
-		IPV6RaValidLifetime       *int64  `json:"ipv6_ra_valid_lifetime,omitempty"`
-		IPV6PDInterface           *string `json:"ipv6_pd_interface,omitempty"`
-		IPV6PDPrefixid            string  `json:"ipv6_pd_prefixid"`
-		IPV6PDStart               *string `json:"ipv6_pd_start,omitempty"`
-		IPV6PDStop                *string `json:"ipv6_pd_stop,omitempty"`
-		IPV6PDAutoPrefixidEnabled bool    `json:"ipv6_pd_auto_prefixid_enabled"`
+		IPV6InterfaceType           *string `json:"ipv6_interface_type,omitempty"`
+		IPV6ClientAddressAssignment *string `json:"ipv6_client_address_assignment,omitempty"`
+		IPV6SettingPreference       *string `json:"ipv6_setting_preference,omitempty"`
+		IPV6RaPriority              *string `json:"ipv6_ra_priority,omitempty"`
+		IPV6Subnet                  *string `json:"ipv6_subnet,omitempty"`
+		IPV6RaEnabled               bool    `json:"ipv6_ra_enabled"`
+		IPV6RaPreferredLifetime     *int64  `json:"ipv6_ra_preferred_lifetime,omitempty"`
+		IPV6RaValidLifetime         *int64  `json:"ipv6_ra_valid_lifetime,omitempty"`
+		IPV6PDInterface             *string `json:"ipv6_pd_interface,omitempty"`
+		IPV6PDPrefixid              string  `json:"ipv6_pd_prefixid"`
+		IPV6PDStart                 *string `json:"ipv6_pd_start,omitempty"`
+		IPV6PDStop                  *string `json:"ipv6_pd_stop,omitempty"`
+		IPV6PDAutoPrefixidEnabled   bool    `json:"ipv6_pd_auto_prefixid_enabled"`
 
 		// DHCPv6
 		DHCPDV6Enabled    bool    `json:"dhcpdv6_enabled"`
@@ -198,18 +199,19 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPRelayServers: orEmptySlice(n.RemoteVPNSubnets),
 
 		// IPv6
-		IPV6InterfaceType:         valueOrDefault(n.IPV6InterfaceType, "none"),
-		IPV6SettingPreference:     n.IPV6SettingPreference,
-		IPV6RaPriority:            n.IPV6RaPriority,
-		IPV6Subnet:                n.IPV6Subnet,
-		IPV6RaEnabled:             n.IPV6RaEnabled,
-		IPV6RaPreferredLifetime:   n.IPV6RaPreferredLifetime,
-		IPV6RaValidLifetime:       n.IPV6RaValidLifetime,
-		IPV6PDInterface:           n.IPV6PDInterface,
-		IPV6PDPrefixid:            n.IPV6PDPrefixid,
-		IPV6PDStart:               n.IPV6PDStart,
-		IPV6PDStop:                n.IPV6PDStop,
-		IPV6PDAutoPrefixidEnabled: n.IPV6PDAutoPrefixidEnabled,
+		IPV6InterfaceType:           valueOrDefault(n.IPV6InterfaceType, "none"),
+		IPV6ClientAddressAssignment: n.IPV6ClientAddressAssignment,
+		IPV6SettingPreference:       n.IPV6SettingPreference,
+		IPV6RaPriority:              n.IPV6RaPriority,
+		IPV6Subnet:                  n.IPV6Subnet,
+		IPV6RaEnabled:               n.IPV6RaEnabled,
+		IPV6RaPreferredLifetime:     n.IPV6RaPreferredLifetime,
+		IPV6RaValidLifetime:         n.IPV6RaValidLifetime,
+		IPV6PDInterface:             n.IPV6PDInterface,
+		IPV6PDPrefixid:              n.IPV6PDPrefixid,
+		IPV6PDStart:                 n.IPV6PDStart,
+		IPV6PDStop:                  n.IPV6PDStop,
+		IPV6PDAutoPrefixidEnabled:   n.IPV6PDAutoPrefixidEnabled,
 
 		// DHCPv6
 		DHCPDV6Enabled:    n.DHCPDV6Enabled,
@@ -349,18 +351,19 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPRelayServers []string `json:"dhcp_relay_servers"`
 
 		// IPv6
-		IPV6InterfaceType         *string `json:"ipv6_interface_type,omitempty"`
-		IPV6SettingPreference     *string `json:"ipv6_setting_preference,omitempty"`
-		IPV6RaPriority            *string `json:"ipv6_ra_priority,omitempty"`
-		IPV6Subnet                *string `json:"ipv6_subnet,omitempty"`
-		IPV6RaEnabled             bool    `json:"ipv6_ra_enabled"`
-		IPV6RaPreferredLifetime   *int64  `json:"ipv6_ra_preferred_lifetime,omitempty"`
-		IPV6RaValidLifetime       *int64  `json:"ipv6_ra_valid_lifetime,omitempty"`
-		IPV6PDInterface           *string `json:"ipv6_pd_interface,omitempty"`
-		IPV6PDPrefixid            string  `json:"ipv6_pd_prefixid"`
-		IPV6PDStart               *string `json:"ipv6_pd_start,omitempty"`
-		IPV6PDStop                *string `json:"ipv6_pd_stop,omitempty"`
-		IPV6PDAutoPrefixidEnabled bool    `json:"ipv6_pd_auto_prefixid_enabled"`
+		IPV6InterfaceType           *string `json:"ipv6_interface_type,omitempty"`
+		IPV6ClientAddressAssignment *string `json:"ipv6_client_address_assignment,omitempty"`
+		IPV6SettingPreference       *string `json:"ipv6_setting_preference,omitempty"`
+		IPV6RaPriority              *string `json:"ipv6_ra_priority,omitempty"`
+		IPV6Subnet                  *string `json:"ipv6_subnet,omitempty"`
+		IPV6RaEnabled               bool    `json:"ipv6_ra_enabled"`
+		IPV6RaPreferredLifetime     *int64  `json:"ipv6_ra_preferred_lifetime,omitempty"`
+		IPV6RaValidLifetime         *int64  `json:"ipv6_ra_valid_lifetime,omitempty"`
+		IPV6PDInterface             *string `json:"ipv6_pd_interface,omitempty"`
+		IPV6PDPrefixid              string  `json:"ipv6_pd_prefixid"`
+		IPV6PDStart                 *string `json:"ipv6_pd_start,omitempty"`
+		IPV6PDStop                  *string `json:"ipv6_pd_stop,omitempty"`
+		IPV6PDAutoPrefixidEnabled   bool    `json:"ipv6_pd_auto_prefixid_enabled"`
 
 		// DHCPv6
 		DHCPDV6Enabled    bool    `json:"dhcpdv6_enabled"`
@@ -434,18 +437,19 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPRelayServers: orEmptySlice(n.DHCPRelayServers),
 
 		// IPv6
-		IPV6InterfaceType:         valueOrDefault(n.IPV6InterfaceType, "none"),
-		IPV6SettingPreference:     n.IPV6SettingPreference,
-		IPV6RaPriority:            n.IPV6RaPriority,
-		IPV6Subnet:                n.IPV6Subnet,
-		IPV6RaEnabled:             n.IPV6RaEnabled,
-		IPV6RaPreferredLifetime:   n.IPV6RaPreferredLifetime,
-		IPV6RaValidLifetime:       n.IPV6RaValidLifetime,
-		IPV6PDInterface:           n.IPV6PDInterface,
-		IPV6PDPrefixid:            n.IPV6PDPrefixid,
-		IPV6PDStart:               n.IPV6PDStart,
-		IPV6PDStop:                n.IPV6PDStop,
-		IPV6PDAutoPrefixidEnabled: n.IPV6PDAutoPrefixidEnabled,
+		IPV6InterfaceType:           valueOrDefault(n.IPV6InterfaceType, "none"),
+		IPV6ClientAddressAssignment: n.IPV6ClientAddressAssignment,
+		IPV6SettingPreference:       n.IPV6SettingPreference,
+		IPV6RaPriority:              n.IPV6RaPriority,
+		IPV6Subnet:                  n.IPV6Subnet,
+		IPV6RaEnabled:               n.IPV6RaEnabled,
+		IPV6RaPreferredLifetime:     n.IPV6RaPreferredLifetime,
+		IPV6RaValidLifetime:         n.IPV6RaValidLifetime,
+		IPV6PDInterface:             n.IPV6PDInterface,
+		IPV6PDPrefixid:              n.IPV6PDPrefixid,
+		IPV6PDStart:                 n.IPV6PDStart,
+		IPV6PDStop:                  n.IPV6PDStop,
+		IPV6PDAutoPrefixidEnabled:   n.IPV6PDAutoPrefixidEnabled,
 
 		// DHCPv6
 		DHCPDV6Enabled:    n.DHCPDV6Enabled,

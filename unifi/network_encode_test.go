@@ -423,6 +423,50 @@ func TestMarshalNetworkGuest(t *testing.T) {
 	}
 }
 
+// TestMarshalNetworkIPv6ClientAddressAssignment guards that the corporate and
+// guest marshalers emit ipv6_client_address_assignment when set, and omit it
+// when nil. The field lives on the generated Network struct but the marshalers
+// only serialize a curated subset, so it would otherwise be silently dropped on
+// write (ubiquiti-community/terraform-provider-unifi#232).
+func TestMarshalNetworkIPv6ClientAddressAssignment(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		t.Run(purpose, func(t *testing.T) {
+			// Set => emitted with the configured value.
+			network := &Network{
+				ID:                          "507f1f77bcf86cd799439011",
+				Purpose:                     purpose,
+				Enabled:                     true,
+				IPV6InterfaceType:           strPtr("static"),
+				IPV6ClientAddressAssignment: strPtr("slaac-dhcpv6"),
+			}
+			data, err := json.Marshal(network)
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			var result map[string]any
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			if got := result["ipv6_client_address_assignment"]; got != "slaac-dhcpv6" {
+				t.Errorf("ipv6_client_address_assignment = %v, want slaac-dhcpv6", got)
+			}
+
+			// Unset => omitted (omitempty), no perpetual diff against the API.
+			data, err = json.Marshal(&Network{ID: "x", Purpose: purpose, Enabled: true})
+			if err != nil {
+				t.Fatalf("marshal (unset): %v", err)
+			}
+			result = map[string]any{}
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("unmarshal (unset): %v", err)
+			}
+			if _, ok := result["ipv6_client_address_assignment"]; ok {
+				t.Errorf("ipv6_client_address_assignment serialized for nil value: %s", data)
+			}
+		})
+	}
+}
+
 // Helper function to create string pointers.
 func strPtr(s string) *string {
 	return &s
