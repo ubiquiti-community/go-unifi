@@ -25,7 +25,15 @@ jobs:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --rebase "$PR_URL"
+        if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
+        # `gh pr merge --auto` can only enable auto-merge when the branch is
+        # protected with required checks; on an unprotected `main` it errors with
+        # "Pull request is in unstable status". Tolerate that so the workflow
+        # stays green — the PR is already approved and can be merged manually
+        # (and auto-merge will start working once branch protection is added).
+        run: |
+          gh pr merge --auto --rebase "$PR_URL" \
+            || echo "auto-merge not enabled (main is not a protected branch); PR approved, merge manually."
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
