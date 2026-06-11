@@ -4,7 +4,7 @@ go 1.24.9
 
 require (
 	github.com/hashicorp/go-retryablehttp v0.7.8
-	github.com/hashicorp/go-version v1.8.0
+	github.com/hashicorp/go-version v1.9.0
 	github.com/hashicorp/terraform-plugin-codegen-spec v0.2.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/stretchr/testify v1.11.1
