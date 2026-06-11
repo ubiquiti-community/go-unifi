@@ -87,12 +87,13 @@ type FirewallPolicyDestination struct {
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
 	MatchOppositeNetworks bool     `json:"match_opposite_networks"`
 	MatchOppositePorts    bool     `json:"match_opposite_ports"`
-	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC
+	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB
 	MatchingTargetType    string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	NetworkIDs            []string `json:"network_ids,omitempty"`
 	Port                  *int64   `json:"port,omitempty"` // [1-9][0-9]{0,4}
 	PortGroupID           string   `json:"port_group_id,omitempty"`
 	PortMatchingType      string   `json:"port_matching_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
+	WebDomains            []string `json:"web_domains,omitempty"`
 	ZoneID                string   `json:"zone_id,omitempty"`
 }
 
@@ -154,12 +155,13 @@ type FirewallPolicySource struct {
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
 	MatchOppositeNetworks bool     `json:"match_opposite_networks"`
 	MatchOppositePorts    bool     `json:"match_opposite_ports"`
-	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC
+	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB
 	MatchingTargetType    string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	NetworkIDs            []string `json:"network_ids,omitempty"`
 	Port                  *int64   `json:"port,omitempty"` // [1-9][0-9]{0,4}
 	PortGroupID           string   `json:"port_group_id,omitempty"`
 	PortMatchingType      string   `json:"port_matching_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
+	WebDomains            []string `json:"web_domains,omitempty"`
 	ZoneID                string   `json:"zone_id,omitempty"`
 }
 
