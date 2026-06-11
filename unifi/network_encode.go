@@ -621,6 +621,34 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		Name    *string `json:"name,omitempty"`
 		Purpose string  `json:"purpose"`
 		Enabled bool    `json:"enabled"`
+
+		// VPN / IPsec
+		VPNType           *string `json:"vpn_type,omitempty"`
+		IPSecInterface    *string `json:"ipsec_interface,omitempty"`
+		IPSecPeerIP       *string `json:"ipsec_peer_ip,omitempty"`
+		IPSecLocalIP      *string `json:"ipsec_local_ip,omitempty"`
+		IPSecKeyExchange  *string `json:"ipsec_key_exchange,omitempty"`
+		IPSecPreSharedKey *string `json:"x_ipsec_pre_shared_key,omitempty"`
+		IPSecProfile      *string `json:"ipsec_profile,omitempty"`
+
+		// IKE (phase 1)
+		IPSecEncryption  *string `json:"ipsec_encryption,omitempty"`
+		IPSecHash        *string `json:"ipsec_hash,omitempty"`
+		IPSecDhGroup     *int64  `json:"ipsec_dh_group,omitempty"`
+		IPSecIkeLifetime *int64  `json:"ipsec_ike_lifetime,omitempty"`
+
+		// ESP (phase 2)
+		IPSecEspEncryption *string `json:"ipsec_esp_encryption,omitempty"`
+		IPSecEspHash       *string `json:"ipsec_esp_hash,omitempty"`
+		IPSecEspDhGroup    *int64  `json:"ipsec_esp_dh_group,omitempty"`
+		IPSecEspLifetime   *int64  `json:"ipsec_esp_lifetime,omitempty"`
+
+		IPSecPfs            bool `json:"ipsec_pfs,omitempty"`
+		IPSecDynamicRouting bool `json:"ipsec_dynamic_routing,omitempty"`
+
+		RemoteVPNSubnets  []string `json:"remote_vpn_subnets,omitempty"`
+		RemoteSiteSubnets []string `json:"remote_site_subnets,omitempty"`
+		RouteDistance     *int64   `json:"route_distance,omitempty"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -632,6 +660,31 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		Name:    n.Name,
 		Purpose: n.Purpose,
 		Enabled: n.Enabled,
+
+		VPNType:           n.VPNType,
+		IPSecInterface:    n.IPSecInterface,
+		IPSecPeerIP:       n.IPSecPeerIP,
+		IPSecLocalIP:      n.IPSecLocalIP,
+		IPSecKeyExchange:  n.IPSecKeyExchange,
+		IPSecPreSharedKey: n.IPSecPreSharedKey,
+		IPSecProfile:      n.IPSecProfile,
+
+		IPSecEncryption:  n.IPSecEncryption,
+		IPSecHash:        n.IPSecHash,
+		IPSecDhGroup:     n.IPSecDhGroup,
+		IPSecIkeLifetime: n.IPSecIkeLifetime,
+
+		IPSecEspEncryption: n.IPSecEspEncryption,
+		IPSecEspHash:       n.IPSecEspHash,
+		IPSecEspDhGroup:    n.IPSecEspDhGroup,
+		IPSecEspLifetime:   n.IPSecEspLifetime,
+
+		IPSecPfs:            n.IPSecPfs,
+		IPSecDynamicRouting: n.IPSecDynamicRouting,
+
+		RemoteVPNSubnets:  n.RemoteVPNSubnets,
+		RemoteSiteSubnets: n.RemoteSiteSubnets,
+		RouteDistance:     n.RouteDistance,
 	})
 }
 

@@ -467,6 +467,61 @@ func TestMarshalNetworkIPv6ClientAddressAssignment(t *testing.T) {
 	}
 }
 
+// TestMarshalNetworkSiteVPN guards that the site-to-site IPsec VPN marshaler
+// emits the VPN/IPsec fields (not just name/purpose/enabled). It was previously
+// a stub, which silently dropped the whole tunnel configuration on write
+// (ubiquiti-community/terraform-provider-unifi#78).
+func TestMarshalNetworkSiteVPN(t *testing.T) {
+	dh := int64(14)
+	network := &Network{
+		ID:                "507f1f77bcf86cd799439011",
+		Name:              strPtr("HQ-to-Branch"),
+		Purpose:           PurposeSiteVPN,
+		Enabled:           true,
+		VPNType:           strPtr("ipsec-vpn"),
+		IPSecInterface:    strPtr("wan"),
+		IPSecPeerIP:       strPtr("203.0.113.9"),
+		IPSecKeyExchange:  strPtr("ikev2"),
+		IPSecPreSharedKey: strPtr("s3cret-psk"),
+		IPSecProfile:      strPtr("customized"),
+		IPSecEncryption:   strPtr("aes256"),
+		IPSecHash:         strPtr("sha256"),
+		IPSecDhGroup:      &dh,
+		IPSecPfs:          true,
+		RemoteVPNSubnets:  []string{"192.0.2.0/24", "198.51.100.0/24"},
+	}
+
+	data, err := json.Marshal(network)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	var result map[string]any
+	if err := json.Unmarshal(data, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+
+	checkJSONFields(t, data, []string{
+		"name", "purpose", "enabled", "vpn_type", "ipsec_interface",
+		"ipsec_peer_ip", "ipsec_key_exchange", "x_ipsec_pre_shared_key",
+		"ipsec_profile", "ipsec_encryption", "ipsec_hash", "ipsec_dh_group",
+		"ipsec_pfs", "remote_vpn_subnets",
+	}, []string{"ip_subnet", "dhcpd_enabled", "vlan"})
+
+	if result["purpose"] != PurposeSiteVPN {
+		t.Errorf("purpose = %v, want %q", result["purpose"], PurposeSiteVPN)
+	}
+	if result["vpn_type"] != "ipsec-vpn" {
+		t.Errorf("vpn_type = %v, want ipsec-vpn", result["vpn_type"])
+	}
+	if result["x_ipsec_pre_shared_key"] != "s3cret-psk" {
+		t.Errorf("x_ipsec_pre_shared_key = %v", result["x_ipsec_pre_shared_key"])
+	}
+	subnets, ok := result["remote_vpn_subnets"].([]any)
+	if !ok || len(subnets) != 2 {
+		t.Errorf("remote_vpn_subnets = %v, want 2 entries", result["remote_vpn_subnets"])
+	}
+}
+
 // Helper function to create string pointers.
 func strPtr(s string) *string {
 	return &s
