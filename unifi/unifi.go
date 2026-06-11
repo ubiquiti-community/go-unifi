@@ -704,7 +704,7 @@ func (c *ApiClient) doRequest(
 			strings.TrimSpace(resp.Status),
 			method,
 			url.String(),
-			string(reqBytes),
+			redactSensitivePayload(reqBytes),
 		)
 	}
 
@@ -761,6 +761,67 @@ func parseRetryAfter(resp *http.Response) time.Duration {
 		}
 	}
 	return 0
+}
+
+// sensitivePayloadKeys are substrings of JSON field names whose values carry
+// secrets (WireGuard/IPsec keys, passphrases, RADIUS secrets, …) and must be
+// redacted from error messages and logs.
+var sensitivePayloadKeys = []string{
+	"private_key",
+	"passphrase",
+	"pre_shared_key",
+	"password",
+	"secret",
+	"psk",
+}
+
+// redactSensitivePayload returns the JSON request body with the values of any
+// sensitive fields replaced by "REDACTED", so secrets (e.g.
+// x_wireguard_private_key, x_passphrase, x_ipsec_pre_shared_key) are never
+// leaked into error messages. If the body is not valid JSON it is omitted.
+func redactSensitivePayload(b []byte) string {
+	if len(b) == 0 {
+		return ""
+	}
+	var v any
+	if err := json.Unmarshal(b, &v); err != nil {
+		return "[non-JSON payload omitted]"
+	}
+	redactSensitiveValue(v)
+	out, err := json.Marshal(v)
+	if err != nil {
+		return "[payload omitted]"
+	}
+	return string(out)
+}
+
+func redactSensitiveValue(v any) {
+	switch t := v.(type) {
+	case map[string]any:
+		for k, val := range t {
+			if isSensitiveKey(k) {
+				if _, ok := val.(string); ok {
+					t[k] = "REDACTED"
+					continue
+				}
+			}
+			redactSensitiveValue(val)
+		}
+	case []any:
+		for _, item := range t {
+			redactSensitiveValue(item)
+		}
+	}
+}
+
+func isSensitiveKey(k string) bool {
+	lk := strings.ToLower(k)
+	for _, s := range sensitivePayloadKeys {
+		if strings.Contains(lk, s) {
+			return true
+		}
+	}
+	return false
 }
 
 func Ptr[T any](in T) *T {
