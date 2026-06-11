@@ -213,7 +213,7 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		baseType.Fields[" DisplayName"] = NewFieldInfo("DisplayName", "display_name", fields.String, "non-generated field", true, false, false, "")
 	case resource.StructName == "WLAN":
 		// this field removed in v6, retaining for backwards compatibility
-		baseType.Fields["WLANGroupID"] = NewFieldInfo("WLANGroupID", "wlangroup_id", fields.String, "", false, false, false, "")
+		baseType.Fields["WLANGroupID"] = NewFieldInfo("WLANGroupID", "wlangroup_id", fields.String, "", true, false, false, "")
 	case resource.StructName == "BGPConfig":
 		resource.ResourcePath = "bgp/config"
 	}

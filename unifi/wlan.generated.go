@@ -119,7 +119,7 @@ type WLAN struct {
 	WEPIDX                      *int64                     `json:"wep_idx,omitempty"`    // [1-4]
 	WLANBand                    string                     `json:"wlan_band,omitempty"`  // 2g|5g|both
 	WLANBands                   []string                   `json:"wlan_bands,omitempty"` // 2g|5g|6g
-	WLANGroupID                 string                     `json:"wlangroup_id"`
+	WLANGroupID                 string                     `json:"wlangroup_id,omitempty"`
 	WPA3Enhanced192             bool                       `json:"wpa3_enhanced_192"`
 	WPA3FastRoaming             bool                       `json:"wpa3_fast_roaming"`
 	WPA3Support                 bool                       `json:"wpa3_support"`
