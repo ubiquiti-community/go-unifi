@@ -681,13 +681,14 @@ func (c *ApiClient) doRequest(
 		if resp.StatusCode == http.StatusUnauthorized {
 			return &LoginRequiredError{APIKey: c.apiKey != ""}
 		}
+		errBytes, _ := io.ReadAll(resp.Body)
 		errBody := struct {
 			Meta meta `json:"meta"`
 			Data []struct {
 				Meta meta `json:"meta"`
 			} `json:"data"`
 		}{}
-		if err = json.NewDecoder(resp.Body).Decode(&errBody); err != nil {
+		if err = json.Unmarshal(errBytes, &errBody); err != nil {
 			return err
 		}
 		var apiErr error
@@ -697,6 +698,26 @@ func (c *ApiClient) doRequest(
 		}
 		if apiErr == nil {
 			apiErr = errBody.Meta.error()
+		}
+		// The v2 API reports errors with a different shape
+		// ({"code","message","errorCode"}) that the v1 meta decoder above leaves
+		// empty. Fall back to it so callers get the controller's actual message
+		// (e.g. api.err.PurePoeRequiresUplinkException) instead of a bare HTTP 400.
+		if ae, ok := apiErr.(*APIError); !ok || ae == nil || ae.Message == "" {
+			v2 := struct {
+				Code    string `json:"code"`
+				Message string `json:"message"`
+			}{}
+			if json.Unmarshal(errBytes, &v2) == nil && (v2.Message != "" || v2.Code != "") {
+				msg := v2.Message
+				switch {
+				case msg == "":
+					msg = v2.Code
+				case v2.Code != "":
+					msg = v2.Code + ": " + msg
+				}
+				apiErr = &APIError{RC: v2.Code, Message: msg}
+			}
 		}
 		return fmt.Errorf(
 			"%w (%s) for %s %s\npayload: %s",
