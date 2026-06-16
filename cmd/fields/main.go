@@ -180,6 +180,24 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		resource.ResourcePath = "ospf/router"
 	case resource.StructName == "FirewallPolicy":
 		resource.ResourcePath = "firewall-policies"
+		resource.FieldProcessor = func(name string, f *FieldInfo) error {
+			// The source/destination `port` is not a single number: the
+			// firmware stores and expects it as a string, and it may carry a
+			// comma-separated list (e.g. "80,443"). Model it as a string and
+			// decode either wire form (bare number or quoted string) through
+			// types.Number. An empty string is dropped by omitempty, which is
+			// what the controller expects for port_matching_type ANY
+			// (terraform-provider-unifi #288, #286).
+			if name == "Port" {
+				f.FieldType = fields.String
+				f.IsPointer = false
+				f.OmitEmpty = true
+				f.FieldValidation = ""
+				f.CustomUnmarshalType = fields.Number
+				f.CustomUnmarshalFunc = ""
+			}
+			return nil
+		}
 	case resource.StructName == "TrafficRoute":
 		resource.ResourcePath = "trafficroutes"
 	case resource.StructName == "Network":

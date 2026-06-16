@@ -23,7 +23,7 @@
     "match_opposite_networks": "true|false",
     "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB",
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
-    "port": "[1-9][0-9]{0,4}",
+    "port": "",
     "port_group_id": "",
     "port_matching_type": "ANY|SPECIFIC|LIST|OBJECT",
     "zone_id": ""
@@ -68,7 +68,7 @@
     "match_opposite_networks": "true|false",
     "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB",
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
-    "port": "[1-9][0-9]{0,4}",
+    "port": "",
     "port_group_id": "",
     "port_matching_type": "ANY|SPECIFIC|LIST|OBJECT",
     "zone_id": ""

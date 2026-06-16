@@ -6,14 +6,20 @@ import (
 	"testing"
 )
 
+// TestFirewallPolicyPortMarshalsAsString guards terraform-provider-unifi #288
+// and #286: the zone-based firewall API expects the source/destination `port`
+// as a quoted string (e.g. "161" or a comma-separated list "80,443"), and a
+// portless endpoint (port_matching_type ANY) must omit the field entirely — a
+// `"0"` makes the gateway reject the whole firewall config.
 func TestFirewallPolicyPortMarshalsAsString(t *testing.T) {
 	cases := []struct {
 		name     string
-		port     *int64
+		port     string
 		wantPort string // exact JSON fragment expected, or "" when port must be absent
 	}{
-		{name: "specific port", port: ptrInt64(161), wantPort: `"port":"161"`},
-		{name: "no port", port: nil, wantPort: ""},
+		{name: "specific port", port: "161", wantPort: `"port":"161"`},
+		{name: "comma separated", port: "80,443", wantPort: `"port":"80,443"`},
+		{name: "no port", port: "", wantPort: ""},
 	}
 
 	for _, tc := range cases {
@@ -62,19 +68,30 @@ func assertPort(t *testing.T, got, wantPort string) {
 	}
 }
 
-// Round-trips a string-encoded port back through decode to confirm the tolerant
-// UnmarshalJSON still reads what we now write.
-func TestFirewallPolicyPortRoundTrip(t *testing.T) {
-	src := FirewallPolicySource{Port: ptrInt64(443)}
-	b, err := json.Marshal(src)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
+// TestFirewallPolicyPortUnmarshal confirms the tolerant decoder accepts a port
+// sent as a JSON number, a quoted string, a comma-separated list, or omitted.
+func TestFirewallPolicyPortUnmarshal(t *testing.T) {
+	cases := []struct {
+		name string
+		body string
+		want string
+	}{
+		{name: "numeric", body: `{"port":443}`, want: "443"},
+		{name: "string", body: `{"port":"443"}`, want: "443"},
+		{name: "comma separated", body: `{"port":"1812,1813"}`, want: "1812,1813"},
+		{name: "empty string", body: `{"port":""}`, want: ""},
+		{name: "absent", body: `{}`, want: ""},
 	}
-	var got FirewallPolicySource
-	if err := json.Unmarshal(b, &got); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if got.Port == nil || *got.Port != 443 {
-		t.Fatalf("round-trip port mismatch: got %v, want 443", got.Port)
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			var got FirewallPolicySource
+			if err := json.Unmarshal([]byte(tc.body), &got); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			if got.Port != tc.want {
+				t.Fatalf("Port = %q, want %q", got.Port, tc.want)
+			}
+		})
 	}
 }
