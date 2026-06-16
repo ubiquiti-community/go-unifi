@@ -40,6 +40,7 @@ type Client struct {
 	FixedApMAC                    string   `json:"fixed_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	FixedIP                       string   `json:"fixed_ip,omitempty"`
 	Hostname                      string   `json:"hostname,omitempty"`
+	LastIP                        string   `json:"last_ip,omitempty"`
 	LastSeen                      *int64   `json:"last_seen,omitempty"`
 	LocalDNSRecord                string   `json:"local_dns_record,omitempty"`
 	LocalDNSRecordEnabled         bool     `json:"local_dns_record_enabled"`
