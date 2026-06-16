@@ -229,6 +229,9 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		baseType.Fields["IP"] = NewFieldInfo("IP", "ip", fields.String, "", true, false, false, "")
 	case resource.StructName == "Client":
 		baseType.Fields[" DisplayName"] = NewFieldInfo("DisplayName", "display_name", fields.String, "non-generated field", true, false, false, "")
+		// The controller reports the client's most recent IP on /rest/user but
+		// ace.jar has no schema for it; surface it as a read-only field.
+		baseType.Fields["LastIP"] = NewFieldInfo("LastIP", "last_ip", fields.String, "non-generated field", true, false, false, "")
 	case resource.StructName == "WLAN":
 		// this field removed in v6, retaining for backwards compatibility
 		baseType.Fields["WLANGroupID"] = NewFieldInfo("WLANGroupID", "wlangroup_id", fields.String, "", true, false, false, "")
