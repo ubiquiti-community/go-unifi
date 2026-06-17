@@ -176,6 +176,17 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		resource.ResourcePath = "static-dns"
 	case resource.StructName == "FirewallZone":
 		resource.ResourcePath = "firewall/zone"
+		resource.FieldProcessor = func(name string, f *FieldInfo) error {
+			// default_zone is server-computed/read-only. Sending it in the
+			// create body makes UniFi Network 10.4.x reject the POST with
+			// "Unrecognized field default_zone" (terraform-provider-unifi#310).
+			// Make it a *bool with omitempty so an unset value is omitted.
+			if name == "DefaultZone" {
+				f.OmitEmpty = true
+				f.IsPointer = true
+			}
+			return nil
+		}
 	case resource.StructName == "OSPFRouter":
 		resource.ResourcePath = "ospf/router"
 	case resource.StructName == "FirewallPolicy":
