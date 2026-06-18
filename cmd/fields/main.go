@@ -185,6 +185,15 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 				f.OmitEmpty = true
 				f.IsPointer = true
 			}
+			// network_ids must always be present in the create body. The v2
+			// firewall/zone POST returns HTTP 500 when the field is omitted
+			// entirely, and the default codegen marks slices omitempty — which
+			// drops an empty []string and breaks creating a zone that has no
+			// networks assigned yet. Keep it always serialized so an empty list
+			// is sent as "network_ids":[] (which the controller accepts).
+			if name == "NetworkIDs" {
+				f.OmitEmpty = false
+			}
 			return nil
 		}
 	case resource.StructName == "OSPFRouter":

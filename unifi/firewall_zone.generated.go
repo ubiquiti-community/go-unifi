@@ -35,7 +35,7 @@ type FirewallZone struct {
 
 	DefaultZone *bool    `json:"default_zone,omitempty"`
 	Name        string   `json:"name,omitempty"`
-	NetworkIDs  []string `json:"network_ids,omitempty"`
+	NetworkIDs  []string `json:"network_ids"`
 	ZoneKey     string   `json:"zone_key,omitempty"`
 }
 
