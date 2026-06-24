@@ -25,6 +25,7 @@
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
     "port": "",
     "port_group_id": "",
+    "ip_group_id": "",
     "port_matching_type": "ANY|SPECIFIC|LIST|OBJECT",
     "zone_id": ""
   },
@@ -70,6 +71,7 @@
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
     "port": "",
     "port_group_id": "",
+    "ip_group_id": "",
     "port_matching_type": "ANY|SPECIFIC|LIST|OBJECT",
     "zone_id": ""
   }
