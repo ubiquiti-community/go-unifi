@@ -2202,6 +2202,18 @@
                   }
                 },
                 {
+                  "name": "date_end",
+                  "string": {
+                    "computed_optional_required": "computed"
+                  }
+                },
+                {
+                  "name": "date_start",
+                  "string": {
+                    "computed_optional_required": "computed"
+                  }
+                },
+                {
                   "name": "mode",
                   "string": {
                     "computed_optional_required": "computed"
@@ -9615,6 +9627,18 @@
                   }
                 },
                 {
+                  "name": "date_end",
+                  "string": {
+                    "computed_optional_required": "computed_optional"
+                  }
+                },
+                {
+                  "name": "date_start",
+                  "string": {
+                    "computed_optional_required": "computed_optional"
+                  }
+                },
+                {
                   "name": "mode",
                   "string": {
                     "computed_optional_required": "computed_optional"
@@ -9632,7 +9656,7 @@
                 {
                   "name": "time_all_day",
                   "bool": {
-                    "computed_optional_required": "optional"
+                    "computed_optional_required": "computed_optional"
                   }
                 },
                 {
