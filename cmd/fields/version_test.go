@@ -77,7 +77,8 @@ func TestLatestUnifiVersion(t *testing.T) {
 			query["filter"],
 			firmwareUpdateApiFilter("eq", "product", unifiControllerProduct),
 		)
-		assert.Contains(query["filter"], firmwareUpdateApiFilter("lt", "version", maxVersion))
+		// No version cap: 10.x+ controllers must be discovered.
+		assert.Len(query["filter"], 2)
 
 		resp, err := json.Marshal(respData)
 		assert.NoError(err)
