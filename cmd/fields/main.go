@@ -338,12 +338,22 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Determine which fetcher path to use.
+	//
+	// -latest  → ELF path (queries unifi-os-server/linux-x64). The OS
+	//             version (e.g. v5.1.21) is only used to satisfy the
+	//             firmware API; the Network version (e.g. 10.4.57) is
+	//             discovered during extraction from product.properties.
+	// -version X.Y.Z where X < 10 → .deb path (legacy, unchanged).
+	// -version X.Y.Z where X >= 10 → rejected; use -latest for 10.x+.
+	var useELFPath bool
 	var unifiVersion *version.Version
 	var unifiDownloadUrl *url.URL
 	var err error
 
 	if *useLatestVersion {
-		unifiVersion, unifiDownloadUrl, err = latestUnifiVersion()
+		useELFPath = true
+		unifiVersion, unifiDownloadUrl, err = latestUnifiOSVersion()
 		if err != nil {
 			panic(err)
 		}
@@ -354,6 +364,14 @@ func main() {
 			os.Exit(1)
 		}
 
+		segments := unifiVersion.Segments()
+		if len(segments) > 0 && segments[0] >= 10 {
+			fmt.Print("error: explicit 10.x+ versions are not supported; use -latest\n\n")
+			usage()
+			os.Exit(1)
+		}
+
+		useELFPath = false
 		unifiDownloadUrl, err = url.Parse(fmt.Sprintf("https://dl.ui.com/unifi/%s/unifi_sysvinit_all.deb", unifiVersion))
 		if err != nil {
 			panic(err)
@@ -372,48 +390,101 @@ func main() {
 
 	versionBaseDir := filepath.Dir(filename)
 
-	fieldsDir := filepath.Join(versionBaseDir, fmt.Sprintf("v%s", unifiVersion))
+	// For the ELF path, fieldsDir uses the Network version (discovered
+	// during extraction), not the OS version. We compute it after
+	// extraction below. For the .deb path, use the firmware API version.
+	var fieldsDir string
+	if !useELFPath {
+		fieldsDir = filepath.Join(versionBaseDir, fmt.Sprintf("v%s", unifiVersion))
+	}
 
 	outDir := filepath.Join(wd, *outputDirFlag)
 
-	fieldsInfo, err := os.Stat(fieldsDir)
-	if err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
-			panic(err)
-		}
-
-		err = os.MkdirAll(fieldsDir, 0o755)
+	if useELFPath {
+		// The ELF path always re-extracts (the OS version changes
+		// whenever Ubiquiti ships a new release). Use the OS version
+		// for the temp dir, then rename to the Network version.
+		osVersionDir := filepath.Join(versionBaseDir, fmt.Sprintf("v%s", unifiVersion))
+		err = os.MkdirAll(osVersionDir, 0o755)
 		if err != nil {
 			panic(err)
 		}
 
-		// download fields, create
-		jarFile, err := downloadJar(unifiDownloadUrl, fieldsDir)
+		elfPath, err := downloadELFInstaller(unifiDownloadUrl, osVersionDir)
 		if err != nil {
 			panic(err)
 		}
 
-		err = extractJSON(jarFile, fieldsDir)
+		aceJarPath, networkVersion, err := extractACFromELF(elfPath, osVersionDir)
 		if err != nil {
 			panic(err)
 		}
+		os.Remove(elfPath) // clean up the 880 MB installer
 
-		// defer func() {
-		// 	err = os.RemoveAll(fieldsDir)
-		// 	if err != nil {
-		// 		panic(err)
-		// 	}
-		// }()
+		_, err = extractInternalDepsJSON(aceJarPath, osVersionDir)
+		if err != nil {
+			panic(err)
+		}
+		os.Remove(aceJarPath) // clean up the 116 MB jar
+
+		// Rename the temp dir to the Network version.
+		networkVersionDir := filepath.Join(versionBaseDir, fmt.Sprintf("v%s", networkVersion))
+		if osVersionDir != networkVersionDir {
+			os.RemoveAll(networkVersionDir)
+			if err := os.Rename(osVersionDir, networkVersionDir); err != nil {
+				panic(err)
+			}
+		}
+		fieldsDir = networkVersionDir
 
 		err = copyCustom(fieldsDir)
 		if err != nil {
 			panic(err)
 		}
 
-		fieldsInfo, err = os.Stat(fieldsDir)
+		// Override unifiVersion with the Network version so the
+		// version.generated.go const is correct.
+		unifiVersion, err = version.NewVersion(networkVersion)
 		if err != nil {
 			panic(err)
 		}
+	} else {
+		fieldsInfo, err := os.Stat(fieldsDir)
+		if err != nil {
+			if !errors.Is(err, os.ErrNotExist) {
+				panic(err)
+			}
+
+			err = os.MkdirAll(fieldsDir, 0o755)
+			if err != nil {
+				panic(err)
+			}
+
+			jarFile, err := downloadJar(unifiDownloadUrl, fieldsDir)
+			if err != nil {
+				panic(err)
+			}
+
+			err = extractJSON(jarFile, fieldsDir)
+			if err != nil {
+				panic(err)
+			}
+
+			err = copyCustom(fieldsDir)
+			if err != nil {
+				panic(err)
+			}
+
+			fieldsInfo, err = os.Stat(fieldsDir)
+			if err != nil {
+				panic(err)
+			}
+		}
+		_ = fieldsInfo
+	}
+	fieldsInfo, err := os.Stat(fieldsDir)
+	if err != nil {
+		panic(err)
 	}
 	if !fieldsInfo.IsDir() {
 		panic("version info isn't a directory")
