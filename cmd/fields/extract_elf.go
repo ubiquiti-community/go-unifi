@@ -1,6 +1,8 @@
 package main
 
 import (
+	"archive/zip"
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -8,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/opencontainers/go-digest"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
@@ -72,3 +75,100 @@ var (
 	_ v1.Manifest
 	_ digest.Digest
 )
+
+// extractInternalDepsJSON opens ace.jar, reads
+// BOOT-INF/lib/internal-dependencies.jar, and writes the JSON definition
+// files we care about (keepToplevel + keepDirs recursively) to outdir.
+// Returns the list of relative paths written.
+func extractInternalDepsJSON(aceJarPath, outdir string) ([]string, error) {
+	aceZip, err := zip.OpenReader(aceJarPath)
+	if err != nil {
+		return nil, fmt.Errorf("open ace.jar: %w", err)
+	}
+	defer aceZip.Close()
+
+	const internalDepsName = "BOOT-INF/lib/internal-dependencies.jar"
+	var internalEntry io.ReadCloser
+	internalEntry, err = aceZip.Open(internalDepsName)
+	if err != nil {
+		// Fall back: any entry whose name contains "internal-dependencies".
+		var found *zip.File
+		for _, f := range aceZip.File {
+			if strings.Contains(f.Name, "internal-dependencies") {
+				found = f
+				break
+			}
+		}
+		if found == nil {
+			return nil, fmt.Errorf("internal-dependencies.jar not found in ace.jar")
+		}
+		internalEntry, err = found.Open()
+		if err != nil {
+			return nil, fmt.Errorf("open internal-dependencies.jar: %w", err)
+		}
+	}
+	defer internalEntry.Close()
+
+	internalBytes, err := io.ReadAll(internalEntry)
+	if err != nil {
+		return nil, fmt.Errorf("read internal-dependencies.jar: %w", err)
+	}
+
+	internalReader, err := zip.NewReader(bytes.NewReader(internalBytes), int64(len(internalBytes)))
+	if err != nil {
+		return nil, fmt.Errorf("open internal-dependencies.jar as zip: %w", err)
+	}
+
+	var written []string
+	keepSet := make(map[string]struct{}, len(keepToplevel))
+	for _, k := range keepToplevel {
+		keepSet[k] = struct{}{}
+	}
+
+	for _, f := range internalReader.File {
+		name := f.Name
+		if _, ok := keepSet[name]; ok {
+			if err := writeZipEntry(f, outdir, name); err != nil {
+				return nil, err
+			}
+			written = append(written, name)
+			continue
+		}
+		for _, dir := range keepDirs {
+			if strings.HasPrefix(name, dir+"/") && strings.HasSuffix(name, ".json") {
+				if err := writeZipEntry(f, outdir, name); err != nil {
+					return nil, err
+				}
+				written = append(written, name)
+				break
+			}
+		}
+	}
+
+	return written, nil
+}
+
+// writeZipEntry writes a zip entry to outdir, preserving its relative path.
+func writeZipEntry(f *zip.File, outdir, name string) error {
+	src, err := f.Open()
+	if err != nil {
+		return fmt.Errorf("open zip entry %q: %w", name, err)
+	}
+	defer src.Close()
+
+	dst := filepath.Join(outdir, filepath.FromSlash(name))
+	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
+		return fmt.Errorf("mkdir for %q: %w", name, err)
+	}
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return fmt.Errorf("create %q: %w", name, err)
+	}
+	defer out.Close()
+
+	if _, err := io.Copy(out, src); err != nil {
+		return fmt.Errorf("write %q: %w", name, err)
+	}
+	return nil
+}
