@@ -401,6 +401,21 @@ func (g *SpecificationGenerator) fieldToDataSourceAttribute(r *ResourceInfo, fie
 		}
 	}
 
+	if field.Sensitive {
+		if attr.String != nil {
+			attr.String.Sensitive = ptr(true)
+		}
+		if attr.Bool != nil {
+			attr.Bool.Sensitive = ptr(true)
+		}
+		if attr.Int64 != nil {
+			attr.Int64.Sensitive = ptr(true)
+		}
+		if attr.Float64 != nil {
+			attr.Float64.Sensitive = ptr(true)
+		}
+	}
+
 	return attr
 }
 
@@ -582,6 +597,21 @@ func (g *SpecificationGenerator) fieldToResourceAttribute(r *ResourceInfo, field
 				ComputedOptionalRequired: computedOptionalRequired,
 				AssociatedExternalType:   externalType,
 			}
+		}
+	}
+
+	if field.Sensitive {
+		if attr.String != nil {
+			attr.String.Sensitive = ptr(true)
+		}
+		if attr.Bool != nil {
+			attr.Bool.Sensitive = ptr(true)
+		}
+		if attr.Int64 != nil {
+			attr.Int64.Sensitive = ptr(true)
+		}
+		if attr.Float64 != nil {
+			attr.Float64.Sensitive = ptr(true)
 		}
 	}
 

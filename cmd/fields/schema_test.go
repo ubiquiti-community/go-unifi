@@ -507,3 +507,25 @@ func TestMarkSensitiveFields_NoCollection(t *testing.T) {
 	r.MarkSensitiveFields(meta)
 	assert.False(r.Types["TeleportClient"].Fields["Name"].Sensitive)
 }
+
+func TestFieldToResourceAttribute_Sensitive(t *testing.T) {
+	assert := assert.New(t)
+
+	r := NewResource("Account", "account")
+	r.Types["Account"].Fields["Name"] = NewFieldInfo("Name", "name", fields.String, "", true, false, false, "")
+	r.Types["Account"].Fields["XPassword"] = NewFieldInfo("XPassword", "x_password", fields.String, "", true, false, false, "")
+	r.Types["Account"].Fields["XPassword"].Sensitive = true
+
+	gen := NewSpecificationGenerator("unifi")
+	attr := gen.fieldToResourceAttribute(r, r.Types["Account"].Fields["XPassword"])
+	require.NotNil(t, attr)
+	require.NotNil(t, attr.String)
+	assert.NotNil(t, attr.String.Sensitive, "x_password should have Sensitive set")
+	assert.True(*attr.String.Sensitive)
+
+	// Non-sensitive field should not have Sensitive set.
+	attr2 := gen.fieldToResourceAttribute(r, r.Types["Account"].Fields["Name"])
+	require.NotNil(t, attr2)
+	require.NotNil(t, attr2.String)
+	assert.Nil(attr2.String.Sensitive, "name should NOT have Sensitive set")
+}
