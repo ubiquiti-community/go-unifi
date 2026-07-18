@@ -75,7 +75,6 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
-		MdnsEnabled             bool                            `json:"mdns_enabled"`
 		LteLanEnabled           bool                            `json:"lte_lan_enabled"`
 		IPAliases               []string                        `json:"ip_aliases"`
 		NATOutboundIPAddresses  []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses"`
@@ -87,8 +86,8 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPDStop              *string `json:"dhcpd_stop,omitempty"`
 		DHCPDLeaseTime         *int64  `json:"dhcpd_leasetime,omitempty"`
 		DHCPDDNSEnabled        bool    `json:"dhcpd_dns_enabled"`
-		DHCPDDNS1              string  `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2              string  `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS1              *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2              *string `json:"dhcpd_dns_2,omitempty"`
 		DHCPDDNS3              string  `json:"dhcpd_dns_3,omitempty"`
 		DHCPDDNS4              string  `json:"dhcpd_dns_4,omitempty"`
 		DHCPDGatewayEnabled    bool    `json:"dhcpd_gateway_enabled"`
@@ -161,7 +160,6 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
-		MdnsEnabled:             n.MdnsEnabled,
 		LteLanEnabled:           n.LteLanEnabled,
 		IPAliases:               orEmptySlice(n.IPAliases),
 		NATOutboundIPAddresses:  orEmptyNATSlice(n.NATOutboundIPAddresses),
@@ -313,7 +311,6 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
-		MdnsEnabled             bool                            `json:"mdns_enabled"`
 		LteLanEnabled           bool                            `json:"lte_lan_enabled"`
 		IPAliases               []string                        `json:"ip_aliases"`
 		NATOutboundIPAddresses  []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses"`
@@ -325,8 +322,8 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPDStop              *string `json:"dhcpd_stop,omitempty"`
 		DHCPDLeaseTime         *int64  `json:"dhcpd_leasetime,omitempty"`
 		DHCPDDNSEnabled        bool    `json:"dhcpd_dns_enabled"`
-		DHCPDDNS1              string  `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2              string  `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS1              *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2              *string `json:"dhcpd_dns_2,omitempty"`
 		DHCPDDNS3              string  `json:"dhcpd_dns_3,omitempty"`
 		DHCPDDNS4              string  `json:"dhcpd_dns_4,omitempty"`
 		DHCPDGatewayEnabled    bool    `json:"dhcpd_gateway_enabled"`
@@ -399,7 +396,6 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
-		MdnsEnabled:             n.MdnsEnabled,
 		LteLanEnabled:           n.LteLanEnabled,
 		IPAliases:               orEmptySlice(n.IPAliases),
 		NATOutboundIPAddresses:  orEmptyNATSlice(n.NATOutboundIPAddresses),
@@ -723,8 +719,8 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 		WireguardPrivateKey                  *string `json:"x_wireguard_private_key,omitempty"`
 
 		// DNS servers for WireGuard interface
-		DHCPDDNS1 string `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2 string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS1 *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2 *string `json:"dhcpd_dns_2,omitempty"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -783,8 +779,8 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		VPNType *string `json:"vpn_type,omitempty"`
 
 		// DNS
-		DHCPDDNS1       string `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2       string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS1       *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2       *string `json:"dhcpd_dns_2,omitempty"`
 		DHCPDDNSEnabled bool   `json:"dhcpd_dns_enabled"`
 
 		// DHCP Range
