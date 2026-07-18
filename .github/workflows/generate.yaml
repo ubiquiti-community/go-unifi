@@ -6,13 +6,17 @@ on:
     - cron: 0 0 * * *
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   fields:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      
+
       - name: Setup Go
         uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
@@ -21,8 +25,30 @@ jobs:
       - name: Generate
         run: go generate ./...
 
-      # TODO: Automatically merge the PR if tests pass.
-      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+      - name: Test
+        run: go test ./...
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR
+        if: steps.changes.outputs.changed == 'true'
+        id: create-pr
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           delete-branch: true
           title: 'Update to latest controller version'
+          labels: 'auto-generated'
+
+      - name: Enable auto-merge
+        if: steps.changes.outputs.changed == 'true' && steps.create-pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.create-pr.outputs.pull-request-number }}" --auto --squash --delete-branch
