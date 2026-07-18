@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -25,6 +26,33 @@ const (
 	SpecVersion       = "0.1"
 	GoUnifiImportPath = "github.com/ubiquiti-community/go-unifi/unifi"
 )
+
+// SensitiveMetadata mirrors sensitive_metadata.json from the Unifi
+// internal-dependencies.jar. It maps Mongo collection names to lists of
+// sensitive field paths (dotted for nested fields).
+type SensitiveMetadata struct {
+	SensitiveDBFieldsByCollection         map[string][]string `json:"sensitive_db_fields_by_collection"`
+	SensitiveDistinctDBFieldsByCollection map[string]string   `json:"sensitive_distinct_db_fields_by_collection"`
+}
+
+// loadSensitiveMetadata reads and parses sensitive_metadata.json. Returns
+// (nil, nil) if the file does not exist (the 9.x .deb path produces no
+// metadata file).
+func loadSensitiveMetadata(path string) (*SensitiveMetadata, error) {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("read sensitive_metadata.json: %w", err)
+	}
+
+	var meta SensitiveMetadata
+	if err := json.Unmarshal(b, &meta); err != nil {
+		return nil, fmt.Errorf("parse sensitive_metadata.json: %w", err)
+	}
+	return &meta, nil
+}
 
 // SpecificationGenerator generates a Terraform provider specification from resources.
 type SpecificationGenerator struct {

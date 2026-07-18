@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"slices"
 	"testing"
 
@@ -358,4 +360,37 @@ func TestSpecification_JSONStructure(t *testing.T) {
 	// Verify resources is an array
 	resources := jsonMap["resources"].([]any)
 	assert.Len(t, resources, 1)
+}
+
+func TestLoadSensitiveMetadata(t *testing.T) {
+	assert := assert.New(t)
+	require := require.New(t)
+
+	content := `{
+		"sensitive_db_fields_by_collection": {
+			"networkconf": ["name", "domain_name"],
+			"wlanconf": ["x_passphrase"]
+		},
+		"sensitive_distinct_db_fields_by_collection": {
+			"rogue": "essid"
+		}
+	}`
+
+	path := filepath.Join(t.TempDir(), "sensitive_metadata.json")
+	require.NoError(os.WriteFile(path, []byte(content), 0o644))
+
+	meta, err := loadSensitiveMetadata(path)
+	require.NoError(err)
+	require.NotNil(meta)
+
+	assert.Equal([]string{"name", "domain_name"}, meta.SensitiveDBFieldsByCollection["networkconf"])
+	assert.Equal([]string{"x_passphrase"}, meta.SensitiveDBFieldsByCollection["wlanconf"])
+	assert.Equal("essid", meta.SensitiveDistinctDBFieldsByCollection["rogue"])
+}
+
+func TestLoadSensitiveMetadata_Absent(t *testing.T) {
+	require := require.New(t)
+	meta, err := loadSensitiveMetadata(filepath.Join(t.TempDir(), "nonexistent.json"))
+	require.NoError(err)
+	require.Nil(meta)
 }
