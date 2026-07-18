@@ -14,6 +14,8 @@ const (
 	debianPlatform         = "debian"
 	releaseChannel         = "release"
 	unifiControllerProduct = "unifi-controller"
+	unifiOSServerProduct   = "unifi-os-server"
+	linuxX64Platform       = "linux-x64"
 	maxVersion             = "10.0.0"
 )
 

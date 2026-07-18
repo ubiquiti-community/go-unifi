@@ -94,3 +94,72 @@ func TestLatestUnifiVersion(t *testing.T) {
 	assert.Equal(fwVersion.Core(), gotVersion)
 	assert.Equal(fwDownload, gotDownload)
 }
+
+func TestLatestUnifiOSVersion(t *testing.T) {
+	assert := assert.New(t)
+	require := require.New(t)
+
+	osVersion, err := version.NewVersion("v5.1.21")
+	require.NoError(err)
+
+	osDownload, err := url.Parse(
+		"https://fw-download.ubnt.com/data/unifi-os-server/f5e2-linux-x64-5.1.21-a400c9c6-8328-4634-b223-ebfcf742720a.21-x64",
+	)
+	require.NoError(err)
+
+	respData := firmwareUpdateApiResponse{
+		Embedded: firmwareUpdateApiResponseEmbedded{
+			Firmware: []firmwareUpdateApiResponseEmbeddedFirmware{
+				{
+					Channel:  releaseChannel,
+					Platform: linuxX64Platform,
+					Product:  unifiOSServerProduct,
+					Version:  osVersion,
+					Links: firmwareUpdateApiResponseEmbeddedFirmwareLinks{
+						Data: firmwareUpdateApiResponseEmbeddedFirmwareDataLink{
+							Href: osDownload,
+						},
+					},
+				},
+				{
+					Channel:  releaseChannel,
+					Platform: "macOS-dmg-amd64",
+					Product:  unifiOSServerProduct,
+					Version:  osVersion,
+					Links: firmwareUpdateApiResponseEmbeddedFirmwareLinks{
+						Data: firmwareUpdateApiResponseEmbeddedFirmwareDataLink{Href: nil},
+					},
+				},
+				{
+					Channel:  releaseChannel,
+					Platform: linuxX64Platform,
+					Product:  "unifi-controller", // wrong product
+					Version:  osVersion,
+					Links: firmwareUpdateApiResponseEmbeddedFirmwareLinks{
+						Data: firmwareUpdateApiResponseEmbeddedFirmwareDataLink{Href: nil},
+					},
+				},
+			},
+		},
+	}
+
+	srv := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		query := req.URL.Query()
+		assert.Contains(query["filter"], firmwareUpdateApiFilter("eq", "channel", releaseChannel))
+		assert.Contains(query["filter"], firmwareUpdateApiFilter("eq", "product", unifiOSServerProduct))
+		assert.Contains(query["filter"], firmwareUpdateApiFilter("eq", "platform", linuxX64Platform))
+
+		resp, err := json.Marshal(respData)
+		assert.NoError(err)
+		_, err = rw.Write(resp)
+		assert.NoError(err)
+	}))
+	defer srv.Close()
+
+	firmwareUpdateApi = srv.URL
+	gotVersion, gotDownload, err := latestUnifiOSVersion()
+	require.NoError(err)
+
+	assert.Equal(osVersion.Core(), gotVersion)
+	assert.Equal(osDownload, gotDownload)
+}
