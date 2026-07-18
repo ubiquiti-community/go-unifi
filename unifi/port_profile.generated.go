@@ -34,17 +34,22 @@ type PortProfile struct {
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
 	Autoneg                      bool                   `json:"autoneg"`
-	Dot1XCtrl                    string                 `json:"dot1x_ctrl,omitempty"`             // auto|force_authorized|force_unauthorized|mac_based|multi_host
-	Dot1XIDleTimeout             *int64                 `json:"dot1x_idle_timeout,omitempty"`     // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
+	Dot1XCtrl                    string                 `json:"dot1x_ctrl,omitempty"`         // auto|force_authorized|force_unauthorized|mac_based|multi_host
+	Dot1XIDleTimeout             *int64                 `json:"dot1x_idle_timeout,omitempty"` // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
+	EeeEnabled                   bool                   `json:"eee_enabled"`
 	EgressRateLimitKbps          *int64                 `json:"egress_rate_limit_kbps,omitempty"` // 6[4-9]|[7-9][0-9]|[1-9][0-9]{2,6}
 	EgressRateLimitKbpsEnabled   bool                   `json:"egress_rate_limit_kbps_enabled"`
 	ExcludedNetworkIDs           []string               `json:"excluded_networkconf_ids,omitempty"`
 	FecMode                      string                 `json:"fec_mode,omitempty"` // rs-fec|fc-fec|default|disabled
-	Forward                      string                 `json:"forward,omitempty"`  // all|native|customize|disabled
+	FlowControlEnabled           bool                   `json:"flow_control_enabled"`
+	Forward                      string                 `json:"forward,omitempty"` // all|native|customize|disabled
 	FullDuplex                   bool                   `json:"full_duplex"`
 	Isolation                    bool                   `json:"isolation"`
+	LinkDebounce                 *int64                 `json:"link_debounce,omitempty"` // 0|[1-9]00|[1-4][0-9]00|5000
+	LinkDebounceAuto             bool                   `json:"link_debounce_auto"`
 	LldpmedEnabled               bool                   `json:"lldpmed_enabled"`
 	LldpmedNotifyEnabled         bool                   `json:"lldpmed_notify_enabled"`
+	MulticastRouterMode          string                 `json:"multicast_router_mode,omitempty"` // ALL|CUSTOM|NONE
 	MulticastRouterNetworkIDs    []string               `json:"multicast_router_networkconf_ids,omitempty"`
 	NATiveNetworkID              string                 `json:"native_networkconf_id,omitempty"`
 	Name                         string                 `json:"name,omitempty"`
@@ -53,13 +58,15 @@ type PortProfile struct {
 	PortKeepaliveEnabled         bool                   `json:"port_keepalive_enabled"`
 	PortSecurityEnabled          bool                   `json:"port_security_enabled"`
 	PortSecurityMACAddress       []string               `json:"port_security_mac_address,omitempty"` // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
-	PriorityQueue1Level          *int64                 `json:"priority_queue1_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue2Level          *int64                 `json:"priority_queue2_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue3Level          *int64                 `json:"priority_queue3_level,omitempty"`     // [0-9]|[1-9][0-9]|100
-	PriorityQueue4Level          *int64                 `json:"priority_queue4_level,omitempty"`     // [0-9]|[1-9][0-9]|100
+	PrecisionTimeProtocolEnabled bool                   `json:"precision_time_protocol_enabled"`
+	PriorityQueue1Level          *int64                 `json:"priority_queue1_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	PriorityQueue2Level          *int64                 `json:"priority_queue2_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	PriorityQueue3Level          *int64                 `json:"priority_queue3_level,omitempty"` // [0-9]|[1-9][0-9]|100
+	PriorityQueue4Level          *int64                 `json:"priority_queue4_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	QOSProfile                   *PortProfileQOSProfile `json:"qos_profile,omitempty"`
 	SettingPreference            string                 `json:"setting_preference,omitempty"` // auto|manual
 	Speed                        *int64                 `json:"speed,omitempty"`              // 10|100|1000|2500|5000|10000|20000|25000|40000|50000|100000
+	StablePortEnabled            bool                   `json:"stable_port_enabled"`
 	StormctrlBroadcastastEnabled bool                   `json:"stormctrl_bcast_enabled"`
 	StormctrlBroadcastastLevel   *int64                 `json:"stormctrl_bcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	StormctrlBroadcastastRate    *int64                 `json:"stormctrl_bcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
@@ -70,7 +77,10 @@ type PortProfile struct {
 	StormctrlUcastEnabled        bool                   `json:"stormctrl_ucast_enabled"`
 	StormctrlUcastLevel          *int64                 `json:"stormctrl_ucast_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	StormctrlUcastRate           *int64                 `json:"stormctrl_ucast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
+	StpBpduGuardEnabled          bool                   `json:"stp_bpdu_guard_enabled"`
+	StpEdgeState                 string                 `json:"stp_edge_state,omitempty"` // auto|enabled|disabled
 	StpPortMode                  bool                   `json:"stp_port_mode"`
+	StpUplink                    bool                   `json:"stp_uplink"`
 	TaggedVLANMgmt               string                 `json:"tagged_vlan_mgmt,omitempty"` // auto|block_all|custom
 	VoiceNetworkID               string                 `json:"voice_networkconf_id,omitempty"`
 }
@@ -80,6 +90,7 @@ func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 	aux := &struct {
 		Dot1XIDleTimeout           *types.Number `json:"dot1x_idle_timeout"`
 		EgressRateLimitKbps        *types.Number `json:"egress_rate_limit_kbps"`
+		LinkDebounce               *types.Number `json:"link_debounce"`
 		PriorityQueue1Level        *types.Number `json:"priority_queue1_level"`
 		PriorityQueue2Level        *types.Number `json:"priority_queue2_level"`
 		PriorityQueue3Level        *types.Number `json:"priority_queue3_level"`
@@ -115,6 +126,14 @@ func (dst *PortProfile) UnmarshalJSON(b []byte) error {
 		} else if string(*aux.EgressRateLimitKbps) == "" {
 			var zero int64
 			dst.EgressRateLimitKbps = &zero
+		}
+	}
+	if aux.LinkDebounce != nil {
+		if val, err := aux.LinkDebounce.Int64(); err == nil {
+			dst.LinkDebounce = &val
+		} else if string(*aux.LinkDebounce) == "" {
+			var zero int64
+			dst.LinkDebounce = &zero
 		}
 	}
 	if aux.PriorityQueue1Level != nil {
