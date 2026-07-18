@@ -140,10 +140,13 @@ func extractInternalDepsJSON(aceJarPath, outdir string) ([]string, error) {
 		}
 		for _, dir := range keepDirs {
 			if strings.HasPrefix(name, dir+"/") && strings.HasSuffix(name, ".json") {
-				if err := writeZipEntry(f, outdir, name); err != nil {
+				// Flatten to top level, matching the .deb path behavior
+				// (extract.go uses filepath.Base for the same purpose).
+				flatName := filepath.Base(name)
+				if err := writeZipEntry(f, outdir, flatName); err != nil {
 					return nil, err
 				}
-				written = append(written, name)
+				written = append(written, flatName)
 				break
 			}
 		}

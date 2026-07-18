@@ -515,7 +515,15 @@ func main() {
 		ext := filepath.Ext(name)
 
 		switch name {
-		case "AuthenticationRequest.json", "Setting.json", "Wall.json":
+		case "AuthenticationRequest.json", "Setting.json", "Wall.json",
+			"sensitive_metadata.json",
+			"ssl-inspection-file-extension.json",
+			"event_defs.json",
+			"radio_specification.json",
+			"country_codes_list.json",
+			"geo_ip_country_codes_list.json",
+			"timezones.json",
+			"legacy_endpoint_segments.json":
 			continue
 		}
 

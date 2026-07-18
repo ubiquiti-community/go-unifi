@@ -118,8 +118,8 @@ func TestExtractInternalDepsJSON(t *testing.T) {
 
 	// Verify a few specific files landed.
 	assert.FileExists(filepath.Join(outdir, "sensitive_metadata.json"))
-	assert.FileExists(filepath.Join(outdir, "api/fields/Account.json"))
-	assert.FileExists(filepath.Join(outdir, "api/fields/Device.json"))
+	assert.FileExists(filepath.Join(outdir, "Account.json"))
+	assert.FileExists(filepath.Join(outdir, "Device.json"))
 
 	// Verify content.
 	got, err := os.ReadFile(filepath.Join(outdir, "sensitive_metadata.json"))
