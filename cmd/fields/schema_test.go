@@ -9,6 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/ubiquiti-community/go-unifi/internal/fields"
 )
 
 func TestSpecificationGenerator_Generate_EmptyProvider(t *testing.T) {
@@ -393,4 +394,116 @@ func TestLoadSensitiveMetadata_Absent(t *testing.T) {
 	meta, err := loadSensitiveMetadata(filepath.Join(t.TempDir(), "nonexistent.json"))
 	require.NoError(err)
 	require.Nil(meta)
+}
+
+func TestCollectionName(t *testing.T) {
+	assert := assert.New(t)
+
+	tests := []struct {
+		structName string
+		want       string
+	}{
+		{"Network", "networkconf"},
+		{"WLAN", "wlanconf"},
+		{"Device", "device"},
+		{"Account", "account"},
+		{"RADIUSProfile", "radiusprofile"},
+		{"Client", "user"},
+		{"ClientGroup", "usergroup"},
+		{"DPIGroup", "dpigroup"},
+		{"DynamicDNS", "dynamicdns"},
+		{"SettingMgmt", "setting"},
+		{"SettingUsg", "setting"},
+		{"FirewallRule", "firewallrule"},
+		{"FirewallGroup", "firewallgroup"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.structName, func(t *testing.T) {
+			r := &ResourceInfo{StructName: tt.structName}
+			assert.Equal(tt.want, r.CollectionName(), "struct %q", tt.structName)
+		})
+	}
+}
+
+func TestMarkSensitiveFields(t *testing.T) {
+	assert := assert.New(t)
+
+	meta := &SensitiveMetadata{
+		SensitiveDBFieldsByCollection: map[string][]string{
+			"networkconf": {"name", "domain_name", "x_wireguard_private_key"},
+			"radiusprofile": {"name", "auth_servers.x_secret"},
+		},
+	}
+
+	r := NewResource("Network", "network")
+	r.Types["Network"].Fields["Name"] = NewFieldInfo("Name", "name", fields.String, "", true, false, false, "")
+	r.Types["Network"].Fields["DomainName"] = NewFieldInfo("DomainName", "domain_name", fields.String, "", true, false, false, "")
+	r.Types["Network"].Fields["Purpose"] = NewFieldInfo("Purpose", "purpose", fields.String, "", false, false, false, "")
+
+	r.MarkSensitiveFields(meta)
+
+	assert.True(r.Types["Network"].Fields["Name"].Sensitive, "name should be sensitive")
+	assert.True(r.Types["Network"].Fields["DomainName"].Sensitive, "domain_name should be sensitive")
+	assert.False(r.Types["Network"].Fields["Purpose"].Sensitive, "purpose should NOT be sensitive")
+}
+
+func TestMarkSensitiveFields_DottedPath(t *testing.T) {
+	assert := assert.New(t)
+
+	meta := &SensitiveMetadata{
+		SensitiveDBFieldsByCollection: map[string][]string{
+			"radiusprofile": {"name", "auth_servers.x_secret"},
+		},
+	}
+
+	r := NewResource("RADIUSProfile", "radiusprofile")
+	authServers := NewFieldInfo("AuthServers", "auth_servers", "AuthServers", "", true, false, true, "")
+	authServers.Fields = map[string]*FieldInfo{
+		"XSecret": NewFieldInfo("XSecret", "x_secret", fields.String, "", true, false, false, ""),
+		"Host":    NewFieldInfo("Host", "host", fields.String, "", true, false, false, ""),
+	}
+	r.Types["RADIUSProfile"].Fields["AuthServers"] = authServers
+	r.Types["AuthServers"] = authServers
+
+	r.MarkSensitiveFields(meta)
+
+	assert.True(authServers.Fields["XSecret"].Sensitive, "auth_servers.x_secret should be sensitive")
+	assert.False(authServers.Fields["Host"].Sensitive, "auth_servers.host should NOT be sensitive")
+}
+
+func TestMarkSensitiveFields_DistinctCollection(t *testing.T) {
+	assert := assert.New(t)
+
+	meta := &SensitiveMetadata{
+		SensitiveDBFieldsByCollection: map[string][]string{},
+		SensitiveDistinctDBFieldsByCollection: map[string]string{
+			"rogue": "essid",
+		},
+	}
+
+	r := NewResource("Rogue", "rogue")
+	r.Types["Rogue"].Fields["Essid"] = NewFieldInfo("Essid", "essid", fields.String, "", true, false, false, "")
+	r.Types["Rogue"].Fields["Name"] = NewFieldInfo("Name", "name", fields.String, "", true, false, false, "")
+
+	r.MarkSensitiveFields(meta)
+
+	assert.True(r.Types["Rogue"].Fields["Essid"].Sensitive, "essid should be sensitive (distinct)")
+	assert.False(r.Types["Rogue"].Fields["Name"].Sensitive, "name should NOT be sensitive")
+}
+
+func TestMarkSensitiveFields_NoCollection(t *testing.T) {
+	assert := assert.New(t)
+
+	meta := &SensitiveMetadata{
+		SensitiveDBFieldsByCollection: map[string][]string{
+			"networkconf": {"name"},
+		},
+	}
+
+	r := NewResource("TeleportClient", "teleport_client")
+	r.Types["TeleportClient"].Fields["Name"] = NewFieldInfo("Name", "name", fields.String, "", true, false, false, "")
+
+	r.MarkSensitiveFields(meta)
+	assert.False(r.Types["TeleportClient"].Fields["Name"].Sensitive)
 }

@@ -132,6 +132,7 @@ type FieldInfo struct {
 	Fields              map[string]*FieldInfo
 	CustomUnmarshalType string
 	CustomUnmarshalFunc string
+	Sensitive           bool
 }
 
 func NewResource(structName string, resourcePath string) *ResourceInfo {

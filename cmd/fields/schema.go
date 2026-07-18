@@ -54,6 +54,103 @@ func loadSensitiveMetadata(path string) (*SensitiveMetadata, error) {
 	return &meta, nil
 }
 
+// collectionToStruct maps Mongo collection names (from sensitive_metadata.json)
+// to the resource struct names used by the generator. Built as a reverse of
+// fileReps with special handling for settings (all Setting* map to "setting").
+var collectionToStruct = map[string]string{
+	"networkconf":   "Network",
+	"wlanconf":      "WLAN",
+	"device":        "Device",
+	"account":       "Account",
+	"radiusprofile": "RADIUSProfile",
+	"user":          "Client",
+	"usergroup":     "ClientGroup",
+	"dpigroup":      "DPIGroup",
+	"dynamicdns":    "DynamicDNS",
+	"firewallrule":  "FirewallRule",
+	"firewallgroup": "FirewallGroup",
+	"rogue":         "Rogue",
+}
+
+// structToCollection is the inverse, built at init time.
+var structToCollection map[string]string
+
+func init() {
+	structToCollection = make(map[string]string, len(collectionToStruct))
+	for coll, structName := range collectionToStruct {
+		structToCollection[structName] = coll
+	}
+}
+
+// CollectionName returns the Mongo collection name for this resource,
+// or "" if no mapping exists.
+func (r *ResourceInfo) CollectionName() string {
+	// All Setting* resources map to the "setting" collection.
+	if strings.HasPrefix(r.StructName, "Setting") {
+		return "setting"
+	}
+	return structToCollection[r.StructName]
+}
+
+// MarkSensitiveFields walks the resource's type tree and sets Sensitive=true
+// on any field whose JSONName path appears in the sensitive metadata for this
+// resource's collection. Dotted paths (e.g. "auth_servers.x_secret") are
+// matched by recursing through nested Fields.
+func (r *ResourceInfo) MarkSensitiveFields(meta *SensitiveMetadata) {
+	if meta == nil {
+		return
+	}
+	collection := r.CollectionName()
+	if collection == "" {
+		return
+	}
+
+	paths := meta.SensitiveDBFieldsByCollection[collection]
+	if len(paths) == 0 && meta.SensitiveDistinctDBFieldsByCollection == nil {
+		return
+	}
+
+	set := make(map[string]struct{}, len(paths)+1)
+	for _, p := range paths {
+		set[p] = struct{}{}
+	}
+	if distinct, ok := meta.SensitiveDistinctDBFieldsByCollection[collection]; ok {
+		set[distinct] = struct{}{}
+	}
+
+	base := r.Types[r.StructName]
+	if base == nil {
+		return
+	}
+	// Walk each top-level child of the base type. The base type's own
+	// JSONName is the collection name, which is NOT part of the dotted
+	// paths in the metadata — only the field paths within the collection
+	// are. Starting the walk at base's children keeps the first path
+	// segment as the child's JSONName (e.g. "name", "auth_servers").
+	for _, child := range base.Fields {
+		r.walkAndMark(child, "", set)
+	}
+}
+
+// walkAndMark recurses through field.Fields, building a dotted path from
+// JSONName values, and sets Sensitive=true on any field whose path is in
+// the set.
+func (r *ResourceInfo) walkAndMark(field *FieldInfo, parent string, set map[string]struct{}) {
+	if field == nil {
+		return
+	}
+	path := field.JSONName
+	if parent != "" {
+		path = parent + "." + path
+	}
+	if _, hit := set[path]; hit {
+		field.Sensitive = true
+	}
+	for _, child := range field.Fields {
+		r.walkAndMark(child, path, set)
+	}
+}
+
 // SpecificationGenerator generates a Terraform provider specification from resources.
 type SpecificationGenerator struct {
 	ProviderName string
