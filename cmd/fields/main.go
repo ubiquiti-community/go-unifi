@@ -504,6 +504,12 @@ func main() {
 	// Initialize specification generator
 	specGen := NewSpecificationGenerator("unifi")
 
+	// Load sensitive metadata if present (10.x ELF path; absent for 9.x .deb).
+	sensitiveMeta, err := loadSensitiveMetadata(filepath.Join(fieldsDir, "sensitive_metadata.json"))
+	if err != nil {
+		panic(err)
+	}
+
 	for _, fieldsFile := range fieldsFiles {
 		name := fieldsFile.Name()
 		ext := filepath.Ext(name)
@@ -722,6 +728,9 @@ func main() {
 				portOverrides.Fields["TaggedNetworkIDs"] = NewFieldInfo("TaggedNetworkIDs", "tagged_networkconf_ids", fields.String, "", true, true, false, "")
 			}
 		}
+
+		// Mark sensitive fields from metadata (no-op if meta is nil).
+		resource.MarkSensitiveFields(sensitiveMeta)
 
 		// Add resource to specification generator
 		specGen.AddResource(resource)
