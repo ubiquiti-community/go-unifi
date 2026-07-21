@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -166,6 +167,7 @@ type ApiClient struct {
 	loginPath string
 	apiPath   string // path to API, e.g. "proxy/network" for new style API, "/api" for old style API
 
+	csrfMu      sync.Mutex // guards csrf and tokenExpiry, which concurrent requests update under the loginMu read lock
 	csrf        string
 	tokenExpiry time.Time
 	loginErr    error // cached login error to prevent retry storms
@@ -192,9 +194,18 @@ func (c *ApiClient) isNewStyle() bool {
 // For standalone (old-style): checks the cookiejar for a unifises session cookie.
 func (c *ApiClient) isLoggedIn() bool {
 	if c.isNewStyle() {
+		c.csrfMu.Lock()
+		defer c.csrfMu.Unlock()
 		return c.csrf != ""
 	}
 	return c.hasCookie("unifises")
+}
+
+// sessionExpired reports whether the tracked session expiry has passed.
+func (c *ApiClient) sessionExpired() bool {
+	c.csrfMu.Lock()
+	defer c.csrfMu.Unlock()
+	return !c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry)
 }
 
 // hasCookie checks if the cookiejar contains a cookie with the given name.
@@ -205,6 +216,40 @@ func (c *ApiClient) hasCookie(name string) bool {
 	return slices.ContainsFunc(c.c.HTTPClient.Jar.Cookies(c.baseURL), func(cookie *http.Cookie) bool {
 		return cookie.Name == name
 	})
+}
+
+// csrfFromJWTCookie extracts the csrfToken claim from a UniFi OS auth cookie
+// (TOKEN or UOS_TOKEN), whose value is a JWT, along with the token expiry from
+// the standard exp claim (zero when absent). Some UniFi OS builds return the
+// CSRF token only in this cookie, not in a response header. No signature
+// verification is performed — this is the client's own session cookie and only
+// individual claims are read from it.
+func csrfFromJWTCookie(cookies []*http.Cookie) (string, time.Time) {
+	for _, ck := range cookies {
+		if ck.Name != "TOKEN" && ck.Name != "UOS_TOKEN" {
+			continue
+		}
+		parts := strings.Split(ck.Value, ".")
+		if len(parts) < 2 {
+			continue
+		}
+		payload, err := base64.RawURLEncoding.DecodeString(parts[1])
+		if err != nil {
+			continue
+		}
+		var claims struct {
+			CSRFToken string `json:"csrfToken"`
+			Exp       int64  `json:"exp"`
+		}
+		if json.Unmarshal(payload, &claims) == nil && claims.CSRFToken != "" {
+			var exp time.Time
+			if claims.Exp > 0 {
+				exp = time.Unix(claims.Exp, 0)
+			}
+			return claims.CSRFToken, exp
+		}
+	}
+	return "", time.Time{}
 }
 
 func (c *ApiClient) setBaseURL(base string) error {
@@ -407,10 +452,13 @@ func (c *ApiClient) login(ctx context.Context) error {
 	if c.baseURL != nil {
 		c.c.HTTPClient.Jar.SetCookies(c.baseURL, []*http.Cookie{
 			{Name: "TOKEN", MaxAge: -1},
+			{Name: "UOS_TOKEN", MaxAge: -1},
 			{Name: "unifises", MaxAge: -1},
 		})
 	}
+	c.csrfMu.Lock()
 	c.csrf = ""
+	c.csrfMu.Unlock()
 
 	// Call doRequest directly to avoid login-check recursion and deadlock on loginMu.
 	err := c.doRequest(ctx, http.MethodPost, c.loginPath, &struct {
@@ -492,7 +540,7 @@ func (c *ApiClient) ensureLoggedIn(ctx context.Context) error {
 	defer c.loginMu.Unlock()
 
 	// Double-check: another goroutine may have already logged in while we waited.
-	if c.isLoggedIn() && (c.tokenExpiry.IsZero() || time.Now().Before(c.tokenExpiry)) {
+	if c.isLoggedIn() && !c.sessionExpired() {
 		return nil
 	}
 
@@ -551,7 +599,7 @@ func (c *ApiClient) do(
 	if c.apiKey == "" && c.username != "" && c.password != "" {
 		// Wait for any in-progress login to complete, then check if we need to login.
 		c.loginMu.RLock()
-		needsLogin := !c.isLoggedIn() || (!c.tokenExpiry.IsZero() && time.Now().After(c.tokenExpiry))
+		needsLogin := !c.isLoggedIn() || c.sessionExpired()
 		c.loginMu.RUnlock()
 
 		if needsLogin {
@@ -638,8 +686,11 @@ func (c *ApiClient) doRequest(
 	if c.apiKey != "" {
 		req.Header.Set("X-Api-Key", c.apiKey)
 	}
-	if c.csrf != "" {
-		req.Header.Set("X-Csrf-Token", c.csrf)
+	c.csrfMu.Lock()
+	csrfToken := c.csrf
+	c.csrfMu.Unlock()
+	if csrfToken != "" {
+		req.Header.Set("X-Csrf-Token", csrfToken)
 	}
 
 	resp, err := c.c.Do(req)
@@ -665,16 +716,29 @@ func (c *ApiClient) doRequest(
 		return &RateLimitError{RetryAfter: parseRetryAfter(resp)}
 	}
 
+	c.csrfMu.Lock()
 	if csrf := resp.Header.Get("X-Updated-Csrf-Token"); csrf != "" {
 		c.csrf = csrf
 	} else if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
 		c.csrf = csrf
+	} else if csrf, exp := csrfFromJWTCookie(resp.Cookies()); csrf != "" {
+		// Some UniFi OS builds omit the CSRF response headers and return the
+		// token only inside the TOKEN/UOS_TOKEN JWT cookie. Without this
+		// fallback, login on those builds never establishes a session
+		// (isLoggedIn requires a non-empty CSRF token on new-style
+		// controllers). The JWT's exp claim drives expiry tracking on these
+		// builds, which also omit X-Token-Expire-Time.
+		c.csrf = csrf
+		if !exp.IsZero() {
+			c.tokenExpiry = exp
+		}
 	}
 	if exp := resp.Header.Get("X-Token-Expire-Time"); exp != "" {
 		if ms, err := strconv.ParseInt(exp, 10, 64); err == nil {
 			c.tokenExpiry = time.UnixMilli(ms)
 		}
 	}
+	c.csrfMu.Unlock()
 
 	successCodes := []int{http.StatusOK, http.StatusCreated, http.StatusAccepted, http.StatusNoContent}
 	if !slices.Contains(successCodes, resp.StatusCode) {
