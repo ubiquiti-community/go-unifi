@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/terraform-plugin-codegen-spec v0.2.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/stretchr/testify v1.11.1
-	github.com/ulikunitz/xz v0.5.15
+	github.com/ulikunitz/xz v0.5.16
 	github.com/xor-gate/ar v0.0.0-20170530204233-5c72ae81e2b7
 )
 
