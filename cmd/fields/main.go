@@ -134,6 +134,19 @@ type FieldInfo struct {
 	CustomUnmarshalFunc string
 }
 
+// clearNativeNetworkOmitEmpty keeps native_networkconf_id serialized even when
+// empty. The controller treats an explicit "" as "set the native network to
+// None", but the default codegen marks the string omitempty, so "" is dropped
+// from the body and clearing the native VLAN silently no-ops (#383). Applied to
+// PortProfile (the reported case). The same field on DevicePortOverrides is a
+// nested type that resource FieldProcessors do not reach, so it is unaffected.
+func clearNativeNetworkOmitEmpty(name string, f *FieldInfo) error {
+	if name == "NATiveNetworkID" {
+		f.OmitEmpty = false
+	}
+	return nil
+}
+
 func NewResource(structName string, resourcePath string) *ResourceInfo {
 	baseType := NewFieldInfo(structName, resourcePath, "struct", "", false, false, false, "")
 	resource := &ResourceInfo{
@@ -247,6 +260,8 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		baseType.Fields["Type"] = NewFieldInfo("Type", "type", fields.String, "", true, false, false, "")
 		baseType.Fields["InformIP"] = NewFieldInfo("InformIP", "inform_ip", fields.String, "", true, false, false, "")
 		baseType.Fields["IP"] = NewFieldInfo("IP", "ip", fields.String, "", true, false, false, "")
+	case resource.StructName == "PortProfile":
+		resource.FieldProcessor = clearNativeNetworkOmitEmpty
 	case resource.StructName == "Client":
 		baseType.Fields[" DisplayName"] = NewFieldInfo("DisplayName", "display_name", fields.String, "non-generated field", true, false, false, "")
 		// The controller reports the client's most recent IP on /rest/user but
