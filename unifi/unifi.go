@@ -92,14 +92,38 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 		c.RetryMax = *cfg.RetryMax
 	}
 
-	// Don't let the transport silently retry HTTP 429: surface it as a
-	// RateLimitError (see doRequest) so loginWithRetry can honor Retry-After
-	// with a login-specific budget. Everything else keeps the default policy.
+	// Login 429s are surfaced as RateLimitError (see doRequest) so loginWithRetry
+	// can honor Retry-After with a login-specific budget. All other requests let
+	// the transport retry 429 itself — retryablehttp's DefaultBackoff honors
+	// Retry-After — because with API-key auth there is no login step, and a
+	// single controller rate-limit hit would otherwise fail the whole run.
 	c.CheckRetry = func(ctx context.Context, resp *http.Response, err error) (bool, error) {
 		if resp != nil && resp.StatusCode == http.StatusTooManyRequests {
-			return false, nil
+			if resp.Request != nil &&
+				(strings.HasSuffix(resp.Request.URL.Path, loginPath) ||
+					strings.HasSuffix(resp.Request.URL.Path, loginPathNew)) {
+				return false, nil
+			}
+			return true, nil
 		}
 		return retryablehttp.DefaultRetryPolicy(ctx, resp, err)
+	}
+
+	// When the retry budget is spent on controller rate limiting, hand the final
+	// 429 back so doRequest surfaces a typed RateLimitError (with its Retry-After
+	// hint) instead of retryablehttp's opaque "giving up" error.
+	c.ErrorHandler = func(resp *http.Response, err error, numTries int) (*http.Response, error) {
+		if resp != nil && resp.StatusCode == http.StatusTooManyRequests && err == nil {
+			return resp, nil
+		}
+		if resp != nil {
+			_, _ = io.Copy(io.Discard, io.LimitReader(resp.Body, 4096))
+			_ = resp.Body.Close()
+		}
+		if err == nil {
+			err = fmt.Errorf("giving up after %d attempt(s)", numTries)
+		}
+		return nil, err
 	}
 
 	if cfg.AllowInsecure {
