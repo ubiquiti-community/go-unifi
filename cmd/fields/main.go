@@ -304,6 +304,16 @@ func main() {
 		"specification.json",
 		"Output path for the Terraform provider specification JSON file",
 	)
+	generateOpenAPI := flag.Bool(
+		"generate-openapi",
+		false,
+		"Generate an OpenAPI 3.0.3 specification (YAML) from the field definitions",
+	)
+	openAPIOutputPath := flag.String(
+		"openapi-output",
+		"openapi.yaml",
+		"Output path for the generated OpenAPI specification YAML file",
+	)
 
 	flag.Parse()
 
@@ -703,6 +713,19 @@ const UnifiVersion = %q
 			panic(err)
 		}
 		fmt.Printf("Generated specification: %s\n", specOutputFile)
+	}
+
+	// Generate an OpenAPI specification directly from the field template
+	// variables if requested.
+	if *generateOpenAPI {
+		openAPIFile := *openAPIOutputPath
+		if !filepath.IsAbs(openAPIFile) {
+			openAPIFile = filepath.Join(wd, openAPIFile)
+		}
+		if err := WriteOpenAPI(specGen.Resources, unifiVersion.String(), openAPIFile); err != nil {
+			panic(err)
+		}
+		fmt.Printf("Generated OpenAPI spec: %s\n", openAPIFile)
 	}
 
 	fmt.Printf("%s\n", outDir)

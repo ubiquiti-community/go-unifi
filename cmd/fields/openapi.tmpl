@@ -1,0 +1,246 @@
+openapi: {{ .OpenAPI }}
+info:
+  title: UniFi Network Application API
+  version: {{ .Version }}
+  description: >-
+    Auto-generated from the UniFi controller (ace.jar) field-validation
+    definitions. Component schemas are derived directly from the same field
+    metadata used to generate the Go client, so they stay in lock-step with it.
+servers:
+  - url: https://unifi.local:8443
+    description: UniFi Network controller (self-hosted)
+security:
+  - apiKeyAuth: []
+  - cookieAuth: []
+tags:
+{{- range .Tags }}
+  - name: {{ .Name }}
+    summary: {{ printf "%q" .Summary }}
+    description: {{ printf "%q" .Description }}
+    kind: {{ .Kind }}
+{{- if .Parent }}
+    parent: {{ .Parent }}
+{{- end }}
+{{- end }}
+paths:
+{{- range .Resources }}
+{{- if and (not .IsSetting) (ne .StructName "BGPConfig") }}
+  {{ collectionPath . }}:
+    get:
+      tags: [{{ .StructName }}]
+      summary: List {{ .StructName }}
+      operationId: list{{ .StructName }}
+      parameters:
+        - $ref: '#/components/parameters/Site'
+      responses:
+        '200':
+          description: A list of {{ .StructName }} objects.
+          content:
+            application/json:
+              schema:
+{{- if .IsV2 }}
+                type: array
+                items:
+                  $ref: '#/components/schemas/{{ .StructName }}'
+{{- else }}
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/{{ .StructName }}'
+{{- end }}
+{{- if not .IsDevice }}
+    post:
+      tags: [{{ .StructName }}]
+      summary: Create {{ .StructName }}
+      operationId: create{{ .StructName }}
+      parameters:
+        - $ref: '#/components/parameters/Site'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{ .StructName }}'
+      responses:
+        '200':
+          description: The created {{ .StructName }}.
+          content:
+            application/json:
+              schema:
+{{- if .IsV2 }}
+                $ref: '#/components/schemas/{{ .StructName }}'
+{{- else }}
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/{{ .StructName }}'
+{{- end }}
+{{- end }}
+  {{ itemPath . }}:
+    get:
+      tags: [{{ .StructName }}]
+      summary: Get {{ .StructName }} by id
+      operationId: get{{ .StructName }}
+      parameters:
+        - $ref: '#/components/parameters/Site'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: The requested {{ .StructName }}.
+          content:
+            application/json:
+              schema:
+{{- if .IsV2 }}
+                $ref: '#/components/schemas/{{ .StructName }}'
+{{- else }}
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/{{ .StructName }}'
+{{- end }}
+        '404':
+          description: Not found.
+{{- if not .IsDevice }}
+    put:
+      tags: [{{ .StructName }}]
+      summary: Update {{ .StructName }}
+      operationId: update{{ .StructName }}
+      parameters:
+        - $ref: '#/components/parameters/Site'
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{ .StructName }}'
+      responses:
+        '200':
+          description: The updated {{ .StructName }}.
+          content:
+            application/json:
+              schema:
+{{- if .IsV2 }}
+                $ref: '#/components/schemas/{{ .StructName }}'
+{{- else }}
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/{{ .StructName }}'
+{{- end }}
+    delete:
+      tags: [{{ .StructName }}]
+      summary: Delete {{ .StructName }}
+      operationId: delete{{ .StructName }}
+      parameters:
+        - $ref: '#/components/parameters/Site'
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Deleted.
+{{- end }}
+{{- end }}
+{{- end }}
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: UniFi API key sent in the X-API-KEY header.
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: TOKEN
+      description: Session cookie obtained from POST /api/login (or /api/auth/login).
+  parameters:
+    Site:
+      name: site
+      in: path
+      required: true
+      description: Site name (the controller's internal site id, e.g. "default").
+      schema:
+        type: string
+      example: default
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Object identifier (_id).
+      schema:
+        type: string
+  schemas:
+    Meta:
+      type: object
+      description: Standard UniFi v1 response envelope metadata.
+      properties:
+        rc:
+          type: string
+          description: Result code; "ok" on success.
+        msg:
+          type: [string, "null"]
+{{- range $r := .Resources }}
+{{- range $name, $t := $r.Types }}
+    {{ $name }}:
+      type: object
+{{- $req := requiredFields $t }}
+{{- if $req }}
+      required: [{{ range $i, $f := $req }}{{ if $i }}, {{ end }}{{ $f }}{{ end }}]
+{{- end }}
+      properties:
+{{- range $fk, $fv := $t.Fields }}
+{{- if $fv }}
+        {{ $fv.JSONName }}:
+{{- $base := baseType $fv.FieldType }}
+{{- if isArrayField $fv }}
+          type: array
+          items:
+{{- if isRef $base }}
+            $ref: '#/components/schemas/{{ $base }}'
+{{- else }}
+            type: {{ openapiType $base }}
+{{- with openapiFormat $base }}
+            format: {{ . }}
+{{- end }}
+{{- end }}
+{{- else if isRef $base }}
+{{- if $fv.IsPointer }}
+          oneOf:
+            - $ref: '#/components/schemas/{{ $base }}'
+            - type: "null"
+{{- else }}
+          $ref: '#/components/schemas/{{ $base }}'
+{{- end }}
+{{- else }}
+{{- if $fv.IsPointer }}
+          type: [{{ openapiType $base }}, "null"]
+{{- else }}
+          type: {{ openapiType $base }}
+{{- end }}
+{{- with openapiFormat $base }}
+          format: {{ . }}
+{{- end }}
+{{- end }}
+{{- if $fv.FieldValidation }}
+          description: {{ printf "%q" $fv.FieldValidation }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
