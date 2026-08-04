@@ -55,6 +55,17 @@ func TestFieldInfoFromValidation(t *testing.T) {
 	}
 }
 
+func TestFirewallPolicyTimeAllDayPreservesPresence(t *testing.T) {
+	resource := NewResource("FirewallPolicy", "firewall-policies")
+	fieldInfo, err := resource.fieldInfoFromValidation("time_all_day", "true|false")
+	if err != nil {
+		t.Fatalf("build time_all_day field: %v", err)
+	}
+	if fieldInfo.FieldType != "bool" || !fieldInfo.IsPointer || !fieldInfo.OmitEmpty {
+		t.Fatalf("time_all_day field = %#v, want *bool with omitempty", fieldInfo)
+	}
+}
+
 func TestResourceTypes(t *testing.T) {
 	testData := `
 {
