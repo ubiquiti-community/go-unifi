@@ -526,3 +526,47 @@ func TestMarshalNetworkSiteVPN(t *testing.T) {
 func strPtr(s string) *string {
 	return &s
 }
+
+// Corporate and guest networks previously emitted dhcpguard_enabled without
+// dhcpd_ip_1..3, so enabling DHCP guarding failed with api.err.MissingIPAddress
+// and any update cleared the trusted servers on the controller. VLAN-only
+// networks already carried the fields.
+func TestMarshalNetworkDHCPGuarding(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		t.Run(purpose, func(t *testing.T) {
+			network := &Network{
+				ID:               "507f1f77bcf86cd799439011",
+				Name:             strPtr("Guarded"),
+				Purpose:          purpose,
+				IPSubnet:         strPtr("192.168.1.0/24"),
+				DHCPguardEnabled: true,
+				DHCPDIP1:         "192.168.1.1",
+				DHCPDIP2:         "192.168.1.2",
+			}
+
+			data, err := json.Marshal(network)
+			if err != nil {
+				t.Fatalf("Failed to marshal network: %v", err)
+			}
+
+			checkJSONFields(
+				t,
+				data,
+				[]string{"dhcpguard_enabled", "dhcpd_ip_1", "dhcpd_ip_2", "dhcpd_ip_3"},
+				nil,
+			)
+
+			var result map[string]any
+			json.Unmarshal(data, &result)
+			if result["dhcpguard_enabled"] != true {
+				t.Errorf("Expected dhcpguard_enabled true, got %v", result["dhcpguard_enabled"])
+			}
+			if result["dhcpd_ip_1"] != "192.168.1.1" {
+				t.Errorf("Expected dhcpd_ip_1 '192.168.1.1', got %v", result["dhcpd_ip_1"])
+			}
+			if result["dhcpd_ip_2"] != "192.168.1.2" {
+				t.Errorf("Expected dhcpd_ip_2 '192.168.1.2', got %v", result["dhcpd_ip_2"])
+			}
+		})
+	}
+}

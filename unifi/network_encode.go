@@ -75,6 +75,9 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
+		DHCPDIP1                string                          `json:"dhcpd_ip_1"`
+		DHCPDIP2                string                          `json:"dhcpd_ip_2"`
+		DHCPDIP3                string                          `json:"dhcpd_ip_3"`
 		MdnsEnabled             bool                            `json:"mdns_enabled"`
 		LteLanEnabled           bool                            `json:"lte_lan_enabled"`
 		IPAliases               []string                        `json:"ip_aliases"`
@@ -161,6 +164,9 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
+		DHCPDIP1:                n.DHCPDIP1,
+		DHCPDIP2:                n.DHCPDIP2,
+		DHCPDIP3:                n.DHCPDIP3,
 		MdnsEnabled:             n.MdnsEnabled,
 		LteLanEnabled:           n.LteLanEnabled,
 		IPAliases:               orEmptySlice(n.IPAliases),
@@ -313,6 +319,9 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
+		DHCPDIP1                string                          `json:"dhcpd_ip_1"`
+		DHCPDIP2                string                          `json:"dhcpd_ip_2"`
+		DHCPDIP3                string                          `json:"dhcpd_ip_3"`
 		MdnsEnabled             bool                            `json:"mdns_enabled"`
 		LteLanEnabled           bool                            `json:"lte_lan_enabled"`
 		IPAliases               []string                        `json:"ip_aliases"`
@@ -399,6 +408,9 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
+		DHCPDIP1:                n.DHCPDIP1,
+		DHCPDIP2:                n.DHCPDIP2,
+		DHCPDIP3:                n.DHCPDIP3,
 		MdnsEnabled:             n.MdnsEnabled,
 		LteLanEnabled:           n.LteLanEnabled,
 		IPAliases:               orEmptySlice(n.IPAliases),
