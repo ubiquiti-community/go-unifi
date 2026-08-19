@@ -202,7 +202,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 
 		// DHCP Relay
 		DHCPRelayEnabled: n.DHCPRelayEnabled,
-		DHCPRelayServers: orEmptySlice(n.RemoteVPNSubnets),
+		DHCPRelayServers: orEmptySlice(n.DHCPRelayServers),
 
 		// IPv6
 		IPV6InterfaceType:           valueOrDefault(n.IPV6InterfaceType, "none"),
