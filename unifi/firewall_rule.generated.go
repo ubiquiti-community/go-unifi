@@ -36,8 +36,8 @@ type FirewallRule struct {
 	Action                string   `json:"action,omitempty"` // drop|reject|accept
 	DstAddress            string   `json:"dst_address,omitempty"`
 	DstAddressIPV6        string   `json:"dst_address_ipv6,omitempty"`
-	DstFirewallGroupIDs   []string `json:"dst_firewallgroup_ids,omitempty"` // [\d\w]+
-	DstNetworkID          string   `json:"dst_networkconf_id"`              // [\d\w]+|^$
+	DstFirewallGroupIDs   []string `json:"dst_firewallgroup_ids,omitempty"` // [\d\w-]+
+	DstNetworkID          string   `json:"dst_networkconf_id"`              // [\d\w-]+|^$
 	DstNetworkType        string   `json:"dst_networkconf_type,omitempty"`  // ADDRv4|NETv4
 	DstPort               string   `json:"dst_port,omitempty"`
 	Enabled               bool     `json:"enabled"`
@@ -54,9 +54,9 @@ type FirewallRule struct {
 	SettingPreference     string   `json:"setting_preference,omitempty"` // auto|manual
 	SrcAddress            string   `json:"src_address,omitempty"`
 	SrcAddressIPV6        string   `json:"src_address_ipv6,omitempty"`
-	SrcFirewallGroupIDs   []string `json:"src_firewallgroup_ids,omitempty"` // [\d\w]+
+	SrcFirewallGroupIDs   []string `json:"src_firewallgroup_ids,omitempty"` // [\d\w-]+
 	SrcMACAddress         string   `json:"src_mac_address"`                 // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$|^$
-	SrcNetworkID          string   `json:"src_networkconf_id"`              // [\d\w]+|^$
+	SrcNetworkID          string   `json:"src_networkconf_id"`              // [\d\w-]+|^$
 	SrcNetworkType        string   `json:"src_networkconf_type,omitempty"`  // ADDRv4|NETv4
 	SrcPort               string   `json:"src_port,omitempty"`
 	StateEstablished      bool     `json:"state_established"`

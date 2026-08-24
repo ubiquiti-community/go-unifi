@@ -21,20 +21,14 @@ var (
 	_ strconv.NumError
 )
 
-type Connectivity struct {
+type SuperApplicationDegradation struct {
 	BaseSetting
 
-	EnableIsolatedWLAN bool   `json:"enable_isolated_wlan"`
-	Enabled            bool   `json:"enabled"`
-	MeshEssid          string `json:"x_mesh_essid,omitempty"`
-	MeshPsk            string `json:"x_mesh_psk,omitempty"`
-	MloMeshEnabled     bool   `json:"mlo_mesh_enabled"`
-	UplinkHost         string `json:"uplink_host,omitempty"`
-	UplinkType         string `json:"uplink_type,omitempty"`
+	Enabled bool `json:"enabled"`
 }
 
-func (dst *Connectivity) UnmarshalJSON(b []byte) error {
-	type Alias Connectivity
+func (dst *SuperApplicationDegradation) UnmarshalJSON(b []byte) error {
+	type Alias SuperApplicationDegradation
 	aux := &struct {
 		*Alias
 	}{

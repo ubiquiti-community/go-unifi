@@ -33,7 +33,7 @@ type DpiGroup struct {
 	NoDelete bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
-	DPIappIDs []string `json:"dpiapp_ids,omitempty"` // [\d\w]+
+	DPIappIDs []string `json:"dpiapp_ids,omitempty"` // [\d\w-]+
 	Enabled   bool     `json:"enabled"`
 	Name      string   `json:"name,omitempty"` // .{1,128}
 }

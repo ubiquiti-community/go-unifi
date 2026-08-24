@@ -25,7 +25,7 @@ type GuestAccess struct {
 	BaseSetting
 
 	AllowedSubnet                          string   `json:"allowed_subnet_,omitempty"`
-	Auth                                   string   `json:"auth,omitempty"` // none|hotspot|facebook_wifi|custom
+	Auth                                   string   `json:"auth,omitempty"` // none|hotspot|custom
 	AuthUrl                                string   `json:"auth_url,omitempty"`
 	AuthorizeLoginid                       string   `json:"x_authorize_loginid,omitempty"`
 	AuthorizeTransactionkey                string   `json:"x_authorize_transactionkey,omitempty"`
@@ -39,10 +39,6 @@ type GuestAccess struct {
 	FacebookAppSecret                      string   `json:"x_facebook_app_secret,omitempty"`
 	FacebookEnabled                        bool     `json:"facebook_enabled"`
 	FacebookScopeEmail                     bool     `json:"facebook_scope_email"`
-	FacebookWifiBlockHttps                 bool     `json:"facebook_wifi_block_https"`
-	FacebookWifiGwID                       string   `json:"facebook_wifi_gw_id,omitempty"`
-	FacebookWifiGwName                     string   `json:"facebook_wifi_gw_name,omitempty"`
-	FacebookWifiGwSecret                   string   `json:"x_facebook_wifi_gw_secret,omitempty"`
 	Gateway                                string   `json:"gateway,omitempty"` // paypal|stripe|authorize|quickpay|merchantwarrior|ippay
 	GoogleClientID                         string   `json:"google_client_id,omitempty"`
 	GoogleClientSecret                     string   `json:"x_google_client_secret,omitempty"`
@@ -113,7 +109,6 @@ type GuestAccess struct {
 	RestrictedDNSServers                   []string `json:"restricted_dns_servers,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	RestrictedSubnet                       string   `json:"restricted_subnet_,omitempty"`
 	StripeApiKey                           string   `json:"x_stripe_api_key,omitempty"`
-	TemplateEngine                         string   `json:"template_engine,omitempty"` // jsp|angular
 	VoucherCustomized                      bool     `json:"voucher_customized"`
 	VoucherEnabled                         bool     `json:"voucher_enabled"`
 	WechatAppID                            string   `json:"wechat_app_id,omitempty"`

@@ -72,7 +72,7 @@ func (dst *SettingMdnsCustomServices) UnmarshalJSON(b []byte) error {
 }
 
 type SettingMdnsPredefinedServices struct {
-	Code string `json:"code,omitempty"` // amazon_devices|android_tv_remote|apple_airDrop|apple_airPlay|apple_file_sharing|apple_iChat|apple_iTunes|aqara|bose|dns_service_discovery|ftp_servers|google_chromecast|homeKit|matter_network|philips_hue|printers|roku|scanners|sonos|spotify_connect|ssh_servers|time_capsule|web_servers|windows_file_sharing_samba
+	Code string `json:"code,omitempty"` // amazon_devices|android_tv_remote|apple_airDrop|apple_airPlay|apple_file_sharing|apple_iChat|apple_iTunes|aqara|bose|dns_service_discovery|ftp_servers|google_chromecast|homeKit|matter_network|philips_hue|printers|roku|scanners|shelly|sonos|spotify_connect|ssh_servers|time_capsule|web_servers|windows_file_sharing_samba
 }
 
 func (dst *SettingMdnsPredefinedServices) UnmarshalJSON(b []byte) error {

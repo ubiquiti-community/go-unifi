@@ -29,11 +29,9 @@ type SuperMgmt struct {
 	AutobackupCronExpr                       string   `json:"autobackup_cron_expr,omitempty"`
 	AutobackupDays                           *int64   `json:"autobackup_days,omitempty"`
 	AutobackupEnabled                        bool     `json:"autobackup_enabled"`
-	AutobackupGcsBucket                      string   `json:"autobackup_gcs_bucket,omitempty"`
-	AutobackupGcsCertificatePath             string   `json:"autobackup_gcs_certificate_path,omitempty"`
 	AutobackupLocalPath                      string   `json:"autobackup_local_path,omitempty"`
 	AutobackupMaxFiles                       *int64   `json:"autobackup_max_files,omitempty"`
-	AutobackupPostActions                    []string `json:"autobackup_post_actions,omitempty"` // copy_local|copy_gcs|copy_cloud
+	AutobackupPostActions                    []string `json:"autobackup_post_actions,omitempty"` // copy_local|copy_cloud
 	AutobackupTimezone                       string   `json:"autobackup_timezone,omitempty"`
 	BackupToCloudEnabled                     bool     `json:"backup_to_cloud_enabled"`
 	ContactInfoCity                          string   `json:"contact_info_city,omitempty"`
@@ -57,8 +55,7 @@ type SuperMgmt struct {
 	GoogleMapsApiKey                         string   `json:"google_maps_api_key,omitempty"`
 	ImageMapsUseGoogleEngine                 bool     `json:"image_maps_use_google_engine"`
 	LedEnabled                               bool     `json:"led_enabled"`
-	LiveChat                                 string   `json:"live_chat,omitempty"`    // disabled|super-only|everyone
-	LiveUpdates                              string   `json:"live_updates,omitempty"` // disabled|live|auto
+	LiveChat                                 string   `json:"live_chat,omitempty"` // disabled|super-only|everyone
 	MinimumUsableHdSpace                     *int64   `json:"minimum_usable_hd_space,omitempty"`
 	MinimumUsableSdSpace                     *int64   `json:"minimum_usable_sd_space,omitempty"`
 	MultipleSitesEnabled                     bool     `json:"multiple_sites_enabled"`

@@ -41,8 +41,8 @@ type Network struct {
 	DHCPDBootFilename                             *string                         `json:"dhcpd_boot_filename,omitempty"` // .{1,256}
 	DHCPDBootServer                               string                          `json:"dhcpd_boot_server"`             // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$|(?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|[a-zA-Z0-9-]{1,63}|^$
 	DHCPDConflictChecking                         bool                            `json:"dhcpd_conflict_checking"`
-	DHCPDDNS1                                     string                          `json:"dhcpd_dns_1"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
-	DHCPDDNS2                                     string                          `json:"dhcpd_dns_2"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	DHCPDDNS1                                     *string                         `json:"dhcpd_dns_1,omitempty"`
+	DHCPDDNS2                                     *string                         `json:"dhcpd_dns_2,omitempty"`
 	DHCPDDNS3                                     string                          `json:"dhcpd_dns_3"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPDDNS4                                     string                          `json:"dhcpd_dns_4"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPDDNSEnabled                               bool                            `json:"dhcpd_dns_enabled"`
@@ -80,10 +80,10 @@ type Network struct {
 	DHCPDWins2                                    *string                         `json:"dhcpd_wins_2,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPDWinsEnabled                              bool                            `json:"dhcpd_wins_enabled"`
 	DHCPRelayEnabled                              bool                            `json:"dhcp_relay_enabled"`
-	DHCPRelayServers                              []string                        `json:"dhcp_relay_servers,omitempty"`
+	DHCPRelayServers                              []string                        `json:"dhcp_relay_servers,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPguardEnabled                              bool                            `json:"dhcpguard_enabled"`
 	DPIEnabled                                    bool                            `json:"dpi_enabled"`
-	DPIgroupID                                    string                          `json:"dpigroup_id"` // [\d\w]+|^$
+	DPIgroupID                                    string                          `json:"dpigroup_id"` // [\d\w-]+|^$
 	DhKey                                         *string                         `json:"x_dh_key,omitempty"`
 	DomainName                                    *string                         `json:"domain_name,omitempty"` // (?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|^$|[a-zA-Z0-9-]{1,63}
 	Enabled                                       bool                            `json:"enabled"`
@@ -102,7 +102,7 @@ type Network struct {
 	IGMPQuerierSwitches                           []NetworkIGMPQuerierSwitches    `json:"igmp_querier_switches,omitempty"`
 	IGMPSnooping                                  bool                            `json:"igmp_snooping"`
 	IGMPSuppression                               bool                            `json:"igmp_supression"`
-	IPAliases                                     []string                        `json:"ip_aliases,omitempty"`
+	IPAliases                                     []string                        `json:"ip_aliases,omitempty"`     // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([8-9]|[1-2][0-9]|3[0-2])$|^$
 	IPSecDhGroup                                  *int64                          `json:"ipsec_dh_group,omitempty"` // 2|5|14|15|16|19|20|21|25|26
 	IPSecDynamicRouting                           bool                            `json:"ipsec_dynamic_routing"`
 	IPSecEncryption                               *string                         `json:"ipsec_encryption,omitempty"`     // aes128|aes192|aes256|3des
@@ -129,7 +129,8 @@ type Network struct {
 	IPSecSeparateIkev2Networks                    bool                            `json:"ipsec_separate_ikev2_networks"`
 	IPSecTunnelIP                                 *string                         `json:"ipsec_tunnel_ip,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$
 	IPSecTunnelIPEnabled                          bool                            `json:"ipsec_tunnel_ip_enabled"`
-	IPSubnet                                      *string                         `json:"ip_subnet,omitempty"`                      // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$
+	IPSubnet                                      *string                         `json:"ip_subnet,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$
+	IPV6Aliases                                   []string                        `json:"ipv6_aliases,omitempty"`
 	IPV6ClientAddressAssignment                   *string                         `json:"ipv6_client_address_assignment,omitempty"` // slaac|dhcpv6
 	IPV6InterfaceType                             *string                         `json:"ipv6_interface_type,omitempty"`            // static|pd|single_network|none
 	IPV6PDAutoPrefixidEnabled                     bool                            `json:"ipv6_pd_auto_prefixid_enabled"`
@@ -145,25 +146,33 @@ type Network struct {
 	IPV6SingleNetworkInterface                    *string                         `json:"ipv6_single_network_interface,omitempty"`
 	IPV6Subnet                                    *string                         `json:"ipv6_subnet,omitempty"`
 	IPV6WANDelegationType                         *string                         `json:"ipv6_wan_delegation_type,omitempty"` // pd|single_network|none
-	InterfaceMtu                                  *int64                          `json:"interface_mtu,omitempty"`            // ^(6[89]|[7-9][0-9]|[1-9][0-9]{2,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|65500)$
+	InterfaceMtu                                  *int64                          `json:"interface_mtu,omitempty"`            // ^(6[89]|[7-9][0-9]|[1-9][0-9]{2,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-6])$
 	InterfaceMtuEnabled                           bool                            `json:"interface_mtu_enabled"`
 	InternetAccessEnabled                         bool                            `json:"internet_access_enabled"`
 	IsNAT                                         bool                            `json:"is_nat"`
+	IsWifiTethering                               bool                            `json:"is_wifi_tethering"`
 	L2TpAllowWeakCiphers                          bool                            `json:"l2tp_allow_weak_ciphers"`
-	L2TpInterface                                 *string                         `json:"l2tp_interface,omitempty"`    // wan[2-9]?
-	L2TpLocalWANIP                                *string                         `json:"l2tp_local_wan_ip,omitempty"` // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-	LocalPort                                     *int64                          `json:"local_port,omitempty"`        // ^([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])$
+	L2TpInterface                                 *string                         `json:"l2tp_interface,omitempty"`            // wan[2-9]?
+	L2TpLocalWANIP                                *string                         `json:"l2tp_local_wan_ip,omitempty"`         // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+	L3InterfaceType                               *string                         `json:"l3_interface_type,omitempty"`         // vlan|port|lag
+	LocalPort                                     *int64                          `json:"local_port,omitempty"`                // ^([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])$
+	LocalVPNNetworkIDs                            []string                        `json:"local_vpn_networkconf_ids,omitempty"` // [\d\w-]+|^$
+	LocalVPNSubnets                               []string                        `json:"local_vpn_subnets,omitempty"`         // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$|^$
+	LocalVPNSubnetsMode                           *string                         `json:"local_vpn_subnets_mode,omitempty"`    // all|selected_networks|custom
 	LteLanEnabled                                 bool                            `json:"lte_lan_enabled"`
 	MACOverride                                   string                          `json:"mac_override"` // (^$|^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$)
 	MACOverrideEnabled                            bool                            `json:"mac_override_enabled"`
-	MdnsEnabled                                   bool                            `json:"mdns_enabled"`
+	MssClamp                                      *string                         `json:"mss_clamp,omitempty"`          // auto|custom|disabled
+	MssClampIPV6                                  *string                         `json:"mss_clamp_ipv6,omitempty"`     // auto|custom|disabled
+	MssClampMss                                   *int64                          `json:"mss_clamp_mss,omitempty"`      // ^(50[0-9]|5[1-9][0-9]|[6-9][0-9]{2}|[1-7][0-9]{3}|8[0-8][0-9]{2}|89[0-5][0-9]|8960)$
+	MssClampMssIPV6                               *int64                          `json:"mss_clamp_mss_ipv6,omitempty"` // ^(50[0-9]|5[1-9][0-9]|[6-9][0-9]{2}|[1-7][0-9]{3}|8[0-8][0-9]{2}|89[0-5][0-9]|8960)$
 	NATOutboundIPAddresses                        []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses,omitempty"`
 	Name                                          *string                         `json:"name,omitempty"`         // .{1,128}
 	NetworkGroup                                  *string                         `json:"networkgroup,omitempty"` // LAN[2-8]?
 	NetworkIsolationEnabled                       bool                            `json:"network_isolation_enabled"`
 	OpenVPNConfiguration                          *string                         `json:"openvpn_configuration,omitempty"`
 	OpenVPNConfigurationFilename                  *string                         `json:"openvpn_configuration_filename,omitempty"`
-	OpenVPNEncryptionCipher                       *string                         `json:"openvpn_encryption_cipher,omitempty"` // AES_256_GCM|AES_256_CBC|BF_CBC
+	OpenVPNEncryptionCipher                       *string                         `json:"openvpn_encryption_cipher,omitempty"` // AES_256_CBC|BF_CBC
 	OpenVPNInterface                              *string                         `json:"openvpn_interface,omitempty"`         // wan[2-9]?
 	OpenVPNLocalAddress                           *string                         `json:"openvpn_local_address,omitempty"`     // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 	OpenVPNLocalPort                              *int64                          `json:"openvpn_local_port,omitempty"`        // ^([1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-4][0-9]{3}|[6][5][0-4][0-9]{2}|[6][5][5][0-2][0-9]|[6][5][5][3][0-5])$
@@ -189,8 +198,11 @@ type Network struct {
 	RemoteVPNSubnets                              []string                        `json:"remote_vpn_subnets,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$|^$
 	ReportWANEvent                                bool                            `json:"report_wan_event"`
 	RequireMschapv2                               bool                            `json:"require_mschapv2"`
-	RouteDistance                                 *int64                          `json:"route_distance,omitempty"` // ^[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]$|^$
+	RouteDistance                                 *int64                          `json:"route_distance,omitempty"`  // ^[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]$|^$
+	RoutedLagIDX                                  *int64                          `json:"routed_lag_idx,omitempty"`  // ([0-9]|[1-9][0-9])
+	RoutedPortIDX                                 *int64                          `json:"routed_port_idx,omitempty"` // ([0-9]|[1-9][0-9])
 	SdwanRemoteSiteID                             *string                         `json:"sdwan_remote_site_id,omitempty"`
+	SdwanUnderlay                                 bool                            `json:"sdwan_underlay"`
 	ServerCrt                                     *string                         `json:"x_server_crt,omitempty"`
 	ServerKey                                     *string                         `json:"x_server_key,omitempty"`
 	SettingPreference                             *string                         `json:"setting_preference,omitempty"` // auto|manual
@@ -214,9 +226,15 @@ type Network struct {
 	UidVPNSyncPublicIP                            bool                            `json:"uid_vpn_sync_public_ip"`
 	UidVPNType                                    *string                         `json:"uid_vpn_type,omitempty"` // openvpn|wireguard
 	UidWorkspaceUrl                               *string                         `json:"uid_workspace_url,omitempty"`
+	UplinkBand                                    *string                         `json:"uplink_band,omitempty"`       // ng|na|6e
+	UplinkIDentity                                *string                         `json:"uplink_identity,omitempty"`   // ^.{0,128}$
+	UplinkPassword                                *string                         `json:"x_uplink_password,omitempty"` // ^.{0,256}$
+	UplinkSSID                                    *string                         `json:"uplink_ssid,omitempty"`       // ^.{0,32}$
+	UplinkSecurity                                *string                         `json:"uplink_security,omitempty"`   // Open|WEP|WPA2-Personal|WPA3-Personal|WPA2-Enterprise|WPA3-Enterprise
 	UserGroupID                                   *string                         `json:"usergroup_id,omitempty"`
 	VLAN                                          *int64                          `json:"vlan,omitempty"` // [2-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|400[0-9]|401[0-8]|^$
 	VLANEnabled                                   bool                            `json:"vlan_enabled"`
+	VPNBindingMode                                *string                         `json:"vpn_binding_mode,omitempty"` // static|interface|any
 	VPNClientConfigurationRemoteIPOverride        *string                         `json:"vpn_client_configuration_remote_ip_override,omitempty"`
 	VPNClientConfigurationRemoteIPOverrideEnabled bool                            `json:"vpn_client_configuration_remote_ip_override_enabled"`
 	VPNClientDefaultRoute                         bool                            `json:"vpn_client_default_route"`
@@ -256,13 +274,14 @@ type Network struct {
 	WANNetworkGroup                               *string                         `json:"wan_networkgroup,omitempty"`        // WAN[2-9]?|WAN_LTE_FAILOVER
 	WANPassword                                   string                          `json:"x_wan_password"`                    // [^"' ]+|^$
 	WANPppoePasswordEnabled                       bool                            `json:"wan_pppoe_password_enabled"`
+	WANPppoeRfc4638Enabled                        bool                            `json:"wan_pppoe_rfc4638_enabled"`
 	WANPppoeUsernameEnabled                       bool                            `json:"wan_pppoe_username_enabled"`
 	WANPrefixlen                                  *int64                          `json:"wan_prefixlen,omitempty"` // ^([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|12[0-8])$|^$
 	WANProviderCapabilities                       *NetworkWANProviderCapabilities `json:"wan_provider_capabilities,omitempty"`
 	WANSla                                        *string                         `json:"wan_sla,omitempty"`
-	WANSmartQDownRate                             *int64                          `json:"wan_smartq_down_rate,omitempty"` // [0-9]{1,6}|1000000
+	WANSmartQDownRate                             *int64                          `json:"wan_smartq_down_rate,omitempty"` // [0-9]{1,9}|1000000000
 	WANSmartQEnabled                              bool                            `json:"wan_smartq_enabled"`
-	WANSmartQUpRate                               *int64                          `json:"wan_smartq_up_rate,omitempty"` // [0-9]{1,6}|1000000
+	WANSmartQUpRate                               *int64                          `json:"wan_smartq_up_rate,omitempty"` // [0-9]{1,9}|1000000000
 	WANType                                       *string                         `json:"wan_type,omitempty"`           // disabled|dhcp|static|pppoe|dslite|map-e,hubspoke|map-e,jpix|map-e,ntt|dslite-over-pppoe
 	WANTypeV6                                     *string                         `json:"wan_type_v6,omitempty"`        // disabled|slaac|dhcpv6|static
 	WANUsername                                   string                          `json:"wan_username"`                 // [^"' ]+|^$
@@ -278,7 +297,8 @@ type Network struct {
 	WireguardClientPresharedKeyEnabled            bool                            `json:"wireguard_client_preshared_key_enabled"`
 	WireguardInterface                            *string                         `json:"wireguard_interface,omitempty"`                         // wan[2-9]?
 	WireguardInterfaceBindingModeIPVersion        *string                         `json:"wireguard_interface_binding_mode_ip_version,omitempty"` // v4|v6
-	WireguardLocalWANIP                           *string                         `json:"wireguard_local_wan_ip,omitempty"`                      // ^any$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+	WireguardInterfaceBindingModeVersion          *string                         `json:"wireguard_interface_binding_mode_ip_version,omitempty"` // ^(v4|v6)$
+	WireguardLocalWANIP                           *string                         `json:"wireguard_local_wan_ip,omitempty"`
 	WireguardPrivateKey                           *string                         `json:"x_wireguard_private_key,omitempty"`
 	WireguardPublicKey                            *string                         `json:"wireguard_public_key,omitempty"`
 }
@@ -301,11 +321,15 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		InterfaceMtu                   *types.Number `json:"interface_mtu"`
 		InternetAccessEnabled          *bool         `json:"internet_access_enabled"`
 		LocalPort                      *types.Number `json:"local_port"`
+		MssClampMss                    *types.Number `json:"mss_clamp_mss"`
+		MssClampMssIPV6                *types.Number `json:"mss_clamp_mss_ipv6"`
 		OpenVPNLocalPort               *types.Number `json:"openvpn_local_port"`
 		OpenVPNRemotePort              *types.Number `json:"openvpn_remote_port"`
 		PptpcRouteDistance             *types.Number `json:"pptpc_route_distance"`
 		Priority                       *types.Number `json:"priority"`
 		RouteDistance                  *types.Number `json:"route_distance"`
+		RoutedLagIDX                   *types.Number `json:"routed_lag_idx"`
+		RoutedPortIDX                  *types.Number `json:"routed_port_idx"`
 		UidPublicGatewayPort           *types.Number `json:"uid_public_gateway_port"`
 		UidVPNMaxConnectionTimeSeconds *types.Number `json:"uid_vpn_max_connection_time_seconds"`
 		VLAN                           *types.Number `json:"vlan"`
@@ -437,6 +461,22 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 			dst.LocalPort = &zero
 		}
 	}
+	if aux.MssClampMss != nil {
+		if val, err := aux.MssClampMss.Int64(); err == nil {
+			dst.MssClampMss = &val
+		} else if string(*aux.MssClampMss) == "" {
+			var zero int64
+			dst.MssClampMss = &zero
+		}
+	}
+	if aux.MssClampMssIPV6 != nil {
+		if val, err := aux.MssClampMssIPV6.Int64(); err == nil {
+			dst.MssClampMssIPV6 = &val
+		} else if string(*aux.MssClampMssIPV6) == "" {
+			var zero int64
+			dst.MssClampMssIPV6 = &zero
+		}
+	}
 	if aux.OpenVPNLocalPort != nil {
 		if val, err := aux.OpenVPNLocalPort.Int64(); err == nil {
 			dst.OpenVPNLocalPort = &val
@@ -475,6 +515,22 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		} else if string(*aux.RouteDistance) == "" {
 			var zero int64
 			dst.RouteDistance = &zero
+		}
+	}
+	if aux.RoutedLagIDX != nil {
+		if val, err := aux.RoutedLagIDX.Int64(); err == nil {
+			dst.RoutedLagIDX = &val
+		} else if string(*aux.RoutedLagIDX) == "" {
+			var zero int64
+			dst.RoutedLagIDX = &zero
+		}
+	}
+	if aux.RoutedPortIDX != nil {
+		if val, err := aux.RoutedPortIDX.Int64(); err == nil {
+			dst.RoutedPortIDX = &val
+		} else if string(*aux.RoutedPortIDX) == "" {
+			var zero int64
+			dst.RoutedPortIDX = &zero
 		}
 	}
 	if aux.UidPublicGatewayPort != nil {
