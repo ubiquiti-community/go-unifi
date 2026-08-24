@@ -791,7 +791,8 @@ func (c *ApiClient) doRequest(
 		// ({"code","message","errorCode"}) that the v1 meta decoder above leaves
 		// empty. Fall back to it so callers get the controller's actual message
 		// (e.g. api.err.PurePoeRequiresUplinkException) instead of a bare HTTP 400.
-		if ae, ok := apiErr.(*APIError); !ok || ae == nil || ae.Message == "" {
+		ae := &APIError{}
+		if errors.As(apiErr, &ae) {
 			v2 := struct {
 				Code    string `json:"code"`
 				Message string `json:"message"`
