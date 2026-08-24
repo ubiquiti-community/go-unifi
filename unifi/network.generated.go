@@ -41,10 +41,10 @@ type Network struct {
 	DHCPDBootFilename                             *string                         `json:"dhcpd_boot_filename,omitempty"` // .{1,256}
 	DHCPDBootServer                               string                          `json:"dhcpd_boot_server"`             // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$|(?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|[a-zA-Z0-9-]{1,63}|^$
 	DHCPDConflictChecking                         bool                            `json:"dhcpd_conflict_checking"`
-	DHCPDDNS1                                     string                          `json:"dhcpd_dns_1"`
-	DHCPDDNS2                                     string                          `json:"dhcpd_dns_2"`
-	DHCPDDNS3                                     string                          `json:"dhcpd_dns_3"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
-	DHCPDDNS4                                     string                          `json:"dhcpd_dns_4"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	DHCPDDNS1                                     *string                         `json:"dhcpd_dns_1,omitempty"`
+	DHCPDDNS2                                     *string                         `json:"dhcpd_dns_2,omitempty"`
+	DHCPDDNS3                                     *string                         `json:"dhcpd_dns_3,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
+	DHCPDDNS4                                     *string                         `json:"dhcpd_dns_4,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$
 	DHCPDDNSEnabled                               bool                            `json:"dhcpd_dns_enabled"`
 	DHCPDEnabled                                  bool                            `json:"dhcpd_enabled"`
 	DHCPDGateway                                  *string                         `json:"dhcpd_gateway,omitempty"` // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^$

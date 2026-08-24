@@ -59,8 +59,8 @@ func TestMarshalNetworkCorporate(t *testing.T) {
 		DHCPDStart:            &dhcpStart,
 		DHCPDStop:             &dhcpStop,
 		DHCPDLeaseTime:        &leasetime,
-		DHCPDDNS1:             "8.8.8.8",
-		DHCPDDNS2:             "8.8.4.4",
+		DHCPDDNS1:             strPtr("8.8.8.8"),
+		DHCPDDNS2:             strPtr("8.8.4.4"),
 		DHCPDDNSEnabled:       true,
 		IPAliases:             []string{},
 	}
@@ -372,7 +372,7 @@ func TestMarshalNetworkGuest(t *testing.T) {
 		DHCPDStop:             &dhcpStop,
 		DHCPDLeaseTime:        &leasetime,
 		DHCPDDNSEnabled:       true,
-		DHCPDDNS1:             "8.8.8.8",
+		DHCPDDNS1:             strPtr("8.8.8.8"),
 	}
 
 	data, err := json.Marshal(network)
@@ -609,13 +609,13 @@ func TestMarshalNetworkDHCPRelayServers(t *testing.T) {
 	}
 }
 
-// marshalCorporate/marshalGuest previously tagged dhcpd_dns_1..4 with
-// omitempty and squashed a pointer-to-"" dhcpd_ntp_1/2 to nil (nilIfEmpty),
-// so an explicit clear ("" values) was dropped from the request body. The
-// controller's networkconf PUT keeps omitted fields, so DNS/NTP servers could
-// be set but never unset (terraform-provider-unifi#429). Empty DNS slots must
-// serialize as "" and a pointer-to-"" NTP slot must survive; a nil NTP slot
-// stays omitted so plain reads/writes don't clear controller state.
+// dhcpd_dns_1..4 and dhcpd_ntp_1/2 follow the same tri-state pointer
+// contract: nil stays off the wire (the controller's networkconf PUT keeps
+// omitted fields, so out-of-band config is preserved), a pointer to ""
+// serializes as "" and clears the slot (terraform-provider-unifi#429), and a
+// pointer to a value sets it. An always-serialized DNS slot would put "" on
+// the wire for every write that did not populate it, silently clearing DNS
+// configured outside the caller.
 func TestMarshalNetworkDNSNtpClear(t *testing.T) {
 	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
 		t.Run(purpose, func(t *testing.T) {
@@ -625,10 +625,10 @@ func TestMarshalNetworkDNSNtpClear(t *testing.T) {
 				Name:      strPtr("Clearing"),
 				Purpose:   purpose,
 				IPSubnet:  strPtr("192.168.1.0/24"),
-				DHCPDDNS1: "",
-				DHCPDDNS2: "",
-				DHCPDDNS3: "",
-				DHCPDDNS4: "",
+				DHCPDDNS1: strPtr(""),
+				DHCPDDNS2: strPtr(""),
+				DHCPDDNS3: strPtr(""),
+				DHCPDDNS4: nil,
 				DHCPDNtp1: &emptyNtp,
 				DHCPDNtp2: nil,
 			}
@@ -642,17 +642,17 @@ func TestMarshalNetworkDNSNtpClear(t *testing.T) {
 				t,
 				data,
 				[]string{
-					"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3", "dhcpd_dns_4",
+					"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3",
 					"dhcpd_ntp_1",
 				},
-				[]string{"dhcpd_ntp_2"},
+				[]string{"dhcpd_dns_4", "dhcpd_ntp_2"},
 			)
 
 			var result map[string]any
 			if err := json.Unmarshal(data, &result); err != nil {
 				t.Fatalf("Failed to unmarshal JSON: %v", err)
 			}
-			for _, f := range []string{"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3", "dhcpd_dns_4", "dhcpd_ntp_1"} {
+			for _, f := range []string{"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3", "dhcpd_ntp_1"} {
 				if result[f] != "" {
 					t.Errorf("Expected %s to be an empty string, got %v", f, result[f])
 				}

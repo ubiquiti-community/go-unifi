@@ -90,10 +90,10 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPDStop              *string `json:"dhcpd_stop,omitempty"`
 		DHCPDLeaseTime         *int64  `json:"dhcpd_leasetime,omitempty"`
 		DHCPDDNSEnabled        bool    `json:"dhcpd_dns_enabled"`
-		DHCPDDNS1              string  `json:"dhcpd_dns_1"`
-		DHCPDDNS2              string  `json:"dhcpd_dns_2"`
-		DHCPDDNS3              string  `json:"dhcpd_dns_3"`
-		DHCPDDNS4              string  `json:"dhcpd_dns_4"`
+		DHCPDDNS1              *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2              *string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS3              *string `json:"dhcpd_dns_3,omitempty"`
+		DHCPDDNS4              *string `json:"dhcpd_dns_4,omitempty"`
 		DHCPDGatewayEnabled    bool    `json:"dhcpd_gateway_enabled"`
 		DHCPDGateway           *string `json:"dhcpd_gateway,omitempty"`
 		DHCPDNtpEnabled        bool    `json:"dhcpd_ntp_enabled"`
@@ -334,10 +334,10 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPDStop              *string `json:"dhcpd_stop,omitempty"`
 		DHCPDLeaseTime         *int64  `json:"dhcpd_leasetime,omitempty"`
 		DHCPDDNSEnabled        bool    `json:"dhcpd_dns_enabled"`
-		DHCPDDNS1              string  `json:"dhcpd_dns_1"`
-		DHCPDDNS2              string  `json:"dhcpd_dns_2"`
-		DHCPDDNS3              string  `json:"dhcpd_dns_3"`
-		DHCPDDNS4              string  `json:"dhcpd_dns_4"`
+		DHCPDDNS1              *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2              *string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS3              *string `json:"dhcpd_dns_3,omitempty"`
+		DHCPDDNS4              *string `json:"dhcpd_dns_4,omitempty"`
 		DHCPDGatewayEnabled    bool    `json:"dhcpd_gateway_enabled"`
 		DHCPDGateway           *string `json:"dhcpd_gateway,omitempty"`
 		DHCPDNtpEnabled        bool    `json:"dhcpd_ntp_enabled"`
@@ -735,8 +735,8 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 		WireguardPrivateKey                  *string `json:"x_wireguard_private_key,omitempty"`
 
 		// DNS servers for WireGuard interface
-		DHCPDDNS1 string `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2 string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNS1 *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2 *string `json:"dhcpd_dns_2,omitempty"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -795,9 +795,9 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		VPNType *string `json:"vpn_type,omitempty"`
 
 		// DNS
-		DHCPDDNS1       string `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2       string `json:"dhcpd_dns_2,omitempty"`
-		DHCPDDNSEnabled bool   `json:"dhcpd_dns_enabled"`
+		DHCPDDNS1       *string `json:"dhcpd_dns_1,omitempty"`
+		DHCPDDNS2       *string `json:"dhcpd_dns_2,omitempty"`
+		DHCPDDNSEnabled bool    `json:"dhcpd_dns_enabled"`
 
 		// DHCP Range
 		DHCPDStart *string `json:"dhcpd_start,omitempty"`

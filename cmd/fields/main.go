@@ -527,13 +527,17 @@ func main() {
 					f.OmitEmpty = true
 					f.IsPointer = true
 				case "DHCPDDNS1", "DHCPDDNS2", "DHCPDDNS3", "DHCPDDNS4":
-					// The 10.x spec dropped the IPv4 regex on dhcpd_dns_1/2,
-					// which would default them to omitempty pointers. Keep all
-					// four slots as always-serialized plain strings so an
-					// empty value clears the slot on the controller (#73) and
-					// the field shapes stay uniform.
-					f.OmitEmpty = false
-					f.IsPointer = false
+					// The 10.x spec dropped the IPv4 regex on dhcpd_dns_1/2
+					// but kept it on 3/4, which would leave the four slots
+					// with mixed shapes. Pin all four to the tri-state
+					// pointer contract used by the NTP/WINS/WAN DNS slots:
+					// nil = omit (preserve the controller value), pointer to
+					// "" = clear the slot, pointer to value = set it. A plain
+					// always-serialized string would put "" on the wire for
+					// every write that did not populate the slot, silently
+					// clearing DNS configured out of band.
+					f.OmitEmpty = true
+					f.IsPointer = true
 				case "Purpose":
 					f.OmitEmpty = false
 					f.IsPointer = false
