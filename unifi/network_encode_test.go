@@ -608,3 +608,55 @@ func TestMarshalNetworkDHCPRelayServers(t *testing.T) {
 		})
 	}
 }
+
+// marshalCorporate/marshalGuest previously tagged dhcpd_dns_1..4 with
+// omitempty and squashed a pointer-to-"" dhcpd_ntp_1/2 to nil (nilIfEmpty),
+// so an explicit clear ("" values) was dropped from the request body. The
+// controller's networkconf PUT keeps omitted fields, so DNS/NTP servers could
+// be set but never unset (terraform-provider-unifi#429). Empty DNS slots must
+// serialize as "" and a pointer-to-"" NTP slot must survive; a nil NTP slot
+// stays omitted so plain reads/writes don't clear controller state.
+func TestMarshalNetworkDNSNtpClear(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		t.Run(purpose, func(t *testing.T) {
+			emptyNtp := ""
+			network := &Network{
+				ID:        "507f1f77bcf86cd799439011",
+				Name:      strPtr("Clearing"),
+				Purpose:   purpose,
+				IPSubnet:  strPtr("192.168.1.0/24"),
+				DHCPDDNS1: "",
+				DHCPDDNS2: "",
+				DHCPDDNS3: "",
+				DHCPDDNS4: "",
+				DHCPDNtp1: &emptyNtp,
+				DHCPDNtp2: nil,
+			}
+
+			data, err := json.Marshal(network)
+			if err != nil {
+				t.Fatalf("Failed to marshal network: %v", err)
+			}
+
+			checkJSONFields(
+				t,
+				data,
+				[]string{
+					"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3", "dhcpd_dns_4",
+					"dhcpd_ntp_1",
+				},
+				[]string{"dhcpd_ntp_2"},
+			)
+
+			var result map[string]any
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("Failed to unmarshal JSON: %v", err)
+			}
+			for _, f := range []string{"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3", "dhcpd_dns_4", "dhcpd_ntp_1"} {
+				if result[f] != "" {
+					t.Errorf("Expected %s to be an empty string, got %v", f, result[f])
+				}
+			}
+		})
+	}
+}
