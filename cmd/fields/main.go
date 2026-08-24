@@ -242,6 +242,9 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 	case resource.StructName == "TrafficRoute":
 		resource.ResourcePath = "trafficroutes"
 	case resource.StructName == "Network":
+		// Removed from the 10.x field spec, retaining for backwards
+		// compatibility with pre-10.x controllers (mirrors SettingUsg above).
+		baseType.Fields["MdnsEnabled"] = NewFieldInfo("MdnsEnabled", "mdns_enabled", fields.Bool, "", false, false, false, "")
 		baseType.Fields["WANEgressQOSEnabled"] = NewFieldInfo("WANEgressQOSEnabled", "wan_egress_qos_enabled", fields.Bool, "", true, false, true, "")
 		baseType.Fields["UPnPEnabled"] = NewFieldInfo("UPnPEnabled", "upnp_enabled", fields.Bool, "", true, false, true, "")
 		baseType.Fields["UPnPWANInterface"] = NewFieldInfo("UPnPWANInterface", "upnp_wan_interface", fields.String, "", true, false, true, "")
@@ -523,6 +526,14 @@ func main() {
 					"DHCPDTFTPServer", "DHCPDWins1", "DHCPDWins2", "DHCPDWPAdUrl", "DomainName", "DHCPDGateway", "DHCPDNtp1", "DHCPDNtp2":
 					f.OmitEmpty = true
 					f.IsPointer = true
+				case "DHCPDDNS1", "DHCPDDNS2", "DHCPDDNS3", "DHCPDDNS4":
+					// The 10.x spec dropped the IPv4 regex on dhcpd_dns_1/2,
+					// which would default them to omitempty pointers. Keep all
+					// four slots as always-serialized plain strings so an
+					// empty value clears the slot on the controller (#73) and
+					// the field shapes stay uniform.
+					f.OmitEmpty = false
+					f.IsPointer = false
 				case "Purpose":
 					f.OmitEmpty = false
 					f.IsPointer = false
