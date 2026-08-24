@@ -37,6 +37,7 @@ type WLAN struct {
 	ApGroupMode                 string                     `json:"ap_group_mode,omitempty"` // all|groups|devices
 	AuthCache                   bool                       `json:"auth_cache"`
 	BSupported                  bool                       `json:"b_supported"`
+	BandsteeringMode            string                     `json:"bandsteering_mode,omitempty"` // off|equal|prefer_5g
 	BroadcastFilterEnabled      bool                       `json:"bc_filter_enabled"`
 	BroadcastFilterList         []string                   `json:"bc_filter_list,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	BssTransition               bool                       `json:"bss_transition"`
