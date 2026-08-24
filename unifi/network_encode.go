@@ -90,10 +90,10 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPDStop              *string `json:"dhcpd_stop,omitempty"`
 		DHCPDLeaseTime         *int64  `json:"dhcpd_leasetime,omitempty"`
 		DHCPDDNSEnabled        bool    `json:"dhcpd_dns_enabled"`
-		DHCPDDNS1              string  `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2              string  `json:"dhcpd_dns_2,omitempty"`
-		DHCPDDNS3              string  `json:"dhcpd_dns_3,omitempty"`
-		DHCPDDNS4              string  `json:"dhcpd_dns_4,omitempty"`
+		DHCPDDNS1              string  `json:"dhcpd_dns_1"`
+		DHCPDDNS2              string  `json:"dhcpd_dns_2"`
+		DHCPDDNS3              string  `json:"dhcpd_dns_3"`
+		DHCPDDNS4              string  `json:"dhcpd_dns_4"`
 		DHCPDGatewayEnabled    bool    `json:"dhcpd_gateway_enabled"`
 		DHCPDGateway           *string `json:"dhcpd_gateway,omitempty"`
 		DHCPDNtpEnabled        bool    `json:"dhcpd_ntp_enabled"`
@@ -186,8 +186,8 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPDGatewayEnabled:    n.DHCPDGatewayEnabled,
 		DHCPDGateway:           n.DHCPDGateway,
 		DHCPDNtpEnabled:        n.DHCPDNtpEnabled,
-		DHCPDNtp1:              nilIfEmpty(n.DHCPDNtp1),
-		DHCPDNtp2:              nilIfEmpty(n.DHCPDNtp2),
+		DHCPDNtp1:              n.DHCPDNtp1,
+		DHCPDNtp2:              n.DHCPDNtp2,
 		DHCPDWinsEnabled:       n.DHCPDWinsEnabled,
 		DHCPDWins1:             valueOrDefault(n.DHCPDWins1, ""),
 		DHCPDWins2:             valueOrDefault(n.DHCPDWins2, ""),
@@ -334,10 +334,10 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPDStop              *string `json:"dhcpd_stop,omitempty"`
 		DHCPDLeaseTime         *int64  `json:"dhcpd_leasetime,omitempty"`
 		DHCPDDNSEnabled        bool    `json:"dhcpd_dns_enabled"`
-		DHCPDDNS1              string  `json:"dhcpd_dns_1,omitempty"`
-		DHCPDDNS2              string  `json:"dhcpd_dns_2,omitempty"`
-		DHCPDDNS3              string  `json:"dhcpd_dns_3,omitempty"`
-		DHCPDDNS4              string  `json:"dhcpd_dns_4,omitempty"`
+		DHCPDDNS1              string  `json:"dhcpd_dns_1"`
+		DHCPDDNS2              string  `json:"dhcpd_dns_2"`
+		DHCPDDNS3              string  `json:"dhcpd_dns_3"`
+		DHCPDDNS4              string  `json:"dhcpd_dns_4"`
 		DHCPDGatewayEnabled    bool    `json:"dhcpd_gateway_enabled"`
 		DHCPDGateway           *string `json:"dhcpd_gateway,omitempty"`
 		DHCPDNtpEnabled        bool    `json:"dhcpd_ntp_enabled"`
@@ -430,8 +430,8 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPDGatewayEnabled:    n.DHCPDGatewayEnabled,
 		DHCPDGateway:           n.DHCPDGateway,
 		DHCPDNtpEnabled:        n.DHCPDNtpEnabled,
-		DHCPDNtp1:              nilIfEmpty(n.DHCPDNtp1),
-		DHCPDNtp2:              nilIfEmpty(n.DHCPDNtp2),
+		DHCPDNtp1:              n.DHCPDNtp1,
+		DHCPDNtp2:              n.DHCPDNtp2,
 		DHCPDWinsEnabled:       n.DHCPDWinsEnabled,
 		DHCPDWins1:             valueOrDefault(n.DHCPDWins1, ""),
 		DHCPDWins2:             valueOrDefault(n.DHCPDWins2, ""),
@@ -917,13 +917,6 @@ func orEmptyWANDHCPOptions(s []NetworkWANDHCPOptions) []NetworkWANDHCPOptions {
 		return s
 	}
 	return []NetworkWANDHCPOptions{}
-}
-
-func nilIfEmpty(s *string) *string {
-	if s != nil && *s == "" {
-		return nil
-	}
-	return s
 }
 
 func derefOrEmpty(s *string) string {
