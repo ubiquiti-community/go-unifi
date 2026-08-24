@@ -58,17 +58,17 @@ func newAPGroupTestClient(t *testing.T, srv *httptest.Server) *ApiClient {
 func TestGetAPGroup_ReadsViaList(t *testing.T) {
 	const site = "default"
 	srv := apGroupTestServer(t, site, `[
-		{"_id":"607e2cbe","name":"Inside","device_macs":["aa:bb:cc:dd:ee:ff"]},
-		{"_id":"60669afa","name":"All APs","device_macs":[]}
+		{"_id":"a1b2c3d4","name":"Building A","device_macs":["aa:bb:cc:dd:ee:ff"]},
+		{"_id":"e5f6a7b8","name":"All APs","device_macs":[]}
 	]`)
 	c := newAPGroupTestClient(t, srv)
 
-	got, err := c.GetAPGroup(context.Background(), site, "607e2cbe")
+	got, err := c.GetAPGroup(context.Background(), site, "a1b2c3d4")
 	if err != nil {
 		t.Fatalf("GetAPGroup errored (regressed to per-id GET?): %v", err)
 	}
-	if got.Name != "Inside" {
-		t.Errorf("name = %q, want Inside", got.Name)
+	if got.Name != "Building A" {
+		t.Errorf("name = %q, want Building A", got.Name)
 	}
 	if len(got.DeviceMacs) != 1 || got.DeviceMacs[0] != "aa:bb:cc:dd:ee:ff" {
 		t.Errorf("device_macs = %v, want [aa:bb:cc:dd:ee:ff]", got.DeviceMacs)
@@ -79,7 +79,7 @@ func TestGetAPGroup_ReadsViaList(t *testing.T) {
 // the Terraform resource's Read can drop it from state instead of erroring.
 func TestGetAPGroup_NotFound(t *testing.T) {
 	const site = "default"
-	srv := apGroupTestServer(t, site, `[{"_id":"607e2cbe","name":"Inside","device_macs":[]}]`)
+	srv := apGroupTestServer(t, site, `[{"_id":"a1b2c3d4","name":"Building A","device_macs":[]}]`)
 	c := newAPGroupTestClient(t, srv)
 
 	_, err := c.GetAPGroup(context.Background(), site, "does-not-exist")
