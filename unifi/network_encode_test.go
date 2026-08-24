@@ -570,3 +570,41 @@ func TestMarshalNetworkDHCPGuarding(t *testing.T) {
 		})
 	}
 }
+
+// marshalCorporate previously populated dhcp_relay_servers from
+// RemoteVPNSubnets, so configured relay servers never reached the controller
+// and remote VPN subnets leaked into the field. The guest path was correct.
+func TestMarshalNetworkDHCPRelayServers(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		t.Run(purpose, func(t *testing.T) {
+			network := &Network{
+				ID:               "507f1f77bcf86cd799439011",
+				Name:             strPtr("Relayed"),
+				Purpose:          purpose,
+				IPSubnet:         strPtr("192.168.1.0/24"),
+				DHCPRelayEnabled: true,
+				DHCPRelayServers: []string{"192.168.1.5", "192.168.1.6"},
+				RemoteVPNSubnets: []string{"10.0.0.0/24"},
+			}
+
+			data, err := json.Marshal(network)
+			if err != nil {
+				t.Fatalf("Failed to marshal network: %v", err)
+			}
+
+			var result map[string]any
+			json.Unmarshal(data, &result)
+
+			servers, ok := result["dhcp_relay_servers"].([]any)
+			if !ok {
+				t.Fatalf(
+					"Expected dhcp_relay_servers to be a list, got %T",
+					result["dhcp_relay_servers"],
+				)
+			}
+			if len(servers) != 2 || servers[0] != "192.168.1.5" || servers[1] != "192.168.1.6" {
+				t.Errorf("Expected dhcp_relay_servers [192.168.1.5 192.168.1.6], got %v", servers)
+			}
+		})
+	}
+}
