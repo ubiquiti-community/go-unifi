@@ -45,6 +45,7 @@ type PortProfile struct {
 	Forward                      string                 `json:"forward,omitempty"` // all|native|customize|disabled
 	FullDuplex                   bool                   `json:"full_duplex"`
 	Isolation                    bool                   `json:"isolation"`
+	LdMode                       bool                   `json:"ld_mode"`
 	LinkDebounce                 *int64                 `json:"link_debounce,omitempty"` // 0|[1-9]00|[1-4][0-9]00|5000
 	LinkDebounceAuto             bool                   `json:"link_debounce_auto"`
 	LldpmedEnabled               bool                   `json:"lldpmed_enabled"`

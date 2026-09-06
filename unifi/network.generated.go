@@ -171,6 +171,7 @@ type Network struct {
 	Name                                          *string                         `json:"name,omitempty"`         // .{1,128}
 	NetworkGroup                                  *string                         `json:"networkgroup,omitempty"` // LAN[2-8]?
 	NetworkIsolationEnabled                       bool                            `json:"network_isolation_enabled"`
+	OpenVPNCompressionDisabled                    bool                            `json:"openvpn_compression_disabled"`
 	OpenVPNConfiguration                          *string                         `json:"openvpn_configuration,omitempty"`
 	OpenVPNConfigurationFilename                  *string                         `json:"openvpn_configuration_filename,omitempty"`
 	OpenVPNEncryptionCipher                       *string                         `json:"openvpn_encryption_cipher,omitempty"` // AES_256_CBC|BF_CBC

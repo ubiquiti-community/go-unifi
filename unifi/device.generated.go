@@ -72,6 +72,7 @@ type Device struct {
 	LcmNightModeEnds                      string                             `json:"lcm_night_mode_ends,omitempty"`      // (^$)|(^(0[0-9])|(1[0-9])|(2[0-3])):([0-5][0-9]$)
 	LcmOrientationOverride                *int64                             `json:"lcm_orientation_override,omitempty"` // 0|90|180|270
 	LcmSettingsRestrictedAccess           bool                               `json:"lcm_settings_restricted_access,omitempty"`
+	LcmStatus                             bool                               `json:"lcm_status,omitempty"`
 	LcmTrackerEnabled                     bool                               `json:"lcm_tracker_enabled,omitempty"`
 	LcmTrackerSeed                        string                             `json:"lcm_tracker_seed,omitempty"`              // .{0,50}
 	LedOverride                           string                             `json:"led_override,omitempty"`                  // default|on|off
@@ -656,6 +657,7 @@ type DevicePortOverrides struct {
 	Forward                      string            `json:"forward,omitempty"` // all|native|customize|disabled
 	FullDuplex                   bool              `json:"full_duplex,omitempty"`
 	Isolation                    bool              `json:"isolation,omitempty"`
+	LdMode                       bool              `json:"ld_mode,omitempty"`
 	LinkDebounce                 *int64            `json:"link_debounce,omitempty"` // 0|[1-9]00|[1-4][0-9]00|5000
 	LinkDebounceAuto             bool              `json:"link_debounce_auto,omitempty"`
 	LldpmedEnabled               bool              `json:"lldpmed_enabled,omitempty"`
@@ -700,6 +702,7 @@ type DevicePortOverrides struct {
 	StpUplink                    bool              `json:"stp_uplink,omitempty"`
 	TaggedNetworkIDs             []string          `json:"tagged_networkconf_ids,omitempty"`
 	TaggedVLANMgmt               string            `json:"tagged_vlan_mgmt,omitempty"` // auto|block_all|custom
+	TrustedPortMAC               string            `json:"trusted_port_mac,omitempty"` // (^$|^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$)
 	UnitID                       *int64            `json:"unit_id,omitempty"`          // [1-8]
 	VoiceNetworkID               string            `json:"voice_networkconf_id,omitempty"`
 }

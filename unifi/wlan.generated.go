@@ -79,7 +79,8 @@ type WLAN struct {
 	MinrateSettingPreference    string                     `json:"minrate_setting_preference,omitempty"` // auto|manual
 	MloEnabled                  bool                       `json:"mlo_enabled"`
 	MulticastEnhanceEnabled     bool                       `json:"mcastenhance_enabled"`
-	Name                        string                     `json:"name,omitempty"` // .{1,32}
+	MulticastSuppressorMode     string                     `json:"multicast_suppressor_mode,omitempty"` // off|conservative|aggressive
+	Name                        string                     `json:"name,omitempty"`                      // .{1,32}
 	NameCombineEnabled          bool                       `json:"name_combine_enabled"`
 	NameCombineSuffix           string                     `json:"name_combine_suffix,omitempty"` // .{0,8}
 	NasIDentifier               string                     `json:"nas_identifier,omitempty"`      // .{0,48}

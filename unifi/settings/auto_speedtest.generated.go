@@ -24,8 +24,10 @@ var (
 type AutoSpeedtest struct {
 	BaseSetting
 
-	CronExpr string `json:"cron_expr,omitempty"`
-	Enabled  bool   `json:"enabled"`
+	CronExpr      string   `json:"cron_expr,omitempty"`
+	Enabled       bool     `json:"enabled"`
+	SpeedTestMode string   `json:"speed_test_mode,omitempty"` // ALL|CUSTOM
+	WANList       []string `json:"wan_list,omitempty"`        // WAN[2-9]?
 }
 
 func (dst *AutoSpeedtest) UnmarshalJSON(b []byte) error {
