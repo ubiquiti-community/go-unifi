@@ -86,7 +86,7 @@ func (c *ApiClient) CreateSite(ctx context.Context, description string) ([]Site,
 		Data []Site `json:"data"`
 	}
 
-	err := c.do(ctx, http.MethodPost, "s/default/cmd/sitemgr", reqBody, &respBody)
+	err := c.do(ctx, http.MethodPost, "api/s/default/cmd/sitemgr", reqBody, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (c *ApiClient) DeleteSite(ctx context.Context, id string) ([]Site, error) {
 		Data []Site `json:"data"`
 	}
 
-	err := c.do(ctx, http.MethodPost, "s/default/cmd/sitemgr", reqBody, &respBody)
+	err := c.do(ctx, http.MethodPost, "api/s/default/cmd/sitemgr", reqBody, &respBody)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (c *ApiClient) UpdateSite(ctx context.Context, name, description string) ([
 		Data []Site `json:"data"`
 	}
 
-	err := c.do(ctx, http.MethodPost, fmt.Sprintf("s/%s/cmd/sitemgr", name), reqBody, &respBody)
+	err := c.do(ctx, http.MethodPost, fmt.Sprintf("api/s/%s/cmd/sitemgr", name), reqBody, &respBody)
 	if err != nil {
 		return nil, err
 	}

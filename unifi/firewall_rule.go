@@ -53,7 +53,7 @@ func (c *ApiClient) ReorderFirewallRules(
 		Ruleset: ruleset,
 		Rules:   reorder,
 	}
-	err := c.do(ctx, http.MethodPost, fmt.Sprintf("s/%s/cmd/firewall", site), reqBody, nil)
+	err := c.do(ctx, http.MethodPost, fmt.Sprintf("api/s/%s/cmd/firewall", site), reqBody, nil)
 	if err != nil {
 		return err
 	}
