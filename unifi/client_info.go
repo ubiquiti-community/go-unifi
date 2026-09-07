@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+
+	"github.com/ubiquiti-community/go-unifi/unifi/types"
 )
 
 // just to fix compile issues with the import.
@@ -44,7 +46,7 @@ type ClientInfo struct {
 	Bssid                               string                   `json:"bssid,omitempty"`
 	Ccq                                 *int64                   `json:"ccq,omitempty"`
 	Channel                             *int64                   `json:"channel,omitempty"`
-	ChannelWidth                        string                   `json:"channel_width,omitempty"`
+	ChannelWidth                        types.Number             `json:"channel_width,omitempty"`
 	DetailedStates                      ClientInfoDetailedStates `json:"detailed_states"`
 	DhcpendTime                         *int64                   `json:"dhcpend_time,omitempty"`
 	DisplayName                         string                   `json:"display_name,omitempty"`

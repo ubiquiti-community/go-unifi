@@ -8,6 +8,9 @@ import (
 
 // Number extends types.Number to handle empty strings and string values.
 // For example a field may contain a number, an empty string, or the string "auto".
+// A field may also arrive quoted on one controller and bare on another (a
+// client's channel_width is "80" for some clients and 80 for others), which a
+// plain string or numeric field cannot decode.
 type Number json.Number
 
 func (n *Number) UnmarshalJSON(b []byte) error {
@@ -15,7 +18,7 @@ func (n *Number) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 	s := string(b)
-	if s == `""` {
+	if s == `""` || s == "null" {
 		*n = ""
 		return nil
 	}

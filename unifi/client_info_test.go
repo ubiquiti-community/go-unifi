@@ -68,4 +68,53 @@ func TestClientInfoDeserialization(t *testing.T) {
 	}
 }
 
+// The controller reports channel_width as a bare number for some clients and a
+// quoted string for others; a list decode fails wholesale on the mismatch.
+func TestClientInfoChannelWidth(t *testing.T) {
+	tests := []struct {
+		name    string
+		raw     string
+		want    string
+		wantInt *int64
+	}{
+		{name: "number", raw: `{"mac":"aa:bb:cc:dd:ee:ff","channel_width":80}`, want: "80", wantInt: ptrInt64(80)},
+		{name: "string", raw: `{"mac":"aa:bb:cc:dd:ee:ff","channel_width":"80"}`, want: "80", wantInt: ptrInt64(80)},
+		{name: "empty string", raw: `{"mac":"aa:bb:cc:dd:ee:ff","channel_width":""}`, want: ""},
+		{name: "null", raw: `{"mac":"aa:bb:cc:dd:ee:ff","channel_width":null}`, want: ""},
+		{name: "absent", raw: `{"mac":"aa:bb:cc:dd:ee:ff"}`, want: ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var ci ClientInfo
+			if err := json.Unmarshal([]byte(tt.raw), &ci); err != nil {
+				t.Fatalf("Unmarshal error: %v", err)
+			}
+			if ci.ChannelWidth.String() != tt.want {
+				t.Errorf("ChannelWidth = %q, want %q", ci.ChannelWidth, tt.want)
+			}
+			got := ci.ChannelWidth.Int64Pointer()
+			switch {
+			case tt.wantInt == nil && got != nil:
+				t.Errorf("ChannelWidth.Int64Pointer() = %d, want nil", *got)
+			case tt.wantInt != nil && got == nil:
+				t.Errorf("ChannelWidth.Int64Pointer() = nil, want %d", *tt.wantInt)
+			case tt.wantInt != nil && *got != *tt.wantInt:
+				t.Errorf("ChannelWidth.Int64Pointer() = %d, want %d", *got, *tt.wantInt)
+			}
+		})
+	}
+
+	t.Run("mixed list", func(t *testing.T) {
+		var list []ClientInfo
+		raw := `[{"mac":"aa:bb:cc:dd:ee:01","channel_width":"20"},{"mac":"aa:bb:cc:dd:ee:02","channel_width":80}]`
+		if err := json.Unmarshal([]byte(raw), &list); err != nil {
+			t.Fatalf("Unmarshal error: %v", err)
+		}
+		if len(list) != 2 || list[0].ChannelWidth != "20" || list[1].ChannelWidth != "80" {
+			t.Errorf("got %+v", list)
+		}
+	})
+}
+
 func ptrInt64(v int64) *int64 { return &v }
