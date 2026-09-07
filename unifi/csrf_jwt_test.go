@@ -22,7 +22,7 @@ func jwtWith(csrf string) string {
 // jwtWithExp is jwtWith plus a standard exp claim (epoch seconds).
 func jwtWithExp(csrf string, exp int64) string {
 	payload := base64.RawURLEncoding.EncodeToString(
-		[]byte(fmt.Sprintf(`{"csrfToken":%q,"exp":%d}`, csrf, exp)),
+		fmt.Appendf(nil, `{"csrfToken":%q,"exp":%d}`, csrf, exp),
 	)
 	return "hdr." + payload + ".sig"
 }

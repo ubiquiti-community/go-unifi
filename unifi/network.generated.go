@@ -298,8 +298,7 @@ type Network struct {
 	WireguardClientPresharedKey                   *string                         `json:"wireguard_client_preshared_key,omitempty"`
 	WireguardClientPresharedKeyEnabled            bool                            `json:"wireguard_client_preshared_key_enabled"`
 	WireguardInterface                            *string                         `json:"wireguard_interface,omitempty"`                         // wan[2-9]?
-	WireguardInterfaceBindingModeIPVersion        *string                         `json:"wireguard_interface_binding_mode_ip_version,omitempty"` // v4|v6
-	WireguardInterfaceBindingModeVersion          *string                         `json:"wireguard_interface_binding_mode_ip_version,omitempty"` // ^(v4|v6)$
+	WireguardInterfaceBindingModeIPVersion        *string                         `json:"wireguard_interface_binding_mode_ip_version,omitempty"` // ^(v4|v6)$
 	WireguardLocalWANIP                           *string                         `json:"wireguard_local_wan_ip,omitempty"`
 	WireguardPrivateKey                           *string                         `json:"x_wireguard_private_key,omitempty"`
 	WireguardPublicKey                            *string                         `json:"wireguard_public_key,omitempty"`

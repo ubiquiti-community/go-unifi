@@ -98,6 +98,7 @@ var fieldReps = []replacement{
 	{"IPStop", "Stop"},
 	{"IPVersion", "Version"},
 	{"IPOrSubnet", "Address"},
+	{"WireguardInterfaceBindingModeVersion", "WireguardInterfaceBindingModeIPVersion"},
 }
 
 var fileReps = []replacement{
