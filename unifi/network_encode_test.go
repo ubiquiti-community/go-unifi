@@ -320,6 +320,81 @@ func TestMarshalNetworkWAN(t *testing.T) {
 	}
 }
 
+// TestMarshalNetworkWANPPPoECredentials pins the tri-state contract for the
+// PPPoE login. The fields were previously absent from the WAN payload
+// altogether, which made the credentials unmanageable; they must now travel
+// when set, and stay off the wire when not, so an update that manages only
+// other WAN settings cannot clear the ISP login and drop the uplink.
+func TestMarshalNetworkWANPPPoECredentials(t *testing.T) {
+	t.Run("unset stays off the wire", func(t *testing.T) {
+		network := &Network{
+			ID:      "507f1f77bcf86cd799439011",
+			Purpose: PurposeWAN,
+			Enabled: true,
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		for _, key := range []string{"wan_username", "x_wan_password"} {
+			if _, present := result[key]; present {
+				t.Errorf("unset %s must stay off the wire, got %v", key, result[key])
+			}
+		}
+	})
+
+	t.Run("configured credentials travel", func(t *testing.T) {
+		network := &Network{
+			ID:          "507f1f77bcf86cd799439011",
+			Purpose:     PurposeWAN,
+			Enabled:     true,
+			WANType:     strPtr("pppoe"),
+			WANUsername: strPtr("isp-user"),
+			WANPassword: strPtr("isp-secret"),
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		if result["wan_username"] != "isp-user" {
+			t.Errorf("wan_username = %v, want isp-user", result["wan_username"])
+		}
+		if result["x_wan_password"] != "isp-secret" {
+			t.Errorf("x_wan_password = %v, want isp-secret", result["x_wan_password"])
+		}
+	})
+
+	t.Run("an explicitly empty credential can still clear it", func(t *testing.T) {
+		network := &Network{
+			ID:          "507f1f77bcf86cd799439011",
+			Purpose:     PurposeWAN,
+			Enabled:     true,
+			WANUsername: strPtr(""),
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		// omitempty on a *string only drops a nil pointer, not a pointer to "".
+		got, present := result["wan_username"]
+		if !present || got != "" {
+			t.Errorf(`wan_username = %v (present=%v), want an explicit ""`, got, present)
+		}
+	})
+}
+
 func TestMarshalNetworkUnknownPurpose(t *testing.T) {
 	network := &Network{
 		ID:      "507f1f77bcf86cd799439016",

@@ -505,6 +505,11 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		WANDHCPv6Cos *int64 `json:"wan_dhcpv6_cos,omitempty"`
 
 		// DNS fields
+		// PPPoE credentials: omitempty so an update that does not manage
+		// them preserves the ISP login rather than clearing it.
+		WANUsername *string `json:"wan_username,omitempty"`
+		WANPassword *string `json:"x_wan_password,omitempty"`
+
 		WANDNS1              *string `json:"wan_dns1,omitempty"`
 		WANDNS2              *string `json:"wan_dns2,omitempty"`
 		WANDNSPreference     *string `json:"wan_dns_preference,omitempty"`
@@ -574,6 +579,8 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		WANDHCPv6Cos: n.WANDHCPv6Cos,
 
 		// DNS fields
+		WANUsername:          n.WANUsername,
+		WANPassword:          n.WANPassword,
 		WANDNS1:              n.WANDNS1,
 		WANDNS2:              n.WANDNS2,
 		WANDNSPreference:     n.WANDNSPreference,

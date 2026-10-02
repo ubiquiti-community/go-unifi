@@ -539,6 +539,14 @@ func main() {
 					// clearing DNS configured out of band.
 					f.OmitEmpty = true
 					f.IsPointer = true
+				case "WANUsername", "WANPassword":
+					// PPPoE credentials. Same tri-state contract as the DNS
+					// slots: nil omits the key so an update that does not
+					// manage them preserves the ISP login, a pointer sets it.
+					// A plain always-serialized string would put "" on the
+					// wire and clear the credentials, dropping the uplink.
+					f.OmitEmpty = true
+					f.IsPointer = true
 				case "AutoScaleEnabled", "LteLanEnabled":
 					// The controller stores no default for these: a network
 					// created without the key simply does not have it, while a

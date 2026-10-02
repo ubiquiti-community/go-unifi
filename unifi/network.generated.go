@@ -274,7 +274,7 @@ type Network struct {
 	WANLoadBalanceWeight                          *int64                          `json:"wan_load_balance_weight,omitempty"` // ^$|[1-9]|[1-9][0-9]
 	WANNetmask                                    *string                         `json:"wan_netmask,omitempty"`             // ^((128|192|224|240|248|252|254)\.0\.0\.0)|(255\.(((0|128|192|224|240|248|252|254)\.0\.0)|(255\.(((0|128|192|224|240|248|252|254)\.0)|255\.(0|128|192|224|240|248|252|254)))))$
 	WANNetworkGroup                               *string                         `json:"wan_networkgroup,omitempty"`        // WAN[2-9]?|WAN_LTE_FAILOVER
-	WANPassword                                   string                          `json:"x_wan_password"`                    // [^"' ]+|^$
+	WANPassword                                   *string                         `json:"x_wan_password,omitempty"`          // [^"' ]+|^$
 	WANPppoePasswordEnabled                       bool                            `json:"wan_pppoe_password_enabled"`
 	WANPppoeRfc4638Enabled                        bool                            `json:"wan_pppoe_rfc4638_enabled"`
 	WANPppoeUsernameEnabled                       bool                            `json:"wan_pppoe_username_enabled"`
@@ -286,7 +286,7 @@ type Network struct {
 	WANSmartQUpRate                               *int64                          `json:"wan_smartq_up_rate,omitempty"` // [0-9]{1,9}|1000000000
 	WANType                                       *string                         `json:"wan_type,omitempty"`           // disabled|dhcp|static|pppoe|dslite|map-e,hubspoke|map-e,jpix|map-e,ntt|dslite-over-pppoe
 	WANTypeV6                                     *string                         `json:"wan_type_v6,omitempty"`        // disabled|slaac|dhcpv6|static
-	WANUsername                                   string                          `json:"wan_username"`                 // [^"' ]+|^$
+	WANUsername                                   *string                         `json:"wan_username,omitempty"`       // [^"' ]+|^$
 	WANVLAN                                       *int64                          `json:"wan_vlan,omitempty"`           // [0-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-4]|^$
 	WANVLANEnabled                                bool                            `json:"wan_vlan_enabled"`
 	WireguardClientConfigurationFile              *string                         `json:"wireguard_client_configuration_file,omitempty"`
