@@ -20,6 +20,17 @@ type WireGuardPeer struct {
 	InterfaceIP string   `json:"interface_ip"`
 	PublicKey   string   `json:"public_key"`
 	AllowedIPs  []string `json:"allowed_ips"`
+
+	// PresharedKey is the optional WireGuard pre-shared key (the UI's
+	// "Pre-Shared Key" toggle). The controller stores and returns it in clear
+	// text, and omits the field entirely when the peer has none.
+	//
+	// A pointer with omitempty because the peer endpoints are full replaces: a
+	// nil omits the key and preserves whatever the controller holds, while a
+	// plain string would send "" on every write. Verified on Network 10.6.106
+	// that a PUT without the field destroys a stored key, so the distinction
+	// is load-bearing rather than cosmetic.
+	PresharedKey *string `json:"preshared_key,omitempty"`
 }
 
 func (c *ApiClient) wireGuardPeersPath(site, networkID string) string {
