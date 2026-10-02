@@ -21,7 +21,10 @@
     "match_opposite_ips": "true|false",
     "match_opposite_ports": "true|false",
     "match_opposite_networks": "true|false",
-    "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB",
+    "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION",
+    "regions": [
+      ""
+    ],
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
     "port": "",
     "port_group_id": "",
@@ -69,7 +72,10 @@
     "match_opposite_ips": "true|false",
     "match_opposite_ports": "true|false",
     "match_opposite_networks": "true|false",
-    "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB",
+    "matching_target": "ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION",
+    "regions": [
+      ""
+    ],
     "matching_target_type": "ANY|SPECIFIC|LIST|OBJECT",
     "port": "",
     "port_group_id": "",
