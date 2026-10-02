@@ -88,12 +88,13 @@ type FirewallPolicyDestination struct {
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
 	MatchOppositeNetworks bool     `json:"match_opposite_networks"`
 	MatchOppositePorts    bool     `json:"match_opposite_ports"`
-	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB
+	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION
 	MatchingTargetType    string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	NetworkIDs            []string `json:"network_ids,omitempty"`
 	Port                  string   `json:"port,omitempty"`
 	PortGroupID           string   `json:"port_group_id,omitempty"`
 	PortMatchingType      string   `json:"port_matching_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
+	Regions               []string `json:"regions,omitempty"`
 	WebDomains            []string `json:"web_domains,omitempty"`
 	ZoneID                string   `json:"zone_id,omitempty"`
 }
@@ -152,12 +153,13 @@ type FirewallPolicySource struct {
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
 	MatchOppositeNetworks bool     `json:"match_opposite_networks"`
 	MatchOppositePorts    bool     `json:"match_opposite_ports"`
-	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB
+	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION
 	MatchingTargetType    string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	NetworkIDs            []string `json:"network_ids,omitempty"`
 	Port                  string   `json:"port,omitempty"`
 	PortGroupID           string   `json:"port_group_id,omitempty"`
 	PortMatchingType      string   `json:"port_matching_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
+	Regions               []string `json:"regions,omitempty"`
 	WebDomains            []string `json:"web_domains,omitempty"`
 	ZoneID                string   `json:"zone_id,omitempty"`
 }
