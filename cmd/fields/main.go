@@ -539,6 +539,20 @@ func main() {
 					// clearing DNS configured out of band.
 					f.OmitEmpty = true
 					f.IsPointer = true
+				case "AutoScaleEnabled", "LteLanEnabled":
+					// The controller stores no default for these: a network
+					// created without the key simply does not have it, while a
+					// network that was written once carries an explicit
+					// true/false (verified on Network 10.6.106 - a freshly
+					// created network has neither key, every pre-existing one
+					// has both). A plain always-serialized bool therefore puts
+					// false on the wire for every write that did not set them,
+					// turning auto-scaling and LTE-LAN off - or, with a
+					// provider-side default, on - behind the operator's back.
+					// Use the same tri-state pointer contract as the DNS slots
+					// above: nil = omit and preserve, pointer = set explicitly.
+					f.OmitEmpty = true
+					f.IsPointer = true
 				case "Purpose":
 					f.OmitEmpty = false
 					f.IsPointer = false

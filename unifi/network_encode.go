@@ -68,7 +68,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		VLAN                    *int64                          `json:"vlan,omitempty"`
 		VLANEnabled             bool                            `json:"vlan_enabled"`
 		DomainName              *string                         `json:"domain_name,omitempty"`
-		AutoScaleEnabled        bool                            `json:"auto_scale_enabled"`
+		AutoScaleEnabled        *bool                           `json:"auto_scale_enabled,omitempty"`
 		GatewayType             *string                         `json:"gateway_type,omitempty"`
 		InternetAccessEnabled   bool                            `json:"internet_access_enabled"`
 		NetworkIsolationEnabled bool                            `json:"network_isolation_enabled"`
@@ -79,7 +79,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		DHCPDIP2                string                          `json:"dhcpd_ip_2"`
 		DHCPDIP3                string                          `json:"dhcpd_ip_3"`
 		MdnsEnabled             bool                            `json:"mdns_enabled"`
-		LteLanEnabled           bool                            `json:"lte_lan_enabled"`
+		LteLanEnabled           *bool                           `json:"lte_lan_enabled,omitempty"`
 		IPAliases               []string                        `json:"ip_aliases"`
 		NATOutboundIPAddresses  []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses"`
 		MACOverride             string                          `json:"mac_override,omitempty"`
@@ -312,7 +312,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		VLAN                    *int64                          `json:"vlan,omitempty"`
 		VLANEnabled             bool                            `json:"vlan_enabled"`
 		DomainName              *string                         `json:"domain_name,omitempty"`
-		AutoScaleEnabled        bool                            `json:"auto_scale_enabled"`
+		AutoScaleEnabled        *bool                           `json:"auto_scale_enabled,omitempty"`
 		GatewayType             *string                         `json:"gateway_type,omitempty"`
 		InternetAccessEnabled   bool                            `json:"internet_access_enabled"`
 		NetworkIsolationEnabled bool                            `json:"network_isolation_enabled"`
@@ -323,7 +323,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		DHCPDIP2                string                          `json:"dhcpd_ip_2"`
 		DHCPDIP3                string                          `json:"dhcpd_ip_3"`
 		MdnsEnabled             bool                            `json:"mdns_enabled"`
-		LteLanEnabled           bool                            `json:"lte_lan_enabled"`
+		LteLanEnabled           *bool                           `json:"lte_lan_enabled,omitempty"`
 		IPAliases               []string                        `json:"ip_aliases"`
 		NATOutboundIPAddresses  []NetworkNATOutboundIPAddresses `json:"nat_outbound_ip_addresses"`
 		MACOverride             string                          `json:"mac_override,omitempty"`

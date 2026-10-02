@@ -43,7 +43,7 @@ func TestMarshalNetworkCorporate(t *testing.T) {
 		Name:                  strPtr("Corporate LAN"),
 		Purpose:               PurposeCorporate,
 		Enabled:               true,
-		AutoScaleEnabled:      false,
+		AutoScaleEnabled:      boolPtr(false),
 		NetworkGroup:          strPtr("LAN"),
 		IPSubnet:              strPtr("192.168.1.0/24"),
 		VLAN:                  &vlan,
@@ -164,6 +164,67 @@ func TestMarshalNetworkCorporateDefaults(t *testing.T) {
 	// Verify empty arrays are empty, not nil
 	if aliases, ok := result["ip_aliases"].([]any); !ok || len(aliases) != 0 {
 		t.Errorf("Expected empty array for ip_aliases, got %v", result["ip_aliases"])
+	}
+}
+
+// TestMarshalNetworkAutoScaleLteLanOmitted pins the tri-state contract for
+// auto_scale_enabled and lte_lan_enabled. The controller stores no default for
+// either: a network created without the key simply does not have it, while one
+// written even once carries an explicit true/false (verified on Network
+// 10.6.106 - a freshly created network has neither key, every pre-existing one
+// has both). An always-serialized bool therefore put false on the wire for
+// every caller that left them unset, silently turning the features off.
+func TestMarshalNetworkAutoScaleLteLanOmitted(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		t.Run(purpose, func(t *testing.T) {
+			unset := &Network{
+				ID:      "507f1f77bcf86cd799439011",
+				Purpose: purpose,
+				Enabled: true,
+			}
+			data, err := json.Marshal(unset)
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			var result map[string]any
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			for _, key := range []string{"auto_scale_enabled", "lte_lan_enabled"} {
+				if _, present := result[key]; present {
+					t.Errorf("unset %s must stay off the wire, got %v", key, result[key])
+				}
+			}
+
+			// An explicit value still travels, in both directions.
+			for _, want := range []bool{true, false} {
+				set := &Network{
+					ID:               "507f1f77bcf86cd799439011",
+					Purpose:          purpose,
+					Enabled:          true,
+					AutoScaleEnabled: boolPtr(want),
+					LteLanEnabled:    boolPtr(want),
+				}
+				data, err := json.Marshal(set)
+				if err != nil {
+					t.Fatalf("marshal: %v", err)
+				}
+				result = map[string]any{}
+				if err := json.Unmarshal(data, &result); err != nil {
+					t.Fatalf("unmarshal: %v", err)
+				}
+				for _, key := range []string{"auto_scale_enabled", "lte_lan_enabled"} {
+					got, present := result[key]
+					if !present {
+						t.Errorf("explicit %s=%v must be sent, key absent", key, want)
+						continue
+					}
+					if got != want {
+						t.Errorf("%s = %v, want %v", key, got, want)
+					}
+				}
+			}
+		})
 	}
 }
 
@@ -523,6 +584,10 @@ func TestMarshalNetworkSiteVPN(t *testing.T) {
 }
 
 // Helper function to create string pointers.
+func boolPtr(b bool) *bool {
+	return &b
+}
+
 func strPtr(s string) *string {
 	return &s
 }

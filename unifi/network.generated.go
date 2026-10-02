@@ -34,7 +34,7 @@ type Network struct {
 	NoEdit   bool   `json:"attr_no_edit,omitempty"`
 
 	AuthKey                                       *string                         `json:"x_auth_key,omitempty"`
-	AutoScaleEnabled                              bool                            `json:"auto_scale_enabled"`
+	AutoScaleEnabled                              *bool                           `json:"auto_scale_enabled,omitempty"`
 	CaCrt                                         *string                         `json:"x_ca_crt,omitempty"`
 	CaKey                                         *string                         `json:"x_ca_key,omitempty"`
 	DHCPDBootEnabled                              bool                            `json:"dhcpd_boot_enabled"`
@@ -159,7 +159,7 @@ type Network struct {
 	LocalVPNNetworkIDs                            []string                        `json:"local_vpn_networkconf_ids,omitempty"` // [\d\w-]+|^$
 	LocalVPNSubnets                               []string                        `json:"local_vpn_subnets,omitempty"`         // ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([1-9]|[1-2][0-9]|3[0-2])$|^$
 	LocalVPNSubnetsMode                           *string                         `json:"local_vpn_subnets_mode,omitempty"`    // all|selected_networks|custom
-	LteLanEnabled                                 bool                            `json:"lte_lan_enabled"`
+	LteLanEnabled                                 *bool                           `json:"lte_lan_enabled,omitempty"`
 	MACOverride                                   string                          `json:"mac_override"` // (^$|^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$)
 	MACOverrideEnabled                            bool                            `json:"mac_override_enabled"`
 	MdnsEnabled                                   bool                            `json:"mdns_enabled"`
