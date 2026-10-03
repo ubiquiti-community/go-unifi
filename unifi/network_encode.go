@@ -660,10 +660,10 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecProfile                 *string `json:"ipsec_profile,omitempty"`
 
 		// IKE (phase 1)
-		IPSecEncryption  *string `json:"ipsec_encryption,omitempty"`
-		IPSecHash        *string `json:"ipsec_hash,omitempty"`
-		IPSecDhGroup     *int64  `json:"ipsec_dh_group,omitempty"`
-		IPSecIkeLifetime *int64  `json:"ipsec_ike_lifetime,omitempty"`
+		IPSecIkeEncryption *string `json:"ipsec_ike_encryption,omitempty"`
+		IPSecIkeHash       *string `json:"ipsec_ike_hash,omitempty"`
+		IPSecIkeDhGroup    *int64  `json:"ipsec_ike_dh_group,omitempty"`
+		IPSecIkeLifetime   *int64  `json:"ipsec_ike_lifetime,omitempty"`
 
 		// ESP (phase 2)
 		IPSecEspEncryption *string `json:"ipsec_esp_encryption,omitempty"`
@@ -702,10 +702,10 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecPreSharedKey:            n.IPSecPreSharedKey,
 		IPSecProfile:                 n.IPSecProfile,
 
-		IPSecEncryption:  n.IPSecEncryption,
-		IPSecHash:        n.IPSecHash,
-		IPSecDhGroup:     n.IPSecDhGroup,
-		IPSecIkeLifetime: n.IPSecIkeLifetime,
+		IPSecIkeEncryption: n.IPSecIkeEncryption,
+		IPSecIkeHash:       n.IPSecIkeHash,
+		IPSecIkeDhGroup:    n.IPSecIkeDhGroup,
+		IPSecIkeLifetime:   n.IPSecIkeLifetime,
 
 		IPSecEspEncryption: n.IPSecEspEncryption,
 		IPSecEspHash:       n.IPSecEspHash,
