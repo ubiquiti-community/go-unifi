@@ -642,13 +642,22 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		Enabled bool    `json:"enabled"`
 
 		// VPN / IPsec
-		VPNType           *string `json:"vpn_type,omitempty"`
-		IPSecInterface    *string `json:"ipsec_interface,omitempty"`
-		IPSecPeerIP       *string `json:"ipsec_peer_ip,omitempty"`
-		IPSecLocalIP      *string `json:"ipsec_local_ip,omitempty"`
-		IPSecKeyExchange  *string `json:"ipsec_key_exchange,omitempty"`
-		IPSecPreSharedKey *string `json:"x_ipsec_pre_shared_key,omitempty"`
-		IPSecProfile      *string `json:"ipsec_profile,omitempty"`
+		VPNType        *string `json:"vpn_type,omitempty"`
+		IPSecInterface *string `json:"ipsec_interface,omitempty"`
+		IPSecPeerIP    *string `json:"ipsec_peer_ip,omitempty"`
+		IPSecLocalIP   *string `json:"ipsec_local_ip,omitempty"`
+
+		// IKE peer-authentication identifiers. The *Enabled flags are plain
+		// bools on Network, but omitempty here keeps a false off the wire so a
+		// caller that does not manage them cannot turn identifier
+		// authentication off on a live tunnel.
+		IPSecLocalIDentifier         *string `json:"ipsec_local_identifier,omitempty"`
+		IPSecLocalIDentifierEnabled  bool    `json:"ipsec_local_identifier_enabled,omitempty"`
+		IPSecRemoteIDentifier        *string `json:"ipsec_remote_identifier,omitempty"`
+		IPSecRemoteIDentifierEnabled bool    `json:"ipsec_remote_identifier_enabled,omitempty"`
+		IPSecKeyExchange             *string `json:"ipsec_key_exchange,omitempty"`
+		IPSecPreSharedKey            *string `json:"x_ipsec_pre_shared_key,omitempty"`
+		IPSecProfile                 *string `json:"ipsec_profile,omitempty"`
 
 		// IKE (phase 1)
 		IPSecEncryption  *string `json:"ipsec_encryption,omitempty"`
@@ -680,13 +689,18 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		Purpose: n.Purpose,
 		Enabled: n.Enabled,
 
-		VPNType:           n.VPNType,
-		IPSecInterface:    n.IPSecInterface,
-		IPSecPeerIP:       n.IPSecPeerIP,
-		IPSecLocalIP:      n.IPSecLocalIP,
-		IPSecKeyExchange:  n.IPSecKeyExchange,
-		IPSecPreSharedKey: n.IPSecPreSharedKey,
-		IPSecProfile:      n.IPSecProfile,
+		VPNType:        n.VPNType,
+		IPSecInterface: n.IPSecInterface,
+		IPSecPeerIP:    n.IPSecPeerIP,
+
+		IPSecLocalIDentifier:         n.IPSecLocalIDentifier,
+		IPSecLocalIDentifierEnabled:  n.IPSecLocalIDentifierEnabled,
+		IPSecRemoteIDentifier:        n.IPSecRemoteIDentifier,
+		IPSecRemoteIDentifierEnabled: n.IPSecRemoteIDentifierEnabled,
+		IPSecLocalIP:                 n.IPSecLocalIP,
+		IPSecKeyExchange:             n.IPSecKeyExchange,
+		IPSecPreSharedKey:            n.IPSecPreSharedKey,
+		IPSecProfile:                 n.IPSecProfile,
 
 		IPSecEncryption:  n.IPSecEncryption,
 		IPSecHash:        n.IPSecHash,

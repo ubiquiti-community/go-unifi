@@ -395,6 +395,91 @@ func TestMarshalNetworkWANPPPoECredentials(t *testing.T) {
 	})
 }
 
+// TestMarshalNetworkSiteVPNIKEIdentifiers pins the IKE identifier contract.
+// marshalSiteVPN previously carried none of these fields, so they could not be
+// managed at all; now that they travel, an unset identifier must stay off the
+// wire - a false on ipsec_local_identifier_enabled would turn identifier
+// authentication off on a live tunnel that relies on it.
+func TestMarshalNetworkSiteVPNIKEIdentifiers(t *testing.T) {
+	t.Run("unset identifiers stay off the wire", func(t *testing.T) {
+		network := &Network{
+			ID:      "507f1f77bcf86cd799439011",
+			Purpose: PurposeSiteVPN,
+			Enabled: true,
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		for _, key := range []string{
+			"ipsec_local_identifier",
+			"ipsec_local_identifier_enabled",
+			"ipsec_remote_identifier",
+			"ipsec_remote_identifier_enabled",
+		} {
+			if _, present := result[key]; present {
+				t.Errorf("unset %s must stay off the wire, got %v", key, result[key])
+			}
+		}
+	})
+
+	t.Run("configured identifiers travel", func(t *testing.T) {
+		network := &Network{
+			ID:                           "507f1f77bcf86cd799439011",
+			Purpose:                      PurposeSiteVPN,
+			Enabled:                      true,
+			IPSecLocalIDentifier:         strPtr("local.example.com"),
+			IPSecLocalIDentifierEnabled:  true,
+			IPSecRemoteIDentifier:        strPtr("remote.example.com"),
+			IPSecRemoteIDentifierEnabled: true,
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		for key, want := range map[string]any{
+			"ipsec_local_identifier":          "local.example.com",
+			"ipsec_local_identifier_enabled":  true,
+			"ipsec_remote_identifier":         "remote.example.com",
+			"ipsec_remote_identifier_enabled": true,
+		} {
+			if result[key] != want {
+				t.Errorf("%s = %v, want %v", key, result[key], want)
+			}
+		}
+	})
+
+	t.Run("a hostname peer is carried verbatim", func(t *testing.T) {
+		// ipsec_peer_ip is *string on the API: the controller stores whatever
+		// the UI accepted, including a dynamic-DNS hostname.
+		network := &Network{
+			ID:          "507f1f77bcf86cd799439011",
+			Purpose:     PurposeSiteVPN,
+			Enabled:     true,
+			IPSecPeerIP: strPtr("peer.dyndns.example"),
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		if result["ipsec_peer_ip"] != "peer.dyndns.example" {
+			t.Errorf("ipsec_peer_ip = %v, want the hostname verbatim", result["ipsec_peer_ip"])
+		}
+	})
+}
+
 func TestMarshalNetworkUnknownPurpose(t *testing.T) {
 	network := &Network{
 		ID:      "507f1f77bcf86cd799439016",
