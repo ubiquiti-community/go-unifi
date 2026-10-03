@@ -657,7 +657,7 @@ type DevicePortOverrides struct {
 	Forward                      string            `json:"forward,omitempty"` // all|native|customize|disabled
 	FullDuplex                   bool              `json:"full_duplex,omitempty"`
 	Isolation                    bool              `json:"isolation,omitempty"`
-	LdMode                       bool              `json:"ld_mode,omitempty"`
+	LdStatus                     bool              `json:"ld_status,omitempty"`
 	LinkDebounce                 *int64            `json:"link_debounce,omitempty"` // 0|[1-9]00|[1-4][0-9]00|5000
 	LinkDebounceAuto             bool              `json:"link_debounce_auto,omitempty"`
 	LldpmedEnabled               bool              `json:"lldpmed_enabled,omitempty"`
