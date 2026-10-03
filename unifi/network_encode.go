@@ -674,7 +674,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecPfs            bool `json:"ipsec_pfs,omitempty"`
 		IPSecDynamicRouting bool `json:"ipsec_dynamic_routing,omitempty"`
 
-		RemoteVPNSubnets  []string `json:"remote_vpn_subnets,omitempty"`
+		RemoteVPNSubnets  []string `json:"remote_vpn_subnets"`
 		RemoteSiteSubnets []string `json:"remote_site_subnets,omitempty"`
 		RouteDistance     *int64   `json:"route_distance,omitempty"`
 	}{
