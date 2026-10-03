@@ -499,6 +499,25 @@ func main() {
 				switch name {
 				case "PortOverrides":
 					f.OmitEmpty = false
+				// config_network is a full replace on the controller: a key the
+				// PUT body leaves out is *deleted* from the stored object rather
+				// than left untouched. With omitempty, the ordinary values -
+				// bonding_enabled=false, an empty dns2 - are dropped from the body,
+				// so the controller removes them; they then read back as null and
+				// the apply fails with "inconsistent result after apply"
+				// (terraform-provider-unifi#542). Measured on a UCG-Fiber running
+				// Network 10.6.106: a config_network write without those two keys
+				// removed them from the stored object, and re-sending them
+				// explicitly restored it. The string fields carry the mirror
+				// hazard: clearing one by setting it to "" would be dropped and
+				// silently no-op, and the controller does accept an empty value
+				// for each of them (verified for gateway, which it stored as "").
+				// ip, netmask and type keep omitempty: a static config_network is
+				// rejected without them, and the provider never builds the object
+				// with one missing. These names occur only in DeviceConfigNetwork
+				// within Device, so matching the short name reaches nothing else.
+				case "BondingEnabled", "DNS1", "DNS2", "DNSsuffix", "Gateway":
+					f.OmitEmpty = false
 				}
 
 				return nil
