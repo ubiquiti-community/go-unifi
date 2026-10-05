@@ -42,7 +42,7 @@ type Nat struct {
 	IsPredefined          bool                  `json:"is_predefined"`
 	Logging               bool                  `json:"logging"`
 	OutInterface          string                `json:"out_interface,omitempty"`
-	Port                  *int64                `json:"port,omitempty"` // [1-9][0-9]{0,4}
+	Port                  string                `json:"port,omitempty"`
 	PppoeUseBaseInterface bool                  `json:"pppoe_use_base_interface"`
 	Protocol              string                `json:"protocol,omitempty"` // all|tcp|udp|tcp_udp
 	RuleIndex             *int64                `json:"rule_index,omitempty"`
@@ -55,7 +55,7 @@ type Nat struct {
 func (dst *Nat) UnmarshalJSON(b []byte) error {
 	type Alias Nat
 	aux := &struct {
-		Port      *types.Number `json:"port"`
+		Port      types.Number  `json:"port"`
 		RuleIndex *types.Number `json:"rule_index"`
 
 		*Alias
@@ -67,14 +67,7 @@ func (dst *Nat) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if aux.Port != nil {
-		if val, err := aux.Port.Int64(); err == nil {
-			dst.Port = &val
-		} else if string(*aux.Port) == "" {
-			var zero int64
-			dst.Port = &zero
-		}
-	}
+	dst.Port = aux.Port.String()
 	if aux.RuleIndex != nil {
 		if val, err := aux.RuleIndex.Int64(); err == nil {
 			dst.RuleIndex = &val
@@ -94,13 +87,13 @@ type NatDestinationFilter struct {
 	InvertAddress    bool     `json:"invert_address"`
 	InvertPort       bool     `json:"invert_port"`
 	NetworkConfID    string   `json:"network_conf_id,omitempty"`
-	Port             *int64   `json:"port,omitempty"` // [1-9][0-9]{0,4}
+	Port             string   `json:"port,omitempty"`
 }
 
 func (dst *NatDestinationFilter) UnmarshalJSON(b []byte) error {
 	type Alias NatDestinationFilter
 	aux := &struct {
-		Port *types.Number `json:"port"`
+		Port types.Number `json:"port"`
 
 		*Alias
 	}{
@@ -111,14 +104,7 @@ func (dst *NatDestinationFilter) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if aux.Port != nil {
-		if val, err := aux.Port.Int64(); err == nil {
-			dst.Port = &val
-		} else if string(*aux.Port) == "" {
-			var zero int64
-			dst.Port = &zero
-		}
-	}
+	dst.Port = aux.Port.String()
 
 	return nil
 }
@@ -130,13 +116,13 @@ type NatSourceFilter struct {
 	InvertAddress    bool     `json:"invert_address"`
 	InvertPort       bool     `json:"invert_port"`
 	NetworkConfID    string   `json:"network_conf_id,omitempty"`
-	Port             *int64   `json:"port,omitempty"` // [1-9][0-9]{0,4}
+	Port             string   `json:"port,omitempty"`
 }
 
 func (dst *NatSourceFilter) UnmarshalJSON(b []byte) error {
 	type Alias NatSourceFilter
 	aux := &struct {
-		Port *types.Number `json:"port"`
+		Port types.Number `json:"port"`
 
 		*Alias
 	}{
@@ -147,14 +133,7 @@ func (dst *NatSourceFilter) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
-	if aux.Port != nil {
-		if val, err := aux.Port.Int64(); err == nil {
-			dst.Port = &val
-		} else if string(*aux.Port) == "" {
-			var zero int64
-			dst.Port = &zero
-		}
-	}
+	dst.Port = aux.Port.String()
 
 	return nil
 }
