@@ -286,7 +286,7 @@ func (c *ApiClient) create{{ .StructName }}(
 	err := c.do(
 		ctx,
 		http.MethodPost,
-		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}", site),
+		fmt.Sprintf("{{ if .IsV2 }}v2/api/site{{ else }}api/s{{ end }}/%s/{{ if eq .StructName "Device" }}stat/{{ else if .IsV2 }}{{ else }}rest/{{ end }}{{ .ResourcePath }}{{ .CreateSuffix }}", site),
 		d,
 		&respBody,
 	)
