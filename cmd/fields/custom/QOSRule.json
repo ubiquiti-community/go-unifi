@@ -1,0 +1,58 @@
+{
+    "name": ".{1,128}",
+    "enabled": "true|false",
+    "index": "[1-9][0-9]+",
+    "objective": "LIMIT|PRIORITIZE|LIMIT_AND_PRIORITIZE",
+    "download_limit_kbps": "[1-9][0-9]*",
+    "upload_limit_kbps": "[1-9][0-9]*",
+    "download_burst": "OFF|SHORT|LONG",
+    "upload_burst": "OFF|SHORT|LONG",
+    "wan_or_vpn_network": "",
+    "source": {
+        "matching_target": "ANY|CLIENT|NETWORK",
+        "client_macs": [
+            "^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$"
+        ],
+        "network_ids": [
+            ""
+        ],
+        "port_matching_type": "ANY"
+    },
+    "destination": {
+        "matching_target": "ANY|APP|APP_CATEGORY|IP|IID|REGION|WEB",
+        "matching_target_type": "SPECIFIC|OBJECT",
+        "app_ids": [
+            "[0-9]+"
+        ],
+        "app_category_ids": [
+            "[0-9]+"
+        ],
+        "ips": [
+            ""
+        ],
+        "ip_group_id": "",
+        "iid": "",
+        "regions": [
+            ""
+        ],
+        "web_domains": [
+            ""
+        ],
+        "web_group_id": "",
+        "port_matching_type": "ANY|SPECIFIC|OBJECT",
+        "port": "",
+        "port_group_id": ""
+    },
+    "schedule": {
+        "date": "",
+        "date_start": "",
+        "date_end": "",
+        "mode": "ALWAYS|EVERY_DAY|EVERY_WEEK|ONE_TIME_ONLY|CUSTOM",
+        "repeat_on_days": [
+            "mon|tue|wed|thu|fri|sat|sun"
+        ],
+        "time_all_day": "true|false",
+        "time_range_end": "",
+        "time_range_start": ""
+    }
+}
