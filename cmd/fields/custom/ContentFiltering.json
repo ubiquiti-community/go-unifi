@@ -1,0 +1,34 @@
+{
+    "name": ".{1,128}",
+    "enabled": "true|false",
+    "network_ids": [
+        ""
+    ],
+    "client_macs": [
+        "^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$"
+    ],
+    "categories": [
+        ""
+    ],
+    "allow_list": [
+        ""
+    ],
+    "block_list": [
+        ""
+    ],
+    "safe_search": [
+        "GOOGLE|YOUTUBE|BING"
+    ],
+    "schedule": {
+        "date": "",
+        "date_start": "",
+        "date_end": "",
+        "mode": "ALWAYS|EVERY_DAY|EVERY_WEEK|ONE_TIME_ONLY|CUSTOM",
+        "repeat_on_days": [
+            "mon|tue|wed|thu|fri|sat|sun"
+        ],
+        "time_all_day": "true|false",
+        "time_range_end": "",
+        "time_range_start": ""
+    }
+}
