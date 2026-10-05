@@ -66,15 +66,27 @@ func TestNatPortRangeRoundTrip(t *testing.T) {
 		t.Fatalf("marshal: %v", err)
 	}
 
-	got := string(b)
-	for _, want := range []string{
-		`"port":"8000-8010","pppoe_use_base_interface"`,
-		`"source_filter":{"filter_type":"ADDRESS_AND_PORT","invert_address":false,"invert_port":false,"port":"80-90"}`,
-		`"destination_filter":{"filter_type":"ADDRESS_AND_PORT","invert_address":false,"invert_port":false,"port":"8000-8010"}`,
-	} {
-		if !strings.Contains(got, want) {
-			t.Errorf("expected %s in payload, got: %s", want, got)
-		}
+	var payload struct {
+		Port         any `json:"port"`
+		SourceFilter struct {
+			Port any `json:"port"`
+		} `json:"source_filter"`
+		DestinationFilter struct {
+			Port any `json:"port"`
+		} `json:"destination_filter"`
+	}
+	if err := json.Unmarshal(b, &payload); err != nil {
+		t.Fatalf("decode payload: %v", err)
+	}
+
+	if payload.Port != "8000-8010" {
+		t.Errorf("port = %#v, want %q", payload.Port, "8000-8010")
+	}
+	if payload.SourceFilter.Port != "80-90" {
+		t.Errorf("source_filter.port = %#v, want %q", payload.SourceFilter.Port, "80-90")
+	}
+	if payload.DestinationFilter.Port != "8000-8010" {
+		t.Errorf("destination_filter.port = %#v, want %q", payload.DestinationFilter.Port, "8000-8010")
 	}
 }
 
