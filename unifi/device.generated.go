@@ -645,23 +645,23 @@ func (dst *DeviceOutletOverrides) UnmarshalJSON(b []byte) error {
 
 type DevicePortOverrides struct {
 	AggregateMembers             []int64           `json:"aggregate_members,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
-	Autoneg                      bool              `json:"autoneg,omitempty"`
+	Autoneg                      *bool             `json:"autoneg,omitempty"`
 	Dot1XCtrl                    string            `json:"dot1x_ctrl,omitempty"`         // auto|force_authorized|force_unauthorized|mac_based|multi_host
 	Dot1XIDleTimeout             *int64            `json:"dot1x_idle_timeout,omitempty"` // [0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]
-	EeeEnabled                   bool              `json:"eee_enabled,omitempty"`
+	EeeEnabled                   *bool             `json:"eee_enabled,omitempty"`
 	EgressRateLimitKbps          *int64            `json:"egress_rate_limit_kbps,omitempty"` // 6[4-9]|[7-9][0-9]|[1-9][0-9]{2,6}
-	EgressRateLimitKbpsEnabled   bool              `json:"egress_rate_limit_kbps_enabled,omitempty"`
+	EgressRateLimitKbpsEnabled   *bool             `json:"egress_rate_limit_kbps_enabled,omitempty"`
 	ExcludedNetworkIDs           []string          `json:"excluded_networkconf_ids,omitempty"`
 	FecMode                      string            `json:"fec_mode,omitempty"` // rs-fec|fc-fec|default|disabled
-	FlowControlEnabled           bool              `json:"flow_control_enabled,omitempty"`
+	FlowControlEnabled           *bool             `json:"flow_control_enabled,omitempty"`
 	Forward                      string            `json:"forward,omitempty"` // all|native|customize|disabled
-	FullDuplex                   bool              `json:"full_duplex,omitempty"`
-	Isolation                    bool              `json:"isolation,omitempty"`
-	LdMode                       bool              `json:"ld_mode,omitempty"`
+	FullDuplex                   *bool             `json:"full_duplex,omitempty"`
+	Isolation                    *bool             `json:"isolation,omitempty"`
+	LdMode                       *bool             `json:"ld_mode,omitempty"`
 	LinkDebounce                 *int64            `json:"link_debounce,omitempty"` // 0|[1-9]00|[1-4][0-9]00|5000
-	LinkDebounceAuto             bool              `json:"link_debounce_auto,omitempty"`
-	LldpmedEnabled               bool              `json:"lldpmed_enabled,omitempty"`
-	LldpmedNotifyEnabled         bool              `json:"lldpmed_notify_enabled,omitempty"`
+	LinkDebounceAuto             *bool             `json:"link_debounce_auto,omitempty"`
+	LldpmedEnabled               *bool             `json:"lldpmed_enabled,omitempty"`
+	LldpmedNotifyEnabled         *bool             `json:"lldpmed_notify_enabled,omitempty"`
 	MirrorPortIDX                *int64            `json:"mirror_port_idx,omitempty"`       // [1-9]|[1-4][0-9]|5[0-6]
 	MulticastRouterMode          string            `json:"multicast_router_mode,omitempty"` // ALL|CUSTOM|NONE
 	MulticastRouterNetworkIDs    []string          `json:"multicast_router_networkconf_ids,omitempty"`
@@ -670,36 +670,36 @@ type DevicePortOverrides struct {
 	OpMode                       string            `json:"op_mode,omitempty"`  // switch|mirror|aggregate|routed|routed_aggregate
 	PoeMode                      string            `json:"poe_mode,omitempty"` // auto|pasv24|passthrough|off
 	PortIDX                      *int64            `json:"port_idx,omitempty"` // [1-9]|[1-4][0-9]|5[0-6]
-	PortKeepaliveEnabled         bool              `json:"port_keepalive_enabled,omitempty"`
+	PortKeepaliveEnabled         *bool             `json:"port_keepalive_enabled,omitempty"`
 	PortProfileID                string            `json:"portconf_id,omitempty"` // [\d\w-]+
-	PortSecurityEnabled          bool              `json:"port_security_enabled,omitempty"`
+	PortSecurityEnabled          *bool             `json:"port_security_enabled,omitempty"`
 	PortSecurityMACAddress       []string          `json:"port_security_mac_address,omitempty"` // ^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$
-	PrecisionTimeProtocolEnabled bool              `json:"precision_time_protocol_enabled,omitempty"`
+	PrecisionTimeProtocolEnabled *bool             `json:"precision_time_protocol_enabled,omitempty"`
 	PriorityQueue1Level          *int64            `json:"priority_queue1_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	PriorityQueue2Level          *int64            `json:"priority_queue2_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	PriorityQueue3Level          *int64            `json:"priority_queue3_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	PriorityQueue4Level          *int64            `json:"priority_queue4_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	QOSProfile                   *DeviceQOSProfile `json:"qos_profile,omitempty"`
 	RoutedNetworkID              string            `json:"routed_networkconf_id,omitempty"`
-	SdWANUnderlayPort            bool              `json:"sd_wan_underlay_port,omitempty"`
+	SdWANUnderlayPort            *bool             `json:"sd_wan_underlay_port,omitempty"`
 	SdWANUnderlayPortNetworkID   string            `json:"sd_wan_underlay_port_networkconf_id,omitempty"`
 	SettingPreference            string            `json:"setting_preference,omitempty"` // auto|manual
 	Speed                        *int64            `json:"speed,omitempty"`              // 10|100|1000|2500|5000|10000|20000|25000|40000|50000|100000
-	StablePortEnabled            bool              `json:"stable_port_enabled,omitempty"`
-	StormctrlBroadcastastEnabled bool              `json:"stormctrl_bcast_enabled,omitempty"`
+	StablePortEnabled            *bool             `json:"stable_port_enabled,omitempty"`
+	StormctrlBroadcastastEnabled *bool             `json:"stormctrl_bcast_enabled,omitempty"`
 	StormctrlBroadcastastLevel   *int64            `json:"stormctrl_bcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	StormctrlBroadcastastRate    *int64            `json:"stormctrl_bcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
-	StormctrlMcastEnabled        bool              `json:"stormctrl_mcast_enabled,omitempty"`
+	StormctrlMcastEnabled        *bool             `json:"stormctrl_mcast_enabled,omitempty"`
 	StormctrlMcastLevel          *int64            `json:"stormctrl_mcast_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	StormctrlMcastRate           *int64            `json:"stormctrl_mcast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
 	StormctrlType                string            `json:"stormctrl_type,omitempty"`        // level|rate
-	StormctrlUcastEnabled        bool              `json:"stormctrl_ucast_enabled,omitempty"`
+	StormctrlUcastEnabled        *bool             `json:"stormctrl_ucast_enabled,omitempty"`
 	StormctrlUcastLevel          *int64            `json:"stormctrl_ucast_level,omitempty"` // [0-9]|[1-9][0-9]|100
 	StormctrlUcastRate           *int64            `json:"stormctrl_ucast_rate,omitempty"`  // [0-9]|[1-9][0-9]{1,6}|1[0-3][0-9]{6}|14[0-7][0-9]{5}|148[0-7][0-9]{4}|14880000
-	StpBpduGuardEnabled          bool              `json:"stp_bpdu_guard_enabled,omitempty"`
+	StpBpduGuardEnabled          *bool             `json:"stp_bpdu_guard_enabled,omitempty"`
 	StpEdgeState                 string            `json:"stp_edge_state,omitempty"` // auto|enabled|disabled
-	StpPortMode                  bool              `json:"stp_port_mode,omitempty"`
-	StpUplink                    bool              `json:"stp_uplink,omitempty"`
+	StpPortMode                  *bool             `json:"stp_port_mode,omitempty"`
+	StpUplink                    *bool             `json:"stp_uplink,omitempty"`
 	TaggedNetworkIDs             []string          `json:"tagged_networkconf_ids,omitempty"`
 	TaggedVLANMgmt               string            `json:"tagged_vlan_mgmt,omitempty"` // auto|block_all|custom
 	TrustedPortMAC               string            `json:"trusted_port_mac,omitempty"` // (^$|^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$)
