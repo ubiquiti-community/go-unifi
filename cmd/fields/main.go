@@ -493,6 +493,18 @@ func main() {
 					if f.FieldType == fields.String {
 						f.CustomUnmarshalType = fields.Number
 					}
+				// port_overrides is a full-replace array: a key the PUT leaves out resets
+				// to the controller default, and omitempty drops a plain false. Pointers
+				// keep an explicit false on the wire and let a decoded false survive the
+				// provider's merge (terraform-provider-unifi#567). These names occur only
+				// in DevicePortOverrides within Device.
+				case "Autoneg", "EeeEnabled", "EgressRateLimitKbpsEnabled", "FlowControlEnabled",
+					"FullDuplex", "Isolation", "LdMode", "LinkDebounceAuto", "LldpmedEnabled",
+					"LldpmedNotifyEnabled", "PortKeepaliveEnabled", "PortSecurityEnabled",
+					"PrecisionTimeProtocolEnabled", "SdWANUnderlayPort", "StablePortEnabled",
+					"StormctrlBroadcastastEnabled", "StormctrlMcastEnabled", "StormctrlUcastEnabled",
+					"StpBpduGuardEnabled", "StpPortMode", "StpUplink":
+					f.IsPointer = true
 				}
 
 				f.OmitEmpty = true
