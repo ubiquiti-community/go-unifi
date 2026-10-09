@@ -110,11 +110,11 @@ func New(ctx context.Context, cfg *Config) (*ApiClient, error) {
 		return retryablehttp.DefaultRetryPolicy(ctx, resp, err)
 	}
 
-	// When the retry budget is spent on controller rate limiting, hand the final
-	// 429 back so doRequest surfaces a typed RateLimitError (with its Retry-After
-	// hint) instead of retryablehttp's opaque "giving up" error.
+	// When the retry budget is spent on a retryable status (429, 5xx), hand the
+	// final response back so doRequest reports its status and body (and a typed
+	// RateLimitError for 429) instead of an opaque "giving up" error.
 	c.ErrorHandler = func(resp *http.Response, err error, numTries int) (*http.Response, error) {
-		if resp != nil && resp.StatusCode == http.StatusTooManyRequests && err == nil {
+		if resp != nil && err == nil {
 			return resp, nil
 		}
 		if resp != nil {
@@ -776,11 +776,11 @@ func (c *ApiClient) doRequest(
 				Meta meta `json:"meta"`
 			} `json:"data"`
 		}{}
-		if err = json.Unmarshal(errBytes, &errBody); err != nil {
-			return err
-		}
 		var apiErr error
-		if len(errBody.Data) > 0 && errBody.Data[0].Meta.RC == "error" {
+		if err = json.Unmarshal(errBytes, &errBody); err != nil {
+			// Proxies and gateways answer 5xx with HTML or plain text.
+			apiErr = &APIError{Message: nonJSONErrorMessage(errBytes)}
+		} else if len(errBody.Data) > 0 && errBody.Data[0].Meta.RC == "error" {
 			// check first error in data, should we look for more than one?
 			apiErr = errBody.Data[0].Meta.error()
 		}
@@ -846,6 +846,19 @@ func (m *meta) error() error {
 	}
 
 	return nil
+}
+
+// nonJSONErrorMessage describes an error response body that is not JSON.
+func nonJSONErrorMessage(body []byte) string {
+	const maxLen = 200
+	s := strings.TrimSpace(string(body))
+	if s == "" {
+		return "empty response body"
+	}
+	if len(s) > maxLen {
+		s = s[:maxLen] + "..."
+	}
+	return s
 }
 
 // parseRetryAfter reads the Retry-After header from a 429 response, supporting
