@@ -658,6 +658,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecKeyExchange             *string `json:"ipsec_key_exchange,omitempty"`
 		IPSecPreSharedKey            *string `json:"x_ipsec_pre_shared_key,omitempty"`
 		IPSecProfile                 *string `json:"ipsec_profile,omitempty"`
+		IPSecDhGroup                 *int64  `json:"ipsec_dh_group,omitempty"`
 
 		// IKE (phase 1)
 		IPSecIkeEncryption *string `json:"ipsec_ike_encryption,omitempty"`
@@ -701,6 +702,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecKeyExchange:             n.IPSecKeyExchange,
 		IPSecPreSharedKey:            n.IPSecPreSharedKey,
 		IPSecProfile:                 n.IPSecProfile,
+		IPSecDhGroup:                 n.IPSecDhGroup,
 
 		IPSecIkeEncryption: n.IPSecIkeEncryption,
 		IPSecIkeHash:       n.IPSecIkeHash,
