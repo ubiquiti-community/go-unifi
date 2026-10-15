@@ -116,8 +116,11 @@ var fileReps = []replacement{
 }
 
 type ResourceInfo struct {
-	StructName     string
-	ResourcePath   string
+	StructName   string
+	ResourcePath string
+	// CreateSuffix is appended to ResourcePath for the create POST, for v2
+	// resources whose create endpoint is not the collection itself.
+	CreateSuffix   string
 	Types          map[string]*FieldInfo
 	FieldProcessor func(name string, f *FieldInfo) error
 }
@@ -182,9 +185,19 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 	case resource.IsSetting():
 		resource.ResourcePath = strcase.ToSnake(strings.TrimPrefix(structName, "Setting"))
 		baseType.Fields[" Key"] = NewFieldInfo("Key", "key", fields.String, "", false, false, false, "")
-		if resource.StructName == "SettingUsg" {
+		switch resource.StructName {
+		case "SettingUsg":
 			// Removed in v7, retaining for backwards compatibility
 			baseType.Fields["MdnsEnabled"] = NewFieldInfo("MdnsEnabled", "mdns_enabled", fields.Bool, "", false, false, false, "")
+		case "SettingMdns":
+			// UniFi Network 10.x selects the networks mDNS is reflected on with
+			// these two keys; the ace.jar field spec predates them.
+			baseType.Fields["EnabledFor"] = NewFieldInfo("EnabledFor", "enabled_for", fields.String, "all|some|none", true, false, false, "")
+			baseType.Fields["EnabledForNetworkIDs"] = NewFieldInfo("EnabledForNetworkIDs", "enabled_for_network_ids", fields.String, "", true, true, false, "")
+		case "SettingRadioAi":
+			// Present on 10.x controllers, absent from the ace.jar field spec.
+			// A pointer so that a controller without the key is not sent false.
+			baseType.Fields["AutoEnabled"] = NewFieldInfo("AutoEnabled", "auto_enabled", fields.Bool, "", true, false, true, "")
 		}
 	case resource.StructName == "DNSRecord":
 		resource.ResourcePath = "static-dns"
@@ -242,6 +255,11 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		}
 	case resource.StructName == "TrafficRoute":
 		resource.ResourcePath = "trafficroutes"
+	case resource.StructName == "QOSRule":
+		resource.ResourcePath = "qos-rules"
+	case resource.StructName == "ContentFiltering":
+		resource.ResourcePath = "content-filtering"
+		resource.CreateSuffix = "/create"
 	case resource.StructName == "Network":
 		// Removed from the 10.x field spec, retaining for backwards
 		// compatibility with pre-10.x controllers (mirrors SettingUsg above).
@@ -781,11 +799,13 @@ func (r *ResourceInfo) IsV2() bool {
 	return slices.Contains([]string{
 		"ApGroup",
 		"BGPConfig",
+		"ContentFiltering",
 		"DNSRecord",
 		"FirewallPolicy",
 		"FirewallZone",
 		"Nat",
 		"OSPFRouter",
+		"QOSRule",
 		"TrafficRoute",
 	}, r.StructName)
 }
