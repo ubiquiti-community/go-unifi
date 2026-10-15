@@ -478,6 +478,28 @@ func TestMarshalNetworkSiteVPNIKEIdentifiers(t *testing.T) {
 			t.Errorf("ipsec_peer_ip = %v, want the hostname verbatim", result["ipsec_peer_ip"])
 		}
 	})
+
+	t.Run("remote_vpn_dynamic_subnets_enabled is carried verbatim", func(t *testing.T) {
+		// remote_vpn_dynamic_subnets_enabled is a boolean on the API: the controller stores whatever
+		// the UI accepted.
+		network := &Network{
+			ID:                             "507f1f77bcf86cd799439011",
+			Purpose:                        PurposeSiteVPN,
+			Enabled:                        true,
+			RemoteVPNDynamicSubnetsEnabled: true,
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		if result["remote_vpn_dynamic_subnets_enabled"] != true {
+			t.Errorf("remote_vpn_dynamic_subnets_enabled = %v, want %v", result["remote_vpn_dynamic_subnets_enabled"], true)
+		}
+	})
 }
 
 func TestMarshalNetworkUnknownPurpose(t *testing.T) {
