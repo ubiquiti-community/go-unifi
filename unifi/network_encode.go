@@ -642,10 +642,12 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		Enabled bool    `json:"enabled"`
 
 		// VPN / IPsec
-		VPNType        *string `json:"vpn_type,omitempty"`
-		IPSecInterface *string `json:"ipsec_interface,omitempty"`
-		IPSecPeerIP    *string `json:"ipsec_peer_ip,omitempty"`
-		IPSecLocalIP   *string `json:"ipsec_local_ip,omitempty"`
+		VPNType              *string `json:"vpn_type,omitempty"`
+		IPSecInterface       *string `json:"ipsec_interface,omitempty"`
+		IPSecPeerIP          *string `json:"ipsec_peer_ip,omitempty"`
+		IPSecLocalIP         *string `json:"ipsec_local_ip,omitempty"`
+		IPSecTunnelIP        *string `json:"ipsec_tunnel_ip,omitempty"`
+		IPSecTunnelIPEnabled bool    `json:"ipsec_tunnel_ip_enabled,omitempty"`
 
 		// IKE peer-authentication identifiers. The *Enabled flags are plain
 		// bools on Network, but omitempty here keeps a false off the wire so a
@@ -698,6 +700,8 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecRemoteIDentifier:        n.IPSecRemoteIDentifier,
 		IPSecRemoteIDentifierEnabled: n.IPSecRemoteIDentifierEnabled,
 		IPSecLocalIP:                 n.IPSecLocalIP,
+		IPSecTunnelIP:                n.IPSecTunnelIP,
+		IPSecTunnelIPEnabled:         n.IPSecTunnelIPEnabled,
 		IPSecKeyExchange:             n.IPSecKeyExchange,
 		IPSecPreSharedKey:            n.IPSecPreSharedKey,
 		IPSecProfile:                 n.IPSecProfile,

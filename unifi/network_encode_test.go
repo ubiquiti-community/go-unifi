@@ -478,6 +478,32 @@ func TestMarshalNetworkSiteVPNIKEIdentifiers(t *testing.T) {
 			t.Errorf("ipsec_peer_ip = %v, want the hostname verbatim", result["ipsec_peer_ip"])
 		}
 	})
+
+	t.Run("ipsec_tunnel_ip is carried verbatim", func(t *testing.T) {
+		// ipsec_tunnel_ip is *string on the API: the controller stores whatever
+		// the UI accepted, including a literal IP address with CIDR notation.
+		network := &Network{
+			ID:                   "507f1f77bcf86cd799439011",
+			Purpose:              PurposeSiteVPN,
+			Enabled:              true,
+			IPSecTunnelIP:        strPtr("169.254.21.1/30"),
+			IPSecTunnelIPEnabled: true,
+		}
+		data, err := json.Marshal(network)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatalf("unmarshal: %v", err)
+		}
+		if result["ipsec_tunnel_ip"] != "169.254.21.1/30" {
+			t.Errorf("ipsec_tunnel_ip = %v, want %v", result["ipsec_tunnel_ip"], "169.254.21.1/30")
+		}
+		if result["ipsec_tunnel_ip_enabled"] != true {
+			t.Errorf("ipsec_tunnel_ip_enabled = %v, want %v", result["ipsec_tunnel_ip_enabled"], true)
+		}
+	})
 }
 
 func TestMarshalNetworkUnknownPurpose(t *testing.T) {
