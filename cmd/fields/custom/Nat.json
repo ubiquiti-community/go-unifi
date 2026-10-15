@@ -9,7 +9,7 @@
     "invert_address": "true|false",
     "invert_port": "true|false",
     "network_conf_id": "",
-    "port": "[1-9][0-9]{0,4}"
+    "port": ""
   },
   "enabled": "true|false",
   "exclude": "true|false",
@@ -19,7 +19,7 @@
   "is_predefined": "true|false",
   "logging": "true|false",
   "out_interface": "",
-  "port": "[1-9][0-9]{0,4}",
+  "port": "",
   "pppoe_use_base_interface": "true|false",
   "protocol": "all|tcp|udp|tcp_udp",
   "rule_index": "[0-9]+",
@@ -33,7 +33,7 @@
     "invert_address": "true|false",
     "invert_port": "true|false",
     "network_conf_id": "",
-    "port": "[1-9][0-9]{0,4}"
+    "port": ""
   },
   "type": "DNAT|SNAT|MASQUERADE"
 }

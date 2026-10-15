@@ -633,6 +633,13 @@ func main() {
 					f.IsPointer = true
 				case "DestinationFilter":
 					f.IsPointer = true
+				case "Port":
+					f.FieldType = fields.String
+					f.IsPointer = false
+					f.OmitEmpty = true
+					f.FieldValidation = ""
+					f.CustomUnmarshalType = fields.Number
+					f.CustomUnmarshalFunc = ""
 				}
 				return nil
 			}
