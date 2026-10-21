@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"slices"
 	"strconv"
+	"strings"
 )
 
 // GetClientByMAC returns slightly different information than GetClient, as they
@@ -20,7 +21,7 @@ func (c *ApiClient) GetClientByMAC(ctx context.Context, site, mac string) (*Clie
 	if len(resp) == 0 {
 		return nil, &NotFoundError{}
 	}
-	if i := slices.IndexFunc(resp, func(d Client) bool { return d.MAC == mac }); i >= 0 {
+	if i := slices.IndexFunc(resp, func(d Client) bool { return strings.EqualFold(d.MAC, mac) }); i >= 0 {
 		d := resp[i]
 		return &d, nil
 	} else {
