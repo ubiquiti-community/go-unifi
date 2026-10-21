@@ -633,6 +633,17 @@ func main() {
 					f.IsPointer = true
 				case "DestinationFilter":
 					f.IsPointer = true
+				// The translated port and the filter ports are strings on
+				// the wire and may hold a range ("8080-8090"), which an
+				// *int64 cannot decode. Decode either wire form through
+				// types.Number.
+				case "Port":
+					f.FieldType = fields.String
+					f.IsPointer = false
+					f.OmitEmpty = true
+					f.FieldValidation = ""
+					f.CustomUnmarshalType = fields.Number
+					f.CustomUnmarshalFunc = ""
 				}
 				return nil
 			}
