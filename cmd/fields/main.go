@@ -182,6 +182,17 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 	case resource.IsSetting():
 		resource.ResourcePath = strcase.ToSnake(strings.TrimPrefix(structName, "Setting"))
 		baseType.Fields[" Key"] = NewFieldInfo("Key", "key", fields.String, "", false, false, false, "")
+		if resource.StructName == "SettingNtp" {
+			resource.FieldProcessor = func(name string, f *FieldInfo) error {
+				switch name {
+				case "NtpServer1", "NtpServer2", "NtpServer3", "NtpServer4":
+					// Nil omits the server; a pointer to "" clears it.
+					f.OmitEmpty = true
+					f.IsPointer = true
+				}
+				return nil
+			}
+		}
 		if resource.StructName == "SettingUsg" {
 			// Removed in v7, retaining for backwards compatibility
 			baseType.Fields["MdnsEnabled"] = NewFieldInfo("MdnsEnabled", "mdns_enabled", fields.Bool, "", false, false, false, "")
