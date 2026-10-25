@@ -72,6 +72,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		GatewayType             *string                         `json:"gateway_type,omitempty"`
 		InternetAccessEnabled   bool                            `json:"internet_access_enabled"`
 		NetworkIsolationEnabled bool                            `json:"network_isolation_enabled"`
+		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
@@ -161,6 +162,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		GatewayType:             valueOrDefault(n.GatewayType, "default"),
 		InternetAccessEnabled:   n.InternetAccessEnabled,
 		NetworkIsolationEnabled: n.NetworkIsolationEnabled,
+		FirewallZoneID:          n.FirewallZoneID,
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
@@ -316,6 +318,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		GatewayType             *string                         `json:"gateway_type,omitempty"`
 		InternetAccessEnabled   bool                            `json:"internet_access_enabled"`
 		NetworkIsolationEnabled bool                            `json:"network_isolation_enabled"`
+		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
@@ -405,6 +408,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		GatewayType:             valueOrDefault(n.GatewayType, "default"),
 		InternetAccessEnabled:   n.InternetAccessEnabled,
 		NetworkIsolationEnabled: n.NetworkIsolationEnabled,
+		FirewallZoneID:          n.FirewallZoneID,
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,

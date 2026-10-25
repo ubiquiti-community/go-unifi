@@ -885,3 +885,47 @@ func TestMarshalNetworkDNSNtpClear(t *testing.T) {
 		})
 	}
 }
+
+// Corporate and guest networks previously dropped firewall_zone_id, so a zone
+// assignment never reached the controller (terraform-provider-unifi#605).
+func TestMarshalNetworkFirewallZoneID(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		t.Run(purpose, func(t *testing.T) {
+			network := &Network{
+				ID:             "507f1f77bcf86cd799439011",
+				Name:           strPtr("Zoned"),
+				Purpose:        purpose,
+				IPSubnet:       strPtr("192.168.1.0/24"),
+				FirewallZoneID: strPtr("677fd1b2c3d4e5f6a7b8c9d0"),
+			}
+
+			data, err := json.Marshal(network)
+			if err != nil {
+				t.Fatalf("Failed to marshal network: %v", err)
+			}
+
+			checkJSONFields(t, data, []string{"firewall_zone_id"}, nil)
+
+			var result map[string]any
+			json.Unmarshal(data, &result)
+			if result["firewall_zone_id"] != "677fd1b2c3d4e5f6a7b8c9d0" {
+				t.Errorf("Expected firewall_zone_id '677fd1b2c3d4e5f6a7b8c9d0', got %v", result["firewall_zone_id"])
+			}
+		})
+
+		t.Run(purpose+"/unset", func(t *testing.T) {
+			network := &Network{
+				Name:     strPtr("Unzoned"),
+				Purpose:  purpose,
+				IPSubnet: strPtr("192.168.1.0/24"),
+			}
+
+			data, err := json.Marshal(network)
+			if err != nil {
+				t.Fatalf("Failed to marshal network: %v", err)
+			}
+
+			checkJSONFields(t, data, nil, []string{"firewall_zone_id"})
+		})
+	}
+}
