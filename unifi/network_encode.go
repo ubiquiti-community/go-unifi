@@ -62,7 +62,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 
 		Name                    *string                         `json:"name,omitempty"`
 		Purpose                 string                          `json:"purpose"`
-		Enabled                 bool                            `json:"enabled"`
+		Enabled                 *bool                           `json:"enabled,omitempty"`
 		NetworkGroup            *string                         `json:"networkgroup,omitempty"`
 		IPSubnet                *string                         `json:"ip_subnet,omitempty"`
 		VLAN                    *int64                          `json:"vlan,omitempty"`
@@ -308,7 +308,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 
 		Name                    *string                         `json:"name,omitempty"`
 		Purpose                 string                          `json:"purpose"`
-		Enabled                 bool                            `json:"enabled"`
+		Enabled                 *bool                           `json:"enabled,omitempty"`
 		NetworkGroup            *string                         `json:"networkgroup,omitempty"`
 		IPSubnet                *string                         `json:"ip_subnet,omitempty"`
 		VLAN                    *int64                          `json:"vlan,omitempty"`
@@ -493,7 +493,7 @@ func (n *Network) marshalWAN() ([]byte, error) {
 
 		Name    *string `json:"name,omitempty"`
 		Purpose string  `json:"purpose"`
-		Enabled bool    `json:"enabled"`
+		Enabled *bool   `json:"enabled,omitempty"`
 
 		// WAN type fields
 		WANType         *string `json:"wan_type,omitempty"`
@@ -643,7 +643,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 
 		Name    *string `json:"name,omitempty"`
 		Purpose string  `json:"purpose"`
-		Enabled bool    `json:"enabled"`
+		Enabled *bool   `json:"enabled,omitempty"`
 
 		// VPN / IPsec
 		VPNType                        *string `json:"vpn_type,omitempty"`
@@ -745,7 +745,7 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 
 		Name     *string `json:"name,omitempty"`
 		Purpose  string  `json:"purpose"`
-		Enabled  bool    `json:"enabled"`
+		Enabled  *bool   `json:"enabled,omitempty"`
 		IPSubnet *string `json:"ip_subnet,omitempty"`
 
 		// VPN Type
@@ -820,7 +820,7 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 
 		Name              *string `json:"name,omitempty"`
 		Purpose           string  `json:"purpose"`
-		Enabled           bool    `json:"enabled"`
+		Enabled           *bool   `json:"enabled,omitempty"`
 		SettingPreference *string `json:"setting_preference,omitempty"`
 		IPSubnet          *string `json:"ip_subnet,omitempty"`
 		IPV6Subnet        *string `json:"ipv6_subnet,omitempty"`
