@@ -580,6 +580,13 @@ func main() {
 					// above: nil = omit and preserve, pointer = set explicitly.
 					f.OmitEmpty = true
 					f.IsPointer = true
+				case "Enabled":
+					// The default LAN is stored without an enabled key, and the
+					// controller treats it as enabled. A plain bool reads that
+					// absent key as false. As a *bool, nil means absent and an
+					// update that leaves it nil does not send the key.
+					f.OmitEmpty = true
+					f.IsPointer = true
 				case "Purpose":
 					f.OmitEmpty = false
 					f.IsPointer = false

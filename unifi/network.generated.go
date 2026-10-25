@@ -86,7 +86,7 @@ type Network struct {
 	DPIgroupID                                    string                          `json:"dpigroup_id"` // [\d\w-]+|^$
 	DhKey                                         *string                         `json:"x_dh_key,omitempty"`
 	DomainName                                    *string                         `json:"domain_name,omitempty"` // (?=^.{3,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)|^$|[a-zA-Z0-9-]{1,63}
-	Enabled                                       bool                            `json:"enabled"`
+	Enabled                                       *bool                           `json:"enabled,omitempty"`
 	ExposedToSiteVPN                              bool                            `json:"exposed_to_site_vpn"`
 	FirewallZoneID                                *string                         `json:"firewall_zone_id,omitempty"`
 	GatewayDevice                                 string                          `json:"gateway_device"`         // (^$|^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$)

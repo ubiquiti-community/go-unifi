@@ -42,7 +42,7 @@ func TestMarshalNetworkCorporate(t *testing.T) {
 		SiteID:                "default",
 		Name:                  strPtr("Corporate LAN"),
 		Purpose:               PurposeCorporate,
-		Enabled:               true,
+		Enabled:               boolPtr(true),
 		AutoScaleEnabled:      boolPtr(false),
 		NetworkGroup:          strPtr("LAN"),
 		IPSubnet:              strPtr("192.168.1.0/24"),
@@ -136,7 +136,7 @@ func TestMarshalNetworkCorporateDefaults(t *testing.T) {
 	network := &Network{
 		ID:      "507f1f77bcf86cd799439011",
 		Purpose: PurposeCorporate,
-		Enabled: true,
+		Enabled: boolPtr(true),
 	}
 
 	data, err := json.Marshal(network)
@@ -180,7 +180,7 @@ func TestMarshalNetworkAutoScaleLteLanOmitted(t *testing.T) {
 			unset := &Network{
 				ID:      "507f1f77bcf86cd799439011",
 				Purpose: purpose,
-				Enabled: true,
+				Enabled: boolPtr(true),
 			}
 			data, err := json.Marshal(unset)
 			if err != nil {
@@ -201,7 +201,7 @@ func TestMarshalNetworkAutoScaleLteLanOmitted(t *testing.T) {
 				set := &Network{
 					ID:               "507f1f77bcf86cd799439011",
 					Purpose:          purpose,
-					Enabled:          true,
+					Enabled:          boolPtr(true),
 					AutoScaleEnabled: boolPtr(want),
 					LteLanEnabled:    boolPtr(want),
 				}
@@ -239,7 +239,7 @@ func TestMarshalNetworkWAN(t *testing.T) {
 		SiteID:                "default",
 		Name:                  strPtr("WAN"),
 		Purpose:               PurposeWAN,
-		Enabled:               true,
+		Enabled:               boolPtr(true),
 		WANType:               strPtr("dhcp"),
 		WANTypeV6:             strPtr("dhcpv6"),
 		WANNetworkGroup:       strPtr("WAN"),
@@ -330,7 +330,7 @@ func TestMarshalNetworkWANPPPoECredentials(t *testing.T) {
 		network := &Network{
 			ID:      "507f1f77bcf86cd799439011",
 			Purpose: PurposeWAN,
-			Enabled: true,
+			Enabled: boolPtr(true),
 		}
 		data, err := json.Marshal(network)
 		if err != nil {
@@ -351,7 +351,7 @@ func TestMarshalNetworkWANPPPoECredentials(t *testing.T) {
 		network := &Network{
 			ID:          "507f1f77bcf86cd799439011",
 			Purpose:     PurposeWAN,
-			Enabled:     true,
+			Enabled:     boolPtr(true),
 			WANType:     strPtr("pppoe"),
 			WANUsername: strPtr("isp-user"),
 			WANPassword: strPtr("isp-secret"),
@@ -376,7 +376,7 @@ func TestMarshalNetworkWANPPPoECredentials(t *testing.T) {
 		network := &Network{
 			ID:          "507f1f77bcf86cd799439011",
 			Purpose:     PurposeWAN,
-			Enabled:     true,
+			Enabled:     boolPtr(true),
 			WANUsername: strPtr(""),
 		}
 		data, err := json.Marshal(network)
@@ -405,7 +405,7 @@ func TestMarshalNetworkSiteVPNIKEIdentifiers(t *testing.T) {
 		network := &Network{
 			ID:      "507f1f77bcf86cd799439011",
 			Purpose: PurposeSiteVPN,
-			Enabled: true,
+			Enabled: boolPtr(true),
 		}
 		data, err := json.Marshal(network)
 		if err != nil {
@@ -431,7 +431,7 @@ func TestMarshalNetworkSiteVPNIKEIdentifiers(t *testing.T) {
 		network := &Network{
 			ID:                           "507f1f77bcf86cd799439011",
 			Purpose:                      PurposeSiteVPN,
-			Enabled:                      true,
+			Enabled:                      boolPtr(true),
 			IPSecLocalIDentifier:         strPtr("local.example.com"),
 			IPSecLocalIDentifierEnabled:  true,
 			IPSecRemoteIDentifier:        strPtr("remote.example.com"),
@@ -463,7 +463,7 @@ func TestMarshalNetworkSiteVPNIKEIdentifiers(t *testing.T) {
 		network := &Network{
 			ID:          "507f1f77bcf86cd799439011",
 			Purpose:     PurposeSiteVPN,
-			Enabled:     true,
+			Enabled:     boolPtr(true),
 			IPSecPeerIP: strPtr("peer.dyndns.example"),
 		}
 		data, err := json.Marshal(network)
@@ -484,7 +484,7 @@ func TestMarshalNetworkUnknownPurpose(t *testing.T) {
 	network := &Network{
 		ID:      "507f1f77bcf86cd799439016",
 		Purpose: "unknown-purpose",
-		Enabled: true,
+		Enabled: boolPtr(true),
 	}
 
 	_, err := json.Marshal(network)
@@ -582,7 +582,7 @@ func TestMarshalNetworkGuest(t *testing.T) {
 		SiteID:                "default",
 		Name:                  strPtr("Guest Network"),
 		Purpose:               PurposeGuest,
-		Enabled:               true,
+		Enabled:               boolPtr(true),
 		NetworkGroup:          strPtr("LAN"),
 		IPSubnet:              strPtr("192.168.100.0/24"),
 		VLAN:                  &vlan,
@@ -656,7 +656,7 @@ func TestMarshalNetworkIPv6ClientAddressAssignment(t *testing.T) {
 			network := &Network{
 				ID:                          "507f1f77bcf86cd799439011",
 				Purpose:                     purpose,
-				Enabled:                     true,
+				Enabled:                     boolPtr(true),
 				IPV6InterfaceType:           strPtr("static"),
 				IPV6ClientAddressAssignment: strPtr("slaac-dhcpv6"),
 			}
@@ -673,7 +673,7 @@ func TestMarshalNetworkIPv6ClientAddressAssignment(t *testing.T) {
 			}
 
 			// Unset => omitted (omitempty), no perpetual diff against the API.
-			data, err = json.Marshal(&Network{ID: "x", Purpose: purpose, Enabled: true})
+			data, err = json.Marshal(&Network{ID: "x", Purpose: purpose, Enabled: boolPtr(true)})
 			if err != nil {
 				t.Fatalf("marshal (unset): %v", err)
 			}
@@ -698,7 +698,7 @@ func TestMarshalNetworkSiteVPN(t *testing.T) {
 		ID:                "507f1f77bcf86cd799439011",
 		Name:              strPtr("HQ-to-Branch"),
 		Purpose:           PurposeSiteVPN,
-		Enabled:           true,
+		Enabled:           boolPtr(true),
 		VPNType:           strPtr("ipsec-vpn"),
 		IPSecInterface:    strPtr("wan"),
 		IPSecPeerIP:       strPtr("203.0.113.9"),
@@ -880,6 +880,74 @@ func TestMarshalNetworkDNSNtpClear(t *testing.T) {
 			for _, f := range []string{"dhcpd_dns_1", "dhcpd_dns_2", "dhcpd_dns_3", "dhcpd_ntp_1"} {
 				if result[f] != "" {
 					t.Errorf("Expected %s to be an empty string, got %v", f, result[f])
+				}
+			}
+		})
+	}
+}
+
+// The default LAN is stored without an enabled key, and the controller treats
+// it as enabled. Decoding must keep absent apart from an explicit false.
+func TestUnmarshalNetworkEnabledKeepsAbsent(t *testing.T) {
+	cases := []struct {
+		name string
+		doc  string
+		want *bool
+	}{
+		{"absent", `{"_id":"x","purpose":"corporate"}`, nil},
+		{"false", `{"_id":"x","purpose":"corporate","enabled":false}`, boolPtr(false)},
+		{"true", `{"_id":"x","purpose":"corporate","enabled":true}`, boolPtr(true)},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			var n Network
+			if err := json.Unmarshal([]byte(tc.doc), &n); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			switch {
+			case tc.want == nil && n.Enabled != nil:
+				t.Errorf("Enabled = %v, want nil", *n.Enabled)
+			case tc.want != nil && n.Enabled == nil:
+				t.Errorf("Enabled = nil, want %v", *tc.want)
+			case tc.want != nil && *n.Enabled != *tc.want:
+				t.Errorf("Enabled = %v, want %v", *n.Enabled, *tc.want)
+			}
+		})
+	}
+}
+
+// A nil Enabled leaves the key out of the body, so an update does not
+// overwrite the stored value. VLAN-only networks always send enabled=true.
+func TestMarshalNetworkEnabledNilOmitted(t *testing.T) {
+	purposes := []string{
+		PurposeCorporate, PurposeGuest, PurposeWAN,
+		PurposeSiteVPN, PurposeVPNClient, PurposeUserVPN,
+	}
+	for _, purpose := range purposes {
+		t.Run(purpose, func(t *testing.T) {
+			data, err := json.Marshal(&Network{ID: "x", Purpose: purpose})
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			var result map[string]any
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			if got, present := result["enabled"]; present {
+				t.Errorf("nil Enabled must stay off the wire, got %v", got)
+			}
+
+			for _, want := range []bool{true, false} {
+				data, err := json.Marshal(&Network{ID: "x", Purpose: purpose, Enabled: boolPtr(want)})
+				if err != nil {
+					t.Fatalf("marshal: %v", err)
+				}
+				result = map[string]any{}
+				if err := json.Unmarshal(data, &result); err != nil {
+					t.Fatalf("unmarshal: %v", err)
+				}
+				if got := result["enabled"]; got != want {
+					t.Errorf("enabled = %v, want %v", got, want)
 				}
 			}
 		})
