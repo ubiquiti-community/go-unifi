@@ -896,6 +896,8 @@ var sensitivePayloadKeys = []string{
 	"password",
 	"secret",
 	"psk",
+	"token",
+	"preshared_key",
 }
 
 // redactSensitivePayload returns the JSON request body with the values of any
@@ -939,6 +941,10 @@ func redactSensitiveValue(v any) {
 
 func isSensitiveKey(k string) bool {
 	lk := strings.ToLower(k)
+	// UniFi prefixes its hidden fields, such as x_iapp_key and x_wep, with x_.
+	if strings.HasPrefix(lk, "x_") {
+		return true
+	}
 	for _, s := range sensitivePayloadKeys {
 		if strings.Contains(lk, s) {
 			return true
