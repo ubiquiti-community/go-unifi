@@ -815,6 +815,7 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		Enabled           bool    `json:"enabled"`
 		SettingPreference *string `json:"setting_preference,omitempty"`
 		IPSubnet          *string `json:"ip_subnet,omitempty"`
+		IPV6Subnet        *string `json:"ipv6_subnet,omitempty"`
 
 		// VPN Type
 		VPNType *string `json:"vpn_type,omitempty"`
@@ -873,6 +874,7 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		Enabled:           n.Enabled,
 		SettingPreference: n.SettingPreference,
 		IPSubnet:          n.IPSubnet,
+		IPV6Subnet:        n.IPV6Subnet,
 
 		// VPN Type
 		VPNType: n.VPNType,
