@@ -929,3 +929,46 @@ func TestMarshalNetworkFirewallZoneID(t *testing.T) {
 		})
 	}
 }
+
+// A WireGuard server's IPv6 subnet and listening family reach the wire: the
+// controller only takes ipv6_subnet when the server is created, so a create
+// without it makes an IPv4-only server.
+func TestMarshalNetworkUserVPNWireGuardIPv6(t *testing.T) {
+	name := "wg"
+	subnet := "192.0.2.1/24"
+	subnet6 := "fd00:db8::1/64"
+	vpnType := "wireguard-server"
+	ipVersion := "v6"
+	network := &Network{
+		Name:                                   &name,
+		Purpose:                                PurposeUserVPN,
+		Enabled:                                true,
+		IPSubnet:                               &subnet,
+		IPV6Subnet:                             &subnet6,
+		VPNType:                                &vpnType,
+		WireguardInterfaceBindingModeIPVersion: &ipVersion,
+	}
+	data, err := json.Marshal(network)
+	if err != nil {
+		t.Fatalf("Failed to marshal: %v", err)
+	}
+	var got map[string]any
+	if err := json.Unmarshal(data, &got); err != nil {
+		t.Fatalf("Failed to unmarshal JSON: %v", err)
+	}
+	if got["ipv6_subnet"] != subnet6 {
+		t.Errorf("ipv6_subnet = %v, want %s", got["ipv6_subnet"], subnet6)
+	}
+	if got["wireguard_interface_binding_mode_ip_version"] != ipVersion {
+		t.Errorf("wireguard_interface_binding_mode_ip_version = %v, want %s",
+			got["wireguard_interface_binding_mode_ip_version"], ipVersion)
+	}
+
+	// Without one, the field stays off the wire.
+	network.IPV6Subnet = nil
+	data, err = json.Marshal(network)
+	if err != nil {
+		t.Fatalf("Failed to marshal: %v", err)
+	}
+	checkJSONFields(t, data, []string{"ip_subnet"}, []string{"ipv6_subnet"})
+}
