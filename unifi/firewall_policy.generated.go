@@ -84,11 +84,13 @@ type FirewallPolicyDestination struct {
 	ClientMACs            []string `json:"client_macs,omitempty"`
 	IPGroupID             string   `json:"ip_group_id,omitempty"`
 	IPs                   []string `json:"ips,omitempty"`
+	Iid                   string   `json:"iid,omitempty"`
 	MatchMAC              bool     `json:"match_mac"`
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
+	MatchOppositeIid      bool     `json:"match_opposite_iid"`
 	MatchOppositeNetworks bool     `json:"match_opposite_networks"`
 	MatchOppositePorts    bool     `json:"match_opposite_ports"`
-	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION
+	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION|IID
 	MatchingTargetType    string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	NetworkIDs            []string `json:"network_ids,omitempty"`
 	Port                  string   `json:"port,omitempty"`
@@ -149,11 +151,14 @@ type FirewallPolicySource struct {
 	ClientMACs            []string `json:"client_macs,omitempty"`
 	IPGroupID             string   `json:"ip_group_id,omitempty"`
 	IPs                   []string `json:"ips,omitempty"`
+	Iid                   string   `json:"iid,omitempty"`
+	MAC                   string   `json:"mac,omitempty"`
 	MatchMAC              bool     `json:"match_mac"`
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
+	MatchOppositeIid      bool     `json:"match_opposite_iid"`
 	MatchOppositeNetworks bool     `json:"match_opposite_networks"`
 	MatchOppositePorts    bool     `json:"match_opposite_ports"`
-	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION
+	MatchingTarget        string   `json:"matching_target,omitempty"`      // ANY|DEVICE|IP|NETWORK|CLIENT|MAC|WEB|REGION|IID
 	MatchingTargetType    string   `json:"matching_target_type,omitempty"` // ANY|SPECIFIC|LIST|OBJECT
 	NetworkIDs            []string `json:"network_ids,omitempty"`
 	Port                  string   `json:"port,omitempty"`
