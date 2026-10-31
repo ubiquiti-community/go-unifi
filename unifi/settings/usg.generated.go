@@ -111,32 +111,32 @@ func (dst *Usg) UnmarshalJSON(b []byte) error {
 		if val, err := aux.ArpCacheBaseReachable.Int64(); err == nil {
 			dst.ArpCacheBaseReachable = &val
 		} else if string(*aux.ArpCacheBaseReachable) == "" {
-			var zero int64
-			dst.ArpCacheBaseReachable = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.ArpCacheBaseReachable = nil
 		}
 	}
 	if aux.DHCPRelayHopCount != nil {
 		if val, err := aux.DHCPRelayHopCount.Int64(); err == nil {
 			dst.DHCPRelayHopCount = &val
 		} else if string(*aux.DHCPRelayHopCount) == "" {
-			var zero int64
-			dst.DHCPRelayHopCount = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.DHCPRelayHopCount = nil
 		}
 	}
 	if aux.DHCPRelayMaxSize != nil {
 		if val, err := aux.DHCPRelayMaxSize.Int64(); err == nil {
 			dst.DHCPRelayMaxSize = &val
 		} else if string(*aux.DHCPRelayMaxSize) == "" {
-			var zero int64
-			dst.DHCPRelayMaxSize = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.DHCPRelayMaxSize = nil
 		}
 	}
 	if aux.DHCPRelayPort != nil {
 		if val, err := aux.DHCPRelayPort.Int64(); err == nil {
 			dst.DHCPRelayPort = &val
 		} else if string(*aux.DHCPRelayPort) == "" {
-			var zero int64
-			dst.DHCPRelayPort = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.DHCPRelayPort = nil
 		}
 	}
 	if val, err := aux.ICMPTimeout.Int64(); err == nil {

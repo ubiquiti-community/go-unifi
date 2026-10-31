@@ -162,8 +162,8 @@ func (dst *GuestAccess) UnmarshalJSON(b []byte) error {
 		if val, err := aux.PortalCustomizedBoxOpacity.Int64(); err == nil {
 			dst.PortalCustomizedBoxOpacity = &val
 		} else if string(*aux.PortalCustomizedBoxOpacity) == "" {
-			var zero int64
-			dst.PortalCustomizedBoxOpacity = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.PortalCustomizedBoxOpacity = nil
 		}
 	}
 	if aux.PortalCustomizedBoxRADIUS != nil {

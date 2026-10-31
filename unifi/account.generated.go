@@ -65,24 +65,24 @@ func (dst *Account) UnmarshalJSON(b []byte) error {
 		if val, err := aux.TunnelMediumType.Int64(); err == nil {
 			dst.TunnelMediumType = &val
 		} else if string(*aux.TunnelMediumType) == "" {
-			var zero int64
-			dst.TunnelMediumType = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.TunnelMediumType = nil
 		}
 	}
 	if aux.TunnelType != nil {
 		if val, err := aux.TunnelType.Int64(); err == nil {
 			dst.TunnelType = &val
 		} else if string(*aux.TunnelType) == "" {
-			var zero int64
-			dst.TunnelType = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.TunnelType = nil
 		}
 	}
 	if aux.VLAN != nil {
 		if val, err := aux.VLAN.Int64(); err == nil {
 			dst.VLAN = &val
 		} else if string(*aux.VLAN) == "" {
-			var zero int64
-			dst.VLAN = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.VLAN = nil
 		}
 	}
 

@@ -27,8 +27,13 @@
 		if val, err := aux.{{ .FieldName }}.Int64(); err == nil {
 			dst.{{ .FieldName }} = &val
 		} else if string(*aux.{{ .FieldName }}) == "" {
+			{{- if .EmptyStringIsNil }}
+			// "" means unset; 0 is not a valid value for this field.
+			dst.{{ .FieldName }} = nil
+			{{- else }}
 			var zero int64
 			dst.{{ .FieldName }} = &zero
+			{{- end }}
 		}
 	}
 				{{- else }}

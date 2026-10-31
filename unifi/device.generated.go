@@ -1236,8 +1236,8 @@ func (dst *DeviceRadioTable) UnmarshalJSON(b []byte) error {
 		if val, err := aux.Maxsta.Int64(); err == nil {
 			dst.Maxsta = &val
 		} else if string(*aux.Maxsta) == "" {
-			var zero int64
-			dst.Maxsta = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.Maxsta = nil
 		}
 	}
 	if aux.MinRssi != nil {
