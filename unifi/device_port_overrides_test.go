@@ -56,3 +56,32 @@ func TestDevicePortOverridesBoolPointers(t *testing.T) {
 		}
 	})
 }
+
+// Network 10.6.109 renamed ld_mode to ld_status in the field spec. Both keys
+// are kept: a 10.6.109 port carrying ld_status round-trips without gaining an
+// ld_mode key, and a pre-10.6.109 port carrying ld_mode keeps it.
+func TestDevicePortOverridesLoopDetectionKeys(t *testing.T) {
+	for _, tc := range []struct {
+		name, in, want, absent string
+	}{
+		{"10.6.109 ld_status", `{"port_idx":1,"ld_status":false}`, `"ld_status":false`, `"ld_mode"`},
+		{"legacy ld_mode", `{"port_idx":1,"ld_mode":true}`, `"ld_mode":true`, `"ld_status"`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var po DevicePortOverrides
+			if err := json.Unmarshal([]byte(tc.in), &po); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			body, err := json.Marshal(po)
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			if !strings.Contains(string(body), tc.want) {
+				t.Errorf("want %s in body: %s", tc.want, body)
+			}
+			if strings.Contains(string(body), tc.absent) {
+				t.Errorf("unexpected %s in body: %s", tc.absent, body)
+			}
+		})
+	}
+}

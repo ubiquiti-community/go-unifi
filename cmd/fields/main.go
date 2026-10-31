@@ -320,6 +320,10 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		baseType.Fields["IP"] = NewFieldInfo("IP", "ip", fields.String, "", true, false, false, "")
 	case resource.StructName == "PortProfile":
 		resource.FieldProcessor = clearNativeNetworkOmitEmpty
+		// Network 10.6.109 renamed ld_mode to ld_status in the field spec;
+		// retain ld_mode for pre-10.6.109 controllers. omitempty so a newer
+		// controller is not sent the old key unless a caller sets it.
+		baseType.Fields["LdMode"] = NewFieldInfo("LdMode", "ld_mode", fields.Bool, "", true, false, false, "")
 	case resource.StructName == "Client":
 		baseType.Fields[" DisplayName"] = NewFieldInfo("DisplayName", "display_name", fields.String, "non-generated field", true, false, false, "")
 		// The controller reports the client's most recent IP on /rest/user but
@@ -545,7 +549,7 @@ func main() {
 				// provider's merge (terraform-provider-unifi#567). These names occur only
 				// in DevicePortOverrides within Device.
 				case "Autoneg", "EeeEnabled", "EgressRateLimitKbpsEnabled", "FlowControlEnabled",
-					"FullDuplex", "Isolation", "LdMode", "LinkDebounceAuto", "LldpmedEnabled",
+					"FullDuplex", "Isolation", "LdMode", "LdStatus", "LinkDebounceAuto", "LldpmedEnabled",
 					"LldpmedNotifyEnabled", "PortKeepaliveEnabled", "PortSecurityEnabled",
 					"PrecisionTimeProtocolEnabled", "SdWANUnderlayPort", "StablePortEnabled",
 					"StormctrlBroadcastastEnabled", "StormctrlMcastEnabled", "StormctrlUcastEnabled",
@@ -765,6 +769,10 @@ func main() {
 		if resource.StructName == "Device" {
 			if portOverrides, ok := resource.Types["DevicePortOverrides"]; ok {
 				portOverrides.Fields["TaggedNetworkIDs"] = NewFieldInfo("TaggedNetworkIDs", "tagged_networkconf_ids", fields.String, "", true, true, false, "")
+				// Network 10.6.109 renamed ld_mode to ld_status in the field spec;
+				// retain ld_mode for pre-10.6.109 controllers. A pointer like its
+				// siblings so a nil value is never written.
+				portOverrides.Fields["LdMode"] = NewFieldInfo("LdMode", "ld_mode", fields.Bool, "", true, false, true, "")
 			}
 		}
 
