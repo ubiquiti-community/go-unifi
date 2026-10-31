@@ -721,21 +721,21 @@ func TestMarshalNetworkIPv6ClientAddressAssignment(t *testing.T) {
 func TestMarshalNetworkSiteVPN(t *testing.T) {
 	dh := int64(14)
 	network := &Network{
-		ID:                "507f1f77bcf86cd799439011",
-		Name:              strPtr("HQ-to-Branch"),
-		Purpose:           PurposeSiteVPN,
-		Enabled:           true,
-		VPNType:           strPtr("ipsec-vpn"),
-		IPSecInterface:    strPtr("wan"),
-		IPSecPeerIP:       strPtr("203.0.113.9"),
-		IPSecKeyExchange:  strPtr("ikev2"),
-		IPSecPreSharedKey: strPtr("s3cret-psk"),
-		IPSecProfile:      strPtr("customized"),
-		IPSecEncryption:   strPtr("aes256"),
-		IPSecHash:         strPtr("sha256"),
-		IPSecDhGroup:      &dh,
-		IPSecPfs:          true,
-		RemoteVPNSubnets:  []string{"192.0.2.0/24", "198.51.100.0/24"},
+		ID:                 "507f1f77bcf86cd799439011",
+		Name:               strPtr("HQ-to-Branch"),
+		Purpose:            PurposeSiteVPN,
+		Enabled:            true,
+		VPNType:            strPtr("ipsec-vpn"),
+		IPSecInterface:     strPtr("wan"),
+		IPSecPeerIP:        strPtr("203.0.113.9"),
+		IPSecKeyExchange:   strPtr("ikev2"),
+		IPSecPreSharedKey:  strPtr("s3cret-psk"),
+		IPSecProfile:       strPtr("customized"),
+		IPSecIkeEncryption: strPtr("aes256"),
+		IPSecIkeHash:       strPtr("sha256"),
+		IPSecDhGroup:       &dh,
+		IPSecPfs:           true,
+		RemoteVPNSubnets:   []string{"192.0.2.0/24", "198.51.100.0/24"},
 	}
 
 	data, err := json.Marshal(network)
@@ -750,7 +750,7 @@ func TestMarshalNetworkSiteVPN(t *testing.T) {
 	checkJSONFields(t, data, []string{
 		"name", "purpose", "enabled", "vpn_type", "ipsec_interface",
 		"ipsec_peer_ip", "ipsec_key_exchange", "x_ipsec_pre_shared_key",
-		"ipsec_profile", "ipsec_encryption", "ipsec_hash", "ipsec_dh_group",
+		"ipsec_profile", "ipsec_ike_encryption", "ipsec_ike_hash", "ipsec_dh_group",
 		"ipsec_pfs", "remote_vpn_subnets",
 	}, []string{"ip_subnet", "dhcpd_enabled", "vlan"})
 
