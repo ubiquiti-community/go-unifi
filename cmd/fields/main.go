@@ -116,8 +116,11 @@ var fileReps = []replacement{
 }
 
 type ResourceInfo struct {
-	StructName     string
-	ResourcePath   string
+	StructName   string
+	ResourcePath string
+	// CreateSuffix is appended to ResourcePath for the create POST, for v2
+	// resources whose create endpoint is not the collection itself.
+	CreateSuffix   string
 	Types          map[string]*FieldInfo
 	FieldProcessor func(name string, f *FieldInfo) error
 }
@@ -133,6 +136,24 @@ type FieldInfo struct {
 	Fields              map[string]*FieldInfo
 	CustomUnmarshalType string
 	CustomUnmarshalFunc string
+}
+
+// EmptyStringIsNil reports whether a numeric field the controller stores as
+// "" should decode to nil rather than to a pointer to 0. That is the case when
+// the field's validation accepts the empty string but rejects 0 (e.g.
+// wan_egress_qos, `[1-7]|^$`): decoding "" as 0 would make a later update
+// re-send 0, which the controller rejects with api.err.InvalidPayload (#105).
+// Fields whose validation accepts 0, or that carry no validation, keep the
+// historical "" -> 0 mapping.
+func (f *FieldInfo) EmptyStringIsNil() bool {
+	if f.FieldValidation == "" {
+		return false
+	}
+	re, err := regexp.Compile(`^(?:` + f.FieldValidation + `)$`)
+	if err != nil {
+		return false
+	}
+	return re.MatchString("") && !re.MatchString("0")
 }
 
 // clearNativeNetworkOmitEmpty keeps native_networkconf_id serialized even when
@@ -182,7 +203,8 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 	case resource.IsSetting():
 		resource.ResourcePath = strcase.ToSnake(strings.TrimPrefix(structName, "Setting"))
 		baseType.Fields[" Key"] = NewFieldInfo("Key", "key", fields.String, "", false, false, false, "")
-		if resource.StructName == "SettingNtp" {
+		switch resource.StructName {
+		case "SettingNtp":
 			resource.FieldProcessor = func(name string, f *FieldInfo) error {
 				switch name {
 				case "NtpServer1", "NtpServer2", "NtpServer3", "NtpServer4":
@@ -192,10 +214,18 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 				}
 				return nil
 			}
-		}
-		if resource.StructName == "SettingUsg" {
+		case "SettingUsg":
 			// Removed in v7, retaining for backwards compatibility
 			baseType.Fields["MdnsEnabled"] = NewFieldInfo("MdnsEnabled", "mdns_enabled", fields.Bool, "", false, false, false, "")
+		case "SettingMdns":
+			// UniFi Network 10.x selects the networks mDNS is reflected on with
+			// these two keys; the ace.jar field spec predates them.
+			baseType.Fields["EnabledFor"] = NewFieldInfo("EnabledFor", "enabled_for", fields.String, "all|some|none", true, false, false, "")
+			baseType.Fields["EnabledForNetworkIDs"] = NewFieldInfo("EnabledForNetworkIDs", "enabled_for_network_ids", fields.String, "", true, true, false, "")
+		case "SettingRadioAi":
+			// Present on 10.x controllers, absent from the ace.jar field spec.
+			// A pointer so that a controller without the key is not sent false.
+			baseType.Fields["AutoEnabled"] = NewFieldInfo("AutoEnabled", "auto_enabled", fields.Bool, "", true, false, true, "")
 		}
 	case resource.StructName == "DNSRecord":
 		resource.ResourcePath = "static-dns"
@@ -253,6 +283,11 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		}
 	case resource.StructName == "TrafficRoute":
 		resource.ResourcePath = "trafficroutes"
+	case resource.StructName == "QOSRule":
+		resource.ResourcePath = "qos-rules"
+	case resource.StructName == "ContentFiltering":
+		resource.ResourcePath = "content-filtering"
+		resource.CreateSuffix = "/create"
 	case resource.StructName == "Network":
 		// Removed from the 10.x field spec, retaining for backwards
 		// compatibility with pre-10.x controllers (mirrors SettingUsg above).
@@ -504,6 +539,18 @@ func main() {
 					if f.FieldType == fields.String {
 						f.CustomUnmarshalType = fields.Number
 					}
+				// port_overrides is a full-replace array: a key the PUT leaves out resets
+				// to the controller default, and omitempty drops a plain false. Pointers
+				// keep an explicit false on the wire and let a decoded false survive the
+				// provider's merge (terraform-provider-unifi#567). These names occur only
+				// in DevicePortOverrides within Device.
+				case "Autoneg", "EeeEnabled", "EgressRateLimitKbpsEnabled", "FlowControlEnabled",
+					"FullDuplex", "Isolation", "LdMode", "LinkDebounceAuto", "LldpmedEnabled",
+					"LldpmedNotifyEnabled", "PortKeepaliveEnabled", "PortSecurityEnabled",
+					"PrecisionTimeProtocolEnabled", "SdWANUnderlayPort", "StablePortEnabled",
+					"StormctrlBroadcastastEnabled", "StormctrlMcastEnabled", "StormctrlUcastEnabled",
+					"StpBpduGuardEnabled", "StpPortMode", "StpUplink":
+					f.IsPointer = true
 				}
 
 				f.OmitEmpty = true
@@ -591,6 +638,13 @@ func main() {
 					// above: nil = omit and preserve, pointer = set explicitly.
 					f.OmitEmpty = true
 					f.IsPointer = true
+				case "Enabled":
+					// The default LAN is stored without an enabled key, and the
+					// controller treats it as enabled. A plain bool reads that
+					// absent key as false. As a *bool, nil means absent and an
+					// update that leaves it nil does not send the key.
+					f.OmitEmpty = true
+					f.IsPointer = true
 				case "Purpose":
 					f.OmitEmpty = false
 					f.IsPointer = false
@@ -644,6 +698,17 @@ func main() {
 					f.IsPointer = true
 				case "DestinationFilter":
 					f.IsPointer = true
+				// The translated port and the filter ports are strings on
+				// the wire and may hold a range ("8080-8090"), which an
+				// *int64 cannot decode. Decode either wire form through
+				// types.Number.
+				case "Port":
+					f.FieldType = fields.String
+					f.IsPointer = false
+					f.OmitEmpty = true
+					f.FieldValidation = ""
+					f.CustomUnmarshalType = fields.Number
+					f.CustomUnmarshalFunc = ""
 				}
 				return nil
 			}
@@ -792,11 +857,13 @@ func (r *ResourceInfo) IsV2() bool {
 	return slices.Contains([]string{
 		"ApGroup",
 		"BGPConfig",
+		"ContentFiltering",
 		"DNSRecord",
 		"FirewallPolicy",
 		"FirewallZone",
 		"Nat",
 		"OSPFRouter",
+		"QOSRule",
 		"TrafficRoute",
 	}, r.StructName)
 }

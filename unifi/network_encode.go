@@ -62,7 +62,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 
 		Name                    *string                         `json:"name,omitempty"`
 		Purpose                 string                          `json:"purpose"`
-		Enabled                 bool                            `json:"enabled"`
+		Enabled                 *bool                           `json:"enabled,omitempty"`
 		NetworkGroup            *string                         `json:"networkgroup,omitempty"`
 		IPSubnet                *string                         `json:"ip_subnet,omitempty"`
 		VLAN                    *int64                          `json:"vlan,omitempty"`
@@ -72,6 +72,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		GatewayType             *string                         `json:"gateway_type,omitempty"`
 		InternetAccessEnabled   bool                            `json:"internet_access_enabled"`
 		NetworkIsolationEnabled bool                            `json:"network_isolation_enabled"`
+		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
@@ -161,6 +162,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		GatewayType:             valueOrDefault(n.GatewayType, "default"),
 		InternetAccessEnabled:   n.InternetAccessEnabled,
 		NetworkIsolationEnabled: n.NetworkIsolationEnabled,
+		FirewallZoneID:          n.FirewallZoneID,
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
@@ -306,7 +308,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 
 		Name                    *string                         `json:"name,omitempty"`
 		Purpose                 string                          `json:"purpose"`
-		Enabled                 bool                            `json:"enabled"`
+		Enabled                 *bool                           `json:"enabled,omitempty"`
 		NetworkGroup            *string                         `json:"networkgroup,omitempty"`
 		IPSubnet                *string                         `json:"ip_subnet,omitempty"`
 		VLAN                    *int64                          `json:"vlan,omitempty"`
@@ -316,6 +318,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		GatewayType             *string                         `json:"gateway_type,omitempty"`
 		InternetAccessEnabled   bool                            `json:"internet_access_enabled"`
 		NetworkIsolationEnabled bool                            `json:"network_isolation_enabled"`
+		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
@@ -405,6 +408,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		GatewayType:             valueOrDefault(n.GatewayType, "default"),
 		InternetAccessEnabled:   n.InternetAccessEnabled,
 		NetworkIsolationEnabled: n.NetworkIsolationEnabled,
+		FirewallZoneID:          n.FirewallZoneID,
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
@@ -489,7 +493,7 @@ func (n *Network) marshalWAN() ([]byte, error) {
 
 		Name    *string `json:"name,omitempty"`
 		Purpose string  `json:"purpose"`
-		Enabled bool    `json:"enabled"`
+		Enabled *bool   `json:"enabled,omitempty"`
 
 		// WAN type fields
 		WANType         *string `json:"wan_type,omitempty"`
@@ -542,9 +546,17 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		WANLoadBalanceWeight *int64  `json:"wan_load_balance_weight,omitempty"`
 		WANFailoverPriority  *int64  `json:"wan_failover_priority,omitempty"`
 
-		// IGMP fields
-		IGMPProxyFor      *string `json:"igmp_proxy_for,omitempty"`
-		IGMPProxyUpstream bool    `json:"igmp_proxy_upstream"`
+		// MTU fields. interface_mtu_enabled is a plain bool on Network, so it
+		// is only sent when the caller manages the MTU (see wanMTUEnabled); a
+		// caller that does not cannot switch a configured MTU override off.
+		InterfaceMtu        *int64 `json:"interface_mtu,omitempty"`
+		InterfaceMtuEnabled *bool  `json:"interface_mtu_enabled,omitempty"`
+
+		// IGMP fields. Downstream networks are tri-state: nil stays off the
+		// wire, an empty non-nil slice is sent as [] to clear the list.
+		IGMPProxyFor                  *string   `json:"igmp_proxy_for,omitempty"`
+		IGMPProxyUpstream             bool      `json:"igmp_proxy_upstream"`
+		IGMPProxyDownstreamNetworkIDs *[]string `json:"igmp_proxy_downstream_networkconf_ids,omitempty"`
 
 		// Event / alias fields
 		ReportWANEvent bool                    `json:"report_wan_event"`
@@ -613,9 +625,14 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		WANLoadBalanceWeight: n.WANLoadBalanceWeight,
 		WANFailoverPriority:  n.WANFailoverPriority,
 
+		// MTU fields
+		InterfaceMtu:        n.InterfaceMtu,
+		InterfaceMtuEnabled: wanMTUEnabled(n),
+
 		// IGMP fields
-		IGMPProxyFor:      n.IGMPProxyFor,
-		IGMPProxyUpstream: n.IGMPProxyUpstream,
+		IGMPProxyFor:                  n.IGMPProxyFor,
+		IGMPProxyUpstream:             n.IGMPProxyUpstream,
+		IGMPProxyDownstreamNetworkIDs: sliceOrNil(n.IGMPProxyDownstreamNetworkIDs),
 
 		// Event / alias fields
 		ReportWANEvent: n.ReportWANEvent,
@@ -639,13 +656,16 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 
 		Name    *string `json:"name,omitempty"`
 		Purpose string  `json:"purpose"`
-		Enabled bool    `json:"enabled"`
+		Enabled *bool   `json:"enabled,omitempty"`
 
 		// VPN / IPsec
-		VPNType        *string `json:"vpn_type,omitempty"`
-		IPSecInterface *string `json:"ipsec_interface,omitempty"`
-		IPSecPeerIP    *string `json:"ipsec_peer_ip,omitempty"`
-		IPSecLocalIP   *string `json:"ipsec_local_ip,omitempty"`
+		VPNType                        *string `json:"vpn_type,omitempty"`
+		IPSecInterface                 *string `json:"ipsec_interface,omitempty"`
+		IPSecPeerIP                    *string `json:"ipsec_peer_ip,omitempty"`
+		IPSecLocalIP                   *string `json:"ipsec_local_ip,omitempty"`
+		IPSecTunnelIP                  *string `json:"ipsec_tunnel_ip,omitempty"`
+		IPSecTunnelIPEnabled           bool    `json:"ipsec_tunnel_ip_enabled,omitempty"`
+		RemoteVPNDynamicSubnetsEnabled bool    `json:"remote_vpn_dynamic_subnets_enabled,omitempty"`
 
 		// IKE peer-authentication identifiers. The *Enabled flags are plain
 		// bools on Network, but omitempty here keeps a false off the wire so a
@@ -658,12 +678,13 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecKeyExchange             *string `json:"ipsec_key_exchange,omitempty"`
 		IPSecPreSharedKey            *string `json:"x_ipsec_pre_shared_key,omitempty"`
 		IPSecProfile                 *string `json:"ipsec_profile,omitempty"`
+		IPSecDhGroup                 *int64  `json:"ipsec_dh_group,omitempty"`
 
 		// IKE (phase 1)
-		IPSecEncryption  *string `json:"ipsec_encryption,omitempty"`
-		IPSecHash        *string `json:"ipsec_hash,omitempty"`
-		IPSecDhGroup     *int64  `json:"ipsec_dh_group,omitempty"`
-		IPSecIkeLifetime *int64  `json:"ipsec_ike_lifetime,omitempty"`
+		IPSecIkeEncryption *string `json:"ipsec_ike_encryption,omitempty"`
+		IPSecIkeHash       *string `json:"ipsec_ike_hash,omitempty"`
+		IPSecIkeDhGroup    *int64  `json:"ipsec_ike_dh_group,omitempty"`
+		IPSecIkeLifetime   *int64  `json:"ipsec_ike_lifetime,omitempty"`
 
 		// ESP (phase 2)
 		IPSecEspEncryption *string `json:"ipsec_esp_encryption,omitempty"`
@@ -674,7 +695,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecPfs            bool `json:"ipsec_pfs,omitempty"`
 		IPSecDynamicRouting bool `json:"ipsec_dynamic_routing,omitempty"`
 
-		RemoteVPNSubnets  []string `json:"remote_vpn_subnets,omitempty"`
+		RemoteVPNSubnets  []string `json:"remote_vpn_subnets"`
 		RemoteSiteSubnets []string `json:"remote_site_subnets,omitempty"`
 		RouteDistance     *int64   `json:"route_distance,omitempty"`
 	}{
@@ -693,19 +714,23 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecInterface: n.IPSecInterface,
 		IPSecPeerIP:    n.IPSecPeerIP,
 
-		IPSecLocalIDentifier:         n.IPSecLocalIDentifier,
-		IPSecLocalIDentifierEnabled:  n.IPSecLocalIDentifierEnabled,
-		IPSecRemoteIDentifier:        n.IPSecRemoteIDentifier,
-		IPSecRemoteIDentifierEnabled: n.IPSecRemoteIDentifierEnabled,
-		IPSecLocalIP:                 n.IPSecLocalIP,
-		IPSecKeyExchange:             n.IPSecKeyExchange,
-		IPSecPreSharedKey:            n.IPSecPreSharedKey,
-		IPSecProfile:                 n.IPSecProfile,
+		IPSecLocalIDentifier:           n.IPSecLocalIDentifier,
+		IPSecLocalIDentifierEnabled:    n.IPSecLocalIDentifierEnabled,
+		IPSecRemoteIDentifier:          n.IPSecRemoteIDentifier,
+		IPSecRemoteIDentifierEnabled:   n.IPSecRemoteIDentifierEnabled,
+		IPSecLocalIP:                   n.IPSecLocalIP,
+		IPSecTunnelIP:                  n.IPSecTunnelIP,
+		IPSecTunnelIPEnabled:           n.IPSecTunnelIPEnabled,
+		RemoteVPNDynamicSubnetsEnabled: n.RemoteVPNDynamicSubnetsEnabled,
+		IPSecKeyExchange:               n.IPSecKeyExchange,
+		IPSecPreSharedKey:              n.IPSecPreSharedKey,
+		IPSecProfile:                   n.IPSecProfile,
+		IPSecDhGroup:                   n.IPSecDhGroup,
 
-		IPSecEncryption:  n.IPSecEncryption,
-		IPSecHash:        n.IPSecHash,
-		IPSecDhGroup:     n.IPSecDhGroup,
-		IPSecIkeLifetime: n.IPSecIkeLifetime,
+		IPSecIkeEncryption: n.IPSecIkeEncryption,
+		IPSecIkeHash:       n.IPSecIkeHash,
+		IPSecIkeDhGroup:    n.IPSecIkeDhGroup,
+		IPSecIkeLifetime:   n.IPSecIkeLifetime,
 
 		IPSecEspEncryption: n.IPSecEspEncryption,
 		IPSecEspHash:       n.IPSecEspHash,
@@ -715,7 +740,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecPfs:            n.IPSecPfs,
 		IPSecDynamicRouting: n.IPSecDynamicRouting,
 
-		RemoteVPNSubnets:  n.RemoteVPNSubnets,
+		RemoteVPNSubnets:  orEmptySlice(n.RemoteVPNSubnets),
 		RemoteSiteSubnets: n.RemoteSiteSubnets,
 		RouteDistance:     n.RouteDistance,
 	})
@@ -733,7 +758,7 @@ func (n *Network) marshalVPNClient() ([]byte, error) {
 
 		Name     *string `json:"name,omitempty"`
 		Purpose  string  `json:"purpose"`
-		Enabled  bool    `json:"enabled"`
+		Enabled  *bool   `json:"enabled,omitempty"`
 		IPSubnet *string `json:"ip_subnet,omitempty"`
 
 		// VPN Type
@@ -808,9 +833,10 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 
 		Name              *string `json:"name,omitempty"`
 		Purpose           string  `json:"purpose"`
-		Enabled           bool    `json:"enabled"`
+		Enabled           *bool   `json:"enabled,omitempty"`
 		SettingPreference *string `json:"setting_preference,omitempty"`
 		IPSubnet          *string `json:"ip_subnet,omitempty"`
+		IPV6Subnet        *string `json:"ipv6_subnet,omitempty"`
 
 		// VPN Type
 		VPNType *string `json:"vpn_type,omitempty"`
@@ -869,6 +895,7 @@ func (n *Network) marshalUserVPN() ([]byte, error) {
 		Enabled:           n.Enabled,
 		SettingPreference: n.SettingPreference,
 		IPSubnet:          n.IPSubnet,
+		IPV6Subnet:        n.IPV6Subnet,
 
 		// VPN Type
 		VPNType: n.VPNType,
@@ -938,6 +965,28 @@ func orEmptyWANDHCPOptions(s []NetworkWANDHCPOptions) []NetworkWANDHCPOptions {
 		return s
 	}
 	return []NetworkWANDHCPOptions{}
+}
+
+// wanMTUEnabled returns interface_mtu_enabled for the WAN encoder, or nil to
+// leave it off the wire. Network.InterfaceMtuEnabled is a plain bool, so a
+// false cannot tell "disabled" from "not managed". It is sent when true, or
+// when InterfaceMtu is set: a caller that sets the MTU manages the override,
+// so its false is meant and is sent to switch the override off.
+func wanMTUEnabled(n *Network) *bool {
+	if !n.InterfaceMtuEnabled && n.InterfaceMtu == nil {
+		return nil
+	}
+	enabled := n.InterfaceMtuEnabled
+	return &enabled
+}
+
+// sliceOrNil returns a pointer to s, or nil when s is nil, so that with
+// omitempty a nil slice stays off the wire and an empty one is sent as [].
+func sliceOrNil[T any](s []T) *[]T {
+	if s == nil {
+		return nil
+	}
+	return &s
 }
 
 func derefOrEmpty(s *string) string {

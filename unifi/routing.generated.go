@@ -63,8 +63,8 @@ func (dst *Routing) UnmarshalJSON(b []byte) error {
 		if val, err := aux.StaticRouteDistance.Int64(); err == nil {
 			dst.StaticRouteDistance = &val
 		} else if string(*aux.StaticRouteDistance) == "" {
-			var zero int64
-			dst.StaticRouteDistance = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.StaticRouteDistance = nil
 		}
 	}
 

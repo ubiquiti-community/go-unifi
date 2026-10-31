@@ -58,8 +58,8 @@ func (dst *SuperSmtp) UnmarshalJSON(b []byte) error {
 		if val, err := aux.Port.Int64(); err == nil {
 			dst.Port = &val
 		} else if string(*aux.Port) == "" {
-			var zero int64
-			dst.Port = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.Port = nil
 		}
 	}
 

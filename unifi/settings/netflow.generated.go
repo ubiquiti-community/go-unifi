@@ -65,8 +65,8 @@ func (dst *Netflow) UnmarshalJSON(b []byte) error {
 		if val, err := aux.EngineID.Int64(); err == nil {
 			dst.EngineID = &val
 		} else if string(*aux.EngineID) == "" {
-			var zero int64
-			dst.EngineID = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.EngineID = nil
 		}
 	}
 	if aux.ExportFrequency != nil {
@@ -97,8 +97,8 @@ func (dst *Netflow) UnmarshalJSON(b []byte) error {
 		if val, err := aux.SamplingRate.Int64(); err == nil {
 			dst.SamplingRate = &val
 		} else if string(*aux.SamplingRate) == "" {
-			var zero int64
-			dst.SamplingRate = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.SamplingRate = nil
 		}
 	}
 	if aux.Version != nil {
