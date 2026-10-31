@@ -152,6 +152,7 @@ type FirewallPolicySource struct {
 	IPGroupID             string   `json:"ip_group_id,omitempty"`
 	IPs                   []string `json:"ips,omitempty"`
 	Iid                   string   `json:"iid,omitempty"`
+	MAC                   string   `json:"mac,omitempty"`
 	MatchMAC              bool     `json:"match_mac"`
 	MatchOppositeIPs      bool     `json:"match_opposite_ips"`
 	MatchOppositeIid      bool     `json:"match_opposite_iid"`

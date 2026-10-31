@@ -71,6 +71,7 @@
       ""
     ],
     "match_mac": "true|false",
+    "mac": "",
     "match_opposite_ips": "true|false",
     "match_opposite_ports": "true|false",
     "match_opposite_networks": "true|false",
