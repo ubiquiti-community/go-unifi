@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 // TrafficMatchingList is a reusable set of match criteria (IPv4 addresses,
@@ -30,18 +31,30 @@ func (c *ApiClient) ListTrafficMatchingLists(
 	ctx context.Context,
 	siteID IntegrationSiteID,
 ) ([]TrafficMatchingList, error) {
-	var respBody integrationPage[TrafficMatchingList]
-	err := c.do(
-		ctx,
-		http.MethodGet,
-		fmt.Sprintf("integration/v1/sites/%s/traffic-matching-lists", siteID),
-		nil,
-		&respBody,
-	)
-	if err != nil {
-		return nil, err
+	var lists []TrafficMatchingList
+	for offset := 0; ; {
+		var page integrationPage[TrafficMatchingList]
+		err := c.do(
+			ctx,
+			http.MethodGet,
+			fmt.Sprintf("integration/v1/sites/%s/traffic-matching-lists", siteID),
+			nil,
+			&page,
+			map[string]string{
+				"offset": strconv.Itoa(offset),
+				"limit":  strconv.Itoa(integrationPageLimit),
+			},
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		lists = append(lists, page.Data...)
+		offset += len(page.Data)
+		if len(page.Data) == 0 || offset >= page.TotalCount {
+			return lists, nil
+		}
 	}
-	return respBody.Data, nil
 }
 
 func (c *ApiClient) GetTrafficMatchingList(
@@ -68,13 +81,14 @@ func (c *ApiClient) CreateTrafficMatchingList(
 	siteID IntegrationSiteID,
 	d *TrafficMatchingList,
 ) (*TrafficMatchingList, error) {
-	d.ID = ""
+	body := *d
+	body.ID = ""
 	var respBody TrafficMatchingList
 	err := c.do(
 		ctx,
 		http.MethodPost,
 		fmt.Sprintf("integration/v1/sites/%s/traffic-matching-lists", siteID),
-		d,
+		&body,
 		&respBody,
 	)
 	if err != nil {
