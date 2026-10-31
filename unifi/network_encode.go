@@ -546,9 +546,17 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		WANLoadBalanceWeight *int64  `json:"wan_load_balance_weight,omitempty"`
 		WANFailoverPriority  *int64  `json:"wan_failover_priority,omitempty"`
 
-		// IGMP fields
-		IGMPProxyFor      *string `json:"igmp_proxy_for,omitempty"`
-		IGMPProxyUpstream bool    `json:"igmp_proxy_upstream"`
+		// MTU fields. interface_mtu_enabled is a plain bool on Network, so it
+		// is only sent when the caller manages the MTU (see wanMTUEnabled); a
+		// caller that does not cannot switch a configured MTU override off.
+		InterfaceMtu        *int64 `json:"interface_mtu,omitempty"`
+		InterfaceMtuEnabled *bool  `json:"interface_mtu_enabled,omitempty"`
+
+		// IGMP fields. Downstream networks are tri-state: nil stays off the
+		// wire, an empty non-nil slice is sent as [] to clear the list.
+		IGMPProxyFor                  *string   `json:"igmp_proxy_for,omitempty"`
+		IGMPProxyUpstream             bool      `json:"igmp_proxy_upstream"`
+		IGMPProxyDownstreamNetworkIDs *[]string `json:"igmp_proxy_downstream_networkconf_ids,omitempty"`
 
 		// Event / alias fields
 		ReportWANEvent bool                    `json:"report_wan_event"`
@@ -617,9 +625,14 @@ func (n *Network) marshalWAN() ([]byte, error) {
 		WANLoadBalanceWeight: n.WANLoadBalanceWeight,
 		WANFailoverPriority:  n.WANFailoverPriority,
 
+		// MTU fields
+		InterfaceMtu:        n.InterfaceMtu,
+		InterfaceMtuEnabled: wanMTUEnabled(n),
+
 		// IGMP fields
-		IGMPProxyFor:      n.IGMPProxyFor,
-		IGMPProxyUpstream: n.IGMPProxyUpstream,
+		IGMPProxyFor:                  n.IGMPProxyFor,
+		IGMPProxyUpstream:             n.IGMPProxyUpstream,
+		IGMPProxyDownstreamNetworkIDs: sliceOrNil(n.IGMPProxyDownstreamNetworkIDs),
 
 		// Event / alias fields
 		ReportWANEvent: n.ReportWANEvent,
@@ -952,6 +965,28 @@ func orEmptyWANDHCPOptions(s []NetworkWANDHCPOptions) []NetworkWANDHCPOptions {
 		return s
 	}
 	return []NetworkWANDHCPOptions{}
+}
+
+// wanMTUEnabled returns interface_mtu_enabled for the WAN encoder, or nil to
+// leave it off the wire. Network.InterfaceMtuEnabled is a plain bool, so a
+// false cannot tell "disabled" from "not managed". It is sent when true, or
+// when InterfaceMtu is set: a caller that sets the MTU manages the override,
+// so its false is meant and is sent to switch the override off.
+func wanMTUEnabled(n *Network) *bool {
+	if !n.InterfaceMtuEnabled && n.InterfaceMtu == nil {
+		return nil
+	}
+	enabled := n.InterfaceMtuEnabled
+	return &enabled
+}
+
+// sliceOrNil returns a pointer to s, or nil when s is nil, so that with
+// omitempty a nil slice stays off the wire and an empty one is sent as [].
+func sliceOrNil[T any](s []T) *[]T {
+	if s == nil {
+		return nil
+	}
+	return &s
 }
 
 func derefOrEmpty(s *string) string {

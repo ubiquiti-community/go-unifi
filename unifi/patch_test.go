@@ -148,6 +148,43 @@ func TestDiff_NetworkUsesPurposeEncoder(t *testing.T) {
 	}
 }
 
+// TestDiff_WANInterfaceMTU checks that WAN MTU and IGMP proxy changes reach a
+// sparse PUT: Diff encodes through marshalWAN, which used to drop these keys.
+func TestDiff_WANInterfaceMTU(t *testing.T) {
+	prior := Network{
+		ID:                            "wan1",
+		Name:                          Ptr("WAN"),
+		Purpose:                       PurposeWAN,
+		WANType:                       Ptr("dhcp"),
+		InterfaceMtu:                  Ptr[int64](1500),
+		IGMPProxyFor:                  Ptr("some"),
+		IGMPProxyDownstreamNetworkIDs: []string{"lan1"},
+	}
+
+	target := prior
+	target.InterfaceMtu = Ptr[int64](1492)
+	target.InterfaceMtuEnabled = true
+	patch, err := Diff(&prior, &target, DiffOptions{})
+	if err != nil {
+		t.Fatalf("Diff: %v", err)
+	}
+	want := map[string]any{"interface_mtu": json.Number("1492"), "interface_mtu_enabled": true}
+	if !reflect.DeepEqual(patch, want) {
+		t.Errorf("patch = %v, want %v", patch, want)
+	}
+
+	target = prior
+	target.IGMPProxyDownstreamNetworkIDs = []string{"lan1", "lan2"}
+	patch, err = Diff(&prior, &target, DiffOptions{})
+	if err != nil {
+		t.Fatalf("Diff: %v", err)
+	}
+	want = map[string]any{"igmp_proxy_downstream_networkconf_ids": []any{"lan1", "lan2"}}
+	if !reflect.DeepEqual(patch, want) {
+		t.Errorf("patch = %v, want %v", patch, want)
+	}
+}
+
 const (
 	patchTestWLANPath = "/proxy/network/api/s/default/rest/wlanconf/wlan1"
 	patchTestLANPath  = "/proxy/network/api/s/default/rest/networkconf/lan1"

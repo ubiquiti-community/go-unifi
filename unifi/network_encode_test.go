@@ -2,6 +2,7 @@ package unifi
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 )
 
@@ -1086,6 +1087,98 @@ func TestMarshalNetworkEnabledNilOmitted(t *testing.T) {
 				if got := result["enabled"]; got != want {
 					t.Errorf("enabled = %v, want %v", got, want)
 				}
+			}
+		})
+	}
+}
+
+// TestMarshalNetworkWANInterfaceMTU pins the MTU fields of the WAN payload.
+// marshalWAN previously dropped them, so an MTU override could not be managed.
+func TestMarshalNetworkWANInterfaceMTU(t *testing.T) {
+	tests := []struct {
+		name        string
+		mtu         *int64
+		enabled     bool
+		wantMTU     any
+		wantEnabled any
+	}{
+		{name: "unmanaged stays off the wire"},
+		{name: "override on", mtu: Ptr[int64](1492), enabled: true, wantMTU: float64(1492), wantEnabled: true},
+		{name: "override off with mtu set", mtu: Ptr[int64](1500), wantMTU: float64(1500), wantEnabled: false},
+		{name: "enabled without mtu", enabled: true, wantEnabled: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := json.Marshal(&Network{
+				ID:                  "x",
+				Purpose:             PurposeWAN,
+				InterfaceMtu:        tt.mtu,
+				InterfaceMtuEnabled: tt.enabled,
+			})
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			var result map[string]any
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			for key, want := range map[string]any{
+				"interface_mtu":         tt.wantMTU,
+				"interface_mtu_enabled": tt.wantEnabled,
+			} {
+				got, present := result[key]
+				if want == nil {
+					if present {
+						t.Errorf("%s must stay off the wire, got %v", key, got)
+					}
+					continue
+				}
+				if got != want {
+					t.Errorf("%s = %v (present=%v), want %v", key, got, present, want)
+				}
+			}
+		})
+	}
+}
+
+// TestMarshalNetworkWANIGMPProxyDownstream pins the tri-state contract for
+// igmp_proxy_downstream_networkconf_ids, which marshalWAN previously dropped:
+// nil stays off the wire, a list travels, and an empty list is sent as [].
+func TestMarshalNetworkWANIGMPProxyDownstream(t *testing.T) {
+	const key = "igmp_proxy_downstream_networkconf_ids"
+	tests := []struct {
+		name string
+		ids  []string
+		want any
+	}{
+		{name: "nil stays off the wire"},
+		{name: "list travels", ids: []string{"lan1", "lan2"}, want: []any{"lan1", "lan2"}},
+		{name: "empty list clears", ids: []string{}, want: []any{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := json.Marshal(&Network{
+				ID:                            "x",
+				Purpose:                       PurposeWAN,
+				IGMPProxyFor:                  Ptr("some"),
+				IGMPProxyDownstreamNetworkIDs: tt.ids,
+			})
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			var result map[string]any
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			got, present := result[key]
+			if tt.want == nil {
+				if present {
+					t.Errorf("%s must stay off the wire, got %v", key, got)
+				}
+				return
+			}
+			if !present || !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("%s = %v (present=%v), want %v", key, got, present, tt.want)
 			}
 		})
 	}
