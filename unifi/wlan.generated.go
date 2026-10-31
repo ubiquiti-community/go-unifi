@@ -170,24 +170,24 @@ func (dst *WLAN) UnmarshalJSON(b []byte) error {
 		if val, err := aux.DTIM6E.Int64(); err == nil {
 			dst.DTIM6E = &val
 		} else if string(*aux.DTIM6E) == "" {
-			var zero int64
-			dst.DTIM6E = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.DTIM6E = nil
 		}
 	}
 	if aux.DTIMNa != nil {
 		if val, err := aux.DTIMNa.Int64(); err == nil {
 			dst.DTIMNa = &val
 		} else if string(*aux.DTIMNa) == "" {
-			var zero int64
-			dst.DTIMNa = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.DTIMNa = nil
 		}
 	}
 	if aux.DTIMNg != nil {
 		if val, err := aux.DTIMNg.Int64(); err == nil {
 			dst.DTIMNg = &val
 		} else if string(*aux.DTIMNg) == "" {
-			var zero int64
-			dst.DTIMNg = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.DTIMNg = nil
 		}
 	}
 	if aux.GroupRekey != nil {
@@ -264,8 +264,8 @@ func (dst *WLAN) UnmarshalJSON(b []byte) error {
 		if val, err := aux.VLAN.Int64(); err == nil {
 			dst.VLAN = &val
 		} else if string(*aux.VLAN) == "" {
-			var zero int64
-			dst.VLAN = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.VLAN = nil
 		}
 	}
 	if aux.WEPIDX != nil {

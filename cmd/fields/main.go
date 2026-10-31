@@ -138,6 +138,24 @@ type FieldInfo struct {
 	CustomUnmarshalFunc string
 }
 
+// EmptyStringIsNil reports whether a numeric field the controller stores as
+// "" should decode to nil rather than to a pointer to 0. That is the case when
+// the field's validation accepts the empty string but rejects 0 (e.g.
+// wan_egress_qos, `[1-7]|^$`): decoding "" as 0 would make a later update
+// re-send 0, which the controller rejects with api.err.InvalidPayload (#105).
+// Fields whose validation accepts 0, or that carry no validation, keep the
+// historical "" -> 0 mapping.
+func (f *FieldInfo) EmptyStringIsNil() bool {
+	if f.FieldValidation == "" {
+		return false
+	}
+	re, err := regexp.Compile(`^(?:` + f.FieldValidation + `)$`)
+	if err != nil {
+		return false
+	}
+	return re.MatchString("") && !re.MatchString("0")
+}
+
 // clearNativeNetworkOmitEmpty keeps native_networkconf_id serialized even when
 // empty. The controller treats an explicit "" as "set the native network to
 // None", but the default codegen marks the string omitempty, so "" is dropped

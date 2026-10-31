@@ -170,3 +170,20 @@ func TestResourceTypes(t *testing.T) {
 		assert.Equal(t, expectation.Types, resource.Types)
 	})
 }
+
+func TestFieldInfoEmptyStringIsNil(t *testing.T) {
+	for validation, want := range map[string]bool{
+		"":                    false,
+		"[1-7]|^$":            true, // wan_egress_qos (#105)
+		"^$|[1-9]|[1-9][0-9]": true, // wan_load_balance_weight
+		"[0-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-4]|^$": false, // wan_vlan accepts 0
+		"[0-9]|[1-9][0-9]":           false, // empty not allowed
+		"^(4[89]|5[0-9]|6[0-4])$|^$": true,
+		"[":                          false, // invalid regex keeps the old behaviour
+	} {
+		f := &FieldInfo{FieldValidation: validation}
+		if got := f.EmptyStringIsNil(); got != want {
+			t.Errorf("%q: got %v, want %v", validation, got, want)
+		}
+	}
+}

@@ -385,16 +385,16 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		if val, err := aux.IGMPGroupmembership.Int64(); err == nil {
 			dst.IGMPGroupmembership = &val
 		} else if string(*aux.IGMPGroupmembership) == "" {
-			var zero int64
-			dst.IGMPGroupmembership = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.IGMPGroupmembership = nil
 		}
 	}
 	if aux.IGMPMaxresponse != nil {
 		if val, err := aux.IGMPMaxresponse.Int64(); err == nil {
 			dst.IGMPMaxresponse = &val
 		} else if string(*aux.IGMPMaxresponse) == "" {
-			var zero int64
-			dst.IGMPMaxresponse = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.IGMPMaxresponse = nil
 		}
 	}
 	if aux.IGMPMcrtrexpiretime != nil {
@@ -498,8 +498,8 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		if val, err := aux.PptpcRouteDistance.Int64(); err == nil {
 			dst.PptpcRouteDistance = &val
 		} else if string(*aux.PptpcRouteDistance) == "" {
-			var zero int64
-			dst.PptpcRouteDistance = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.PptpcRouteDistance = nil
 		}
 	}
 	if aux.Priority != nil {
@@ -514,8 +514,8 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		if val, err := aux.RouteDistance.Int64(); err == nil {
 			dst.RouteDistance = &val
 		} else if string(*aux.RouteDistance) == "" {
-			var zero int64
-			dst.RouteDistance = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.RouteDistance = nil
 		}
 	}
 	if aux.RoutedLagIDX != nil {
@@ -554,8 +554,8 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		if val, err := aux.VLAN.Int64(); err == nil {
 			dst.VLAN = &val
 		} else if string(*aux.VLAN) == "" {
-			var zero int64
-			dst.VLAN = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.VLAN = nil
 		}
 	}
 	if aux.VrrpVrid != nil {
@@ -586,16 +586,16 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		if val, err := aux.WANDHCPv6PDSize.Int64(); err == nil {
 			dst.WANDHCPv6PDSize = &val
 		} else if string(*aux.WANDHCPv6PDSize) == "" {
-			var zero int64
-			dst.WANDHCPv6PDSize = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.WANDHCPv6PDSize = nil
 		}
 	}
 	if aux.WANEgressQOS != nil {
 		if val, err := aux.WANEgressQOS.Int64(); err == nil {
 			dst.WANEgressQOS = &val
 		} else if string(*aux.WANEgressQOS) == "" {
-			var zero int64
-			dst.WANEgressQOS = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.WANEgressQOS = nil
 		}
 	}
 	if aux.WANFailoverPriority != nil {
@@ -610,16 +610,16 @@ func (dst *Network) UnmarshalJSON(b []byte) error {
 		if val, err := aux.WANLoadBalanceWeight.Int64(); err == nil {
 			dst.WANLoadBalanceWeight = &val
 		} else if string(*aux.WANLoadBalanceWeight) == "" {
-			var zero int64
-			dst.WANLoadBalanceWeight = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.WANLoadBalanceWeight = nil
 		}
 	}
 	if aux.WANPrefixlen != nil {
 		if val, err := aux.WANPrefixlen.Int64(); err == nil {
 			dst.WANPrefixlen = &val
 		} else if string(*aux.WANPrefixlen) == "" {
-			var zero int64
-			dst.WANPrefixlen = &zero
+			// "" means unset; 0 is not a valid value for this field.
+			dst.WANPrefixlen = nil
 		}
 	}
 	if aux.WANSmartQDownRate != nil {
