@@ -725,7 +725,7 @@ func (n *Network) marshalSiteVPN() ([]byte, error) {
 		IPSecPfs:            n.IPSecPfs,
 		IPSecDynamicRouting: n.IPSecDynamicRouting,
 
-		RemoteVPNSubnets:  n.RemoteVPNSubnets,
+		RemoteVPNSubnets:  orEmptySlice(n.RemoteVPNSubnets),
 		RemoteSiteSubnets: n.RemoteSiteSubnets,
 		RouteDistance:     n.RouteDistance,
 	})
