@@ -715,6 +715,50 @@ func TestMarshalNetworkIPv6ClientAddressAssignment(t *testing.T) {
 	}
 }
 
+// TestMarshalNetworkIPv6Aliases guards that the corporate and guest marshalers
+// carry ipv6_aliases: a nil slice is omitted so the controller keeps its
+// aliases, an empty slice is sent as [] to clear them, and a list is sent as
+// is (ubiquiti-community/terraform-provider-unifi#699).
+func TestMarshalNetworkIPv6Aliases(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		for _, tc := range []struct {
+			name    string
+			aliases []string
+			want    any
+		}{
+			{"nil is omitted", nil, nil},
+			{"empty clears", []string{}, []any{}},
+			{"list is sent", []string{"fd7a:6c9e:4b28:4::1/64"}, []any{"fd7a:6c9e:4b28:4::1/64"}},
+		} {
+			t.Run(purpose+"/"+tc.name, func(t *testing.T) {
+				data, err := json.Marshal(&Network{
+					ID:          "x",
+					Purpose:     purpose,
+					Enabled:     boolPtr(true),
+					IPV6Aliases: tc.aliases,
+				})
+				if err != nil {
+					t.Fatalf("marshal: %v", err)
+				}
+				var result map[string]any
+				if err := json.Unmarshal(data, &result); err != nil {
+					t.Fatalf("unmarshal: %v", err)
+				}
+				got, ok := result["ipv6_aliases"]
+				if tc.want == nil {
+					if ok {
+						t.Errorf("ipv6_aliases serialized for a nil slice: %s", data)
+					}
+					return
+				}
+				if !reflect.DeepEqual(got, tc.want) {
+					t.Errorf("ipv6_aliases = %#v, want %#v", got, tc.want)
+				}
+			})
+		}
+	}
+}
+
 // TestMarshalNetworkSiteVPN guards that the site-to-site IPsec VPN marshaler
 // emits the VPN/IPsec fields (not just name/purpose/enabled). It was previously
 // a stub, which silently dropped the whole tunnel configuration on write
