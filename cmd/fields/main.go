@@ -329,6 +329,11 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 		// The controller reports the client's most recent IP on /rest/user but
 		// ace.jar has no schema for it; surface it as a read-only field.
 		baseType.Fields["LastIP"] = NewFieldInfo("LastIP", "last_ip", fields.String, "non-generated field", true, false, false, "")
+		// The device type the client was manually set to ("Change Device Type"
+		// in the UI). ace.jar has no schema for it. UniFi Network 11 sends a
+		// numeric string ("3263") where earlier controllers sent a number;
+		// types.Number decodes both. Set it with OverrideClientFingerprint.
+		baseType.Fields["DevIdOverride"] = NewFieldInfo("DevIdOverride", "dev_id_override", fields.Int, "non-generated field", true, false, true, fields.Number)
 	case resource.StructName == "WLAN":
 		// this field removed in v6, retaining for backwards compatibility
 		baseType.Fields["WLANGroupID"] = NewFieldInfo("WLANGroupID", "wlangroup_id", fields.String, "", true, false, false, "")

@@ -36,6 +36,7 @@ type Client struct {
 	DisplayName string `json:"display_name,omitempty"` // non-generated field
 
 	Blocked                       *bool    `json:"blocked,omitempty"`
+	DevIdOverride                 *int64   `json:"dev_id_override,omitempty"` // non-generated field
 	FixedApEnabled                bool     `json:"fixed_ap_enabled"`
 	FixedApMAC                    string   `json:"fixed_ap_mac,omitempty"` // ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	FixedIP                       string   `json:"fixed_ip,omitempty"`
@@ -58,7 +59,8 @@ type Client struct {
 func (dst *Client) UnmarshalJSON(b []byte) error {
 	type Alias Client
 	aux := &struct {
-		Blocked *types.Bool `json:"blocked"`
+		Blocked       *types.Bool   `json:"blocked"`
+		DevIdOverride *types.Number `json:"dev_id_override"`
 
 		*Alias
 	}{
@@ -70,6 +72,14 @@ func (dst *Client) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("unable to unmarshal alias: %w", err)
 	}
 	dst.Blocked = boolPtrValue(aux.Blocked)
+	if aux.DevIdOverride != nil {
+		if val, err := aux.DevIdOverride.Int64(); err == nil {
+			dst.DevIdOverride = &val
+		} else if string(*aux.DevIdOverride) == "" {
+			var zero int64
+			dst.DevIdOverride = &zero
+		}
+	}
 
 	return nil
 }
