@@ -75,6 +75,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
+		UPnPLanEnabled          bool                            `json:"upnp_lan_enabled"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
 		DHCPDIP1                string                          `json:"dhcpd_ip_1"`
 		DHCPDIP2                string                          `json:"dhcpd_ip_2"`
@@ -166,6 +167,7 @@ func (n *Network) marshalCorporate() ([]byte, error) {
 		FirewallZoneID:          n.FirewallZoneID,
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
+		UPnPLanEnabled:          n.UPnPLanEnabled,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
 		DHCPDIP1:                n.DHCPDIP1,
 		DHCPDIP2:                n.DHCPDIP2,
@@ -323,6 +325,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		FirewallZoneID          *string                         `json:"firewall_zone_id,omitempty"`
 		SettingPreference       *string                         `json:"setting_preference,omitempty"`
 		IGMPSnooping            bool                            `json:"igmp_snooping"`
+		UPnPLanEnabled          bool                            `json:"upnp_lan_enabled"`
 		DHCPguardEnabled        bool                            `json:"dhcpguard_enabled"`
 		DHCPDIP1                string                          `json:"dhcpd_ip_1"`
 		DHCPDIP2                string                          `json:"dhcpd_ip_2"`
@@ -414,6 +417,7 @@ func (n *Network) marshalGuest() ([]byte, error) {
 		FirewallZoneID:          n.FirewallZoneID,
 		SettingPreference:       valueOrDefault(n.SettingPreference, "auto"),
 		IGMPSnooping:            n.IGMPSnooping,
+		UPnPLanEnabled:          n.UPnPLanEnabled,
 		DHCPguardEnabled:        n.DHCPguardEnabled,
 		DHCPDIP1:                n.DHCPDIP1,
 		DHCPDIP2:                n.DHCPDIP2,

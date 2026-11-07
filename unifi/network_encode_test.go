@@ -2,6 +2,7 @@ package unifi
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -1225,5 +1226,38 @@ func TestMarshalNetworkWANIGMPProxyDownstream(t *testing.T) {
 				t.Errorf("%s = %v (present=%v), want %v", key, got, present, tt.want)
 			}
 		})
+	}
+}
+
+// TestMarshalNetworkUPnPLanEnabled guards that the corporate and guest
+// marshalers send upnp_lan_enabled, the per-network UPnP opt-in. Both curate
+// a subset of Network and used to leave it out, so it never reached the
+// controller.
+func TestMarshalNetworkUPnPLanEnabled(t *testing.T) {
+	for _, purpose := range []string{PurposeCorporate, PurposeGuest} {
+		for _, want := range []bool{true, false} {
+			t.Run(fmt.Sprintf("%s/%t", purpose, want), func(t *testing.T) {
+				data, err := json.Marshal(&Network{
+					ID:             "x",
+					Purpose:        purpose,
+					Enabled:        boolPtr(true),
+					UPnPLanEnabled: want,
+				})
+				if err != nil {
+					t.Fatalf("marshal: %v", err)
+				}
+				var result map[string]any
+				if err := json.Unmarshal(data, &result); err != nil {
+					t.Fatalf("unmarshal: %v", err)
+				}
+				got, ok := result["upnp_lan_enabled"]
+				if !ok {
+					t.Fatalf("upnp_lan_enabled not serialized: %s", data)
+				}
+				if got != want {
+					t.Errorf("upnp_lan_enabled = %#v, want %t", got, want)
+				}
+			})
+		}
 	}
 }
