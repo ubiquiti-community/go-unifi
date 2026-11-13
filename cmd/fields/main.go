@@ -222,6 +222,19 @@ func NewResource(structName string, resourcePath string) *ResourceInfo {
 			// these two keys; the ace.jar field spec predates them.
 			baseType.Fields["EnabledFor"] = NewFieldInfo("EnabledFor", "enabled_for", fields.String, "all|some|none", true, false, false, "")
 			baseType.Fields["EnabledForNetworkIDs"] = NewFieldInfo("EnabledForNetworkIDs", "enabled_for_network_ids", fields.String, "", true, true, false, "")
+		case "SettingIps":
+			// Ad blocking is a site-wide switch plus the networks it applies to.
+			// Network 10.x and 11 controllers store both keys on the ips
+			// setting, but the ace.jar field spec has neither. The switch is a
+			// pointer and the list omitempty, so a caller that never read them
+			// does not send them.
+			adBlocking := NewFieldInfo("AdBlockingConfigurations", "ad_blocking_configurations", "SettingIpsAdBlockingConfigurations", "", true, true, false, "")
+			adBlocking.Fields = map[string]*FieldInfo{
+				"NetworkID": NewFieldInfo("NetworkID", "network_id", fields.String, "", true, false, false, ""),
+			}
+			baseType.Fields["AdBlockingConfigurations"] = adBlocking
+			resource.Types["SettingIpsAdBlockingConfigurations"] = adBlocking
+			baseType.Fields["AdBlockingEnabled"] = NewFieldInfo("AdBlockingEnabled", "ad_blocking_enabled", fields.Bool, "", true, false, true, "")
 		case "SettingRadioAi":
 			// Present on 10.x controllers, absent from the ace.jar field spec.
 			// A pointer so that a controller without the key is not sent false.
