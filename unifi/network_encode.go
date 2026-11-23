@@ -569,6 +569,9 @@ func (n *Network) marshalWAN() ([]byte, error) {
 
 		// Provider capabilities
 		WANProviderCapabilities *NetworkWANProviderCapabilities `json:"wan_provider_capabilities,omitempty"`
+
+		// WAN SLA profile (v2 wan-slas) deciding whether the WAN is usable.
+		WANSla *string `json:"wan_sla,omitempty"`
 	}{
 		ID:       n.ID,
 		SiteID:   n.SiteID,
@@ -645,6 +648,8 @@ func (n *Network) marshalWAN() ([]byte, error) {
 
 		// Provider capabilities
 		WANProviderCapabilities: n.WANProviderCapabilities,
+
+		WANSla: n.WANSla,
 	})
 }
 
