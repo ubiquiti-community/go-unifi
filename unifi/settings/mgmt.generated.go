@@ -78,12 +78,12 @@ func (dst *Mgmt) UnmarshalJSON(b []byte) error {
 }
 
 type SettingMgmtSSHKeys struct {
-	Comment     string `json:"comment"`
-	Date        string `json:"date"`
-	Fingerprint string `json:"fingerprint"`
-	Key         string `json:"key"`
-	KeyType     string `json:"type"`
-	Name        string `json:"name"`
+	Comment     string               `json:"comment"`
+	Date        types.NumberOrString `json:"date"`
+	Fingerprint string               `json:"fingerprint"`
+	Key         string               `json:"key"`
+	KeyType     string               `json:"type"`
+	Name        string               `json:"name"`
 }
 
 func (dst *SettingMgmtSSHKeys) UnmarshalJSON(b []byte) error {
