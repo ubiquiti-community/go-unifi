@@ -670,13 +670,15 @@ func main() {
 				return nil
 			}
 		case "SettingMgmt":
+			// UniFi Network 11.0.104 sends an SSH key's date as a number; the
+			// type takes a string as well.
 			sshKeyField := NewFieldInfo(resource.StructName+"SSHKeys", "x_ssh_keys", "struct", "", false, false, false, "")
 			sshKeyField.Fields = map[string]*FieldInfo{
 				"name":        NewFieldInfo("Name", "name", fields.String, "", false, false, false, ""),
 				"keyType":     NewFieldInfo("KeyType", "type", fields.String, "", false, false, false, ""),
 				"key":         NewFieldInfo("Key", "key", fields.String, "", false, false, false, ""),
 				"comment":     NewFieldInfo("Comment", "comment", fields.String, "", false, false, false, ""),
-				"date":        NewFieldInfo("Date", "date", fields.String, "", false, false, false, ""),
+				"date":        NewFieldInfo("Date", "date", fields.NumberOrString, "", false, false, false, ""),
 				"fingerprint": NewFieldInfo("Fingerprint", "fingerprint", fields.String, "", false, false, false, ""),
 			}
 			resource.Types[sshKeyField.FieldName] = sshKeyField
